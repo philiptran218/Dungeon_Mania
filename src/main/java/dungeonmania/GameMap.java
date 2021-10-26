@@ -15,8 +15,7 @@ import dungeonmania.util.Position;
 public class GameMap {
     // Need to figure something to stand in for entity, or we might need 
     // multiple maps for one dungeon.
-    
-    //Map<Position, Entity> dungeonMap = new HashMap<>();
+    private Map<Position, List<Entity>> dungeonMap = new HashMap<>();
     private String gameDifficulty;
 
     // ******************************************
@@ -58,8 +57,15 @@ public class GameMap {
         List<EntityResponse> entityList = new ArrayList<EntityResponse>();
         Integer i = 0;
         for (JsonElement entity : map.getAsJsonArray("entities")) {
-            Position pos = new Position(entity.getAsJsonObject().get("x").getAsInt(), entity.getAsJsonObject().get("y").getAsInt());
-            String type = entity.getAsJsonObject().get("type").getAsString();
+            JsonObject obj = entity.getAsJsonObject();
+            Position pos;
+            // Check if there is a third layer:
+            if (obj.get("layer") == null) {
+                pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
+            } else {
+                pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt(), obj.get("layer").getAsInt());
+            }
+            String type = obj.get("type").getAsString();
             // Need additional checking here to see if the entity can interact with the frontend.
             entityList.add(new EntityResponse(i.toString(), type, pos, false));
             i++;
@@ -82,8 +88,23 @@ public class GameMap {
      * and returns it.
      * @return
      */
-    /*
     public Map<Position, Entity> jsonToMap(JsonObject jsonMap) {
-        
-    }*/
+        // Create map:
+        Map<Position, List<Entity>> newMap = new HashMap<>();
+
+        for (JsonElement entity : jsonMap.getAsJsonArray("entities")) {
+            Position pos = new Position(entity.getAsJsonObject().get("x").getAsInt(), entity.getAsJsonObject().get("y").getAsInt());
+            String type = entity.getAsJsonObject().get("type").getAsString();
+            EntityFactory.getEntityObject(type, pos);
+            JsonObject obj = entity.getAsJsonObject();
+            // Check if there is a third layer:
+            if (obj.get("layer") == null) {
+                pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
+            } else {
+                pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt(), obj.get("layer").getAsInt());
+            }
+        }
+
+        return null;
+    }
 }
