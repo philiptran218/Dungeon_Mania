@@ -19,12 +19,34 @@ public class GameMap {
     //Map<Position, Entity> dungeonMap = new HashMap<>();
     private String gameDifficulty;
 
+    // ******************************************
     // Need to make varibales to game state here:
     // GameState currState;
+    // ******************************************
 
-    public GameMap(String difficulty) {
-        // Constructor
+    /**
+     * This constructor used for establishing new games
+     * @param difficulty
+     * @param dungeonName
+     * @param jsonMap
+     */
+    public GameMap(String difficulty, JsonObject jsonMap) {
+        // THIS IS FOR A NEW GAME 
         this.gameDifficulty = difficulty;
+
+        // Given the json map, we would convert it to a Map<Position, Entity List> 
+        // and set dungeonMap to this map.
+    }
+
+    /**
+     * This constructor used for loading saved games.
+     * @param map
+     * @return
+     */
+    public GameMap(JsonObject jsonMap) {
+        // This is called for an exisiting game where only
+        // the json map is passed in. Convert it to Map<Position, Entity List>
+        // and set it to this map.
     }
 
     /**
@@ -39,26 +61,10 @@ public class GameMap {
             Position pos = new Position(entity.getAsJsonObject().get("x").getAsInt(), entity.getAsJsonObject().get("y").getAsInt());
             String type = entity.getAsJsonObject().get("type").getAsString();
             // Need additional checking here to see if the entity can interact with the frontend.
-            // Also, look for ways to make a better id:
             entityList.add(new EntityResponse(i.toString(), type, pos, false));
             i++;
         }
         return entityList;
-    }
-
-    /**
-     * Given a file path, it will get the json file and return it as
-     * a json object.
-     * @return Dungeon Map as JsonObject
-     */
-    public JsonObject getMapAsJson(String filePath) {
-        // "src\\main\\resources\\dungeons\\" + dungeonName + ".json"
-        try {
-            String path = filePath;
-            return JsonParser.parseReader(new FileReader(path)).getAsJsonObject();
-        } catch (Exception e) {
-            throw new IllegalArgumentException("File does not exist.");
-        }
     }
     
     /**
@@ -66,19 +72,18 @@ public class GameMap {
      * in the designated folder. Also If there is no game difficulty
      * add a field in the json file for game difficulty.
      */
-    public void saveMap() {
+    public void saveMapAsJson() {
+        // Argument would be a Map<Position, Entity>.
         return;
     }
 
-    
     /**
      * Takes in a json object, and turns it into a Map<Position, Entity>
      * and returns it.
      * @return
      */
     /*
-    public Map<Position, Entity> jsonToMap() {
+    public Map<Position, Entity> jsonToMap(JsonObject jsonMap) {
         
     }*/
-
 }
