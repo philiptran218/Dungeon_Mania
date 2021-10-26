@@ -1,6 +1,13 @@
 package dungeonmania;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
+import dungeonmania.response.models.*;
 
 public class CollectableEntityTest {
 
@@ -10,22 +17,50 @@ public class CollectableEntityTest {
     // Condition: should appear in the player's inventory
     @Test
     public void testCollectablePickup() {
-        // Stub...
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        assertDoesNotThrow(() -> newDungeon.newGame("advanced", "Standard"));
 
+        // Create a new player
+        // Create the different CollectableEntities (place them at different positions)
+        // Get player to move to each entity to collect them
+        // Assert that the entity is inside the player's inventory
+
+        // This is just a template to check if the entity is in inventory
+        // Once functions have been completed, fill out the entries!!!
+        /*
+        List<ItemResponse> inv = newDungeon.tick(null, PUT_DIRECTION_HERE).getInventory();
+        assertTrue(inv.stream().anyMatch(itm -> itm.getId().equals(PUT_ID_HERE)));
+        */
     }
 
     // Test 2: check that armour/oneRing is obtained from enemy after battle
     // Condition: should appear in the player's inventory
     @Test
     public void testBattlePickups() {
-        // Stub...
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        assertDoesNotThrow(() -> newDungeon.newGame("advanced", "Standard"));
+
+        // Create map, player and an enemy
+        // Give the enemy armour as well as spawning theOneRing upon death
+        // Perform combat until enemy is dead
+        // After combat ends, check inventory for armour and ring
     }
 
     // Test 3: check that entity is successfully removed after being used
     // Condition: should not appear in player's inventory
     @Test
     public void testUsedCollectable() {
-        // Stub...
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        assertDoesNotThrow(() -> newDungeon.newGame("advanced", "Standard"));
+
+        // Create entity, player, map
+        // Collect entity and then use it
+        // Check that it is not in inventory anymore
+        /*
+        List<ItemResponse> inv = newDungeon.tick(PUT_ID_HERE, PUT_DIRECTION_HERE).getInventory();
+        assertFalse(inv.stream().anyMatch(itm -> itm.getId().equals(PUT_ID_HERE)));
+        */
+
     }
 
     // Test 4: test that each entity performs their intended functions
@@ -38,14 +73,12 @@ public class CollectableEntityTest {
     //            theOneRing - revives the player to full hp upon death
     @Test
     public void testCollectableFunctionality() {
-        // Stub...
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        assertDoesNotThrow(() -> newDungeon.newGame("advanced", "Standard"));
+
+        // Have to set up situations for the entities to be used.
+        // Best to separate these out.
     }
-
-    // SOME ASSUMPTIONS FOR COLLECTABLEENTITIES:
-    // 1. Player can collect an unlimited number of entities (with exception of key)
-    // 2. Maybe limit the number of armour/sword the player could have...
-    // 3. TheOneRing is used immediately once the player dies (they are not given a choice).
-
 
     // SOME NOTES FOR COLLECTABLEENTITIES:
     // - armour and theOneRing is added to inventory after defeating an enemy with it
@@ -92,11 +125,6 @@ public class CollectableEntityTest {
         // Stub...
     }
 
-    // SOME ASSUMPTIONS TO POSSIBLY ADD:
-    // 1. Player can only hold 1 bow and 1 shield at a time. Creating another bow/shield discards
-    // the currently existing bow/shield. (Prevents unrealistic combat)
-    // 2. Shield/bow is used automatically in combat. Player is not given an option to use it
-    // or not.
 
     // IDEAS FOR COMBAT:
     // Player has a method which returns the amount of damage they deal
