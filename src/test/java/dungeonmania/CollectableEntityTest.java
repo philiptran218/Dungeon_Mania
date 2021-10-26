@@ -93,7 +93,12 @@ public class CollectableEntityTest {
     // Condition: check that materials have been removed from inventory
     @Test
     public void testSuccessfulBuild() {
-        // Stub...
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        assertDoesNotThrow(() -> newDungeon.newGame("advanced", "Standard"));
+
+        // Create player and utility entities
+        // Get player to pick them up and craft bow/shield with it
+        // Check that it is in inventory
     }
 
     // Test 2: check that entity is not built if user has insufficent materials
@@ -101,28 +106,40 @@ public class CollectableEntityTest {
     // Condition: check that materials are still in inventory
     @Test
     public void testUnsuccessfulBuild() {
-        // Stub...
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        assertDoesNotThrow(() -> newDungeon.newGame("advanced", "Standard"));
+
+        // Create player
+        // Try to craft with nothing in inventory
+        // Should still be nothing there
     }
 
     // Test 3: check that entities are performing correct functions in combat
     // Condition: Bow - attacks twice   Shield - reduces damage received
     @Test
     public void testBuildableFunctionality() {
-        // Stub...
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        assertDoesNotThrow(() -> newDungeon.newGame("advanced", "Standard"));
+
+        // Create player, entities, enemies
+        // Craft shield/bow
+        // Fight enemy with shield/bow
+        // Also good idea to test durability here as well
+
     }
 
-    // Test 4: check that entity durability is being worn out by combat
-    // Condition: Bow/shield durability decreases if used, removed once it reaches 0.
-    @Test
-    public void testDurability() {
-        // Stub...
-    }
-
-    // Test 5 (assumption): check that a second bow/shield replaces the current bow/shield.
+    // Test 4 (assumption): check that a second bow/shield replaces the current bow/shield.
     // Condition: new bow/arrow should have full durability and only have 1 in inventory
     @Test 
     public void testBuildableLimit() {
-        // Stub...
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        assertDoesNotThrow(() -> newDungeon.newGame("advanced", "Standard"));
+
+        // Create player, entities
+        // Collect entities then craft shield/bow
+        // Wear down durability
+        // Create new shield/bow
+        // Shield/bow in inventory should have full durability and limit to 1
     }
 
 
@@ -137,5 +154,4 @@ public class CollectableEntityTest {
     // current health to calculate enemy's current health after battle.
     // Similarly, player.recDamage(enemy.getDamage(), enemy.getHealth());
     // recDamage() also takes into account shield/armour to reduce damage received.
-
 }
