@@ -1,7 +1,9 @@
 package dungeonmania;
 
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.DungeonResponse;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
 
@@ -11,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -44,22 +47,35 @@ public class DungeonManiaController {
     }
 
     /**
-     * Given a file path, it will get the json file and return it as
-     * a json object.
+     * Given a file name it will go to the source folder and locate dungeon map,
+     * and if not found it will go into the test tolder to locate the test json 
+     * file and return it as a json object.
      * @return Dungeon Map as JsonObject
      */
-    public JsonObject getJsonFile(String filePath) {
+    public JsonObject getJsonFile(String fileName) {
         // "src\\main\\resources\\dungeons\\" + dungeonName + ".json"
         try {
-            String path = filePath;
-            return JsonParser.parseReader(new FileReader(path)).getAsJsonObject();
+            return JsonParser.parseReader(new FileReader("src\\main\\resources\\dungeons\\" + fileName + ".json")).getAsJsonObject();
         } catch (Exception e) {
-            throw new IllegalArgumentException("File does not exist.");
+            try {
+                return JsonParser.parseReader(new FileReader("src\\test\\resources\\dungeons\\" + fileName + ".json")).getAsJsonObject();
+            } catch (Exception r) {
+                throw new IllegalArgumentException("File not found.");
+            }
         }
     }
 
     public DungeonResponse newGame(String dungeonName, String gameMode) throws IllegalArgumentException {
-        return null;
+        if (!getGameModes().contains(gameMode)) {
+            throw new IllegalArgumentException("Game mode does not exist.");
+        }
+        // Cahnge the name
+        JsonObject jsonMap = getJsonFile("play_boulder_interaction");
+
+        // ASSIGN THE MAP STORES BY THE CONTROLLER HERE :: JUST FOR TESTING:
+        GameMap map = new GameMap(gameMode, jsonMap);
+
+        return new DungeonResponse("dungeonId", dungeonName, map.mapToListEntityResponse(jsonMap), new ArrayList<ItemResponse>(), new ArrayList<String>(), "goals");
     }
     
     public DungeonResponse saveGame(String name) throws IllegalArgumentException {
@@ -85,4 +101,5 @@ public class DungeonManiaController {
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
         return null;
     }
+
 }
