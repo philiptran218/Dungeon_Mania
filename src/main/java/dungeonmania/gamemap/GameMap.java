@@ -1,6 +1,7 @@
 package dungeonmania.gamemap;
 
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,8 +11,12 @@ import java.util.Map;
 
 import com.google.gson.*;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
+import dungeonmania.CollectableEntities.*;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
@@ -21,6 +26,7 @@ public class GameMap {
     // multiple maps for one dungeon.
     private Map<Position, List<Entity>> dungeonMap;
     private String gameDifficulty;
+    private String goal;
     private Player player;
     private String mapId;
     private int width;
@@ -91,8 +97,62 @@ public class GameMap {
      * in the designated folder. Also If there is no game difficulty
      * add a field in the json file for game difficulty.
      */
-    public void saveMapAsJson() {
-        // Argument would be a Map<Position, Entity>.
+    public void saveMapAsJson(String name) {
+        // Main object for file
+        JSONObject main = new JSONObject();
+        JSONArray entities = new JSONArray();
+
+        main.put("width", getMapWidth());
+        main.put("height", getMapHeight());
+
+        // Goals:
+        main.put("goal-condition", this.getGoal());
+
+        for (Map.Entry<Position, List<Entity>> entry : this.dungeonMap.entrySet()) {
+            Position p = entry.getKey();
+            if (entry.getValue().size() == 1) {
+                Entity e = entry.getValue().get(0);
+                JSONObject temp = new JSONObject();
+                temp.put("x", p.getX());
+                temp.put("y", p.getY());
+                temp.put("type", e.getType());
+                if (e.getType().equals("key")) {
+                    temp.put("key", ((Key) e).getKeyId());
+                }
+                /*
+                if (e.getType().equals("door")) {
+                    temp.put("key", ((Door) e).getKeyId());
+                }*/
+                entities.put(temp);
+            }
+            if (entry.getValue().size() > 1) {
+                for (Entity e : entry.getValue()) {
+                    JSONObject temp = new JSONObject();
+                    temp.put("x", p.getX());
+                    temp.put("y", p.getY());
+                    temp.put("x", entry.getValue().indexOf(e));
+                    if (e.getType().equals("key")) {
+                        temp.put("key", ((Key) e).getKeyId());
+                    }
+                    /*
+                    if (e.getType().equals("door")) {
+                        temp.put("key", ((Door) e).getKeyId());
+                    }*/
+                    entities.put(temp);
+                }
+            }
+
+        }
+        main.put("entities", entities);
+
+        try {  
+            FileWriter file = new FileWriter(name + ".json");
+            file.write(main.toString(4));
+            file.flush();
+            file.close();
+        } catch (IOException e) {  
+            e.printStackTrace();  
+        }  
         return;
     }
 
@@ -147,6 +207,8 @@ public class GameMap {
      * @return
      */
     public Map<Position, List<Entity>> jsonToMap(JsonObject jsonMap) {
+        // Add goals to the map:
+        this.goal = jsonMap.get("goal-condition").toString();
         // Initialise the map:
         Map<Position, List<Entity>> newMap = createInitialisedMap(jsonMap.get("width").getAsInt(), jsonMap.get("height").getAsInt());
 
@@ -177,6 +239,7 @@ public class GameMap {
         return newMap;
     }
 
+    // Getter and setters:
     public Player getPlayer() {
         return this.player;
     }
@@ -187,5 +250,24 @@ public class GameMap {
 
     public String getMapId() {
         return mapId;
+    }
+
+    public String getGoal() {
+        return goal;
+    }
+
+    public int getMapHeight() {
+        return this.height;
+    }
+
+    public int getMapWidth() {
+        return this.width;
+    }
+
+    public String getDifficulty () {
+        return gameDifficulty;
+    }
+    public static void main(String[] args) {
+        System.out.println("" + System.currentTimeMillis());
     }
 }

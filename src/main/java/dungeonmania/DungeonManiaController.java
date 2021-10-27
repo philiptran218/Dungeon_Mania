@@ -78,18 +78,15 @@ public class DungeonManiaController {
         if (!getGameModes().contains(gameMode)) {
             throw new IllegalArgumentException("Game mode does not exist.");
         }
-        /*
-        if (!dungeons().contains(dungeonName)) {
-            throw new IllegalArgumentException("Dungeon does not exist.");
-        }*/
-        // Create new map:
+        // Set map:
         this.gameMap = new GameMap(gameMode, getJsonFile(dungeonName));
 
-        return new DungeonResponse(gameMap.getMapId(), dungeonName, gameMap.mapToListEntityResponse(), new ArrayList<ItemResponse>(), new ArrayList<String>(), "goals");
+        return new DungeonResponse(gameMap.getMapId(), dungeonName, gameMap.mapToListEntityResponse(), new ArrayList<ItemResponse>(), new ArrayList<String>(), "Goals");
     }
     
     public DungeonResponse saveGame(String name) throws IllegalArgumentException {
-        return null;
+        this.gameMap.saveMapAsJson(name);
+        return new DungeonResponse(gameMap.getMapId(), gameMap.getDifficulty(), gameMap.mapToListEntityResponse(), new ArrayList<ItemResponse>(), new ArrayList<String>(), "Goals");
     }
 
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
@@ -97,7 +94,11 @@ public class DungeonManiaController {
     }
 
     public List<String> allGames() {
-        return new ArrayList<>();
+        try {
+            return FileLoader.listFileNamesInResourceDirectory("/saved_games");
+        } catch (IOException e) {
+            return new ArrayList<>();
+        }
     }
 
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
@@ -110,7 +111,7 @@ public class DungeonManiaController {
         // Move the player:
         gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
 
-        return new DungeonResponse("hello", "advanced", gameMap.mapToListEntityResponse(), new ArrayList<ItemResponse>(), new ArrayList<String>(), "goals");
+        return new DungeonResponse(gameMap.getMapId(), gameMap.getDifficulty(), gameMap.mapToListEntityResponse(), new ArrayList<ItemResponse>(), new ArrayList<String>(), "Goals");
     }
 
     public DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {
@@ -121,4 +122,8 @@ public class DungeonManiaController {
         return null;
     }
 
+    public static void main(String[] args) {
+        DungeonManiaController d = new DungeonManiaController();
+        System.out.println(d.allGames());
+    }
 }
