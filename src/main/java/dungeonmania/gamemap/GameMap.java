@@ -1,5 +1,6 @@
 package dungeonmania.gamemap;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -32,6 +33,9 @@ public class GameMap {
     private int width;
     private int height;
 
+    // Current path of this saved map:
+    private String savedPath;
+
     // ******************************************
     // Need to make varibales to game state here:
     // GameState currState;
@@ -50,6 +54,7 @@ public class GameMap {
         // Given the json map, we would convert it to a Map<Position, Entity List> 
         // and set dungeonMap to this map.
         this.mapId = "" + System.currentTimeMillis();
+        this.savedPath = null;
     }
 
     /**
@@ -98,6 +103,28 @@ public class GameMap {
      * add a field in the json file for game difficulty.
      */
     public void saveMapAsJson(String name) {
+        System.out.println(savedPath);
+        if (savedPath == null) {
+            savedPath = "src/main/resources/saved_games/" + name + ".json"; 
+        } else {
+            // Delete the file there first:
+            File file = new File(savedPath);
+            file.delete();
+            // Update file path:
+            savedPath = "src/main/resources/saved_games/" + name + ".json"; 
+        }
+        try {  
+            FileWriter file = new FileWriter("src/main/resources/saved_games/" + name + ".json");
+            file.write(mapToJson().toString(4));
+            file.flush();
+            file.close();
+        } catch (IOException e) {  
+            e.printStackTrace();  
+        }  
+        return;
+    }
+
+    public JSONObject mapToJson() {
         // Main object for file
         JSONObject main = new JSONObject();
         JSONArray entities = new JSONArray();
@@ -144,16 +171,8 @@ public class GameMap {
 
         }
         main.put("entities", entities);
-
-        try {  
-            FileWriter file = new FileWriter(name + ".json");
-            file.write(main.toString(4));
-            file.flush();
-            file.close();
-        } catch (IOException e) {  
-            e.printStackTrace();  
-        }  
-        return;
+        
+        return main;
     }
 
     /**
@@ -267,7 +286,5 @@ public class GameMap {
     public String getDifficulty () {
         return gameDifficulty;
     }
-    public static void main(String[] args) {
-        System.out.println("" + System.currentTimeMillis());
-    }
+
 }
