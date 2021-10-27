@@ -1,8 +1,5 @@
 package dungeonmania;
 
-
-import java.lang.invoke.SwitchPoint;
-
 import com.google.gson.JsonElement;
 
 import dungeonmania.CollectableEntities.*;
@@ -13,7 +10,6 @@ import dungeonmania.util.Position;
 public class EntityFactory {
     public static Entity getEntityObject(String id, String type, Position pos, JsonElement keyId) {
         switch (type) {
-            
             case "wall": 
                 return new Wall(id, type, pos);
             case "exit": 
@@ -54,14 +50,14 @@ public class EntityFactory {
                 return new Sword(id, type, pos);
             case "armour": 
                 return new Armour(id, type, pos);
-            case "one_ring": 
+            //case "one_ring": 
                 //return new TheOneRing(id, type, pos);
             case "bow": 
                 return new Bow(id, type, pos);
             case "shield": 
                 return new Shield(id, type, pos);
             case "player": 
-                //return new Player(id, type, pos);
+                return new Player(id, type, pos);
             default: 
                 return null;
         }
