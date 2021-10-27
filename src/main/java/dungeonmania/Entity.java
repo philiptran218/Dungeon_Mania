@@ -31,7 +31,6 @@ public abstract class Entity {
     }
 
     public String getType() {
-        System.out.println(type);
         return this.type;
     }
 

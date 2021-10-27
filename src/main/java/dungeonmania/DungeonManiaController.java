@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -69,7 +68,7 @@ public class DungeonManiaController {
             }
         }
     }
-
+    
     public DungeonResponse newGame(String dungeonName, String gameMode) throws IllegalArgumentException {
         if (!getGameModes().contains(gameMode)) {
             throw new IllegalArgumentException("Game mode does not exist.");
@@ -81,7 +80,6 @@ public class DungeonManiaController {
         this.gameMap = new GameMap(gameMode, getJsonFile(dungeonName));
 
         String unixTime = "" + System.currentTimeMillis();
-
         return new DungeonResponse(unixTime, dungeonName, gameMap.mapToListEntityResponse(), new ArrayList<ItemResponse>(), new ArrayList<String>(), "goals");
     }
     

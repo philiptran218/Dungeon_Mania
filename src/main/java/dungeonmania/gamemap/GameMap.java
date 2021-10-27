@@ -127,6 +127,7 @@ public class GameMap {
             for (Entity e : currList) {
                 if (e.getPos().getLayer() == i) {
                     orderList.add(e);
+                    return orderList;
                 }
             }
         }
@@ -158,13 +159,6 @@ public class GameMap {
             // Create the entity object, by factory method:
             Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, obj.get("key"));
             Position insertPosition = new Position(pos.getX(), pos.getY());
-
-            if (obj.get("type").getAsString().equals("player")) {
-                System.out.println("HELLO");
-                System.out.println(type);
-                System.out.println(i);
-                System.out.println(temp.getType());
-            }
             
             // Before adding the element check the list:
             newMap.put(insertPosition, orderLayer(newMap.get(insertPosition), temp));
