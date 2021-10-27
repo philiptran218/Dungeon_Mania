@@ -14,7 +14,6 @@ public abstract class MovingEntity extends Entity{
     private double health;
     private double attackDamage;
     private Position playerLocation;
-    private String type;
 
     /**
      * 
@@ -73,14 +72,6 @@ public abstract class MovingEntity extends Entity{
 
     public void setPlayerLocation(Position playerLocation) {
         this.playerLocation = playerLocation;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
 }
