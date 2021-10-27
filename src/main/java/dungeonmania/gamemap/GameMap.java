@@ -12,14 +12,13 @@ import com.google.gson.*;
 
 import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
-import dungeonmania.MovingEntities.Spider;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
 public class GameMap {
     // Need to figure something to stand in for entity, or we might need 
     // multiple maps for one dungeon.
-    private Map<Position, List<Entity>> dungeonMap = new HashMap<>();
+    private Map<Position, List<Entity>> dungeonMap;
     private String gameDifficulty;
 
     // ******************************************
@@ -36,7 +35,7 @@ public class GameMap {
     public GameMap(String difficulty, JsonObject jsonMap) {
         // THIS IS FOR A NEW GAME 
         this.gameDifficulty = difficulty;
-
+        this.dungeonMap = jsonToMap(jsonMap);
         // Given the json map, we would convert it to a Map<Position, Entity List> 
         // and set dungeonMap to this map.
     }
@@ -57,23 +56,28 @@ public class GameMap {
      * returns all entities on the map as a list of entity response.
      * @return List of Entity Response
      */
-    public List<EntityResponse> mapToListEntityResponse(JsonObject map) {
+    public List<EntityResponse> mapToListEntityResponse() {
         List<EntityResponse> entityList = new ArrayList<EntityResponse>();
-        Integer i = 0;
-        for (JsonElement entity : map.getAsJsonArray("entities")) {
-            JsonObject obj = entity.getAsJsonObject();
-            Position pos;
-            // Check if there is a third layer:
-            if (obj.get("layer") == null) {
-                pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
-            } else {
-                pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt(), obj.get("layer").getAsInt());
+
+        for (Map.Entry<Position, List<Entity>> entry : this.dungeonMap.entrySet()) {
+            // For each position add the entity to the response list:
+            // First check if it is one element:
+            if (entry.getValue().size() == 1) {
+                Entity e = entry.getValue().get(0);
+                entityList.add(new EntityResponse(e.getId(), e.getType(), e.getPos(), false));
+            } 
+            
+            if (entry.getValue().size() > 1) {
+                int layer = 0;
+                for (Entity e : entry.getValue()) {
+                    int x = e.getPos().getX();
+                    int y = e.getPos().getY();
+                    entityList.add(new EntityResponse(e.getId(), e.getType(), new Position(x, y, layer), false));
+                    layer++;
+                }
             }
-            String type = obj.get("type").getAsString();
-            // Need additional checking here to see if the entity can interact with the frontend.
-            entityList.add(new EntityResponse(i.toString(), type, pos, false));
-            i++;
         }
+
         return entityList;
     }
     
@@ -138,12 +142,11 @@ public class GameMap {
         // Initialise the map:
         Map<Position, List<Entity>> newMap = createInitialisedMap(jsonMap.get("width").getAsInt(), jsonMap.get("height").getAsInt());
 
+        Integer i = 0;
         for (JsonElement entity : jsonMap.getAsJsonArray("entities")) {
             // Get all attributes:
             JsonObject obj = entity.getAsJsonObject();
-            
             String type = obj.get("type").getAsString();
-            String id = obj.get("id").getAsString();
             Position pos;
 
             if(obj.get("layer") == null) {
@@ -153,13 +156,21 @@ public class GameMap {
             }
 
             // Create the entity object, by factory method:
-            Entity temp = EntityFactory.getEntityObject(id, type, pos, obj.get("key"));
-            Position insertPosition = new Position(temp.getPos().getX(), temp.getPos().getY());
+            Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, obj.get("key"));
+            Position insertPosition = new Position(pos.getX(), pos.getY());
+
+            if (obj.get("type").getAsString().equals("player")) {
+                System.out.println("HELLO");
+                System.out.println(type);
+                System.out.println(i);
+                System.out.println(temp.getType());
+            }
             
             // Before adding the element check the list:
             newMap.put(insertPosition, orderLayer(newMap.get(insertPosition), temp));
+            i++;
         }
-        return null;
+        return newMap;
     }
-    
+
 }
