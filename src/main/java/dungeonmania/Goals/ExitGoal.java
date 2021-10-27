@@ -6,4 +6,6 @@ public class ExitGoal implements GoalInterface {
     public boolean isGoalComplete(GameMap game) {
         return true;
     }
+    public void add(GoalInterface goal) {
+    }
 }

@@ -10,8 +10,15 @@ import java.util.Map;
 
 import com.google.gson.*;
 
+import org.json.JSONObject;
+
 import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
+import dungeonmania.Goals.AndGoal;
+import dungeonmania.Goals.CompositeGoal;
+import dungeonmania.Goals.GoalFactory;
+import dungeonmania.Goals.GoalInterface;
+import dungeonmania.Goals.OrGoal;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
@@ -112,4 +119,24 @@ public class GameMap {
         return null;
     }
     
+    /**
+     * Convert JsonObject containing goals into a composite pattern
+     */
+    public GoalInterface goalJsonToPattern(JsonObject jsonGoal) {
+        if (jsonGoal.get("goal").getAsString().equals("AND")) {
+            GoalInterface goal = new AndGoal();
+            for (JsonElement entity : jsonGoal.getAsJsonArray("subgoals")) {
+                goal.add(goalJsonToPattern(entity.getAsJsonObject()));
+            }
+            return goal;
+        } else if (jsonGoal.get("goal").getAsString().equals("OR")) {
+            GoalInterface goal = new OrGoal();
+            for (JsonElement entity : jsonGoal.getAsJsonArray("subgoals")) {
+                goal.add(goalJsonToPattern(entity.getAsJsonObject()));
+            }
+            return goal;
+        } else {
+            return GoalFactory.getGoal(jsonGoal.get("goal").getAsString());
+        }
+    }
 }

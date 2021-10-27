@@ -1,15 +1,43 @@
 package dungeonmania;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.google.gson.JsonObject;
 
 import org.junit.jupiter.api.Test;
 
+import dungeonmania.response.models.DungeonResponse;
+import dungeonmania.response.models.EntityResponse;
+import dungeonmania.util.Direction;
+import dungeonmania.util.Position;
+
 public class GoalTest {
+    // Gets the id of entity on a position:
+    public String getEntityId(Position pos, DungeonResponse response) {
+        for (EntityResponse entity : response.getEntities()) {
+            if (entity.getPosition().equals(pos) && entity.getPosition().getLayer() == pos.getLayer()) {
+                return entity.getId();
+            }
+        }
+        return null;
+    }
     /**
      * Test getting to exit
      */
     @Test
     public void ExitGoal() {
+         // Create controller
+         DungeonManiaController controller = new DungeonManiaController();
+         // Create new game
+         DungeonResponse createNew = controller.newGame("basic_player_move", "Peaceful");
+         // Get id of player:
+         String playerId = getEntityId(new Position(1, 1), createNew);
+         for (int i = 0; i < 3; i++) {
+            controller.tick(null, Direction.RIGHT);
+         }
     }
 
     /**
