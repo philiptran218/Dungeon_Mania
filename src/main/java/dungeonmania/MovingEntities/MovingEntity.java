@@ -73,5 +73,5 @@ public abstract class MovingEntity extends Entity{
     public void setPlayerLocation(Position playerLocation) {
         this.playerLocation = playerLocation;
     }
-
+    
 }
