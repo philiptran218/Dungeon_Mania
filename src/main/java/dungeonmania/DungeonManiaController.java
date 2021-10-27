@@ -58,7 +58,7 @@ public class DungeonManiaController {
             return JsonParser.parseReader(new FileReader("src\\main\\resources\\dungeons\\" + fileName + ".json")).getAsJsonObject();
         } catch (Exception e) {
             try {
-                return JsonParser.parseReader(new FileReader("src\\test\\java\\dungeonmania\\json_test_files\\" + fileName + ".json")).getAsJsonObject();
+                return JsonParser.parseReader(new FileReader("src\\test\\\\resources\\dungeons\\" + fileName + ".json")).getAsJsonObject();
             } catch (Exception r) {
                 throw new IllegalArgumentException("File not found.");
             }
@@ -100,5 +100,9 @@ public class DungeonManiaController {
 
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
         return null;
+    }
+    public static void main(String[] args) {
+        DungeonManiaController c = new DungeonManiaController();
+        System.out.println(c.getJsonFile("file1"));
     }
 }
