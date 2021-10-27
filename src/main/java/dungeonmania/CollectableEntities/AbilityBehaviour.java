@@ -4,5 +4,5 @@ import dungeonmania.MovingEntities.Player;
 
 public interface AbilityBehaviour {
 
-    public void ability(Player player);
+    public void ability();
 }

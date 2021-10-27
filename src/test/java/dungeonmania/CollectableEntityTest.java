@@ -18,7 +18,7 @@ public class CollectableEntityTest {
     @Test
     public void testCollectablePickup() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        assertDoesNotThrow(() -> newDungeon.newGame("advanced", "Standard"));
+        assertDoesNotThrow(() -> newDungeon.newGame("collectable", "Peaceful"));
 
         // Create a new player
         // Create the different CollectableEntities (place them at different positions)
