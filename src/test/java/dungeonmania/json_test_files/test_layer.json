@@ -1,0 +1,23 @@
+
+{
+    "entities": [
+      {
+        "x": 0,
+        "y": 0,
+        "layer": 3,
+        "type": "wall"
+      },
+      {
+        "x": 1,
+        "y": 1,
+        "layer": 3,
+        "type": "wall"
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "layer": 3,
+        "type": "wall"
+      }
+    ]
+}
