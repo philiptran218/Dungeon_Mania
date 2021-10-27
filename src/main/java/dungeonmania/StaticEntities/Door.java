@@ -9,7 +9,6 @@ public class Door extends StaticEntity {
     public Door(String id, String type, Position pos) {
         super(id, type, pos);
         super.setCanStandOn(false);
-        super.setType("Door");
     }
 
     public void unlock(int key) {

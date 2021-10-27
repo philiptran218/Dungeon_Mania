@@ -16,7 +16,6 @@ public class ZombieToastSpawner extends StaticEntity {
     public ZombieToastSpawner(String id, String type, Position pos) {
         super(id, type, pos);
         super.setCanStandOn(false);
-        super.setType("ZombieToastSpawner");
         hardState = new HardState();
         standardState = new StandardState();
     }

@@ -11,7 +11,6 @@ public class Portal extends StaticEntity {
     public Portal(String id, String type, Position pos) {
         super(id, type, pos);
         super.setCanStandOn(true);
-        super.setType("Portal");
     }
     /**
      * Getter for teleportLocation
