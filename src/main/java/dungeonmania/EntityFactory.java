@@ -1,12 +1,16 @@
 package dungeonmania;
 
 
+import com.google.gson.JsonElement;
+
+import dungeonmania.CollectableEntities.*;
+import dungeonmania.MovingEntities.*;
 import dungeonmania.util.Position;
 
 public class EntityFactory {
-    public static Entity getEntityObject(String type, Position pos) {
-        /*
+    public static Entity getEntityObject(String id, String type, Position pos, JsonElement keyId) {
         switch (type) {
+            /*
             case "wall": 
                 return new Spider(pos);
             case "exit": 
@@ -21,44 +25,44 @@ public class EntityFactory {
                 return new Wall(position, type);
             case "zombie_toast_spawner": 
                 return new Wall(position, type);
+            */
             case "spider": 
-                return new Wall(position, type);
+                return new Spider(id, type, pos);
             case "zombie_toast": 
-                return new Wall(position, type);
+                return new ZombieToast(id, type, pos);
             case "mercenary": 
-                return new Mercenary(position, type);
+                return new Mercenary(id, type, pos);
             case "treasure": 
-                return new Wall(position, type);
-            case "key": 
-                return new Wall(position, type);
+                return new Treasure(id, type, pos);
             case "health_potion": 
-                return new Wall(position, type);
+                return new HealthPotion(id, type, pos);
+            case "key":
+                return new Key(id, type, pos, keyId.getAsInt());
             case "invincibility_potion": 
-                return new Wall(position, type);
+                return new InvincibilityPotion(id, type, pos);
             case "invisibility_potion": 
-                return new Wall(position, type);
+                return new InvisibilityPotion(id, type, pos);
             case "wood": 
-                return new Wall(position, type);
+                return new Wood(id, type, pos);
             case "arrow": 
-                return new Wall(position, type);
+                return new Arrow(id, type, pos);
             case "bomb": 
-                return new Wall(position, type);
+                return new Bomb(id, type, pos);
             case "sword": 
-                return new Wall(position, type);
+                return new Sword(id, type, pos);
             case "armour": 
-                return new Wall(position, type);
+                return new Armour(id, type, pos);
             case "one_ring": 
-                return new Wall(position, type);
+                //return new TheOneRing(id, type, pos);
             case "bow": 
-                return new Wall(position, type);
+                return new Bow(id, type, pos);
             case "shield": 
-                return new Wall(position, type);
+                return new Shield(id, type, pos);
             case "player": 
-                return new Wall(position, type);
+                //return new Player(id, type, pos);
             default: 
                 return null;
         }
-        */
-        return null;
     }
+
 }

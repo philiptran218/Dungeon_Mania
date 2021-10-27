@@ -9,7 +9,7 @@ public abstract class Entity {
 
     public Entity (String id, String type, Position pos) {
         this.id = id;
-        this.pos = new Position(pos.getX(), pos.getY());
+        this.pos = pos;
         this.type = type;
     }
 
