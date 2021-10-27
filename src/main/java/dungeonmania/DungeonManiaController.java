@@ -1,5 +1,6 @@
 package dungeonmania;
 
+import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.gamemap.GameMap;
@@ -35,6 +36,10 @@ public class DungeonManiaController {
 
     public List<String> getGameModes() {
         return Arrays.asList("Standard", "Peaceful", "Hard");
+    }
+
+    public List<String> getUsableItems() {
+        return Arrays.asList("bomb", "health_potion", "invincibility_potion", "invisibility_potion", null);
     }
 
     /**
@@ -73,9 +78,10 @@ public class DungeonManiaController {
         if (!getGameModes().contains(gameMode)) {
             throw new IllegalArgumentException("Game mode does not exist.");
         }
+        /*
         if (!dungeons().contains(dungeonName)) {
             throw new IllegalArgumentException("Dungeon does not exist.");
-        }
+        }*/
         // Create new map:
         this.gameMap = new GameMap(gameMode, getJsonFile(dungeonName));
 
@@ -96,7 +102,16 @@ public class DungeonManiaController {
     }
 
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
-        return null;
+        if (!getUsableItems().contains(itemUsed)) {
+            throw new IllegalArgumentException("Invalid item used.");
+        }
+        // Check inventory in item.
+        // ***********************
+        
+        // Move the player:
+        gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
+
+        return new DungeonResponse("hello", "advanced", gameMap.mapToListEntityResponse(), new ArrayList<ItemResponse>(), new ArrayList<String>(), "goals");
     }
 
     public DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {

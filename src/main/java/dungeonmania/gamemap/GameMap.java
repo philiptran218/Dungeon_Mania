@@ -12,6 +12,7 @@ import com.google.gson.*;
 
 import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
+import dungeonmania.MovingEntities.Player;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
@@ -20,6 +21,10 @@ public class GameMap {
     // multiple maps for one dungeon.
     private Map<Position, List<Entity>> dungeonMap;
     private String gameDifficulty;
+    private Player player;
+    private String mapId;
+    private int width;
+    private int height;
 
     // ******************************************
     // Need to make varibales to game state here:
@@ -38,6 +43,7 @@ public class GameMap {
         this.dungeonMap = jsonToMap(jsonMap);
         // Given the json map, we would convert it to a Map<Position, Entity List> 
         // and set dungeonMap to this map.
+
     }
 
     /**
@@ -66,7 +72,7 @@ public class GameMap {
                 Entity e = entry.getValue().get(0);
                 entityList.add(new EntityResponse(e.getId(), e.getType(), e.getPos(), false));
             } 
-            
+            // Check for stacking:
             if (entry.getValue().size() > 1) {
                 int layer = 0;
                 for (Entity e : entry.getValue()) {
@@ -77,7 +83,6 @@ public class GameMap {
                 }
             }
         }
-
         return entityList;
     }
     
@@ -95,6 +100,8 @@ public class GameMap {
      * Initialises the map given the width and the length with empty lists.
      */
     public Map<Position, List<Entity>> createInitialisedMap(int width, int height) {
+        this.width = width;
+        this.height = height;
         Map<Position, List<Entity>> map = new HashMap<>();
         for (int i = 0; i < width; i++) { // width
             for (int j = 0; j < height; j++) { // height
@@ -159,6 +166,9 @@ public class GameMap {
             // Create the entity object, by factory method:
             Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, obj.get("key"));
             Position insertPosition = new Position(pos.getX(), pos.getY());
+            if (type.equals("player")) {
+                this.player = (Player) temp;
+            }
             
             // Before adding the element check the list:
             newMap.put(insertPosition, orderLayer(newMap.get(insertPosition), temp));
@@ -167,4 +177,11 @@ public class GameMap {
         return newMap;
     }
 
+    public Player getPlayer() {
+        return this.player;
+    }
+
+    public Map<Position, List<Entity>> getMap() {
+        return this.dungeonMap;
+    }
 }
