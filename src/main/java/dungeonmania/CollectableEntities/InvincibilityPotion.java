@@ -32,8 +32,7 @@ public class InvincibilityPotion extends Potion implements AbilityBehaviour {
      * Activates the ability of the potion.
      * Called when the player wants to consume the potion.
      */
-    public void ability(Player plyr) {
-        setPlayer(plyr);
+    public void ability() {
         setIsActive(true);
         
         // Have to change state of movement here for enemies
