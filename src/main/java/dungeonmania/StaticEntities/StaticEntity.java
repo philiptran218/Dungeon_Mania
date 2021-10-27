@@ -1,15 +1,13 @@
 package dungeonmania.StaticEntities;
 
-public abstract class StaticEntity {
+import dungeonmania.Entity;
+import dungeonmania.util.Position;
+
+public abstract class StaticEntity extends Entity {
     private boolean canStandOn;
-    private String type;
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public StaticEntity(String id, String type, Position pos) {
+        super(id, type, pos);
     }
 
     public boolean getCanStandOn() {

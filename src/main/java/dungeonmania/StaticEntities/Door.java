@@ -1,10 +1,13 @@
 package dungeonmania.StaticEntities;
 
+import dungeonmania.util.Position;
+
 public class Door extends StaticEntity {
     private int keyId;
     private boolean locked = true;
 
-    public Door() {
+    public Door(String id, String type, Position pos) {
+        super(id, type, pos);
         super.setCanStandOn(false);
         super.setType("Door");
     }

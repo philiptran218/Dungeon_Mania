@@ -1,8 +1,9 @@
 package dungeonmania.StaticEntities;
 
-import dungeonmania.GameState;
-import dungeonmania.HardState;
-import dungeonmania.StandardState;
+import dungeonmania.gamemap.GameState;
+import dungeonmania.gamemap.HardState;
+import dungeonmania.gamemap.StandardState;
+import dungeonmania.util.Position;
 
 public class ZombieToastSpawner extends StaticEntity {
     private int tickProgress = 0;
@@ -12,7 +13,8 @@ public class ZombieToastSpawner extends StaticEntity {
     /**
      * Constructor for ZombieToastSpawner
      */
-    public ZombieToastSpawner() {
+    public ZombieToastSpawner(String id, String type, Position pos) {
+        super(id, type, pos);
         super.setCanStandOn(false);
         super.setType("ZombieToastSpawner");
         hardState = new HardState();
