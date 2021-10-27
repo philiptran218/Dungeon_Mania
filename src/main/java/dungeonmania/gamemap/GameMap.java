@@ -1,4 +1,4 @@
-package dungeonmania;
+package dungeonmania.gamemap;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -10,7 +10,8 @@ import java.util.Map;
 
 import com.google.gson.*;
 
-import dungeonmania.MovingEntities.Spider;
+import dungeonmania.Entity;
+import dungeonmania.EntityFactory;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
@@ -85,40 +86,6 @@ public class GameMap {
         return;
     }
 
-    public List<Entity> insertEntityLayer(List<Entity> entityList, Entity entity) {
-        // Empty list or if entity does not have a layer
-        if (entityList.isEmpty()) {
-            entityList.add(entity);
-            return entityList;
-        }
-        
-        for (Entity i : entityList) {
-            // Layer of the entity I am inserting
-            int srcLayer = entity.getPos().getLayer();
-            // Layer of entity I am comparing to
-            int dstLayer = i.getPos().getLayer();
-
-            if (srcLayer < dstLayer) {
-                entityList.add(entityList.indexOf(i), entity);
-                break;
-            } 
-
-            // Check for last:
-            int listSize = entityList.size() - 1;
-            if (entityList.get(listSize).getPos().getLayer() < srcLayer) {
-                entityList.add(entity);
-                break;
-            }
-            // Get index after the next.
-            int next = entityList.indexOf(i) + 1;
-            if (srcLayer > dstLayer && srcLayer < entityList.get(next).getPos().getLayer()){
-                entityList.add(next, entity);
-                break;
-            }
-        }
-        return entityList;
-    }
-
     /**
      * Takes in a json object, and turns it into a Map<Position, Entity>
      * and returns it.
@@ -140,11 +107,9 @@ public class GameMap {
                 pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt(), obj.get("layer").getAsInt());
             }
             // Update the map with new entity
-            newMap.put(pos, insertEntityLayer(newMap.get(pos), EntityFactory.getEntityObject(type, pos)));
+            // newMap.put(pos, null);
         }
-        return newMap;
+        return null;
     }
-    public static void main(String[] args) {
-        
-    }
+    
 }

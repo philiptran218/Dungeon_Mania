@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
