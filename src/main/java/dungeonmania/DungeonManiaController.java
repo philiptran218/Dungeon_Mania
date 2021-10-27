@@ -1,11 +1,14 @@
 package dungeonmania;
 
+import dungeonmania.MovingEntities.Player;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.DungeonResponse;
+import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
+import dungeonmania.util.Position;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -13,11 +16,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class DungeonManiaController {
+    private GameMap gameMap;
+
     public DungeonManiaController() {
     }
 
@@ -64,18 +68,19 @@ public class DungeonManiaController {
             }
         }
     }
-
+    
     public DungeonResponse newGame(String dungeonName, String gameMode) throws IllegalArgumentException {
         if (!getGameModes().contains(gameMode)) {
             throw new IllegalArgumentException("Game mode does not exist.");
         }
-        // Cahnge the name
-        JsonObject jsonMap = getJsonFile("play_boulder_interaction");
+        if (!dungeons().contains(dungeonName)) {
+            throw new IllegalArgumentException("Dungeon does not exist.");
+        }
+        // Create new map:
+        this.gameMap = new GameMap(gameMode, getJsonFile(dungeonName));
 
-        // ASSIGN THE MAP STORES BY THE CONTROLLER HERE :: JUST FOR TESTING:
-        GameMap map = new GameMap(gameMode, jsonMap);
-
-        return new DungeonResponse("dungeonId", dungeonName, map.mapToListEntityResponse(jsonMap), new ArrayList<ItemResponse>(), new ArrayList<String>(), "goals");
+        String unixTime = "" + System.currentTimeMillis();
+        return new DungeonResponse(unixTime, dungeonName, gameMap.mapToListEntityResponse(), new ArrayList<ItemResponse>(), new ArrayList<String>(), "goals");
     }
     
     public DungeonResponse saveGame(String name) throws IllegalArgumentException {
