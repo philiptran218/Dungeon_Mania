@@ -1,31 +1,29 @@
 package dungeonmania;
 
-
 import com.google.gson.JsonElement;
 
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.MovingEntities.*;
+import dungeonmania.StaticEntities.*;
 import dungeonmania.util.Position;
 
 public class EntityFactory {
     public static Entity getEntityObject(String id, String type, Position pos, JsonElement keyId) {
         switch (type) {
-            /*
             case "wall": 
-                return new Spider(pos);
+                return new Wall(id, type, pos);
             case "exit": 
-                return new Wall(position, type);
+                return new Exit(id, type, pos);
             case "boulder": 
-                return new Wall(position, type);     
+                return new Boulder(id, type, pos);     
             case "switch": 
-                return new Wall(position, type);
+                return new FloorSwitch(id, type, pos);
             case "door": 
-                return new Wall(position, type);
+                return new Door(id, type, pos);
             case "portal": 
-                return new Wall(position, type);
+                return new Portal(id, type, pos);
             case "zombie_toast_spawner": 
-                return new Wall(position, type);
-            */
+                return new ZombieToastSpawner(id, type, pos);
             case "spider": 
                 return new Spider(id, type, pos);
             case "zombie_toast": 
@@ -52,14 +50,14 @@ public class EntityFactory {
                 return new Sword(id, type, pos);
             case "armour": 
                 return new Armour(id, type, pos);
-            case "one_ring": 
+            //case "one_ring": 
                 //return new TheOneRing(id, type, pos);
             case "bow": 
                 return new Bow(id, type, pos);
             case "shield": 
                 return new Shield(id, type, pos);
             case "player": 
-                //return new Player(id, type, pos);
+                return new Player(id, type, pos);
             default: 
                 return null;
         }

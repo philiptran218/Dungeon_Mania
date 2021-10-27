@@ -15,7 +15,7 @@ public abstract class Entity {
 
     // Getters and Setters
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(String id) {
@@ -31,7 +31,7 @@ public abstract class Entity {
     }
 
     public String getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(String type) {
