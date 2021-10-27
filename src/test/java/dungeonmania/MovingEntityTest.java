@@ -149,4 +149,8 @@ public class MovingEntityTest {
         assertTrue(isEntityOnTile(temp, new Position(1, 3), playerId));
     }
 
+    // ************************************************************ \\ 
+    //               Test for Spider Basic Movements
+    // ************************************************************ \\ 
+
 }
