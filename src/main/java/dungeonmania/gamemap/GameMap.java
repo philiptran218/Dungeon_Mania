@@ -12,6 +12,7 @@ import com.google.gson.*;
 
 import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
+import dungeonmania.MovingEntities.Spider;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
@@ -87,27 +88,76 @@ public class GameMap {
     }
 
     /**
+     * Initialises the map given the width and the length with empty lists.
+     */
+    public Map<Position, List<Entity>> createInitialisedMap(int width, int height) {
+        Map<Position, List<Entity>> map = new HashMap<>();
+        for (int i = 0; i < width; i++) { // width
+            for (int j = 0; j < height; j++) { // height
+                map.put(new Position(i, j), new ArrayList<Entity>());
+            }
+        }
+        return map;
+    }
+
+    /**
+     * This function adds given entity to the given list taking into account the order
+     * of layer.
+     * @param currList
+     * @param insert
+     * @return An ordered list of entities in terms of layer.
+     */
+    public List<Entity> orderLayer(List<Entity> currList, Entity insert) {
+        List<Entity> orderList = new ArrayList<>();
+        // Create an integer list:
+        List<Integer> intList = new ArrayList<>();
+        currList.add(insert);
+        // Add all layer ints to the list;
+        for (Entity e : currList) {
+            intList.add(e.getPos().getLayer());
+        }
+        // Sort the curr list:
+        Collections.sort(intList);
+
+        for (int i : intList) {
+            for (Entity e : currList) {
+                if (e.getPos().getLayer() == i) {
+                    orderList.add(e);
+                }
+            }
+        }
+        return orderList;
+    }
+
+    /**
      * Takes in a json object, and turns it into a Map<Position, Entity>
      * and returns it.
      * @return
      */
     public Map<Position, List<Entity>> jsonToMap(JsonObject jsonMap) {
-        // Create map:
-        Map<Position, List<Entity>> newMap = new HashMap<>();
+        // Initialise the map:
+        Map<Position, List<Entity>> newMap = createInitialisedMap(jsonMap.get("width").getAsInt(), jsonMap.get("height").getAsInt());
 
         for (JsonElement entity : jsonMap.getAsJsonArray("entities")) {
-            Position pos = new Position(entity.getAsJsonObject().get("x").getAsInt(), entity.getAsJsonObject().get("y").getAsInt());
-            String type = entity.getAsJsonObject().get("type").getAsString();
-            EntityFactory.getEntityObject(type, pos);
+            // Get all attributes:
             JsonObject obj = entity.getAsJsonObject();
-            // Check if there is a third layer:
-            if (obj.get("layer") == null) {
+            
+            String type = obj.get("type").getAsString();
+            String id = obj.get("id").getAsString();
+            Position pos;
+
+            if(obj.get("layer") == null) {
                 pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
             } else {
                 pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt(), obj.get("layer").getAsInt());
             }
-            // Update the map with new entity
-            // newMap.put(pos, null);
+
+            // Create the entity object, by factory method:
+            Entity temp = EntityFactory.getEntityObject(id, type, pos, obj.get("key"));
+            Position insertPosition = new Position(temp.getPos().getX(), temp.getPos().getY());
+            
+            // Before adding the element check the list:
+            newMap.put(insertPosition, orderLayer(newMap.get(insertPosition), temp));
         }
         return null;
     }
