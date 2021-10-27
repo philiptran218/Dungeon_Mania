@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import dungeonmania.response.models.*;
+import dungeonmania.util.Direction;
 
 public class CollectableEntityTest {
 
@@ -18,19 +19,35 @@ public class CollectableEntityTest {
     @Test
     public void testCollectablePickup() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        assertDoesNotThrow(() -> newDungeon.newGame("collectable", "Peaceful"));
+        newDungeon.newGame("player_pickup_item", "Peaceful");
+        List<ItemResponse> inv;
+        
+        inv = newDungeon.tick(null, Direction.RIGHT).getInventory();
+        assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("wood")));
 
-        // Create a new player
-        // Create the different CollectableEntities (place them at different positions)
-        // Get player to move to each entity to collect them
-        // Assert that the entity is inside the player's inventory
+        inv = newDungeon.tick(null, Direction.RIGHT).getInventory();
+        assertTrue(inv.stream().anyMatch(itm -> itm.getId().equals("arrow")));
 
-        // This is just a template to check if the entity is in inventory
-        // Once functions have been completed, fill out the entries!!!
-        /*
-        List<ItemResponse> inv = newDungeon.tick(null, PUT_DIRECTION_HERE).getInventory();
-        assertTrue(inv.stream().anyMatch(itm -> itm.getId().equals(PUT_ID_HERE)));
-        */
+        inv = newDungeon.tick(null, Direction.RIGHT).getInventory();
+        assertTrue(inv.stream().anyMatch(itm -> itm.getId().equals("treasure")));
+
+        inv = newDungeon.tick(null, Direction.UP).getInventory();
+        assertTrue(inv.stream().anyMatch(itm -> itm.getId().equals("key")));
+
+        inv = newDungeon.tick(null, Direction.LEFT).getInventory();
+        assertTrue(inv.stream().anyMatch(itm -> itm.getId().equals("sword")));
+
+        inv = newDungeon.tick(null, Direction.LEFT).getInventory();
+        assertTrue(inv.stream().anyMatch(itm -> itm.getId().equals("health_potion")));
+
+        inv = newDungeon.tick(null, Direction.LEFT).getInventory();
+        assertTrue(inv.stream().anyMatch(itm -> itm.getId().equals("invincibility_potion")));
+
+        inv = newDungeon.tick(null, Direction.UP).getInventory();
+        assertTrue(inv.stream().anyMatch(itm -> itm.getId().equals("invisibility_potion")));
+
+        inv = newDungeon.tick(null, Direction.RIGHT).getInventory();
+        assertTrue(inv.stream().anyMatch(itm -> itm.getId().equals("bomb")));
     }
 
     // Test 2: check that armour/oneRing is obtained from enemy after battle
