@@ -1,7 +1,9 @@
 package dungeonmania;
 
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.DungeonResponse;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
 
@@ -45,17 +47,21 @@ public class DungeonManiaController {
     }
 
     /**
-     * Given a file path, it will get the json file and return it as
-     * a json object.
+     * Given a file name it will go to the source folder and locate dungeon map,
+     * and if not found it will go into the test tolder to locate the test json 
+     * file and return it as a json object.
      * @return Dungeon Map as JsonObject
      */
-    public JsonObject getJsonFile(String filePath) {
+    public JsonObject getJsonFile(String fileName) {
         // "src\\main\\resources\\dungeons\\" + dungeonName + ".json"
         try {
-            String path = filePath;
-            return JsonParser.parseReader(new FileReader(path)).getAsJsonObject();
+            return JsonParser.parseReader(new FileReader("src\\main\\resources\\dungeons\\" + fileName + ".json")).getAsJsonObject();
         } catch (Exception e) {
-            throw new IllegalArgumentException("File does not exist.");
+            try {
+                return JsonParser.parseReader(new FileReader("src\\test\\java\\dungeonmania\\json_test_files\\" + fileName + ".json")).getAsJsonObject();
+            } catch (Exception r) {
+                throw new IllegalArgumentException("File not found.");
+            }
         }
     }
 
@@ -86,4 +92,5 @@ public class DungeonManiaController {
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
         return null;
     }
+
 }
