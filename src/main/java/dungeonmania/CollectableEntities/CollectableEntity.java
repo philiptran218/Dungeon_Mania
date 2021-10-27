@@ -1,9 +1,17 @@
 package dungeonmania.CollectableEntities;
 
+import dungeonmania.Entity;
+import dungeonmania.util.Position;
 
-// public abstract class CollectableEntity extends Entity - add in later
-public abstract class CollectableEntity {
+public abstract class CollectableEntity extends Entity {
 
-    // Stub for CollectableEntity...
-
+    /**
+     * Constructor for CollectableEntity
+     * @param id
+     * @param type
+     * @param pos
+     */
+    public CollectableEntity(String id, String type, Position pos) {
+        super(id, type, pos);
+    }
 }
