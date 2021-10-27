@@ -14,50 +14,26 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
 
 public class GameMapTest {
     // Helper function to get the json test files:
-    public String getTestJsonPath(int fileNum) {
-        return "src\\test\\java\\dungeonmania\\json_test_files\\file" + fileNum + ".json";
-    }
-
-    // Check invalid map arguments
-    @Test
-    public void testInvalidMapToJason() {
-        GameMap map = new GameMap("Peaceful");
-        assertThrows(IllegalArgumentException.class, () -> map.getMapAsJson("src\\main\\resources\\dungeons"));
-    }
-
-    // Test valid map arguments
-    @Test
-    public void testValidMapToJson() {
-        assertDoesNotThrow(() -> {
-            GameMap map = new GameMap("Peaceful");
-            map.getMapAsJson("src\\main\\resources\\dungeons\\advanced.json");
-        });
-
-        assertDoesNotThrow(() -> {
-            GameMap map = new GameMap("Peaceful");
-            map.getMapAsJson("src\\main\\resources\\dungeons\\boulders.json");
-        });
-
-        assertDoesNotThrow(() -> {
-            GameMap map = new GameMap("Peaceful");
-            map.getMapAsJson("src\\main\\resources\\dungeons\\maze.json");
-        });
+    public JsonObject getTestJsonPath(String fileName) {
+        DungeonManiaController n = new DungeonManiaController();
+        return n.getJsonFile(fileName);
     }
 
     // Test mapToListEntityResponse, to check whether or not it processes 
     // json files properly.
     @Test
     public void testMapToListOfEntityResponse() {
-        GameMap map = new GameMap("Peaceful");
+        GameMap map = new GameMap("Peaceful", null);
 
         // Get the json entity response list:
-        JsonObject main = map.getMapAsJson(getTestJsonPath(1));
+        JsonObject main = getTestJsonPath("file1");
         List<EntityResponse> entityList = map.mapToListEntityResponse(main);
         
         // Manually make the array:
@@ -79,4 +55,32 @@ public class GameMapTest {
         }
     }
 
-}
+    // Check if we are sucessfully ignoring the third layer:
+    @Test
+    public void testNoLayerFromReadingJsonMap () {
+        // Get the json entity response list:
+        JsonObject main = getTestJsonPath("file1");
+
+        // Load game:
+        GameMap map = new GameMap(main);
+
+        for (EntityResponse i : map.mapToListEntityResponse(main)) {
+           assertEquals(i.getPosition().getLayer(), 0);
+        }
+    }
+
+    // Check if we are processing the third layer sucessfully:
+    @Test
+    public void testLayerFromReadingJsonMap() {
+        // Get the json entity response list:
+        JsonObject main = getTestJsonPath("test_layer");
+
+        // Load game:
+        GameMap map = new GameMap(main);
+
+        for (EntityResponse i : map.mapToListEntityResponse(main)) {
+            assertEquals(i.getPosition().getLayer(), 3);
+        }
+    }
+
+}   

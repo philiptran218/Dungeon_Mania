@@ -1,8 +1,8 @@
-package dungeonmania;
+package dungeonmania.gamemap;
 
-public class StandardState implements GameState{
+public class HardState implements GameState {
     public int spawnZombie(int tickProgress) {
-        if (tickProgress == 20) {
+        if (tickProgress == 15) {
             // SPAWN ZOMBIE
             tickProgress = 0;
         }
