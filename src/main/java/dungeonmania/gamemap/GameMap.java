@@ -43,7 +43,7 @@ public class GameMap {
         this.dungeonMap = jsonToMap(jsonMap);
         // Given the json map, we would convert it to a Map<Position, Entity List> 
         // and set dungeonMap to this map.
-
+        this.mapId = "" + System.currentTimeMillis();
     }
 
     /**
@@ -183,5 +183,9 @@ public class GameMap {
 
     public Map<Position, List<Entity>> getMap() {
         return this.dungeonMap;
+    }
+
+    public String getMapId() {
+        return mapId;
     }
 }

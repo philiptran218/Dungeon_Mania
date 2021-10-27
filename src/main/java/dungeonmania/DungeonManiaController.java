@@ -85,8 +85,7 @@ public class DungeonManiaController {
         // Create new map:
         this.gameMap = new GameMap(gameMode, getJsonFile(dungeonName));
 
-        String unixTime = "" + System.currentTimeMillis();
-        return new DungeonResponse(unixTime, dungeonName, gameMap.mapToListEntityResponse(), new ArrayList<ItemResponse>(), new ArrayList<String>(), "goals");
+        return new DungeonResponse(gameMap.getMapId(), dungeonName, gameMap.mapToListEntityResponse(), new ArrayList<ItemResponse>(), new ArrayList<String>(), "goals");
     }
     
     public DungeonResponse saveGame(String name) throws IllegalArgumentException {

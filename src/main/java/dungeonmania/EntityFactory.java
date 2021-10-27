@@ -50,8 +50,8 @@ public class EntityFactory {
                 return new Sword(id, type, pos);
             case "armour": 
                 return new Armour(id, type, pos);
-            //case "one_ring": 
-                //return new TheOneRing(id, type, pos);
+            case "one_ring": 
+                return new TheOneRing(id, type, pos);
             case "bow": 
                 return new Bow(id, type, pos);
             case "shield": 
