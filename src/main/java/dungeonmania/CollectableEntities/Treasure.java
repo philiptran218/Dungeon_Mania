@@ -1,11 +1,16 @@
 package dungeonmania.CollectableEntities;
 
+import dungeonmania.util.Position;
+
 public class Treasure extends Utility {
 
-    // Stubs for Treasure...
-
-    public Treasure() {
-
+    /**
+     * Constructor for Treasure
+     * @param id
+     * @param type
+     * @param pos
+     */
+    public Treasure (String id, String type, Position pos) {
+        super(id, type, pos);
     }
-
 }
