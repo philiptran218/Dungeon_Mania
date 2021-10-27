@@ -23,7 +23,7 @@ public class GameMapTest {
     // Helper function to get the json test files:
     public JsonObject getTestJsonPath(String fileName) {
         DungeonManiaController n = new DungeonManiaController();
-        return n.getJsonFile("src\\test\\java\\dungeonmania\\json_test_files\\" + fileName + ".json");
+        return n.getJsonFile(fileName);
     }
 
     // Test mapToListEntityResponse, to check whether or not it processes 
