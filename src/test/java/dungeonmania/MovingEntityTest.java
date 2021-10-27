@@ -54,7 +54,7 @@ public class MovingEntityTest {
         assertTrue(isEntityOnTile(temp, new Position(2, 1), playerId));
 
         temp = controller.tick(null, Direction.RIGHT);
-        assertTrue(isEntityOnTile(temp, new Position(3, 1), playerId);
+        assertTrue(isEntityOnTile(temp, new Position(3, 1), playerId));
         
         temp = controller.tick(null, Direction.DOWN);
         assertTrue(isEntityOnTile(temp, new Position(3, 2), playerId));
