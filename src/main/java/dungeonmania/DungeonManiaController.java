@@ -70,7 +70,7 @@ public class DungeonManiaController {
             throw new IllegalArgumentException("Game mode does not exist.");
         }
         // Cahnge the name
-        JsonObject jsonMap = getJsonFile("play_boulder_interaction");
+        JsonObject jsonMap = getJsonFile("simpleExit");
 
         // ASSIGN THE MAP STORES BY THE CONTROLLER HERE :: JUST FOR TESTING:
         GameMap map = new GameMap(gameMode, jsonMap);
