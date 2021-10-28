@@ -1,16 +1,13 @@
 package dungeonmania.Battles;
 
-import dungeonmania.MovingEntities.MovingEntity;
+import dungeonmania.MovingEntities.*;
 
 public class InvisibleState implements BattleState {
 
-    public InvisibleState() {
-
-
+    /**
+     * Since the player is invisible, no fighting occurs.
+     */
+    public void fight(Player p1, MovingEntity p2) {
+        return;
     }
-
-    public void fight(MovingEntity p1, MovingEntity p2) {
-        
-    }
-    
 }
