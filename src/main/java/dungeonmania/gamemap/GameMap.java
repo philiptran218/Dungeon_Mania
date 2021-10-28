@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
 import dungeonmania.CollectableEntities.*;
+import dungeonmania.Goals.*;
 import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.response.models.EntityResponse;
@@ -256,5 +257,26 @@ public class GameMap {
 
     public String getDungeonName() {
         return this.dungeonName;
+    }
+
+    /**
+     * Convert JsonObject containing goals into a composite pattern
+     */
+    public GoalInterface goalJsonToPattern(JsonObject jsonGoal) {
+        if (jsonGoal.get("goal").getAsString().equals("AND")) {
+            GoalInterface goal = new AndGoal();
+            for (JsonElement entity : jsonGoal.getAsJsonArray("subgoals")) {
+                goal.add(goalJsonToPattern(entity.getAsJsonObject()));
+            }
+            return goal;
+        } else if (jsonGoal.get("goal").getAsString().equals("OR")) {
+            GoalInterface goal = new OrGoal();
+            for (JsonElement entity : jsonGoal.getAsJsonArray("subgoals")) {
+                goal.add(goalJsonToPattern(entity.getAsJsonObject()));
+            }
+            return goal;
+        } else {
+            return GoalFactory.getGoal(jsonGoal.get("goal").getAsString());
+        }
     }
 }
