@@ -289,6 +289,7 @@ public class GameMap {
         } else {
             return GoalFactory.getGoal(jsonGoal.get("goal").getAsString());
         }
+    }
 
     // Getter and setters:
     public Player getPlayer() {

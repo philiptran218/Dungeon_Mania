@@ -19,9 +19,9 @@ public class BouldersGoal implements GoalInterface {
             int switchLayer = 0;
             for (Entity entity : entities) {
                 if (entity.getType().equals("switch")) {
-                    entities.get(index)
-                    if (entity.next)
+                    return false;
                 }
+            }
         }
         return true;
     }
