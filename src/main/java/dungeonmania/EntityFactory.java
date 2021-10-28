@@ -25,7 +25,7 @@ public class EntityFactory {
             case "switch": 
                 return new FloorSwitch(id, type, absolPos);
             case "door": 
-                return new Door(id, type, staticPos);
+                return new Door(id, type, staticPos, keyId.getAsInt());
             case "portal": 
                 return new Portal(id, type, collectPos);
             case "zombie_toast_spawner": 
