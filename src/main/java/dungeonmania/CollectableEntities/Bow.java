@@ -34,6 +34,12 @@ public class Bow extends CombatItems {
     }
 
     /**
+     * Won't need to be called as bow is only used in battles.
+     */
+    public void use() {
+    }
+
+    /**
      * Reduces the durability if it has been used
      */
     public void reduceDurability() {
@@ -48,7 +54,14 @@ public class Bow extends CombatItems {
      */
     public double usedInCombat() {
         reduceDurability();
+        checkNoDurability();
         return DAMAGE;
+    }
+
+    public void checkNoDurability() {
+        if (durability == 0) {
+            // Remove the entity from inventory
+        }
     }
     
 }
