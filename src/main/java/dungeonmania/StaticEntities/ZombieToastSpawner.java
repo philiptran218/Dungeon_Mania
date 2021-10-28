@@ -12,6 +12,7 @@ import dungeonmania.util.Position;
 
 public class ZombieToastSpawner extends StaticEntity {
     private int tickProgress = 0;
+    private int zombieId = 0;
     GameState state;
     GameState hardState;
     GameState standardState;
@@ -42,8 +43,10 @@ public class ZombieToastSpawner extends StaticEntity {
     }
     /**
      * Spawns the zombie in 15 or 20 ticks depending on the game mode
+     * @param zombieSpawner
+     * @param listOfEntities
      */
     public void tick(Position zombieSpawner, HashMap<Position, List<Entity>> listOfEntities) {
-        tickProgress = state.spawnZombie(tickProgress, listOfEntities, zombieSpawner);
+        state.spawnZombie(tickProgress, listOfEntities, zombieSpawner, zombieId);
     }
 }

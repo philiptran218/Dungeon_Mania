@@ -8,7 +8,6 @@ import dungeonmania.Entity;
 import dungeonmania.util.Position;
 
 public class PeacefulState implements GameState{
-    public int spawnZombie(int tickProgress, HashMap<Position, List<Entity>> listOfEntities, Position zombieSpawner) {
-        return 0;
+    public void spawnZombie(int tickProgress, HashMap<Position, List<Entity>> listOfEntities, Position zombieSpawner, int zombieId) {
     }
 }
