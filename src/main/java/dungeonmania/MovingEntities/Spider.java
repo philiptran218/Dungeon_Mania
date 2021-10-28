@@ -9,7 +9,7 @@ import dungeonmania.util.Direction;
 import dungeonmania.Entity;
 
 
-public class Spider extends MovingEntity implements MovingEntityObserver{
+public class Spider extends MovingEntity {
     private Position startPos;
     private boolean clockwise = true; // 1 for clockwise
     private List<Position> path = new ArrayList<Position>();
@@ -87,11 +87,4 @@ public class Spider extends MovingEntity implements MovingEntityObserver{
         this.path.add(startPos.translateBy(Direction.LEFT));
         this.path.add(startPos.translateBy(Direction.LEFT).translateBy(Direction.UP));
     }
-
-
-    @Override
-    public void update(MovingEntitySubject obj) {
-        super.setPlayerLocation(((Player) obj).getPos());
-    }
-
 }

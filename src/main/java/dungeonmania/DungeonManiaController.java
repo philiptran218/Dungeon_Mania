@@ -56,6 +56,15 @@ public class DungeonManiaController {
     }
 
     /**
+     * Returns a dungeon response based on the current state of the game.
+     * @return DungeonResponse on the current state of map.
+     */
+    public DungeonResponse returnDungeonResponse() {
+        return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), 
+            gameMap.inventoryToItemResponse(), new ArrayList<String>(), "Goals");
+    }
+
+    /**
      * Given a file name it will go to the source folder and locate dungeon map,
      * and if not found it will go into the test tolder to locate the test json 
      * file and return it as a json object.
@@ -78,6 +87,7 @@ public class DungeonManiaController {
         if (!getGameModes().contains(gameMode)) {
             throw new IllegalArgumentException("Game mode does not exist.");
         }
+<<<<<<< HEAD
         // Cahnge the name
         JsonObject jsonMap = getJsonFile("exit");
 
@@ -93,6 +103,25 @@ public class DungeonManiaController {
 
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
         return null;
+=======
+        // Set map:
+        this.gameMap = new GameMap(gameMode, dungeonName, getJsonFile(dungeonName));
+        // Return DungeonResponse
+        return returnDungeonResponse();
+    }
+    
+    public DungeonResponse saveGame(String name) throws IllegalArgumentException {
+        // Advanced 
+        this.gameMap.saveMapAsJson(name);
+        // Return DungeonResponse
+        return returnDungeonResponse();
+    }
+
+    public DungeonResponse loadGame(String name) throws IllegalArgumentException {
+        this.gameMap = new GameMap(name);
+        // Return DungeonResponse
+        return returnDungeonResponse();
+>>>>>>> master
     }
 
     public List<String> allGames() {
@@ -118,6 +147,7 @@ public class DungeonManiaController {
                 gameMap.getMap().get(checkPosition).remove(tempEntity);
             }
         }
+<<<<<<< HEAD
         // PROBABLY NOT NEEDED
         // if (tempEntity.getType() == "switch") {
         //     List <Entity> tempList = gameMap.getMap().get(checkPosition);
@@ -142,6 +172,23 @@ public class DungeonManiaController {
             // Add code for playermovement
         }
         return null;
+=======
+        // Check inventory in item.
+        /*
+        if (gameMap.getPlayer().getInventory().getItem(itemUsed) == null) {
+
+        }*/
+        // Move the player:
+        gameMap.setObservers();
+        gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
+
+        // Move all the moving entities by one tick:
+        for (MovingEntity e : gameMap.getMovingEntityList()) {
+            e.move(gameMap.getMap());
+        }
+        // Return DungeonResponse
+        return returnDungeonResponse();
+>>>>>>> master
     }
 
     public DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {
