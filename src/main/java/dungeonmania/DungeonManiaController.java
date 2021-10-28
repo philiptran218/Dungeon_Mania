@@ -1,11 +1,16 @@
 package dungeonmania;
 
+import dungeonmania.StaticEntities.Boulder;
+import dungeonmania.StaticEntities.FloorSwitch;
+import dungeonmania.StaticEntities.Portal;
+import dungeonmania.StaticEntities.StaticEntity;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
+import dungeonmania.util.Position;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -70,7 +75,7 @@ public class DungeonManiaController {
             throw new IllegalArgumentException("Game mode does not exist.");
         }
         // Cahnge the name
-        JsonObject jsonMap = getJsonFile("play_boulder_interaction");
+        JsonObject jsonMap = getJsonFile("exit");
 
         // ASSIGN THE MAP STORES BY THE CONTROLLER HERE :: JUST FOR TESTING:
         GameMap map = new GameMap(gameMode, jsonMap);
@@ -91,6 +96,52 @@ public class DungeonManiaController {
     }
 
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
+        // Position of the zombie spawner
+        Position zombieSpawner;
+
+        Position dir = movementDirection.getOffset();
+        // Position in front of player
+        Position checkPosition;
+        Entity tempEntity = listOfEntities.get(checkPosition).get(0);
+        // Player position
+        Position playerPosition;
+        // Check type name
+        if (tempEntity.getType() == "boulder") {
+            Position newPosition = new Position(checkPosition.getX() + dir.getX(),checkPosition.getY() + dir.getY(), 1);
+            List <Entity> tempList = listOfEntities.get(newPosition);
+            if (tempList.get(0) == null) {
+                Boulder tempBoulder = (Boulder) tempEntity;
+                tempList.add(tempBoulder);
+                listOfEntities.get(checkPosition).remove(tempBoulder);
+            }
+            else if (tempList.get(0).getType() == "switch" && tempList.get(1) == null) {
+                Boulder tempBoulder = (Boulder) tempEntity;
+                tempList.add(tempBoulder);
+                listOfEntities.get(checkPosition).remove(tempBoulder);
+            }
+        }
+        // ADD PLAYER MOVEMENT
+        if (tempEntity.getType() == "switch") {
+            Position inFrontOfCheckPosition;
+            List <Entity> tempList = listOfEntities.get(inFrontOfCheckPosition);
+            if (tempList.get(1).getType() == "boulder") {
+                Position newPosition = new Position(inFrontOfCheckPosition.getX() + dir.getX(),inFrontOfCheckPosition.getY() + dir.getY(), 0);
+                List <Entity> entitiesOnPosition = listOfEntities.get(newPosition);
+                if (entitiesOnPosition.get(0) == null) {
+                    listOfEntities.get(newPosition).add(tempEntity);
+                    listOfEntities.get(inFrontOfCheckPosition).remove(tempEntity);
+                }
+                else if (entitiesOnPosition.get(0).getType() == "switch" && entitiesOnPosition.get(1) != null) {
+                    listOfEntities.get(newPosition).add(tempEntity);
+                    listOfEntities.get(inFrontOfCheckPosition).remove(tempEntity);
+                }
+            }
+        }
+        if (tempEntity.getType() == "portal") {
+            Portal portal = (Portal) tempEntity;
+            Position teleportLocation = portal.getTeleportLocation();
+            // Add code for playermovement
+        }
         return null;
     }
 
