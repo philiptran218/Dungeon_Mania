@@ -1,11 +1,9 @@
 package dungeonmania.gamemap;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -135,7 +133,8 @@ public class GameMap {
 
         main.put("width", getMapWidth());
         main.put("height", getMapHeight());
-
+        main.put("game-mode", this.gameDifficulty);
+        main.put("map-name", this.dungeonName);
         // Goals:
         main.put("goal-condition", this.getGoal());
 
@@ -158,8 +157,6 @@ public class GameMap {
             }
         }
         main.put("entities", entities);
-        main.put("game-mode", this.gameDifficulty);
-        main.put("map-name", this.dungeonName);
         return main;
     }
 
@@ -204,10 +201,7 @@ public class GameMap {
             if (type.equals("player")) {
                 this.player = (Player) temp;
             }
-            List<Entity> eList = newMap.get(temp.getPos());
-            eList.add(temp);
-            // Before adding the element check the list:
-            newMap.put(temp.getPos(), eList);
+            newMap.get(temp.getPos()).add(temp);
             i++;
         }
         return newMap;
