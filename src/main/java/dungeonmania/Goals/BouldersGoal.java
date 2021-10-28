@@ -13,17 +13,8 @@ public class BouldersGoal implements GoalInterface {
     
     @Override
     public boolean isGoalComplete(GameMap game) {
-        Map<Position, List<Entity>> map = game.getMap();
-        for(List<Entity> entities : map.values()) {
-            int boulderLayer = 0;
-            int switchLayer = 0;
-            for (Entity entity : entities) {
-                if (entity.getType().equals("switch")) {
-                    entities.get(index)
-                    if (entity.next)
-                }
-        }
-        return true;
+        
+        return false;
     }
 
     @Override
