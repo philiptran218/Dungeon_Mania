@@ -1,29 +1,97 @@
 package dungeonmania.MovingEntities;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import dungeonmania.util.Position;
+import dungeonmania.util.Direction;
+import dungeonmania.Entity;
 
 
 public class Spider extends MovingEntity implements MovingEntityObserver{
-    private Position startLocation;
-    private int direction = 1; // 1 for clockwise
+    private Position startPos;
+    private boolean clockwise = true; // 1 for clockwise
+    private List<Position> path = new ArrayList<Position>();
+    private int pathPos = 0;
 
-    public Spider(Position startLocation){
-        super(3, 3, startLocation);
-
-        this.startLocation = startLocation;
+    public Spider(String id, String type, Position pos){
+        super(id, type, pos, 3, 3);
+        this.startPos = pos;
+        this.setPath();
     }
 
-    public void move() {
+    public void move(Map<Position, List<Entity>> map) {
+        if (super.getPos().equals(startPos)) {
+            // Spider has just spawned, move up
+            Position newPos = this.path.get(0);
+            super.moveToPos(map, newPos);
+            return;
+        }
+
+        int forwardMove = pathPos + 1;
+        int backwardMove = pathPos - 1;
+
+        if (forwardMove > 7) {
+            forwardMove = 0;
+        } 
+        if (backwardMove < 0) {
+            backwardMove = 7;
+        }
+        boolean canMoveForward = canPass(map, this.path.get(forwardMove));
+        boolean canMoveBackward = canPass(map, this.path.get(backwardMove));
+
+        if (!canMoveForward && !canMoveBackward) {
+            // Spider is trapped
+            this.clockwise = true;
+            return;
+        }
+        if (!canMoveForward) {
+            this.clockwise = false;
+            super.moveToPos(map, this.path.get(backwardMove));
+        } else if (!canMoveBackward) {
+            this.clockwise = true;
+            super.moveToPos(map, this.path.get(forwardMove));
+        } else {
+            // can move in either direction
+            if (clockwise) {
+                super.moveToPos(map, this.path.get(forwardMove));
+            } else {
+                super.moveToPos(map, this.path.get(backwardMove));
+            }
+
+        }
 
     }
+
+    public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
+        List<Entity> entities = map.get(pos);
+        for (Entity entity: entities) {
+            switch(entity.getType()) {
+                case "boulder":
+                    return false;
+            }
+        }
+        return true;
+    }
+
+
 
     public void setPath() {
-
+        this.path.add(startPos.translateBy(Direction.UP));
+        this.path.add(startPos.translateBy(Direction.UP).translateBy(Direction.RIGHT));
+        this.path.add(startPos.translateBy(Direction.RIGHT));
+        this.path.add(startPos.translateBy(Direction.RIGHT).translateBy(Direction.DOWN));
+        this.path.add(startPos.translateBy(Direction.DOWN));
+        this.path.add(startPos.translateBy(Direction.DOWN).translateBy(Direction.LEFT));
+        this.path.add(startPos.translateBy(Direction.LEFT));
+        this.path.add(startPos.translateBy(Direction.LEFT).translateBy(Direction.UP));
     }
+
 
     @Override
     public void update(MovingEntitySubject obj) {
-        Player player = (Player) obj;
+        super.setPlayerLocation(((Player) obj).getPos());
     }
 
 }

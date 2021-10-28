@@ -4,26 +4,27 @@ import dungeonmania.MovingEntities.Player;
 import dungeonmania.util.Position;
 
 public class TheOneRing extends CombatItems {
-    
-    private Player player;
+
     /**
      * Constructor for TheOneRing
      * @param id
      * @param type
      * @param pos
      */
-    public TheOneRing(String id, String type, Position pos, Player player) {
+    public TheOneRing(String id, String type, Position pos) {
         super(id, type, pos);
+    }
+
+    /**
+     * If the player moves onto TheOneRing, it is added to their
+     * inventory.
+     * @param player
+     */
+    public void pickUp(Player player) {
         this.setPlayer(player);
-    }
-
-    // Getters and Setters
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    public Player getPlayer() {
-        return player;
+        
+        // Add the ring to player inventory here
+        // Also maybe remove it from Map's list of entities.
     }
 
     /**
@@ -31,7 +32,7 @@ public class TheOneRing extends CombatItems {
      * inventory should be done separately.
      */
     public void revive() {
-        player.setHealth(100);
+        this.getPlayer().setHealth(100);
     }
 
 }

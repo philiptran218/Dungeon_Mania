@@ -19,8 +19,7 @@ public class HealthPotion extends Potion implements AbilityBehaviour {
      * Activates the ability of the potion.
      * Called when the player wants to consume the potion.
      */
-    public void ability(Player plyr) {
-        setPlayer(plyr);
+    public void ability() {
         getPlayer().setHealth(100);
     }
     
