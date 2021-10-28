@@ -34,9 +34,6 @@ public class GameMap {
     private int width;
     private int height;
 
-    // Current path of this saved map:
-    private String savedPath;
-
     // ******************************************
     // Need to make varibales to game state here:
     // GameState currState;
@@ -54,7 +51,6 @@ public class GameMap {
         // Given the json map, we would convert it to a Map<Position, Entity List> 
         // and set dungeonMap to this map.
         this.mapId = "" + System.currentTimeMillis();
-        this.savedPath = null;
         this.dungeonName = name;
     }
 
@@ -65,7 +61,6 @@ public class GameMap {
      */
     public GameMap(String name) {
         this(getSavedMap(name).get("game-mode").getAsString(), getSavedMap(name).get("map-name").getAsString(), getSavedMap(name));
-        this.savedPath = "src/main/resources/saved_games/" + name + ".json";
     }
 
     /**
@@ -103,8 +98,6 @@ public class GameMap {
      * add a field in the json file for game difficulty.
      */
     public void saveMapAsJson(String name) {
-        // Set new save path:
-        savedPath = "src/main/resources/saved_games/" + name + ".json"; 
         try {  
             FileWriter file = new FileWriter("src/main/resources/saved_games/" + name + ".json");
             file.write(mapToJson().toString(4));
@@ -190,7 +183,7 @@ public class GameMap {
     /**
      * Takes in a json object, and turns it into a Map<Position, Entity>
      * and returns it.
-     * @return
+     * @return Map<Position, List<Entity>> form of a map corresponding to jsonMap
      */
     public Map<Position, List<Entity>> jsonToMap(JsonObject jsonMap) {
         // Add goals to the map:
@@ -203,20 +196,14 @@ public class GameMap {
             // Get all attributes:
             JsonObject obj = entity.getAsJsonObject();
             String type = obj.get("type").getAsString();
-            Position pos;
+            Position pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
 
-            if (obj.get("layer") == null) {
-                pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
-            } else {
-                pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt(), obj.get("layer").getAsInt());
-            }
             // Create the entity object, by factory method:
             Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, obj.get("key"));
             // Set player:
             if (type.equals("player")) {
                 this.player = (Player) temp;
             }
-
             List<Entity> eList = newMap.get(temp.getPos());
             eList.add(temp);
             // Before adding the element check the list:

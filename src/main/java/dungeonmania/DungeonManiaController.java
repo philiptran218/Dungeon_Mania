@@ -134,6 +134,9 @@ public class DungeonManiaController {
         // Move the player:
         gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
 
+        // Move all the moving entities by one tick:
+        
+
         return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), new ArrayList<ItemResponse>(), new ArrayList<String>(), "Goals");
     }
 
