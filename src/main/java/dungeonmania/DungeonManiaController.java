@@ -78,7 +78,6 @@ public class DungeonManiaController {
         if (!getGameModes().contains(gameMode)) {
             throw new IllegalArgumentException("Game mode does not exist.");
         }
-
         // Set map:
         this.gameMap = new GameMap(gameMode, getJsonFile(dungeonName));
 
