@@ -39,7 +39,9 @@ public class DungeonManiaController {
     public List<String> getGameModes() {
         return Arrays.asList("Standard", "Peaceful", "Hard");
     }
-
+    public List<String> getUsableItems() {
+        return Arrays.asList("bomb", "health_potion", "invincibility_potion", "invisibility_potion", null);
+    }
     /**
      * /dungeons
      * 
