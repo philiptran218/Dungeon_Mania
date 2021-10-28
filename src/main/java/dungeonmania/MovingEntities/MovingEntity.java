@@ -1,11 +1,12 @@
 package dungeonmania.MovingEntities;
 
+import dungeonmania.Entity;
 import dungeonmania.util.Position;
 
-public abstract class MovingEntity {
+public abstract class MovingEntity extends Entity {
     private int health;
     private int attackDamage;
-    private Position location;
+    //private Position location;
 
     /**
      * 
@@ -13,10 +14,11 @@ public abstract class MovingEntity {
      * @param attackDamage
      * @param location
      */
-    public MovingEntity(int health, int attackDamage, Position location){
+    public MovingEntity(String id, String type, Position pos, int health, int attackDamage){
+        super(id, type, pos);
         this.health = health;
         this.attackDamage = attackDamage;
-        this.location = location;
+        //this.location = location;
     }
 
     /**
@@ -71,13 +73,13 @@ public abstract class MovingEntity {
         this.attackDamage = attackDamage;
     }
 
-    public Position getLocation() {
-        return location;
-    }
+    // public Position getLocation() {
+    //     return location;
+    // }
 
-    public void setLocation(Position location) {
-        this.location = location;
-    }
+    // public void setLocation(Position location) {
+    //     this.location = location;
+    // }
 
 
 }
