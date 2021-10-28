@@ -8,8 +8,8 @@ import dungeonmania.util.Position;
 public class ZombieToast extends MovingEntity implements MovingEntityObserver{
     private boolean armour;
 
-    public ZombieToast(Position startLocation) {
-        super(4, 4, startLocation);
+    public ZombieToast(String id, String type, Position pos) {
+        super(id, type, pos, 4, 4);
         this.armour = generateArmour();
 
     }

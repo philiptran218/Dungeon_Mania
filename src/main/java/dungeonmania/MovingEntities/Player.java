@@ -8,8 +8,9 @@ import dungeonmania.util.Position;
 public class Player extends MovingEntity implements MovingEntitySubject{
     private List<MovingEntityObserver> listObservers = new ArrayList<MovingEntityObserver>();
 
-    public Player(Position startLocation){
-        super(10, 10, startLocation);
+    public Player(String id, String type, Position pos){
+        super(id, type, pos, 10, 10);
+        //startLocation);
     }
 
     @Override
