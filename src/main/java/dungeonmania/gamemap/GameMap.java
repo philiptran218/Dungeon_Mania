@@ -19,6 +19,7 @@ import dungeonmania.EntityFactory;
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.MovingEntities.Player;
+import dungeonmania.StaticEntities.*;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
@@ -149,11 +150,9 @@ public class GameMap {
                 temp.put("type", e.getType());
                 if (e.getType().equals("key")) {
                     temp.put("key", ((Key) e).getKeyId());
-                }
-                /*
-                if (e.getType().equals("door")) {
+                } else if (e.getType().equals("door")) {
                     temp.put("key", ((Door) e).getKeyId());
-                }*/
+                }
                 entities.put(temp);
             }
         }
