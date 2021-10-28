@@ -57,6 +57,15 @@ public class DungeonManiaController {
     }
 
     /**
+     * Returns a dungeon response based on the current state of the game.
+     * @return DungeonResponse on the current state of map.
+     */
+    public DungeonResponse returnDungeonResponse() {
+        return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), 
+            gameMap.inventoryToItemResponse(), new ArrayList<String>(), "Goals");
+    }
+
+    /**
      * Given a file name it will go to the source folder and locate dungeon map,
      * and if not found it will go into the test tolder to locate the test json 
      * file and return it as a json object.
@@ -81,24 +90,21 @@ public class DungeonManiaController {
         }
         // Set map:
         this.gameMap = new GameMap(gameMode, dungeonName, getJsonFile(dungeonName));
-
-        return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), 
-            new ArrayList<ItemResponse>(), new ArrayList<String>(), "Goals");
+        // Return DungeonResponse
+        return returnDungeonResponse();
     }
     
     public DungeonResponse saveGame(String name) throws IllegalArgumentException {
         // Advanced 
         this.gameMap.saveMapAsJson(name);
-
-        return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), 
-            new ArrayList<ItemResponse>(), new ArrayList<String>(), "Goals");
+        // Return DungeonResponse
+        return returnDungeonResponse();
     }
 
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
         this.gameMap = new GameMap(name);
-
-        return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), 
-            new ArrayList<ItemResponse>(), new ArrayList<String>(), "Goals");
+        // Return DungeonResponse
+        return returnDungeonResponse();
     }
 
     public List<String> allGames() {
@@ -114,7 +120,10 @@ public class DungeonManiaController {
             throw new IllegalArgumentException("Invalid item used.");
         }
         // Check inventory in item.
-        // ***********************
+        /*
+        if (gameMap.getPlayer().getInventory().getItem(itemUsed) == null) {
+
+        }*/
         // Move the player:
         gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
 
@@ -122,9 +131,8 @@ public class DungeonManiaController {
         for (MovingEntity e : gameMap.getMovingEntityList()) {
             e.move(gameMap.getMap());
         }
-        
-        return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), 
-            new ArrayList<ItemResponse>(), new ArrayList<String>(), "Goals");
+        // Return DungeonResponse
+        return returnDungeonResponse();
     }
 
     public DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {
