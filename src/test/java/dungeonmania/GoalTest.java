@@ -15,29 +15,21 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public class GoalTest {
-    // Gets the id of entity on a position:
-    public String getEntityId(Position pos, DungeonResponse response) {
-        for (EntityResponse entity : response.getEntities()) {
-            if (entity.getPosition().equals(pos) && entity.getPosition().getLayer() == pos.getLayer()) {
-                return entity.getId();
-            }
-        }
-        return null;
-    }
+    
     /**
      * Test getting to exit
      */
     @Test
     public void ExitGoal() {
-         // Create controller
-         DungeonManiaController controller = new DungeonManiaController();
-         // Create new game
-         controller.newGame("simpleExit", "Peaceful");
-         // Get id of player:
-         for (int i = 0; i < 3; i++) {
-            controller.tick(null, Direction.RIGHT);
-         }
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("simpleExit", "Peaceful");
 
+        for (int i = 0; i < 3; i++) {
+            tmp = controller.tick(null, Direction.RIGHT);
+        }
+        assertTrue("".equals(tmp.getGoals()));
     }
 
     /**
@@ -45,6 +37,15 @@ public class GoalTest {
      */
     @Test
     public void EnemiesGoal() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("simpleEnemies", "Standard");
+
+        for (int i = 0; i < 3; i++) {
+            tmp = controller.tick(null, Direction.RIGHT);
+        }
+        assertTrue("".equals(tmp.getGoals()));
     }
 
     /**
@@ -52,6 +53,15 @@ public class GoalTest {
      */
     @Test
     public void BouldersGoal() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("simpleBoulder", "Standard");
+
+        for (int i = 0; i < 2; i++) {
+            tmp = controller.tick(null, Direction.RIGHT);
+            assertTrue("".equals(tmp.getGoals()));
+        }
     }
 
     /**
@@ -59,6 +69,15 @@ public class GoalTest {
      */
     @Test
     public void TreasureGoal() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("simpleExit", "Peaceful");
+
+        for (int i = 0; i < 3; i++) {
+            tmp = controller.tick(null, Direction.RIGHT);
+        }
+        assertTrue("".equals(tmp.getGoals()));
     }
 
     /**
