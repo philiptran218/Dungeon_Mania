@@ -106,35 +106,36 @@ public class DungeonManiaController {
         Position dir = movementDirection.getOffset();
         // Position in front of player
         Position checkPosition;
-        Entity tempEntity = getMap().get(checkPosition).get(0);
+        Entity tempEntity = gameMap.getMap().get(checkPosition).get(1);
         // Player position
         Position playerPosition;
         if (tempEntity.getType() == "boulder") {
-            Position newPosition = new Position(checkPosition.getX() + dir.getX(),checkPosition.getY() + dir.getY(), 0);
-            List <Entity> tempList = getMap().get(newPosition);
+            Position inFrontOfCheckPosition = new Position(checkPosition.getX() + dir.getX(),checkPosition.getY() + dir.getY(), 0);
+            List <Entity> tempList = gameMap.getMap().get(inFrontOfCheckPosition);
             if (tempList.get(0) == null) {
-                tempList.add(tempEntity);
-                getMap().get(checkPosition).remove(tempEntity);
+                tempList.add(1, tempEntity);
+                gameMap.getMap().get(checkPosition).remove(tempEntity);
             }
             else if (tempList.get(0).getType() == "switch" && tempList.get(1) == null) {
-                tempList.add(tempEntity);
-                getMap().get(checkPosition).remove(tempEntity);
+                tempList.add(1, tempEntity);
+                gameMap.getMap().get(checkPosition).remove(tempEntity);
             }
         }
         // ADD PLAYER MOVEMENT
         if (tempEntity.getType() == "switch") {
-            Position inFrontOfCheckPosition;
-            List <Entity> tempList = getMap().get(inFrontOfCheckPosition);
+            List <Entity> tempList = gameMap.getMap().get(checkPosition);
             if (tempList.get(1).getType() == "boulder") {
-                Position newPosition = new Position(inFrontOfCheckPosition.getX() + dir.getX(),inFrontOfCheckPosition.getY() + dir.getY(), 0);
-                List <Entity> entitiesOnPosition = gameMap.getMap().get(newPosition);
-                if (entitiesOnPosition.get(0) == null) {
-                    getMap().get(newPosition).add(tempEntity);
-                    getMap().get(inFrontOfCheckPosition).remove(tempEntity);
+                Position inFrontOfCheckPosition = new Position(checkPosition.getX() + dir.getX(),checkPosition.getY() + dir.getY(), 0);
+                List <Entity> entitiesOnPosition = gameMap.getMap().get(inFrontOfCheckPosition);
+                if (entitiesOnPosition.get(1) == null && entitiesOnPosition.get(3) == null) {
+                    Entity newBoulder = tempList.get(1);
+                    gameMap.getMap().get(inFrontOfCheckPosition).add(1, newBoulder);
+                    gameMap.getMap().get(checkPosition).remove(newBoulder);
                 }
-                else if (entitiesOnPosition.get(0).getType() == "switch" && entitiesOnPosition.get(1) != null) {
-                    getMap().get(newPosition).add(tempEntity);
-                    getMap().get(inFrontOfCheckPosition).remove(tempEntity);
+                else if (entitiesOnPosition.get(0).getType() == "switch" && entitiesOnPosition.get(1) == null) {
+                    Entity newBoulder = tempList.get(1);
+                    gameMap.getMap().get(inFrontOfCheckPosition).add(1, newBoulder);
+                    gameMap.getMap().get(checkPosition).remove(newBoulder);
                 }
             }
         }
