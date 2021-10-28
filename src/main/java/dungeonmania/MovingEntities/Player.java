@@ -12,7 +12,7 @@ import dungeonmania.Inventory;
 import dungeonmania.CollectableEntities.CollectableEntity;
 
 
-public class Player extends MovingEntity implements MovingEntitySubject{
+public class Player extends MovingEntity implements MovingEntitySubject {
     private List<MovingEntityObserver> listObservers = new ArrayList<MovingEntityObserver>();
     private Inventory inventory = new Inventory(this);
 
@@ -24,7 +24,6 @@ public class Player extends MovingEntity implements MovingEntitySubject{
 
     }
     public void move(Map<Position, List<Entity>> map, Direction direction) {
-        notifyObservers();
         Position newPos = super.getPos().translateBy(direction);        
         if (canPass(map, newPos)) {
             moveInDir(map, direction);
@@ -32,6 +31,7 @@ public class Player extends MovingEntity implements MovingEntitySubject{
             // Do nothing
         }
         pickUp(map, newPos);
+        notifyObservers();
     }
 
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
@@ -40,9 +40,14 @@ public class Player extends MovingEntity implements MovingEntitySubject{
 
     public void pickUp(Map<Position, List<Entity>> map, Position pos) {
         List<Entity> collectables = map.get(new Position(pos.getX(), pos.getY(), 2));
-        this.inventory.put(collectables.get(0));
+        if (!collectables.isEmpty()) {
+            Entity entity = collectables.get(0);
+            if (entity instanceof CollectableEntity) {
+                this.inventory.put(entity);
+                collectables.remove(entity);
+            }
+        }
     }
-
 
     public Inventory getInventory() {
         return inventory;

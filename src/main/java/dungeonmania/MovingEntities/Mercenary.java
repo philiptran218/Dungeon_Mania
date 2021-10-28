@@ -10,7 +10,7 @@ import dungeonmania.util.Direction;
 import dungeonmania.Entity;
 
 
-public class Mercenary extends MovingEntity implements MovingEntityObserver{
+public class Mercenary extends MovingEntity {
     private MercenaryState enemyState;
     private MercenaryState allyState;
     private MercenaryState state;
@@ -38,12 +38,5 @@ public class Mercenary extends MovingEntity implements MovingEntityObserver{
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
         return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty();
     }
-
-    @Override
-    public void update(MovingEntitySubject obj) {
-        super.setPlayerLocation(((Player) obj).getPos());
-    }
-
-
 }
 

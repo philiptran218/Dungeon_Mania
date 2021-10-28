@@ -10,7 +10,7 @@ import dungeonmania.util.Direction;
 import dungeonmania.Entity;
 
 
-public abstract class MovingEntity extends Entity{
+public abstract class MovingEntity extends Entity implements MovingEntityObserver {
     private double health;
     private double attackDamage;
     private Position playerLocation;
@@ -76,4 +76,11 @@ public abstract class MovingEntity extends Entity{
         this.playerLocation = playerLocation;
     }
     
+
+    @Override
+    public void update(MovingEntitySubject obj) {
+        this.setPlayerLocation(((Player) obj).getPos());
+    }
+
+
 }
