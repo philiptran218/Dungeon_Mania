@@ -36,19 +36,7 @@ public class Mercenary extends MovingEntity implements MovingEntityObserver{
     }
 
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
-        List<Entity> entities = map.get(pos);
-        for (Entity entity: entities) {
-            switch(entity.getType()) {
-                case "wall":
-                    return false;
-                case "boulder":
-                    return false;
-                case "door":
-                    return false;
-            }
-        }
-        
-        return true;
+        return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty();
     }
 
     @Override

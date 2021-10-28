@@ -18,5 +18,9 @@
         "y": 2,
         "type": "wall"
       }
-    ]
+    ],
+    "map-name" : "custom",
+    "goal-condition": {
+      "goal": "boulders"
+    }
 }

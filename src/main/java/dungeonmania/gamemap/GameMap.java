@@ -28,6 +28,7 @@ public class GameMap {
     private Map<Position, List<Entity>> dungeonMap;
     private String gameDifficulty;
     private String goal;
+    private String dungeonName;
     private Player player;
     private String mapId;
     private int width;
@@ -47,14 +48,14 @@ public class GameMap {
      * @param dungeonName
      * @param jsonMap
      */
-    public GameMap(String difficulty, JsonObject jsonMap) {
-        // THIS IS FOR A NEW GAME 
+    public GameMap(String difficulty, String name, JsonObject jsonMap) {
         this.gameDifficulty = difficulty;
         this.dungeonMap = jsonToMap(jsonMap);
         // Given the json map, we would convert it to a Map<Position, Entity List> 
         // and set dungeonMap to this map.
         this.mapId = "" + System.currentTimeMillis();
         this.savedPath = null;
+        this.dungeonName = name;
     }
 
     /**
@@ -62,10 +63,9 @@ public class GameMap {
      * @param map
      * @return
      */
-    public GameMap(JsonObject jsonMap) {
-        // This is called for an exisiting game where only
-        // the json map is passed in. Convert it to Map<Position, Entity List>
-        // and set it to this map.
+    public GameMap(String name) {
+        this(getSavedMap(name).get("game-mode").getAsString(), getSavedMap(name).get("map-name").getAsString(), getSavedMap(name));
+        this.savedPath = "src/main/resources/saved_games/" + name + ".json";
     }
 
     /**
@@ -103,16 +103,8 @@ public class GameMap {
      * add a field in the json file for game difficulty.
      */
     public void saveMapAsJson(String name) {
-        // Delete previous save:
-        if (savedPath == null) {
-            savedPath = "src/main/resources/saved_games/" + name + ".json"; 
-        } else {
-            // Delete the file there first:
-            File file = new File(savedPath);
-            file.delete();
-            // Update file path:
-            savedPath = "src/main/resources/saved_games/" + name + ".json"; 
-        }
+        // Set new save path:
+        savedPath = "src/main/resources/saved_games/" + name + ".json"; 
         try {  
             FileWriter file = new FileWriter("src/main/resources/saved_games/" + name + ".json");
             file.write(mapToJson().toString(4));
@@ -121,9 +113,28 @@ public class GameMap {
         } catch (IOException e) {  
             e.printStackTrace();  
         }  
-        return;
     }
 
+    /**
+     * Given the name of a saved file, attempts to look for the game
+     * and return it as a JsonObject
+     * @param Name of saved game.
+     * @return JsonObject file of the saved game.
+     */
+    public static JsonObject getSavedMap(String name) {
+        try {
+            return JsonParser.parseReader(new FileReader("src\\main\\resources\\saved_games\\" + name + ".json")).getAsJsonObject();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("File not found.");
+            
+        }
+    }
+
+    /**
+     * Takes the current map of this function and converts it to 
+     * a json object.
+     * @return JsonObject of the current state of the map.
+     */
     public JSONObject mapToJson() {
         // Main object for file
         JSONObject main = new JSONObject();
@@ -152,26 +163,10 @@ public class GameMap {
                 }*/
                 entities.put(temp);
             }
-            if (entry.getValue().size() > 1) {
-                for (Entity e : entry.getValue()) {
-                    JSONObject temp = new JSONObject();
-                    temp.put("x", p.getX());
-                    temp.put("y", p.getY());
-                    temp.put("x", entry.getValue().indexOf(e));
-                    if (e.getType().equals("key")) {
-                        temp.put("key", ((Key) e).getKeyId());
-                    }
-                    /*
-                    if (e.getType().equals("door")) {
-                        temp.put("key", ((Door) e).getKeyId());
-                    }*/
-                    entities.put(temp);
-                }
-            }
-
         }
         main.put("entities", entities);
-        
+        main.put("game-mode", this.gameDifficulty);
+        main.put("map-name", this.dungeonName);
         return main;
     }
 
@@ -182,42 +177,14 @@ public class GameMap {
         this.width = width;
         this.height = height;
         Map<Position, List<Entity>> map = new HashMap<>();
-        for (int i = 0; i < width; i++) { // width
-            for (int j = 0; j < height; j++) { // height
-                map.put(new Position(i, j), new ArrayList<Entity>());
-            }
-        }
-        return map;
-    }
-
-    /**
-     * This function adds given entity to the given list taking into account the order
-     * of layer.
-     * @param currList
-     * @param insert
-     * @return An ordered list of entities in terms of layer.
-     */
-    public List<Entity> orderLayer(List<Entity> currList, Entity insert) {
-        List<Entity> orderList = new ArrayList<>();
-        // Create an integer list:
-        List<Integer> intList = new ArrayList<>();
-        currList.add(insert);
-        // Add all layer ints to the list;
-        for (Entity e : currList) {
-            intList.add(e.getPos().getLayer());
-        }
-        // Sort the curr list:
-        Collections.sort(intList);
-
-        for (int i : intList) {
-            for (Entity e : currList) {
-                if (e.getPos().getLayer() == i) {
-                    orderList.add(e);
-                    return orderList;
+        for (int k = 0; k < 4; k++) {
+            for (int i = 0; i < width; i++) { // width
+                for (int j = 0; j < height; j++) { // height
+                    map.put(new Position(i, j, k), new ArrayList<Entity>());
                 }
             }
         }
-        return orderList;
+        return map;
     }
 
     /**
@@ -238,21 +205,22 @@ public class GameMap {
             String type = obj.get("type").getAsString();
             Position pos;
 
-            if(obj.get("layer") == null) {
+            if (obj.get("layer") == null) {
                 pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
             } else {
                 pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt(), obj.get("layer").getAsInt());
             }
-
             // Create the entity object, by factory method:
             Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, obj.get("key"));
-            Position insertPosition = new Position(pos.getX(), pos.getY());
+            // Set player:
             if (type.equals("player")) {
                 this.player = (Player) temp;
             }
-            
+
+            List<Entity> eList = newMap.get(temp.getPos());
+            eList.add(temp);
             // Before adding the element check the list:
-            newMap.put(insertPosition, orderLayer(newMap.get(insertPosition), temp));
+            newMap.put(temp.getPos(), eList);
             i++;
         }
         return newMap;
@@ -283,8 +251,11 @@ public class GameMap {
         return this.width;
     }
 
-    public String getDifficulty () {
-        return gameDifficulty;
+    public String getDifficulty() {
+        return this.gameDifficulty;
     }
 
+    public String getDungeonName() {
+        return this.dungeonName;
+    }
 }
