@@ -109,6 +109,7 @@ public class DungeonManiaController {
         Entity tempEntity = gameMap.getMap().get(checkPosition).get(1);
         // Player position
         Position playerPosition;
+        // ADD PLAYER MOVEMENT
         if (tempEntity.getType() == "boulder") {
             Position inFrontOfCheckPosition = new Position(checkPosition.getX() + dir.getX(),checkPosition.getY() + dir.getY(), 0);
             List <Entity> tempList = gameMap.getMap().get(inFrontOfCheckPosition);
@@ -121,24 +122,24 @@ public class DungeonManiaController {
                 gameMap.getMap().get(checkPosition).remove(tempEntity);
             }
         }
-        // ADD PLAYER MOVEMENT
-        if (tempEntity.getType() == "switch") {
-            List <Entity> tempList = gameMap.getMap().get(checkPosition);
-            if (tempList.get(1).getType() == "boulder") {
-                Position inFrontOfCheckPosition = new Position(checkPosition.getX() + dir.getX(),checkPosition.getY() + dir.getY(), 0);
-                List <Entity> entitiesOnPosition = gameMap.getMap().get(inFrontOfCheckPosition);
-                if (entitiesOnPosition.get(1) == null && entitiesOnPosition.get(3) == null) {
-                    Entity newBoulder = tempList.get(1);
-                    gameMap.getMap().get(inFrontOfCheckPosition).add(1, newBoulder);
-                    gameMap.getMap().get(checkPosition).remove(newBoulder);
-                }
-                else if (entitiesOnPosition.get(0).getType() == "switch" && entitiesOnPosition.get(1) == null) {
-                    Entity newBoulder = tempList.get(1);
-                    gameMap.getMap().get(inFrontOfCheckPosition).add(1, newBoulder);
-                    gameMap.getMap().get(checkPosition).remove(newBoulder);
-                }
-            }
-        }
+        // PROBABLY NOT NEEDED
+        // if (tempEntity.getType() == "switch") {
+        //     List <Entity> tempList = gameMap.getMap().get(checkPosition);
+        //     if (tempList.get(1).getType() == "boulder") {
+        //         Position inFrontOfCheckPosition = new Position(checkPosition.getX() + dir.getX(),checkPosition.getY() + dir.getY(), 0);
+        //         List <Entity> entitiesOnPosition = gameMap.getMap().get(inFrontOfCheckPosition);
+        //         if (entitiesOnPosition.get(1) == null && entitiesOnPosition.get(3) == null) {
+        //             Entity newBoulder = tempList.get(1);
+        //             gameMap.getMap().get(inFrontOfCheckPosition).add(1, newBoulder);
+        //             gameMap.getMap().get(checkPosition).remove(newBoulder);
+        //         }
+        //         else if (entitiesOnPosition.get(0).getType() == "switch" && entitiesOnPosition.get(1) == null) {
+        //             Entity newBoulder = tempList.get(1);
+        //             gameMap.getMap().get(inFrontOfCheckPosition).add(1, newBoulder);
+        //             gameMap.getMap().get(checkPosition).remove(newBoulder);
+        //         }
+        //     }
+        // }
         if (tempEntity.getType() == "portal") {
             Portal portal = (Portal) tempEntity;
             Position teleportLocation = portal.getTeleportLocation();
