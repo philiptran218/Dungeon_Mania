@@ -15,6 +15,12 @@ public class Inventory {
     private Player player;
     private List<CollectableEntity> entities = new ArrayList<>(); 
 
+    public void put(Entity entity){
+        if (entity instanceof CollectableEntity) {
+            this.entities.add((CollectableEntity) entity);
+        }
+    }
+
     /**
      * Constructor for Inventory
      * @param player
