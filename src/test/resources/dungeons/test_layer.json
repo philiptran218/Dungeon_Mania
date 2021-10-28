@@ -21,5 +21,9 @@
         "layer": 3,
         "type": "wall"
       }
-    ]
+    ],
+    "map-name" : "testLayer",
+    "goal-condition": {
+      "goal": "boulders"
+    }
 }

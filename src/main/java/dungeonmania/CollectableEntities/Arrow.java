@@ -13,4 +13,11 @@ public class Arrow extends Utility {
     public Arrow(String id, String type, Position pos) {
         super(id, type, pos);
     }
+
+    /**
+     * Uses arrows to build bows.
+     */
+    public void use() {
+        // Remove the arrow from inventory
+    }
 }

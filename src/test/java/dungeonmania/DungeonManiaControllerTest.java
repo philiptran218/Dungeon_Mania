@@ -66,6 +66,7 @@ public class DungeonManiaControllerTest {
     // Test saveGames:
     @Test
     public void testSavingOneGame() {
+        deleteSavedGames();
         // Create dungeon controller
         DungeonManiaController newDungeon = new DungeonManiaController();
 
@@ -76,27 +77,6 @@ public class DungeonManiaControllerTest {
             TimeUnit.SECONDS.sleep(1);
         });
         assertTrue(newDungeon.allGames().size() == 1);
-        deleteSavedGames();
-    }
-    
-    @Test
-    public void testSavingMultipleGames() {
-        // Create dungeon controller
-        DungeonManiaController newDungeon = new DungeonManiaController();
-
-        // Create multiple games:
-        assertDoesNotThrow(() ->  {
-            newDungeon.newGame("advanced", "Peaceful");
-            newDungeon.saveGame(getUnix());
-
-            newDungeon.newGame("boulder", "Peaceful");
-            newDungeon.saveGame(getUnix());
-
-            newDungeon.newGame("advanced", "Peaceful");
-            newDungeon.saveGame(getUnix());
-            TimeUnit.SECONDS.sleep(1);
-        });
-        assertEquals(newDungeon.allGames().size(), 3);
         deleteSavedGames();
     }
 
@@ -113,13 +93,14 @@ public class DungeonManiaControllerTest {
     @Test
     public void testLoadGame() {
         // Create dungeon controller
+        deleteSavedGames();
         DungeonManiaController newDungeon = new DungeonManiaController();
 
         // Create, save, and loading the game
         assertDoesNotThrow(() ->  {
-            DungeonResponse game = newDungeon.newGame("advanced", "Peaceful");
-            newDungeon.saveGame(game.getDungeonId());
-            newDungeon.loadGame(game.getDungeonId());
+            newDungeon.newGame("advanced", "Peaceful");
+            newDungeon.saveGame("newgame");
+            newDungeon.loadGame("newgame");
         });
     }
 
@@ -135,6 +116,7 @@ public class DungeonManiaControllerTest {
     @Test
     public void testGetAllGamesFunctionForMultipleSavedGames() {
         // Create dungeon controller
+        deleteSavedGames();
         DungeonManiaController newDungeon = new DungeonManiaController();
 
         // Create multiple games:
@@ -144,10 +126,15 @@ public class DungeonManiaControllerTest {
 
             DungeonResponse game2 = newDungeon.newGame("advanced", "Peaceful");
             newDungeon.saveGame(game2.getDungeonId());
+            TimeUnit.SECONDS.sleep(1);
         });
-
+        
         // Check if there are indeed two games saved:
         assertEquals(newDungeon.allGames().size(), 2);
     }
 
+    @Test
+    public void testDelete() {
+        deleteSavedGames();
+    }
 }
