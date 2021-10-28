@@ -49,5 +49,16 @@
         "y": 1,
         "type": "wall"
       }
-    ]
+    ],
+    "goal-condition": {
+      "goal": "AND",
+      "subgoals": [
+        {
+          "goal": "enemies"
+        },
+        {
+          "goal": "treasure"
+        }
+      ]
+    }
   }
