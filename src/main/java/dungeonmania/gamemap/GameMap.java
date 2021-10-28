@@ -216,14 +216,11 @@ public class GameMap {
             if (type.equals("player")) {
                 this.player = (Player) temp;
             }
-            System.out.println(temp + " Position is: " + pos + " Type: " + type);
-            if (temp != null) {
 
-                List<Entity> eList = newMap.get(temp.getPos());
-                eList.add(temp);
-                // Before adding the element check the list:
-                newMap.put(temp.getPos(), eList);
-            }
+            List<Entity> eList = newMap.get(temp.getPos());
+            eList.add(temp);
+            // Before adding the element check the list:
+            newMap.put(temp.getPos(), eList);
             i++;
         }
         return newMap;
