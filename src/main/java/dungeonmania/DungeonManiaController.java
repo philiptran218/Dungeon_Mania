@@ -113,11 +113,7 @@ public class DungeonManiaController {
         if (tempEntity.getType() == "boulder") {
             Position inFrontOfCheckPosition = new Position(checkPosition.getX() + dir.getX(),checkPosition.getY() + dir.getY(), 0);
             List <Entity> tempList = gameMap.getMap().get(inFrontOfCheckPosition);
-            if (tempList.get(0) == null) {
-                tempList.add(1, tempEntity);
-                gameMap.getMap().get(checkPosition).remove(tempEntity);
-            }
-            else if (tempList.get(0).getType() == "switch" && tempList.get(1) == null) {
+            if (tempList.get(1) == null && tempList.get(3) == null) {
                 tempList.add(1, tempEntity);
                 gameMap.getMap().get(checkPosition).remove(tempEntity);
             }
