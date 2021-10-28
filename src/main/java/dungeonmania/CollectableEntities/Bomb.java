@@ -8,4 +8,12 @@ public class Bomb extends CombatItems {
         super(id, type, pos);
     }
 
+    /**
+     * Places the bomb onto the map.
+     */
+    public void use() {
+        // Remove from inventory, add onto entities map
+        //this.setPos(new Position(0, 0));
+    }
+
 }

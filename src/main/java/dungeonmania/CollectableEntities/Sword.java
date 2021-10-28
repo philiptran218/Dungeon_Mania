@@ -1,5 +1,6 @@
 package dungeonmania.CollectableEntities;
 
+import dungeonmania.MovingEntities.Player;
 import dungeonmania.util.Position;
 
 public class Sword extends CombatItems {
@@ -41,6 +42,14 @@ public class Sword extends CombatItems {
     }
 
     /**
+     * Used to interact with enemy spawners.
+     */
+    public void use() {
+        reduceDurability();
+        checkNoDurability();
+    }
+
+    /**
      * Called when the combat item is being used in battle.
      * Its durability is reduced by 1 and its damage value is returned for
      * use in damage calculation.
@@ -48,7 +57,14 @@ public class Sword extends CombatItems {
      */
     public double usedInCombat() {
         reduceDurability();
+        checkNoDurability();
         return DAMAGE;
+    }
+
+    public void checkNoDurability() {
+        if (durability == 0) {
+            // Remove the entity from inventory
+        }
     }
     
 }

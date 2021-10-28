@@ -26,6 +26,5 @@ public abstract class CollectableEntity extends Entity {
         return player;
     }
 
-    // add this in later!!
-    //abstract void pickUp(Player player);
+    abstract public void use();
 }

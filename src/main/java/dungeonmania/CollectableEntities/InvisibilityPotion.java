@@ -3,7 +3,7 @@ package dungeonmania.CollectableEntities;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.util.Position;
 
-public class InvisibilityPotion extends Potion implements AbilityBehaviour  {
+public class InvisibilityPotion extends Potion {
 
     private boolean isActive;
     // Need to hold movement class for enemies
@@ -32,10 +32,12 @@ public class InvisibilityPotion extends Potion implements AbilityBehaviour  {
      * Activates the ability of the potion.
      * Called when the player wants to consume the potion.
      */
-    public void ability() {
+    public void use() {
         setIsActive(true);
 
         // Change the state of movement here
         // Enemies cannot see player so they move normally
+        // Create a thread for 30 secs, which sets the movement state
+        // Once finished, it resets the movement state
     }
 }
