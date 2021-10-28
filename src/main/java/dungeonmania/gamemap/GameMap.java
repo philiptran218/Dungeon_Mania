@@ -269,7 +269,6 @@ public class GameMap {
         }
         return newMap;
     }
-<<<<<<< src/main/java/dungeonmania/gamemap/GameMap.java
     
     /**
      * Convert JsonObject containing goals into a composite pattern
@@ -290,20 +289,14 @@ public class GameMap {
         } else {
             return GoalFactory.getGoal(jsonGoal.get("goal").getAsString());
         }
-=======
 
     // Getter and setters:
     public Player getPlayer() {
         return this.player;
->>>>>>> src/main/java/dungeonmania/gamemap/GameMap.java
     }
 
     public Map<Position, List<Entity>> getMap() {
         return this.dungeonMap;
-<<<<<<< src/main/java/dungeonmania/gamemap/GameMap.java
-    } 
-}
-=======
     }
 
     public String getMapId() {
@@ -327,4 +320,3 @@ public class GameMap {
     }
 
 }
->>>>>>> src/main/java/dungeonmania/gamemap/GameMap.java
