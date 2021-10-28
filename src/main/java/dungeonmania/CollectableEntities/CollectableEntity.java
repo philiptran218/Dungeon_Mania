@@ -26,6 +26,17 @@ public abstract class CollectableEntity extends Entity {
         return player;
     }
 
-    // add this in later!!
-    //abstract void pickUp(Player player);
+    /**
+     * Player picks up the item when they walk over it, defeat an enemy that has the
+     * item or builds the item.
+     * @param player
+     */
+    public void pickUp(Player player) {
+        this.setPos(null);
+        this.setPlayer(player);
+        
+        // this.getPlayer().getInventory.add(this);
+    }
+
+    abstract public void use();
 }
