@@ -119,7 +119,6 @@ public class GameMap {
             return JsonParser.parseReader(new FileReader("src\\main\\resources\\saved_games\\" + name + ".json")).getAsJsonObject();
         } catch (Exception e) {
             throw new IllegalArgumentException("File not found.");
-            
         }
     }
 
@@ -209,11 +208,6 @@ public class GameMap {
         return newMap;
     }
 
-    // Getter and setters:
-    public Player getPlayer() {
-        return this.player;
-    }
-
     /**
      * Returns a list of all self moving entities:
      * @return Entity list of all self-moving entities.
@@ -229,6 +223,11 @@ public class GameMap {
             }
         }
         return entityList;
+    }
+    
+    // Getter and setters:
+    public Player getPlayer() {
+        return this.player;
     }
 
     public Map<Position, List<Entity>> getMap() {
