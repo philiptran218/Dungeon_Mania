@@ -120,10 +120,9 @@ public class DungeonManiaController {
 
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
-            if (e.getType().equals("zombie_toast")) {
-                ((ZombieToast) e).move(gameMap.getMap());
-            }
+            e.move(gameMap.getMap());
         }
+        
         return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), 
             new ArrayList<ItemResponse>(), new ArrayList<String>(), "Goals");
     }
