@@ -120,7 +120,10 @@ public class DungeonManiaController {
             throw new IllegalArgumentException("Invalid item used.");
         }
         // Check inventory in item.
-        // ***********************
+        /*
+        if (gameMap.getPlayer().getInventory().getItem(itemUsed) == null) {
+
+        }*/
         // Move the player:
         gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
 
