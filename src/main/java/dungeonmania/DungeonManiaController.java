@@ -23,6 +23,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class DungeonManiaController {
+    private GameMap gameMap;
+
     public DungeonManiaController() {
     }
 
@@ -123,7 +125,7 @@ public class DungeonManiaController {
             List <Entity> tempList = getMap().get(inFrontOfCheckPosition);
             if (tempList.get(1).getType() == "boulder") {
                 Position newPosition = new Position(inFrontOfCheckPosition.getX() + dir.getX(),inFrontOfCheckPosition.getY() + dir.getY(), 0);
-                List <Entity> entitiesOnPosition = getMap().get(newPosition);
+                List <Entity> entitiesOnPosition = gameMap.getMap().get(newPosition);
                 if (entitiesOnPosition.get(0) == null) {
                     getMap().get(newPosition).add(tempEntity);
                     getMap().get(inFrontOfCheckPosition).remove(tempEntity);
