@@ -1,5 +1,6 @@
 package dungeonmania.CollectableEntities;
 
+import dungeonmania.MovingEntities.Player;
 import dungeonmania.util.Position;
 
 public class Shield extends CombatItems {
@@ -32,12 +33,18 @@ public class Shield extends CombatItems {
     public double getReduceDamage() {
         return REDUCE_DAMAGE;
     }
-    
+
     /**
      * Reduces the durability if it has been used
      */
     public void reduceDurability() {
         durability = durability - 1;
+    }
+
+    /**
+     * Won't need to be called as shields are only used in battles.
+     */
+    public void use() {
     }
 
     /**
@@ -48,7 +55,14 @@ public class Shield extends CombatItems {
      */
     public double usedInCombat() {
         reduceDurability();
+        checkNoDurability();
         return REDUCE_DAMAGE;
+    }
+
+    public void checkNoDurability() {
+        if (durability == 0) {
+            // Remove the entity from inventory
+        }
     }
 
 }
