@@ -1,5 +1,6 @@
 package dungeonmania;
 
+import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.StaticEntities.Boulder;
 import dungeonmania.StaticEntities.FloorSwitch;
 import dungeonmania.StaticEntities.Portal;
@@ -87,23 +88,6 @@ public class DungeonManiaController {
         if (!getGameModes().contains(gameMode)) {
             throw new IllegalArgumentException("Game mode does not exist.");
         }
-<<<<<<< HEAD
-        // Cahnge the name
-        JsonObject jsonMap = getJsonFile("exit");
-
-        // ASSIGN THE MAP STORES BY THE CONTROLLER HERE :: JUST FOR TESTING:
-        GameMap map = new GameMap(gameMode, jsonMap);
-
-        return new DungeonResponse("dungeonId", dungeonName, map.mapToListEntityResponse(jsonMap), new ArrayList<ItemResponse>(), new ArrayList<String>(), "goals");
-    }
-    
-    public DungeonResponse saveGame(String name) throws IllegalArgumentException {
-        return null;
-    }
-
-    public DungeonResponse loadGame(String name) throws IllegalArgumentException {
-        return null;
-=======
         // Set map:
         this.gameMap = new GameMap(gameMode, dungeonName, getJsonFile(dungeonName));
         // Return DungeonResponse
@@ -121,7 +105,6 @@ public class DungeonManiaController {
         this.gameMap = new GameMap(name);
         // Return DungeonResponse
         return returnDungeonResponse();
->>>>>>> master
     }
 
     public List<String> allGames() {
@@ -147,7 +130,6 @@ public class DungeonManiaController {
                 gameMap.getMap().get(checkPosition).remove(tempEntity);
             }
         }
-<<<<<<< HEAD
         // PROBABLY NOT NEEDED
         // if (tempEntity.getType() == "switch") {
         //     List <Entity> tempList = gameMap.getMap().get(checkPosition);
@@ -171,8 +153,6 @@ public class DungeonManiaController {
             Position teleportLocation = portal.getTeleportLocation();
             // Add code for playermovement
         }
-        return null;
-=======
         // Check inventory in item.
         /*
         if (gameMap.getPlayer().getInventory().getItem(itemUsed) == null) {
@@ -188,11 +168,26 @@ public class DungeonManiaController {
         }
         // Return DungeonResponse
         return returnDungeonResponse();
->>>>>>> master
     }
 
     public DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {
-        return null;
+        boolean isValid = false;
+        Position entityPosition = null;
+        for (Position key : gameMap.getMap().keySet()) {
+            for (Entity counter : gameMap.getMap().get(key)) {
+                if (counter.getId() == entityId) {
+                    if (counter.getType() == "zombie_toast_spawner" || counter.getType() == "mercenary") {
+                        isValid = true;
+                        entityPosition = key;
+                    }
+                }
+            }
+        }
+        if (isValid == false) {
+            throw new IllegalArgumentException();
+        }
+
+        return returnDungeonResponse();
     }
 
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
