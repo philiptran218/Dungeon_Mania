@@ -33,6 +33,10 @@ public abstract class MovingEntity extends Entity{
      */
     public abstract boolean canPass(Map<Position, List<Entity>> map, Position pos);
 
+    public void move(Map<Position, List<Entity>> map) {
+        return;
+    }
+
     public void moveInDir(Map<Position, List<Entity>> map, Direction direction) {
         map.get(super.getPos()).remove(this);
         

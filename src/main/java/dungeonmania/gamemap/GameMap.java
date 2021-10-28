@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import org.json.JSONObject;
 import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
 import dungeonmania.CollectableEntities.*;
+import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
@@ -210,6 +212,23 @@ public class GameMap {
     // Getter and setters:
     public Player getPlayer() {
         return this.player;
+    }
+
+    /**
+     * Returns a list of all self moving entities:
+     * @return Entity list of all self-moving entities.
+     */
+    public List<MovingEntity> getMovingEntityList() {
+        List<String> movingType = Arrays.asList("mercenary", "spider", "zombie_toast");
+        List<MovingEntity> entityList = new ArrayList<>();
+        for (Map.Entry<Position, List<Entity>> entry : dungeonMap.entrySet()) {
+            for (Entity e : entry.getValue()) {
+                if (movingType.contains(e.getType())) {
+                    entityList.add((MovingEntity) e);
+                }
+            }
+        }
+        return entityList;
     }
 
     public Map<Position, List<Entity>> getMap() {

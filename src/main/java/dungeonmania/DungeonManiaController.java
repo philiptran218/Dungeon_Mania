@@ -2,6 +2,7 @@ package dungeonmania;
 
 import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.MovingEntities.Player;
+import dungeonmania.MovingEntities.ZombieToast;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.DungeonResponse;
@@ -93,27 +94,14 @@ public class DungeonManiaController {
     public DungeonResponse saveGame(String name) throws IllegalArgumentException {
         // Advanced 
         this.gameMap.saveMapAsJson(name);
-        // Get response arguments:
-        String id = gameMap.getMapId();
-        String dungeonName = gameMap.getDungeonName();
-        List<EntityResponse> eResponse = gameMap.mapToListEntityResponse();
-        List<ItemResponse> iResponse = new ArrayList<ItemResponse>();
-        List<String> stringL = new ArrayList<String>();
-
-        return new DungeonResponse(id, dungeonName, eResponse, iResponse, stringL, "Goals");
+        return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), 
+            new ArrayList<ItemResponse>(), new ArrayList<String>(), "Goals");
     }
 
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
         this.gameMap = new GameMap(name);
-        
-        // Get response arguments:
-        String id = gameMap.getMapId();
-        String dungeonName = gameMap.getDungeonName();
-        List<EntityResponse> eResponse = gameMap.mapToListEntityResponse();
-        List<ItemResponse> iResponse = new ArrayList<ItemResponse>();
-        List<String> stringL = new ArrayList<String>();
-
-        return new DungeonResponse(id, dungeonName, eResponse, iResponse, stringL, "Goals");
+        return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), 
+            new ArrayList<ItemResponse>(), new ArrayList<String>(), "Goals");
     }
 
     public List<String> allGames() {
@@ -135,9 +123,13 @@ public class DungeonManiaController {
         gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
 
         // Move all the moving entities by one tick:
-        
-
-        return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), new ArrayList<ItemResponse>(), new ArrayList<String>(), "Goals");
+        for (MovingEntity e : gameMap.getMovingEntityList()) {
+            if (e.getType().equals("zombie_toast")) {
+                ((ZombieToast) e).move(gameMap.getMap());
+            }
+        }
+        return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), 
+            new ArrayList<ItemResponse>(), new ArrayList<String>(), "Goals");
     }
 
     public DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {
