@@ -125,6 +125,7 @@ public class DungeonManiaController {
 
         }*/
         // Move the player:
+        gameMap.setObservers();
         gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
 
         // Move all the moving entities by one tick:

@@ -10,7 +10,7 @@ import dungeonmania.util.Direction;
 import dungeonmania.Entity;
 
 
-public class ZombieToast extends MovingEntity implements MovingEntityObserver{
+public class ZombieToast extends MovingEntity {
     private boolean armour;
 
     public ZombieToast(String id, String type, Position pos) {
@@ -62,8 +62,4 @@ public class ZombieToast extends MovingEntity implements MovingEntityObserver{
         return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty();
     }
 
-    @Override
-    public void update(MovingEntitySubject obj) {
-        super.setPlayerLocation(((Player) obj).getPos());
-    }
 }

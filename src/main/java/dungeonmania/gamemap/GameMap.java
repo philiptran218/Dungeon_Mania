@@ -289,4 +289,11 @@ public class GameMap {
             return GoalFactory.getGoal(jsonGoal.get("goal").getAsString());
         }
     }
+
+    public void setObservers() {
+        for (MovingEntity e : getMovingEntityList()) {
+            player.registerObserver(e);
+        }
+    }
+
 }
