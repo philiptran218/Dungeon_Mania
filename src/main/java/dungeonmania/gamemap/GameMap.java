@@ -18,6 +18,7 @@ import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.MovingEntities.MovingEntity;
+import dungeonmania.MovingEntities.MovingEntityObserver;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.response.models.EntityResponse;
@@ -133,11 +134,11 @@ public class GameMap {
         JSONObject main = new JSONObject();
         JSONArray entities = new JSONArray();
 
+        // Add all fields:
         main.put("width", getMapWidth());
         main.put("height", getMapHeight());
         main.put("game-mode", this.gameDifficulty);
         main.put("map-name", this.dungeonName);
-        // Goals:
         main.put("goal-condition", this.getGoal());
 
         for (Map.Entry<Position, List<Entity>> entry : this.dungeonMap.entrySet()) {
@@ -223,7 +224,7 @@ public class GameMap {
         }
         return entityList;
     }
-    
+
     // Getter and setters:
     public Player getPlayer() {
         return this.player;
