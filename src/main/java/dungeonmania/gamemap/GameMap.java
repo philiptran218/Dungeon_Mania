@@ -20,7 +20,9 @@ import dungeonmania.Inventory;
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.Goals.*;
 import dungeonmania.MovingEntities.MovingEntity;
+import dungeonmania.MovingEntities.MovingEntityObserver;
 import dungeonmania.MovingEntities.Player;
+import dungeonmania.StaticEntities.*;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
@@ -143,11 +145,11 @@ public class GameMap {
         JSONObject main = new JSONObject();
         JSONArray entities = new JSONArray();
 
+        // Add all fields:
         main.put("width", getMapWidth());
         main.put("height", getMapHeight());
         main.put("game-mode", this.gameDifficulty);
         main.put("map-name", this.dungeonName);
-        // Goals:
         main.put("goal-condition", this.getGoal());
 
         for (Map.Entry<Position, List<Entity>> entry : this.dungeonMap.entrySet()) {
@@ -160,11 +162,9 @@ public class GameMap {
                 temp.put("type", e.getType());
                 if (e.getType().equals("key")) {
                     temp.put("key", ((Key) e).getKeyId());
-                }
-                /*
-                if (e.getType().equals("door")) {
+                } else if (e.getType().equals("door")) {
                     temp.put("key", ((Door) e).getKeyId());
-                }*/
+                }
                 entities.put(temp);
             }
         }
@@ -235,7 +235,7 @@ public class GameMap {
         }
         return entityList;
     }
-    
+
     // Getter and setters:
     public Player getPlayer() {
         return this.player;
