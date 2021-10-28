@@ -39,6 +39,9 @@ public class InvincibilityPotion extends Potion {
 
         // Enemies move away from the player
         // Combat kills enemies immediately (set health to 0)
+
+        // HAVE TO CHECK FOR DIFFICULTY, IF ON HARD, USING POTION DOES NOTHING
+        // (DON'T CHANGE ANY STATE)
     }
     
 }
