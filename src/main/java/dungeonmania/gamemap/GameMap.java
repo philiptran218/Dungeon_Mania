@@ -10,19 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import com.google.gson.*;
-
-
-
-import dungeonmania.DungeonManiaController;
-import dungeonmania.Entity;
-import dungeonmania.EntityFactory;
-import dungeonmania.Goals.AndGoal;
-import dungeonmania.Goals.CompositeGoal;
-import dungeonmania.Goals.GoalFactory;
-import dungeonmania.Goals.GoalInterface;
-import dungeonmania.Goals.OrGoal;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -269,41 +257,14 @@ public class GameMap {
         }
         return newMap;
     }
-<<<<<<< src/main/java/dungeonmania/gamemap/GameMap.java
-    
-    /**
-     * Convert JsonObject containing goals into a composite pattern
-     */
-    public GoalInterface goalJsonToPattern(JsonObject jsonGoal) {
-        if (jsonGoal.get("goal").getAsString().equals("AND")) {
-            GoalInterface goal = new AndGoal();
-            for (JsonElement entity : jsonGoal.getAsJsonArray("subgoals")) {
-                goal.add(goalJsonToPattern(entity.getAsJsonObject()));
-            }
-            return goal;
-        } else if (jsonGoal.get("goal").getAsString().equals("OR")) {
-            GoalInterface goal = new OrGoal();
-            for (JsonElement entity : jsonGoal.getAsJsonArray("subgoals")) {
-                goal.add(goalJsonToPattern(entity.getAsJsonObject()));
-            }
-            return goal;
-        } else {
-            return GoalFactory.getGoal(jsonGoal.get("goal").getAsString());
-        }
-=======
 
     // Getter and setters:
     public Player getPlayer() {
         return this.player;
->>>>>>> src/main/java/dungeonmania/gamemap/GameMap.java
     }
 
     public Map<Position, List<Entity>> getMap() {
         return this.dungeonMap;
-<<<<<<< src/main/java/dungeonmania/gamemap/GameMap.java
-    } 
-}
-=======
     }
 
     public String getMapId() {
@@ -327,4 +288,3 @@ public class GameMap {
     }
 
 }
->>>>>>> src/main/java/dungeonmania/gamemap/GameMap.java
