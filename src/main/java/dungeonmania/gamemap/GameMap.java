@@ -8,10 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 import com.google.gson.*;
 
 import org.json.JSONObject;
 
+import dungeonmania.DungeonManiaController;
 import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
 import dungeonmania.Goals.AndGoal;
@@ -139,4 +141,29 @@ public class GameMap {
             return GoalFactory.getGoal(jsonGoal.get("goal").getAsString());
         }
     }
+
+    public static void main(String[] args) {
+       // DungeonManiaController d = new DungeonManiaController();
+       // System.out.println(d.getJsonFile("testGoal"));
+        try {
+            JsonObject test = JsonParser.parseReader(new FileReader("src\\test\\resources\\dungeons\\" + "testGoal" + ".json")).getAsJsonObject();
+            System.out.println(test.toString());
+            GameMap temp = new GameMap(test);
+            GoalInterface goal = temp.goalJsonToPattern(test);
+            System.out.println(goal.getGoalName());
+            List<GoalInterface> children2 = new ArrayList<>();
+            for (GoalInterface children : goal.getChildren()) {
+                if (children.getGoalName().equals("OR"))
+                    children2.add(children);
+                System.out.println(children.getGoalName());
+            }
+            for (GoalInterface children : children2) {
+                for (GoalInterface child : children.getChildren()) {
+                    System.out.println(child.getGoalName());
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Fail");
+        }
+    } 
 }

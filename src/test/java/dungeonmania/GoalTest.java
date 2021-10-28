@@ -32,12 +32,12 @@ public class GoalTest {
          // Create controller
          DungeonManiaController controller = new DungeonManiaController();
          // Create new game
-         DungeonResponse createNew = controller.newGame("basic_player_move", "Peaceful");
+         controller.newGame("simpleExit", "Peaceful");
          // Get id of player:
-         String playerId = getEntityId(new Position(1, 1), createNew);
          for (int i = 0; i < 3; i++) {
             controller.tick(null, Direction.RIGHT);
          }
+
     }
 
     /**

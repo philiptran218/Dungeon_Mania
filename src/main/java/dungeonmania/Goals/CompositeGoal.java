@@ -15,4 +15,14 @@ public abstract class CompositeGoal {
     public void add(GoalInterface goal) {
         this.children.add(goal);
     }
+
+    public List<GoalInterface> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<GoalInterface> children) {
+        this.children = children;
+    }
+
+    
 }
