@@ -14,7 +14,7 @@ public class Key extends Utility {
      */
     public Key(String id, String type, Position pos, int keyId) {
         super(id, type, pos);
-
+        this.setKeyId(keyId);
     }
 
     // Getters and Setters
