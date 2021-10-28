@@ -2,6 +2,8 @@ package dungeonmania;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,7 +16,22 @@ import org.junit.jupiter.api.Test;
 
 import dungeonmania.exceptions.InvalidActionException;
 
+
 public class DungeonManiaControllerTest {
+    // Helper:
+    public String getUnix() {
+        return "" + System.currentTimeMillis();
+    }
+
+    public void deleteSavedGames() {
+        DungeonManiaController d = new DungeonManiaController();
+        File file;
+        for (String s : d.allGames()) {
+            file = new File("src/main/resources/saved_games/" + s + ".json");
+            file.delete();
+        }
+    }
+
     // Test newGame:
     @Test
     public void testValidGameCreation() {
@@ -54,11 +71,12 @@ public class DungeonManiaControllerTest {
 
         // Create a game and saving it:
         assertDoesNotThrow(() ->  {
-            DungeonResponse game = newDungeon.newGame("advanced", "Peaceful");
-            newDungeon.saveGame(game.getDungeonId());
+            newDungeon.newGame("player_wall_interaction", "Peaceful");
+            newDungeon.saveGame(getUnix());
+            TimeUnit.SECONDS.sleep(1);
         });
-
-        assertEquals(newDungeon.allGames().size(), 1);
+        assertTrue(newDungeon.allGames().size() == 1);
+        deleteSavedGames();
     }
     
     @Test
@@ -68,17 +86,18 @@ public class DungeonManiaControllerTest {
 
         // Create multiple games:
         assertDoesNotThrow(() ->  {
-            DungeonResponse game1 = newDungeon.newGame("advanced", "Peaceful");
-            newDungeon.saveGame(game1.getDungeonId());
+            newDungeon.newGame("advanced", "Peaceful");
+            newDungeon.saveGame(getUnix());
 
-            DungeonResponse game2 = newDungeon.newGame("advanced", "Peaceful");
-            newDungeon.saveGame(game2.getDungeonId());
+            newDungeon.newGame("boulder", "Peaceful");
+            newDungeon.saveGame(getUnix());
 
-            DungeonResponse game3 = newDungeon.newGame("advanced", "Peaceful");
-            newDungeon.saveGame(game3.getDungeonId());
+            newDungeon.newGame("advanced", "Peaceful");
+            newDungeon.saveGame(getUnix());
+            TimeUnit.SECONDS.sleep(1);
         });
-
         assertEquals(newDungeon.allGames().size(), 3);
+        deleteSavedGames();
     }
 
     // Test loadGame:
@@ -131,10 +150,4 @@ public class DungeonManiaControllerTest {
         assertEquals(newDungeon.allGames().size(), 2);
     }
 
-
-
-    public static void main(String[] args) {
-        long unixTime = System.currentTimeMillis();
-        System.out.println(unixTime);
-    }
 }
