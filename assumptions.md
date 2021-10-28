@@ -1,5 +1,10 @@
 # Assumptions for Dungeon Mania
 
+# Assumptions for Static Entities:
+- If a boulder and a mob move to the same spot at the same time, the mobs do not move
+- If there is no open spot for a zombie toast to spawn, no zombie toast will spawn
+- Zombie toasts spawns from the top position. If that space is already occupied, it will check the right position and keeps going in a clockwise direction until a free spot is found.
+
 # Assumptions for Collectable Entities:
 
 - Player can collect an unlimited number of entities (with the exception of key).
