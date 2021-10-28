@@ -11,8 +11,8 @@ public class NormalState implements BattleState {
     }
 
     /**
-     * Conducts the normal actions for fighting. p1 is the attacking entity and
-     * p2 is the defending entity.
+     * Conducts the normal actions for fighting. p1 is the player and
+     * p2 is the enemy.
      */
     public void fight(MovingEntity p1, MovingEntity p2) {
 
@@ -27,6 +27,7 @@ public class NormalState implements BattleState {
      */
     public double damageCalculation(MovingEntity p1) {
         if (p1 instanceof Player) {
+            Player plyr = (Player) p1;
             double dmg = p1.getAttackDamage();
             Sword sword = p1.getInventory().getItem("sword");
             Bow bow = p1.getInventory().getItem("bow");
