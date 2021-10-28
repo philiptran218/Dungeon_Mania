@@ -103,7 +103,7 @@ public class GameMap {
      * add a field in the json file for game difficulty.
      */
     public void saveMapAsJson(String name) {
-        System.out.println(savedPath);
+        // Delete previous save:
         if (savedPath == null) {
             savedPath = "src/main/resources/saved_games/" + name + ".json"; 
         } else {
