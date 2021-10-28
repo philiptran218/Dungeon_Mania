@@ -4,6 +4,8 @@
 - If a boulder and a mob move to the same spot at the same time, the mobs do not move
 - If there is no open spot for a zombie toast to spawn, no zombie toast will spawn
 - Zombie toasts spawns from the top position. If that space is already occupied, it will check the right position and keeps going in a clockwise direction until a free spot is found.
+- There can only be one static entity in one block
+- Zombies can spawn on an exit or portal
 
 # Assumptions for Collectable Entities:
 
