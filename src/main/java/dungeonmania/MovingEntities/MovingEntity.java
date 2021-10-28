@@ -1,12 +1,20 @@
 package dungeonmania.MovingEntities;
 
 import dungeonmania.Entity;
-import dungeonmania.util.Position;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
-public abstract class MovingEntity extends Entity {
-    private int health;
-    private int attackDamage;
-    //private Position location;
+import dungeonmania.util.Position;
+import dungeonmania.util.Direction;
+import dungeonmania.Entity;
+
+
+public abstract class MovingEntity extends Entity{
+    private double health;
+    private double attackDamage;
+    private Position playerLocation;
 
     /**
      * 
@@ -14,72 +22,59 @@ public abstract class MovingEntity extends Entity {
      * @param attackDamage
      * @param location
      */
-    public MovingEntity(String id, String type, Position pos, int health, int attackDamage){
+    public MovingEntity(String id, String type, Position pos, double health, double attackDamage){
         super(id, type, pos);
         this.health = health;
         this.attackDamage = attackDamage;
-        //this.location = location;
     }
 
     /**
-     * When the MovingEntity enemy fights with the player
+     * @param entities A list of Entity at the position that the MovingEntity is checking it can move to
+     * @return true if the MovingEntity can pass through each Entity in entities, false otherwise
      */
-    public void fight() {
+    public abstract boolean canPass(Map<Position, List<Entity>> map, Position pos);
 
+    public abstract void move(Map<Position, List<Entity>> map);
+
+    public void moveInDir(Map<Position, List<Entity>> map, Direction direction) {
+        map.get(super.getPos()).remove(this);
+        
+        Position newPos = super.getPos().translateBy(direction);
+        super.setPos(newPos);
+        map.get(newPos).add(this);
     }
+    public void moveToPos(Map<Position, List<Entity>> map, Position newPos) {
+        map.get(super.getPos()).remove(this);
 
-    public void moveUp() {
-
+        super.setPos(newPos);
+        map.get(newPos).add(this);
     }
-    public void moveRight() {
-
-    }
-    public void moveDown() {
-
-    }
-    public void moveLeft() {
-
-    }
-
-    /** 
-     * The MovingEntity will move around the map based on its type
-     */
-    public abstract void move();
-
-    /**
-     * 
-     * @return
-     */
-    //public abstract void canPass();
-
-
 
 
     ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters
-    public int getHealth() {
+    public double getHealth() {
         return health;
     }
 
-    public void setHealth(int health) {
+    public void setHealth(double health) {
         this.health = health;
     }
 
-    public int getAttackDamage() {
+    public double getAttackDamage() {
         return attackDamage;
     }
 
-    public void setAttackDamage(int attackDamage) {
+    public void setAttackDamage(double attackDamage) {
         this.attackDamage = attackDamage;
     }
 
-    // public Position getLocation() {
-    //     return location;
-    // }
+    public Position getPlayerLocation() {
+        return playerLocation;
+    }
 
-    // public void setLocation(Position location) {
-    //     this.location = location;
-    // }
-
-
+    public void setPlayerLocation(Position playerLocation) {
+        this.playerLocation = playerLocation;
+    }
+    
 }

@@ -3,7 +3,7 @@ package dungeonmania.CollectableEntities;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.util.Position;
 
-public class HealthPotion extends Potion implements AbilityBehaviour {
+public class HealthPotion extends Potion {
 
     /**
      * Constructor for HealthPotion
@@ -19,8 +19,7 @@ public class HealthPotion extends Potion implements AbilityBehaviour {
      * Activates the ability of the potion.
      * Called when the player wants to consume the potion.
      */
-    public void ability(Player plyr) {
-        setPlayer(plyr);
+    public void use() {
         getPlayer().setHealth(100);
     }
     

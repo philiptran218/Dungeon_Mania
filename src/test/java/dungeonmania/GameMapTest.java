@@ -30,11 +30,10 @@ public class GameMapTest {
     // json files properly.
     @Test
     public void testMapToListOfEntityResponse() {
-        GameMap map = new GameMap("Peaceful", null);
+        JsonObject j = getTestJsonPath("file1");
+        GameMap map = new GameMap("Peaceful", j.get("map-name").getAsString(), j);
 
-        // Get the json entity response list:
-        JsonObject main = getTestJsonPath("file1");
-        List<EntityResponse> entityList = map.mapToListEntityResponse(main);
+        List<EntityResponse> entityList = map.mapToListEntityResponse();
         
         // Manually make the array:
         List<EntityResponse> tested = new ArrayList<>();
@@ -58,13 +57,11 @@ public class GameMapTest {
     // Check if we are sucessfully ignoring the third layer:
     @Test
     public void testNoLayerFromReadingJsonMap () {
-        // Get the json entity response list:
-        JsonObject main = getTestJsonPath("file1");
-
         // Load game:
-        GameMap map = new GameMap(main);
+        JsonObject j = getTestJsonPath("file1");
+        GameMap map = new GameMap("Peaceful", j.get("map-name").getAsString(), j);
 
-        for (EntityResponse i : map.mapToListEntityResponse(main)) {
+        for (EntityResponse i : map.mapToListEntityResponse()) {
            assertEquals(i.getPosition().getLayer(), 0);
         }
     }
@@ -72,13 +69,11 @@ public class GameMapTest {
     // Check if we are processing the third layer sucessfully:
     @Test
     public void testLayerFromReadingJsonMap() {
-        // Get the json entity response list:
-        JsonObject main = getTestJsonPath("test_layer");
-
+        JsonObject j = getTestJsonPath("test_layer");
         // Load game:
-        GameMap map = new GameMap(main);
+        GameMap map = new GameMap("Peaceful", j.get("map-name").getAsString(), j);
 
-        for (EntityResponse i : map.mapToListEntityResponse(main)) {
+        for (EntityResponse i : map.mapToListEntityResponse()) {
             assertEquals(i.getPosition().getLayer(), 3);
         }
     }

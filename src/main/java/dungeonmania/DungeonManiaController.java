@@ -1,12 +1,19 @@
 package dungeonmania;
 
+<<<<<<< HEAD
 import dungeonmania.StaticEntities.Boulder;
 import dungeonmania.StaticEntities.FloorSwitch;
 import dungeonmania.StaticEntities.Portal;
 import dungeonmania.StaticEntities.StaticEntity;
+=======
+import dungeonmania.MovingEntities.MovingEntity;
+import dungeonmania.MovingEntities.Player;
+import dungeonmania.MovingEntities.ZombieToast;
+>>>>>>> master
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.DungeonResponse;
+import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
@@ -18,11 +25,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class DungeonManiaController {
+    private GameMap gameMap;
+
     public DungeonManiaController() {
     }
 
@@ -36,6 +44,10 @@ public class DungeonManiaController {
 
     public List<String> getGameModes() {
         return Arrays.asList("Standard", "Peaceful", "Hard");
+    }
+
+    public List<String> getUsableItems() {
+        return Arrays.asList("bomb", "health_potion", "invincibility_potion", "invisibility_potion", null);
     }
 
     /**
@@ -69,33 +81,48 @@ public class DungeonManiaController {
             }
         }
     }
-
+    
     public DungeonResponse newGame(String dungeonName, String gameMode) throws IllegalArgumentException {
         if (!getGameModes().contains(gameMode)) {
             throw new IllegalArgumentException("Game mode does not exist.");
         }
+<<<<<<< HEAD
         // Cahnge the name
         JsonObject jsonMap = getJsonFile("exit");
+=======
+        // Set map:
+        this.gameMap = new GameMap(gameMode, dungeonName, getJsonFile(dungeonName));
+>>>>>>> master
 
-        // ASSIGN THE MAP STORES BY THE CONTROLLER HERE :: JUST FOR TESTING:
-        GameMap map = new GameMap(gameMode, jsonMap);
-
-        return new DungeonResponse("dungeonId", dungeonName, map.mapToListEntityResponse(jsonMap), new ArrayList<ItemResponse>(), new ArrayList<String>(), "goals");
+        return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), 
+            new ArrayList<ItemResponse>(), new ArrayList<String>(), "Goals");
     }
     
     public DungeonResponse saveGame(String name) throws IllegalArgumentException {
-        return null;
+        // Advanced 
+        this.gameMap.saveMapAsJson(name);
+
+        return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), 
+            new ArrayList<ItemResponse>(), new ArrayList<String>(), "Goals");
     }
 
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
-        return null;
+        this.gameMap = new GameMap(name);
+
+        return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), 
+            new ArrayList<ItemResponse>(), new ArrayList<String>(), "Goals");
     }
 
     public List<String> allGames() {
-        return new ArrayList<>();
+        try {
+            return FileLoader.listFileNamesInResourceDirectory("/saved_games");
+        } catch (IOException e) {
+            return new ArrayList<>();
+        }
     }
 
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
+<<<<<<< HEAD
         // Position of the zombie spawner
         Position zombieSpawner;
 
@@ -143,6 +170,23 @@ public class DungeonManiaController {
             // Add code for playermovement
         }
         return null;
+=======
+        if (!getUsableItems().contains(itemUsed)) {
+            throw new IllegalArgumentException("Invalid item used.");
+        }
+        // Check inventory in item.
+        // ***********************
+        // Move the player:
+        gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
+
+        // Move all the moving entities by one tick:
+        for (MovingEntity e : gameMap.getMovingEntityList()) {
+            e.move(gameMap.getMap());
+        }
+        
+        return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), 
+            new ArrayList<ItemResponse>(), new ArrayList<String>(), "Goals");
+>>>>>>> master
     }
 
     public DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {
@@ -152,5 +196,4 @@ public class DungeonManiaController {
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
         return null;
     }
-
 }

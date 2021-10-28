@@ -26,4 +26,10 @@ public class Key extends Utility {
         return keyId;
     }
 
+    public void use() {
+        // Check if player is cardinally adjacent to a door
+        // Then check that keyId matches to door's Id
+        // Then open door if possible (check goals etc... may be delegated to other functions)
+    }
+
 }

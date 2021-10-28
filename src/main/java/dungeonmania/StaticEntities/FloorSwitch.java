@@ -8,6 +8,10 @@ public class FloorSwitch extends StaticEntity {
     public FloorSwitch(String id, String type, Position pos) {
         super(id, type, pos);
         super.setCanStandOn(true);
+<<<<<<< HEAD
+=======
+        super.setType("switch");
+>>>>>>> master
     }
     
     public boolean isTriggered() {

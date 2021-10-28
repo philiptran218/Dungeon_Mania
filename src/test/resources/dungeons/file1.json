@@ -1,5 +1,7 @@
 
 {
+    "width": 3,
+    "height": 3,
     "entities": [
       {
         "x": 0,
@@ -16,5 +18,9 @@
         "y": 2,
         "type": "wall"
       }
-    ]
+    ],
+    "map-name" : "custom",
+    "goal-condition": {
+      "goal": "boulders"
+    }
 }

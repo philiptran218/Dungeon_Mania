@@ -9,13 +9,13 @@ public abstract class Entity {
 
     public Entity (String id, String type, Position pos) {
         this.id = id;
-        this.pos = new Position(pos.getX(), pos.getY());
+        this.pos = pos;
         this.type = type;
     }
 
     // Getters and Setters
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(String id) {
@@ -31,7 +31,7 @@ public abstract class Entity {
     }
 
     public String getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(String type) {

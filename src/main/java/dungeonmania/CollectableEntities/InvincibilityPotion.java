@@ -3,7 +3,7 @@ package dungeonmania.CollectableEntities;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.util.Position;
 
-public class InvincibilityPotion extends Potion implements AbilityBehaviour {
+public class InvincibilityPotion extends Potion {
 
     private boolean isActive;
     // Need to hold battle class and movement class
@@ -32,10 +32,8 @@ public class InvincibilityPotion extends Potion implements AbilityBehaviour {
      * Activates the ability of the potion.
      * Called when the player wants to consume the potion.
      */
-    public void ability(Player plyr) {
-        setPlayer(plyr);
+    public void use() {
         setIsActive(true);
-        
         // Have to change state of movement here for enemies
         // Also change state here for combat
 

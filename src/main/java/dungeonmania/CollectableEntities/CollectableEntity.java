@@ -1,10 +1,12 @@
 package dungeonmania.CollectableEntities;
 
 import dungeonmania.Entity;
+import dungeonmania.MovingEntities.Player;
 import dungeonmania.util.Position;
 
 public abstract class CollectableEntity extends Entity {
 
+    private Player player;
     /**
      * Constructor for CollectableEntity
      * @param id
@@ -14,4 +16,15 @@ public abstract class CollectableEntity extends Entity {
     public CollectableEntity(String id, String type, Position pos) {
         super(id, type, pos);
     }
+
+    // Getters and Setters
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    abstract public void use();
 }

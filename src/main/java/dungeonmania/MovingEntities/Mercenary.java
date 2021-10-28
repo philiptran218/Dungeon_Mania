@@ -1,8 +1,13 @@
 package dungeonmania.MovingEntities;
 
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import dungeonmania.util.Position;
+import dungeonmania.util.Direction;
+import dungeonmania.Entity;
 
 
 public class Mercenary extends MovingEntity implements MovingEntityObserver{
@@ -10,15 +15,13 @@ public class Mercenary extends MovingEntity implements MovingEntityObserver{
     private MercenaryState allyState;
     private MercenaryState state;
 
-    private Position playerlocation;
-
     private int battleRadius;
-    public Mercenary(Position startLocation) {
-        super(5, 5, startLocation);
-        this.enemyState = new EnemyState(this);
-        this.allyState = new AllyState(this);
+    public Mercenary(String id, String type, Position pos) {
+        super(id, type, pos, 5, 5);
+        this.enemyState = new MercenaryEnemyState(this);
+        this.allyState = new MercenaryAllyState(this);
+        this.state = enemyState;
     }
-
 
     public boolean generateArmour() {
         int num = ThreadLocalRandom.current().nextInt(0,10);
@@ -28,15 +31,19 @@ public class Mercenary extends MovingEntity implements MovingEntityObserver{
         return num >= 7;
     }
 
-    public void move(){
-
+    public void move(Map<Position, List<Entity>> map){
+        state.move(map);
     }
 
+    public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
+        return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty();
+    }
 
     @Override
     public void update(MovingEntitySubject obj) {
-        Player player = (Player) obj;
+        super.setPlayerLocation(((Player) obj).getPos());
     }
+
 
 }
 

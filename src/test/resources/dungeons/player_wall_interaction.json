@@ -1,5 +1,7 @@
 
 {
+    "width": 3,
+    "height": 3,
     "entities": [
       {
         "x": 1,
@@ -47,5 +49,16 @@
         "y": 1,
         "type": "wall"
       }
-    ]
+    ],
+    "goal-condition": {
+      "goal": "AND",
+      "subgoals": [
+        {
+          "goal": "enemies"
+        },
+        {
+          "goal": "treasure"
+        }
+      ]
+    }
   }

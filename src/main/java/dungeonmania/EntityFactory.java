@@ -1,64 +1,72 @@
 package dungeonmania;
 
+import com.google.gson.JsonElement;
 
+import dungeonmania.CollectableEntities.*;
+import dungeonmania.MovingEntities.*;
+import dungeonmania.StaticEntities.*;
 import dungeonmania.util.Position;
 
 public class EntityFactory {
-    public static Entity getEntityObject(String type, Position pos) {
-        /*
+    public static Entity getEntityObject(String id, String type, Position pos, JsonElement keyId) {
+        
+        Position movingPos = new Position(pos.getX(), pos.getY(), 3);
+        Position collectPos = new Position(pos.getX(), pos.getY(), 2);
+        Position staticPos = new Position(pos.getX(), pos.getY(), 1);
+        Position absolPos = new Position(pos.getX(), pos.getY(), 0);
+
         switch (type) {
             case "wall": 
-                return new Spider(pos);
+                return new Wall(id, type, staticPos);
             case "exit": 
-                return new Wall(position, type);
+                return new Exit(id, type, absolPos);
             case "boulder": 
-                return new Wall(position, type);     
+                return new Boulder(id, type, staticPos);     
             case "switch": 
-                return new Wall(position, type);
+                return new FloorSwitch(id, type, absolPos);
             case "door": 
-                return new Wall(position, type);
+                return new Door(id, type, staticPos);
             case "portal": 
-                return new Wall(position, type);
+                return new Portal(id, type, collectPos);
             case "zombie_toast_spawner": 
-                return new Wall(position, type);
+                return new ZombieToastSpawner(id, type, staticPos);
             case "spider": 
-                return new Wall(position, type);
+                return new Spider(id, type, movingPos);
             case "zombie_toast": 
-                return new Wall(position, type);
+                return new ZombieToast(id, type, staticPos);
             case "mercenary": 
-                return new Mercenary(position, type);
+                return new Mercenary(id, type, movingPos);
             case "treasure": 
-                return new Wall(position, type);
-            case "key": 
-                return new Wall(position, type);
+                return new Treasure(id, type, collectPos);
             case "health_potion": 
-                return new Wall(position, type);
+                return new HealthPotion(id, type, collectPos);
+            case "key":
+                return new Key(id, type, collectPos, keyId.getAsInt());
             case "invincibility_potion": 
-                return new Wall(position, type);
+                return new InvincibilityPotion(id, type, collectPos);
             case "invisibility_potion": 
-                return new Wall(position, type);
+                return new InvisibilityPotion(id, type, collectPos);
             case "wood": 
-                return new Wall(position, type);
+                return new Wood(id, type, collectPos);
             case "arrow": 
-                return new Wall(position, type);
+                return new Arrow(id, type, collectPos);
             case "bomb": 
-                return new Wall(position, type);
+                return new Bomb(id, type, collectPos);
             case "sword": 
-                return new Wall(position, type);
+                return new Sword(id, type, collectPos);
             case "armour": 
-                return new Wall(position, type);
+                return new Armour(id, type, collectPos);
             case "one_ring": 
-                return new Wall(position, type);
+                return new TheOneRing(id, type, collectPos);
             case "bow": 
-                return new Wall(position, type);
+                return new Bow(id, type, collectPos);
             case "shield": 
-                return new Wall(position, type);
+                return new Shield(id, type, collectPos);
             case "player": 
-                return new Wall(position, type);
+                return new Player(id, type, movingPos);
             default: 
                 return null;
         }
-        */
-        return null;
     }
+
 }
