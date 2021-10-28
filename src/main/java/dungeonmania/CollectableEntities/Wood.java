@@ -1,5 +1,6 @@
 package dungeonmania.CollectableEntities;
 
+import dungeonmania.MovingEntities.Player;
 import dungeonmania.util.Position;
 
 public class Wood extends Utility {
@@ -12,5 +13,12 @@ public class Wood extends Utility {
      */
     public Wood(String id, String type, Position pos) {
         super(id, type, pos);
+    }
+
+    /**
+     * Uses wood to build bows and shields. 
+     */
+    public void use() {
+        // Remove the treasure from inventory
     }
 }
