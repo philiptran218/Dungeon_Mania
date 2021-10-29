@@ -16,10 +16,15 @@ import org.json.JSONObject;
 
 import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
+import dungeonmania.Inventory;
 import dungeonmania.CollectableEntities.*;
+import dungeonmania.Goals.*;
 import dungeonmania.MovingEntities.MovingEntity;
+import dungeonmania.MovingEntities.MovingEntityObserver;
 import dungeonmania.MovingEntities.Player;
+import dungeonmania.StaticEntities.*;
 import dungeonmania.response.models.EntityResponse;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
 public class GameMap {
@@ -57,7 +62,6 @@ public class GameMap {
     /**
      * This constructor used for loading saved games.
      * @param map
-     * @return
      */
     public GameMap(String name) {
         this(getSavedMap(name).get("game-mode").getAsString(), getSavedMap(name).get("map-name").getAsString(), getSavedMap(name));
@@ -92,6 +96,15 @@ public class GameMap {
         return entityList;
     }
     
+    public List<ItemResponse> inventoryToItemResponse() {
+        List<ItemResponse> itemResponse = new ArrayList<>();
+        Inventory i = player.getInventory();
+        for (CollectableEntity c : i.getInventory()) {
+            itemResponse.add(new ItemResponse(c.getId(), c.getType()));
+        }
+        return itemResponse;
+    }
+
     /**
      * Converts the current game map into a json file and saves it 
      * in the designated folder. Also If there is no game difficulty
@@ -132,11 +145,11 @@ public class GameMap {
         JSONObject main = new JSONObject();
         JSONArray entities = new JSONArray();
 
+        // Add all fields:
         main.put("width", getMapWidth());
         main.put("height", getMapHeight());
         main.put("game-mode", this.gameDifficulty);
         main.put("map-name", this.dungeonName);
-        // Goals:
         main.put("goal-condition", this.getGoal());
 
         for (Map.Entry<Position, List<Entity>> entry : this.dungeonMap.entrySet()) {
@@ -149,11 +162,9 @@ public class GameMap {
                 temp.put("type", e.getType());
                 if (e.getType().equals("key")) {
                     temp.put("key", ((Key) e).getKeyId());
-                }
-                /*
-                if (e.getType().equals("door")) {
+                } else if (e.getType().equals("door")) {
                     temp.put("key", ((Door) e).getKeyId());
-                }*/
+                }
                 entities.put(temp);
             }
         }
@@ -224,7 +235,7 @@ public class GameMap {
         }
         return entityList;
     }
-    
+
     // Getter and setters:
     public Player getPlayer() {
         return this.player;
@@ -257,4 +268,32 @@ public class GameMap {
     public String getDungeonName() {
         return this.dungeonName;
     }
+
+    /**
+     * Convert JsonObject containing goals into a composite pattern
+     */
+    public GoalInterface goalJsonToPattern(JsonObject jsonGoal) {
+        if (jsonGoal.get("goal").getAsString().equals("AND")) {
+            GoalInterface goal = new AndGoal();
+            for (JsonElement entity : jsonGoal.getAsJsonArray("subgoals")) {
+                goal.add(goalJsonToPattern(entity.getAsJsonObject()));
+            }
+            return goal;
+        } else if (jsonGoal.get("goal").getAsString().equals("OR")) {
+            GoalInterface goal = new OrGoal();
+            for (JsonElement entity : jsonGoal.getAsJsonArray("subgoals")) {
+                goal.add(goalJsonToPattern(entity.getAsJsonObject()));
+            }
+            return goal;
+        } else {
+            return GoalFactory.getGoal(jsonGoal.get("goal").getAsString());
+        }
+    }
+
+    public void setObservers() {
+        for (MovingEntity e : getMovingEntityList()) {
+            player.registerObserver(e);
+        }
+    }
+
 }
