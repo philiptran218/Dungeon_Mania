@@ -85,18 +85,19 @@ public class GameMap {
             } 
             // Check for stacking:
             if (entry.getValue().size() > 1) {
-                int layer = 0;
                 for (Entity e : entry.getValue()) {
-                    int x = e.getPos().getX();
-                    int y = e.getPos().getY();
-                    entityList.add(new EntityResponse(e.getId(), e.getType(), new Position(x, y, layer), false));
-                    layer++;
+                    boolean isInteractable = (e.getType().equals("mercenary") || e.getType().equals("zombie_toast_spawner"));
+                    entityList.add(new EntityResponse(e.getId(), e.getType(), e.getPos(), isInteractable));
                 }
             }
         }
         return entityList;
     }
     
+    /**
+     * Converts the player into item response.
+     * @return List of items as a list of item response.
+     */
     public List<ItemResponse> inventoryToItemResponse() {
         List<ItemResponse> itemResponse = new ArrayList<>();
         Inventory i = player.getInventory();
