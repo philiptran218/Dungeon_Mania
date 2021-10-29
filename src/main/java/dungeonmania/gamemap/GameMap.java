@@ -53,10 +53,9 @@ public class GameMap {
     public GameMap(String difficulty, String name, JsonObject jsonMap) {
         this.gameDifficulty = difficulty;
         this.dungeonMap = jsonToMap(jsonMap);
-        // Given the json map, we would convert it to a Map<Position, Entity List> 
-        // and set dungeonMap to this map.
         this.mapId = "" + System.currentTimeMillis();
         this.dungeonName = name;
+        this.setObservers();
     }
 
     /**
