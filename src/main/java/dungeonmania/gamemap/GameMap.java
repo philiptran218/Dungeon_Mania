@@ -23,6 +23,7 @@ import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.MovingEntities.MovingEntityObserver;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.StaticEntities.*;
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
@@ -52,9 +53,10 @@ public class GameMap {
      */
     public GameMap(String difficulty, String name, JsonObject jsonMap) {
         this.gameDifficulty = difficulty;
-        this.dungeonMap = jsonToMap(jsonMap);
-        this.mapId = "" + System.currentTimeMillis();
         this.dungeonName = name;
+        this.mapId = "" + System.currentTimeMillis();
+        this.dungeonMap = jsonToMap(jsonMap);
+        this.setPlayerInventory(jsonMap);
         this.setObservers();
     }
 
@@ -65,7 +67,7 @@ public class GameMap {
     public GameMap(String name) {
         this(getSavedMap(name).get("game-mode").getAsString(), getSavedMap(name).get("map-name").getAsString(), getSavedMap(name));
     }
-
+    
     /**
      * Takes an the json map object then looks at entity field and 
      * returns all entities on the map as a list of entity response.
@@ -151,6 +153,17 @@ public class GameMap {
         main.put("map-name", this.dungeonName);
         main.put("goal-condition", this.getGoal());
 
+        JSONArray inventory = new JSONArray();
+        for (CollectableEntity e : player.getInventoryList()) {
+            JSONObject c = new JSONObject();
+            c.put("type", e.getType());
+            if (e.getType().equals("key")) {
+                c.put("key", ((Key) e).getKeyId());
+            }
+            inventory.put(c);
+        }   
+        main.put("inventory", inventory);
+
         for (Map.Entry<Position, List<Entity>> entry : this.dungeonMap.entrySet()) {
             Position p = entry.getKey();
             if (entry.getValue().size() == 1) {
@@ -194,11 +207,8 @@ public class GameMap {
      * @return Map<Position, List<Entity>> form of a map corresponding to jsonMap
      */
     public Map<Position, List<Entity>> jsonToMap(JsonObject jsonMap) {
-        // Add goals to the map:
-        this.goal = jsonMap.get("goal-condition").toString();
         // Initialise the map:
         Map<Position, List<Entity>> newMap = createInitialisedMap(jsonMap.get("width").getAsInt(), jsonMap.get("height").getAsInt());
-
         Integer i = 0;
         for (JsonElement entity : jsonMap.getAsJsonArray("entities")) {
             // Get all attributes:
@@ -216,6 +226,21 @@ public class GameMap {
             i++;
         }
         return newMap;
+    }
+
+    public void setPlayerInventory(JsonObject jsonMap) {
+        // Case when the player does not exist.
+        if (jsonMap.getAsJsonArray("inventory") == null) {
+            return;
+        }
+        // Look at the inventory field in json file.
+        for (JsonElement entity : jsonMap.getAsJsonArray("inventory")) {
+            JsonObject obj = entity.getAsJsonObject();
+            String type = obj.get("type").getAsString();
+            Position pos = new Position(0, 0, -1);
+            Entity collectable = EntityFactory.getEntityObject("" + System.currentTimeMillis(), type, pos, obj.get("key"));
+            player.getInventory().put(collectable);
+        }
     }
 
     /**

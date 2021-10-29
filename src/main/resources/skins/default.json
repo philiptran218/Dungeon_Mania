@@ -1,8 +1,7 @@
 {
     "main_menu": {
         "background_image": "images/backgrounds/main_menu.png",
-        "text_color": "white",
-        "background_music": "audio/slayer.mp3"
+        "text_color": "white"
     },
     "game": {
         "background_image": {
@@ -13,8 +12,7 @@
         },
         "resolution_px": 16,
         "item_box": "images/ui/box.png",
-        "text_color": "white",
-        "background_music": "audio/circulation.mp3"
+        "text_color": "white"
     },
     "entities": {
         "boulder": "images/tileset/entities/boulder_00.png",

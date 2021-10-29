@@ -54,6 +54,14 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     }
 
     /**
+     * Get the player inventory in the form: List<CollectableEntity>
+     * @return List of entity in the player's inventory.
+     */
+    public List<CollectableEntity> getInventoryList() {
+        return inventory.getInventory();
+    }
+
+    /**
      * Given an item name, check if the player has the 
      * item in inventory or not.
      * @param item (Collectable Entity)
