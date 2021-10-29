@@ -3,6 +3,7 @@ package dungeonmania;
 import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.MovingEntities.ZombieToast;
+import dungeonmania.StaticEntities.ZombieToastSpawner;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.DungeonResponse;
@@ -139,7 +140,47 @@ public class DungeonManiaController {
     }
 
     public DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {
-        return null;
+        boolean isValid = false;
+        Position entityPosition = null;
+        String type = "";
+        for (Position key : gameMap.getMap().keySet()) {
+            for (Entity counter : gameMap.getMap().get(key)) {
+                if (counter.getId() == entityId) {
+                    if (counter.getType() == "zombie_toast_spawner" || counter.getType() == "mercenary") {
+                        isValid = true;
+                        entityPosition = key;
+                        type = counter.getType();
+                    }
+                }
+            }
+        }
+        if (isValid == false) {
+            throw new IllegalArgumentException();
+        }
+        // If the player wants to destroy the zombie toast spawner
+        if (type.equals("zombie_toast_spawner")) {
+            Player playerEntity = null;
+            boolean isAdjacent = false;
+            // Checks if the interaction is valid
+            ZombieToastSpawner spawner = (ZombieToastSpawner) gameMap.getMap().get(entityPosition).get(1);
+            playerEntity = spawner.canSpawnerBeDestroyed(entityPosition, gameMap.getMap(), isAdjacent, playerEntity);
+            if (isAdjacent == false) {
+                throw new InvalidActionException("Player is not cardinally adjacent to spawner");
+            }
+            if (playerEntity.getInventory().getItem("sword") == null && playerEntity.getInventory().getItem("bow") == null) {
+                throw new InvalidActionException("Player does not have a weapon");
+            }
+
+            // Destroys the zombie toast spawner
+            if (playerEntity.getInventory().getItem("sword") != null) {
+                playerEntity.getInventory().getItem("sword").use();
+            }
+            else {
+                playerEntity.getInventory().getItem("bow").use();
+            }
+            gameMap.getMap().get(entityPosition).remove(1);
+        }
+        return returnDungeonResponse();
     }
 
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
