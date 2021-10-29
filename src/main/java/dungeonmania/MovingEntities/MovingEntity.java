@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
@@ -49,6 +51,9 @@ public abstract class MovingEntity extends Entity implements MovingEntityObserve
         super.setPos(newPos);
         map.get(newPos).add(this);
     }
+
+
+
 
 
     ////////////////////////////////////////////////////////////////////////////
