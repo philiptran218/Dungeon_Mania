@@ -1,5 +1,9 @@
 package dungeonmania.StaticEntities;
 
+import java.util.List;
+import java.util.Map;
+
+import dungeonmania.Entity;
 import dungeonmania.util.Position;
 
 public class FloorSwitch extends StaticEntity {
@@ -9,4 +13,28 @@ public class FloorSwitch extends StaticEntity {
         super.setCanStandOn(true);
         super.setType("switch");
     }
+<<<<<<< HEAD
+=======
+    
+    public boolean isTriggered() {
+        return triggered;
+    }
+
+    public void setTriggered(boolean triggered) {
+        this.triggered = triggered;
+    }
+
+    public boolean isUnderBoulder(Map<Position, List<Entity>> map) {
+        Position pos = super.getPos();
+        List<Entity> entities = map.get(new Position(pos.getX(), pos.getY(), 1));
+        if (entities.isEmpty()) {
+            return false;
+        }
+        if (entities.get(0) instanceof Boulder) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+>>>>>>> master
 }

@@ -21,8 +21,7 @@ public class TheOneRing extends CombatItems {
      */
     public void use() {
         this.getPlayer().setHealth(100);
-        // Then remove the item from inventory
-        //this.getPlayer().getInventory.remove(this);
+        getPlayer().getInventoryList().remove(this);
     }
 
 }

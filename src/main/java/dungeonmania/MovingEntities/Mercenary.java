@@ -16,6 +16,7 @@ public class Mercenary extends MovingEntity {
     private MercenaryState enemyState;
     private MercenaryState allyState;
     private MercenaryState state;
+    private int price = 1;
 
     private int battleRadius;
     public Mercenary(String id, String type, Position pos) {
@@ -41,7 +42,9 @@ public class Mercenary extends MovingEntity {
         return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty();
     }
 
-
+    public void bribe() {
+        this.state = allyState;
+    }
     public void moveAway(Map<Position, List<Entity>> map) {
         Position playerPos = this.getPlayerLocation();
         Position pos = super.getPos();
@@ -64,5 +67,12 @@ public class Mercenary extends MovingEntity {
         this.moveToPos(map, new Position(newPos.getX(), newPos.getY(), 3));
     }
 
+    public int getPrice() {
+        return price;
+    }
+
+    public boolean isAlly() {
+        return state.equals(allyState);
+    }
 }
 
