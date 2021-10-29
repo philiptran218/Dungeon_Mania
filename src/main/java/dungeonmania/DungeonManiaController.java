@@ -176,7 +176,7 @@ public class DungeonManiaController {
             }
             playerInv.useItem("wood");
             playerInv.useItem("wood");
-            if (playerInv.getNoItemType("treasure") < 1 ) {
+            if (playerInv.getNoItemType("treasure") >= 1 ) {
                 playerInv.useItem("treasure");
             } else {
                 playerInv.useItem("key");
