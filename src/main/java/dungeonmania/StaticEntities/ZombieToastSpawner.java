@@ -11,6 +11,7 @@ import dungeonmania.gamemap.StandardState;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import dungeonmania.Entity;
+import dungeonmania.MovingEntities.Player;
 
 public class ZombieToastSpawner extends StaticEntity {
     private int tickProgress = 0;
