@@ -68,19 +68,20 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         Position pos = super.getPos();
         Position mercenaryPos = mercenary.getPos();
 
-        if (inventory.getNoItemType("treasure") <= mercenary.getPrice()) {
+        if (inventory.getNoItemType("treasure") < mercenary.getPrice()) {
             // Player doesnt have enough gold
             throw new InvalidActionException("Player doesn't have enough gold");
-        } 
-        // Remove gold;
-        for (int i = 1; i < mercenary.getPrice(); i++) {
-            inventory.useItem("treasure");
         }
 
         Position difference = Position.calculatePositionBetween(pos, mercenaryPos);
         if (Math.abs(difference.getX()) + Math.abs(difference.getY()) > 2) {
             // player more than 2 cardinal tiles from mercenary
             throw new InvalidActionException("Mercenary too far away");
+        }
+        
+        // Remove gold;
+        for (int i = 1; i < mercenary.getPrice(); i++) {
+            inventory.useItem("treasure");
         }
 
         // Successfully bribe mercenary

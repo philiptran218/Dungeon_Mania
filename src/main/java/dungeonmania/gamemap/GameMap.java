@@ -20,11 +20,10 @@ import dungeonmania.Inventory;
 import dungeonmania.Battles.Battle;
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.Goals.*;
+import dungeonmania.MovingEntities.Mercenary;
 import dungeonmania.MovingEntities.MovingEntity;
-import dungeonmania.MovingEntities.MovingEntityObserver;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.StaticEntities.*;
-import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
@@ -84,6 +83,9 @@ public class GameMap {
         for (Map.Entry<Position, List<Entity>> entry : this.dungeonMap.entrySet()) {
             for (Entity e : entry.getValue()) {
                 boolean isInteractable = (e.getType().equals("mercenary") || e.getType().equals("zombie_toast_spawner"));
+                if (e.getType().equals("mercenary") && ((Mercenary) e).isAlly()){
+                    isInteractable = false;
+                }
                 entityList.add(new EntityResponse(e.getId(), e.getType(), e.getPos(), isInteractable));
             }
         }
@@ -255,6 +257,23 @@ public class GameMap {
             }
         }
         return entityList;
+    }
+    
+    /**
+     * Given the id of an entity, search the map and return the
+     * entity with the respective id.
+     * @param id (String)
+     * @return Entity with given id (String).
+     */
+    public Entity getEntityOnMap(String id) {
+        for (Map.Entry<Position, List<Entity>> entry : dungeonMap.entrySet()) {
+            for (Entity e : entry.getValue()) {
+                if (e.getId().equals(id)) {
+                    return e;
+                }
+            }
+        }
+        return null;
     }
 
     // Getter and setters:
