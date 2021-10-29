@@ -71,8 +71,7 @@ public class InvisibilityPotion extends Potion {
             setIsActive(false);
 
             // Check if there is a currently active invincibility potion
-            InvincibilityPotion invincPotion = (InvincibilityPotion) getPlayer().getItem("invincibility_potion");
-            if (invincPotion == null || !invincPotion.getIsActive()) {
+            if (!activeInvincPotion() || getBattle().getDifficulty().equals("hard")) {
                 getBattle().setInitialState();
                 // Set movement here as well....
             }
@@ -81,7 +80,15 @@ public class InvisibilityPotion extends Potion {
                 getBattle().setBattleState(getBattle().getInvincibleState()); 
                 // Set invincible movement here...
             }
-            // Remove potion from inventory here...
+            getPlayer().getInventoryList().remove(this);
         }
+    }
+
+    public Boolean activeInvincPotion() {
+        InvincibilityPotion invincPotion = (InvincibilityPotion) getPlayer().getItem("invincibility_potion");
+        if (invincPotion == null || !invincPotion.getIsActive()) {
+            return false;
+        }
+        return true;
     }
 }

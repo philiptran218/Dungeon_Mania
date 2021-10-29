@@ -1,12 +1,14 @@
 package dungeonmania.CollectableEntities;
 
+import dungeonmania.Battles.Battle;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.util.Position;
 
 public class InvincibilityPotion extends Potion {
 
     private boolean isActive;
-    // Need to hold battle class and movement class
+    private int duration;
+    private Battle battle;
 
     /**
      * Constructor for InvincibilityPotion
@@ -14,9 +16,11 @@ public class InvincibilityPotion extends Potion {
      * @param type
      * @param pos
      */
-    public InvincibilityPotion(String id, String type, Position pos) {
+    public InvincibilityPotion(String id, String type, Position pos, Battle battle) {
         super(id, type, pos);
         this.setIsActive(false);
+        this.setBattle(battle);
+        this.setDuration(0);
     }
 
     // Getters and Setters
@@ -28,20 +32,59 @@ public class InvincibilityPotion extends Potion {
         return isActive;
     }
 
+    public void setBattle(Battle battle) {
+        this.battle = battle;
+    }
+
+    public Battle getBattle() {
+        return battle;
+    }
+
+    public void setDuration(int time) {
+        this.duration = time;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
     /**
      * Activates the ability of the potion.
      * Called when the player wants to consume the potion.
      */
     public void use() {
-        setIsActive(true);
-        // Have to change state of movement here for enemies
-        // Also change state here for combat
+        if (!getIsActive() && !activeInvisPotion() && !getBattle().getDifficulty().equals("hard")) {
+            setIsActive(true);
+            this.setDuration(30);
+            getBattle().setBattleState(getBattle().getInvincibleState());
+        } 
+        else if (!getIsActive()) {
+            setIsActive(true);
+            this.setDuration(30);
+        }
+    }
 
-        // Enemies move away from the player
-        // Combat kills enemies immediately (set health to 0)
+    public void tickDuration() {
+        this.setDuration(getDuration() - 1);
 
-        // HAVE TO CHECK FOR DIFFICULTY, IF ON HARD, USING POTION DOES NOTHING
-        // (DON'T CHANGE ANY STATE)
+        if (getDuration() == 0) {
+            setIsActive(false);
+
+            // Check if there is a currently active invisibility potion
+            if (!activeInvisPotion()) {
+                getBattle().setInitialState();
+                // Set movement here as well....
+            }
+            getPlayer().getInventoryList().remove(this);
+        }
+    }
+
+    public Boolean activeInvisPotion() {
+        InvisibilityPotion invisPotion = (InvisibilityPotion) getPlayer().getItem("invisibility_potion");
+        if (invisPotion == null || !invisPotion.getIsActive()) {
+            return false;
+        }
+        return true;
     }
     
 }
