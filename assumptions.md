@@ -6,7 +6,7 @@
 - Zombie toasts spawns from the top position. If that space is already occupied, it will check the right position and keeps going in a clockwise direction until a free spot is found.
 - There can only be one static entity in one block
 - Zombies can spawn on an exit, portal or unlocked door
-- If the player has a sword and a bow, the player will use a sword to destroy the zombie toast spawner
+- If the player has both a sword and a bow, the player will use a sword to destroy the zombie toast spawner
 
 # Assumptions for Collectable Entities:
 
