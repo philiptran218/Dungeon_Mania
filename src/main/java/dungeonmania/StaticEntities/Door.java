@@ -12,11 +12,9 @@ public class Door extends StaticEntity {
         this.keyId = keyId;
     }
 
-    public void unlock(int key) {
-        if (keyId == key) {
-            locked = false;
-            super.setCanStandOn(true);
-        }
+    public void unlock() {
+        locked = false;
+        super.setCanStandOn(true);
     }
 
     public boolean isLocked() {
