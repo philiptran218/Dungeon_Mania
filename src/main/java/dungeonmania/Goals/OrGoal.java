@@ -1,17 +1,26 @@
 package dungeonmania.Goals;
 
-import dungeonmania.gamemap.GameMap;
+import java.util.List;
+import java.util.Map;
+
+import dungeonmania.Entity;
+import dungeonmania.util.Position;
 
 public class OrGoal extends CompositeGoal implements GoalInterface {
     
     private String goalName = "OR";
 
-    public boolean isGoalComplete(GameMap game) {
-        return true;
-    }
-
     @Override
     public String getGoalName() {
         return this.goalName;
+    }
+
+    @Override
+    public boolean isGoalComplete(Map<Position, List<Entity>> map) {
+        boolean complete = false;
+        for (GoalInterface goal : this.getChildren()) {
+            complete = complete || goal.isGoalComplete(map);
+        }
+        return complete;
     }
 }

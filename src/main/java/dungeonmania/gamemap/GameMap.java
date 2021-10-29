@@ -232,10 +232,7 @@ public class GameMap {
                 }
             }
         }
-<<<<<<< HEAD
-=======
         return entityList;
->>>>>>> master
     }
 
     // Getter and setters:
