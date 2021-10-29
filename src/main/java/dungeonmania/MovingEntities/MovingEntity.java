@@ -35,8 +35,17 @@ public abstract class MovingEntity extends Entity implements MovingEntityObserve
      */
     public abstract boolean canPass(Map<Position, List<Entity>> map, Position pos);
 
+    /**
+     * The default move of the MovingEntity in a tic
+     * @param map
+     */
     public abstract void move(Map<Position, List<Entity>> map);
 
+    /**
+     * Move the MovingEntity in a direction
+     * @param map
+     * @param direction
+     */
     public void moveInDir(Map<Position, List<Entity>> map, Direction direction) {
         map.get(super.getPos()).remove(this);
         
@@ -44,6 +53,12 @@ public abstract class MovingEntity extends Entity implements MovingEntityObserve
         super.setPos(newPos);
         map.get(newPos).add(this);
     }
+
+    /**
+     * Moves the MovingEntity to a given Position on the map
+     * @param map
+     * @param newPos
+     */
     public void moveToPos(Map<Position, List<Entity>> map, Position newPos) {
         map.get(super.getPos()).remove(this);
 
