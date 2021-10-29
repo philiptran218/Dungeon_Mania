@@ -70,5 +70,9 @@ public class Mercenary extends MovingEntity {
     public int getPrice() {
         return price;
     }
+
+    public boolean isAlly() {
+        return state.equals(allyState);
+    }
 }
 
