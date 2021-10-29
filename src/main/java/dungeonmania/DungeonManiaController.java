@@ -115,9 +115,15 @@ public class DungeonManiaController {
     }
 
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
-        // Position of the zombie spawner
-        Position zombieSpawner;
-
+        // Ticks the zombie toast spawner
+        List<ZombieToastSpawner> spawnerList = new ArrayList<ZombieToastSpawner>();
+        for (Position key : gameMap.getMap().keySet()) {
+            Entity checkSpawner = gameMap.getMap().get(key).get(1);
+            if (checkSpawner.getType() == "zombie_toast_spawner") {
+                ZombieToastSpawner tickSpawner = (ZombieToastSpawner) checkSpawner;
+                tickSpawner.tick(key, gameMap.getMap());
+            }
+        }
         Position dir = movementDirection.getOffset();
         // Position in front of player
         Position checkPosition;
@@ -125,7 +131,7 @@ public class DungeonManiaController {
         // Player position
         Position playerPosition;
         // ADD PLAYER MOVEMENT
-        if (!tempEntity.getType().equals("boulder")) {
+        if (tempEntity.getType().equals("boulder")) {
             Position inFrontOfCheckPosition = new Position(checkPosition.getX() + dir.getX(),checkPosition.getY() + dir.getY(), 0);
             List <Entity> tempList = gameMap.getMap().get(inFrontOfCheckPosition);
             if (tempList.get(1) == null && tempList.get(3) == null) {
@@ -144,6 +150,7 @@ public class DungeonManiaController {
                 door.unlock();
                 // CHANGE ANIMATION FOR DOOR
             }
+        }
         // Check if the item is valid.
         if (!getUsableItems().contains(itemUsed)) {
             throw new IllegalArgumentException("Invalid item used.");
