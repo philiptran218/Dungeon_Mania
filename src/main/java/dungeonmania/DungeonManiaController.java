@@ -140,23 +140,11 @@ public class DungeonManiaController {
     }
 
     public DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {
-        boolean isValid = false;
-        Position entityPosition = null;
-        String type = "";
-        for (Position key : gameMap.getMap().keySet()) {
-            for (Entity counter : gameMap.getMap().get(key)) {
-                if (counter.getId() == entityId) {
-                    if (counter.getType() == "zombie_toast_spawner" || counter.getType() == "mercenary") {
-                        isValid = true;
-                        entityPosition = key;
-                        type = counter.getType();
-                    }
-                }
-            }
+        if (gameMap.getEntityOnMap(entityId) == null) {
+            throw new IllegalArgumentException("Entity does not exist.");
         }
-        if (isValid == false) {
-            throw new IllegalArgumentException();
-        }
+
+
         // If the player wants to destroy the zombie toast spawner
         if (type.equals("zombie_toast_spawner")) {
             Player playerEntity = null;

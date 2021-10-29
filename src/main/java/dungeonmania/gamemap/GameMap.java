@@ -254,6 +254,23 @@ public class GameMap {
         }
         return entityList;
     }
+    
+    /**
+     * Given the id of an entity, search the map and return the
+     * entity with the respective id.
+     * @param id (String)
+     * @return Entity with given id (String).
+     */
+    public Entity getEntityOnMap(String id) {
+        for (Map.Entry<Position, List<Entity>> entry : dungeonMap.entrySet()) {
+            for (Entity e : entry.getValue()) {
+                if (e.getId().equals(id)) {
+                    return e;
+                }
+            }
+        }
+        return null;
+    }
 
     // Getter and setters:
     public Player getPlayer() {
