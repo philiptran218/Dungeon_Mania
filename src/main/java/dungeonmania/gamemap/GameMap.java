@@ -209,7 +209,7 @@ public class GameMap {
             Position pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
 
             // Create the entity object, by factory method:
-            Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, obj.get("key"));
+            Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, obj.get("key"), this.gameDifficulty);
             // Set player:
             if (type.equals("player")) {
                 this.player = (Player) temp;
@@ -230,7 +230,7 @@ public class GameMap {
             JsonObject obj = entity.getAsJsonObject();
             String type = obj.get("type").getAsString();
             Position pos = new Position(0, 0, -1);
-            Entity collectable = EntityFactory.getEntityObject("" + System.currentTimeMillis(), type, pos, obj.get("key"));
+            Entity collectable = EntityFactory.getEntityObject("" + System.currentTimeMillis(), type, pos, obj.get("key"), this.gameDifficulty);
             player.getInventory().put(collectable);
         }
     }
