@@ -112,17 +112,21 @@ public class DungeonManiaController {
     }
 
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
-        // Check if the item is valid.
-        if (!getUsableItems().contains(itemUsed)) {
-            throw new IllegalArgumentException("Invalid item used.");
-        }
+        // If itemUsed is NULL move the player:
+        if (itemUsed == null) {
+            gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
+        } else {
+            // Get the entity on map:
+            Entity c = gameMap.getPlayer().getItem(itemUsed);
+            if (!getUsableItems().contains(c.getType())) {
+                throw new IllegalArgumentException("Invalid item used.");
+            }
 
-        // Check inventory in item.
-        if (!gameMap.getPlayer().hasItem(itemUsed) && itemUsed != null) {
-            throw new InvalidActionException("Player does not have the item.");
+            // Check inventory in item.
+            if (!gameMap.getPlayer().hasItem(itemUsed)) {
+                throw new InvalidActionException("Player does not have the item.");
+            }
         }
-        // Move the player:
-        gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
 
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
