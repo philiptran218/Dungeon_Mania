@@ -12,18 +12,18 @@ public class Battle {
     BattleState NormalState;
     BattleState PeacefulState;
     BattleState HardState; 
+    private String difficulty;
 
     /**
      * Constructor for Battle class
      */
-    public Battle() {
+    public Battle(String difficulty) {
         NormalState = new NormalState(this);
         PeacefulState = new PeacefulState(this);
         InvincibleState = new InvincibleState();
         InvisibleState = new InvisibleState();
-
-        // Need a way of checking difficulty here to set state.
-        state = NormalState;
+        this.setDifficulty(difficulty);
+        this.setInitialState();
     }
 
     // Getters and Setters
@@ -45,6 +45,22 @@ public class Battle {
     }
     public BattleState getInvincibleState() {
         return InvincibleState;
+    }
+
+    public void setInitialState() {
+        if (this.getDifficulty().equals("peaceful")) {
+            this.setBattleState(PeacefulState);
+        }
+        else {
+            this.setBattleState(NormalState);
+        }
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
+    public String getDifficulty() {
+        return difficulty;
     }
 
     public void fight(Player p1, MovingEntity p2) {
