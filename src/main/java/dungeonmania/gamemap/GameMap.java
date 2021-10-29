@@ -77,18 +77,9 @@ public class GameMap {
         List<EntityResponse> entityList = new ArrayList<EntityResponse>();
 
         for (Map.Entry<Position, List<Entity>> entry : this.dungeonMap.entrySet()) {
-            // For each position add the entity to the response list:
-            // First check if it is one element:
-            if (entry.getValue().size() == 1) {
-                Entity e = entry.getValue().get(0);
-                entityList.add(new EntityResponse(e.getId(), e.getType(), e.getPos(), false));
-            } 
-            // Check for stacking:
-            if (entry.getValue().size() > 1) {
-                for (Entity e : entry.getValue()) {
-                    boolean isInteractable = (e.getType().equals("mercenary") || e.getType().equals("zombie_toast_spawner"));
-                    entityList.add(new EntityResponse(e.getId(), e.getType(), e.getPos(), isInteractable));
-                }
+            for (Entity e : entry.getValue()) {
+                boolean isInteractable = (e.getType().equals("mercenary") || e.getType().equals("zombie_toast_spawner"));
+                entityList.add(new EntityResponse(e.getId(), e.getType(), e.getPos(), isInteractable));
             }
         }
         return entityList;
@@ -218,7 +209,7 @@ public class GameMap {
             Position pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
 
             // Create the entity object, by factory method:
-            Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, obj.get("key"));
+            Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, obj.get("key"), this.gameDifficulty);
             // Set player:
             if (type.equals("player")) {
                 this.player = (Player) temp;
@@ -239,7 +230,7 @@ public class GameMap {
             JsonObject obj = entity.getAsJsonObject();
             String type = obj.get("type").getAsString();
             Position pos = new Position(0, 0, -1);
-            Entity collectable = EntityFactory.getEntityObject("" + System.currentTimeMillis(), type, pos, obj.get("key"));
+            Entity collectable = EntityFactory.getEntityObject("" + System.currentTimeMillis(), type, pos, obj.get("key"), this.gameDifficulty);
             player.getInventory().put(collectable);
         }
     }
