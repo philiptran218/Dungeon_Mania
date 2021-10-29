@@ -1,7 +1,6 @@
 package dungeonmania.StaticEntities;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,25 +31,11 @@ public class ZombieToastSpawner extends StaticEntity {
         peacefulState = new PeacefulState();
     }
     /**
-     * Getter for tickProgress
-     * @return the progress of the tick
-     */
-    public int getTickProgress() {
-        return tickProgress;
-    }
-    /**
-     * Setter for tickProgress
-     * @param tickProgress
-     */
-    public void setTickProgress(int tickProgress) {
-        this.tickProgress = tickProgress;
-    }
-    /**
      * Spawns the zombie in 15 or 20 ticks depending on the game mode
      * @param zombieSpawner
      * @param listOfEntities
      */
-    public void tick(Position zombieSpawner, HashMap<Position, List<Entity>> listOfEntities) {
+    public void tick(Position zombieSpawner, Map<Position, List<Entity>> listOfEntities) {
         state.spawnZombie(tickProgress, listOfEntities, zombieSpawner, zombieId);
     }
     /**
@@ -79,5 +64,12 @@ public class ZombieToastSpawner extends StaticEntity {
             }
         }
         return playerEntity;
+    }
+    // Getters and setters
+    public int getTickProgress() {
+        return tickProgress;
+    }
+    public void setTickProgress(int tickProgress) {
+        this.tickProgress = tickProgress;
     }
 }
