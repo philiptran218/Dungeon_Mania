@@ -62,7 +62,7 @@ public class DungeonManiaController {
      */
     public DungeonResponse returnDungeonResponse() {
         return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), 
-            gameMap.inventoryToItemResponse(), new ArrayList<String>(), "Goals");
+            gameMap.inventoryToItemResponse(), new ArrayList<String>(), gameMap.getGoals());
     }
 
     /**
@@ -125,7 +125,6 @@ public class DungeonManiaController {
         if (!gameMap.getPlayer().hasItem(itemUsed) && itemUsed != null) {
             throw new InvalidActionException("Player does not have the item.");
         }
-        
         // Move the player:
         gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
 
@@ -134,6 +133,7 @@ public class DungeonManiaController {
             e.move(gameMap.getMap());
         }
 
+        gameMap.setGoals(gameMap.goalPatternToString(gameMap.getRootGoal(), "", gameMap.getMap()));
         // Return DungeonResponse
         return returnDungeonResponse();
     }

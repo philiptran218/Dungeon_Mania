@@ -2,6 +2,7 @@ package dungeonmania;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -15,7 +16,25 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public class GoalTest {
-    
+    // Gets the id of entity on a position:
+    public String getEntityId(Position pos, DungeonResponse response) {
+        for (EntityResponse entity : response.getEntities()) {
+            if (entity.getPosition().equals(pos) && entity.getPosition().getLayer() == pos.getLayer()) {
+                return entity.getId();
+            }
+        }
+        return null;
+    }
+    // Test helper: Checks if entity on a given position.
+    public boolean isEntityOnTile(DungeonResponse response, Position pos, String id) {
+        for (EntityResponse entity : response.getEntities()) {
+            if (entity.getId() == id) {
+                return entity.getPosition().equals(pos);
+            }
+        }
+        return false;
+    }
+
     /**
      * Test getting to exit
      */
@@ -25,11 +44,11 @@ public class GoalTest {
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
         DungeonResponse tmp = controller.newGame("simpleExit", "Peaceful");
-
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 10; i++) {
             tmp = controller.tick(null, Direction.RIGHT);
+            System.out.println(tmp.getGoals());
         }
-        assertTrue("".equals(tmp.getGoals()));
+        assertFalse("".equals(tmp.getGoals()));
     }
 
     /**

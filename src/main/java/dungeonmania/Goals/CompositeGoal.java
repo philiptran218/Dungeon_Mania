@@ -2,10 +2,6 @@ package dungeonmania.Goals;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import dungeonmania.Entity;
-import dungeonmania.util.Position;
 
 public abstract class CompositeGoal {
     List<GoalInterface> children = new ArrayList<GoalInterface>();
