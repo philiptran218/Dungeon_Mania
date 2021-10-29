@@ -1,17 +1,12 @@
 package dungeonmania;
 
-import dungeonmania.MovingEntities.MovingEntity;
-import dungeonmania.MovingEntities.Player;
-import dungeonmania.MovingEntities.ZombieToast;
-import dungeonmania.StaticEntities.ZombieToastSpawner;
+import dungeonmania.MovingEntities.*;
+import dungeonmania.StaticEntities.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.DungeonResponse;
-import dungeonmania.response.models.EntityResponse;
-import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
-import dungeonmania.util.Position;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -138,34 +133,20 @@ public class DungeonManiaController {
     }
 
     public DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {
+        // Checks if the entity is on the map.
         if (gameMap.getEntityOnMap(entityId) == null) {
             throw new IllegalArgumentException("Entity does not exist.");
         }
+        Entity e = gameMap.getEntityOnMap(entityId);
 
-
-        // If the player wants to destroy the zombie toast spawner
-        if (type.equals("zombie_toast_spawner")) {
-            Player playerEntity = null;
-            boolean isAdjacent = false;
-            // Checks if the interaction is valid
-            ZombieToastSpawner spawner = (ZombieToastSpawner) gameMap.getMap().get(entityPosition).get(1);
-            playerEntity = spawner.canSpawnerBeDestroyed(entityPosition, gameMap.getMap(), isAdjacent, playerEntity);
-            if (isAdjacent == false) {
-                throw new InvalidActionException("Player is not cardinally adjacent to spawner");
-            }
-            if (playerEntity.getInventory().getItem("sword") == null && playerEntity.getInventory().getItem("bow") == null) {
-                throw new InvalidActionException("Player does not have a weapon");
-            }
-
-            // Destroys the zombie toast spawner
-            if (playerEntity.getInventory().getItem("sword") != null) {
-                playerEntity.getInventory().getItem("sword").use();
-            }
-            else {
-                playerEntity.getInventory().getItem("bow").use();
-            }
-            gameMap.getMap().get(entityPosition).remove(1);
+        if (e.getType().equals("mercenary")) {
+            gameMap.getPlayer().bribeMercenary(gameMap.getMap(), (Mercenary) e);
+        } else if (e.getType().equals("zombie_toast_spawner")) {
+            gameMap.getPlayer().attackZombieSpawner(gameMap.getMap(), (ZombieToastSpawner) e);
+        } else {
+            throw new IllegalArgumentException("Entity not interactable");
         }
+
         return returnDungeonResponse();
     }
 

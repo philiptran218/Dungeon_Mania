@@ -20,11 +20,10 @@ import dungeonmania.Inventory;
 import dungeonmania.Battles.Battle;
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.Goals.*;
+import dungeonmania.MovingEntities.Mercenary;
 import dungeonmania.MovingEntities.MovingEntity;
-import dungeonmania.MovingEntities.MovingEntityObserver;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.StaticEntities.*;
-import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
@@ -84,6 +83,9 @@ public class GameMap {
         for (Map.Entry<Position, List<Entity>> entry : this.dungeonMap.entrySet()) {
             for (Entity e : entry.getValue()) {
                 boolean isInteractable = (e.getType().equals("mercenary") || e.getType().equals("zombie_toast_spawner"));
+                if (e.getType().equals("mercenary") && ((Mercenary) e).isAlly()){
+                    isInteractable = false;
+                }
                 entityList.add(new EntityResponse(e.getId(), e.getType(), e.getPos(), isInteractable));
             }
         }
