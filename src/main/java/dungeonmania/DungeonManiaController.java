@@ -116,7 +116,6 @@ public class DungeonManiaController {
 
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
         // Ticks the zombie toast spawner
-        List<ZombieToastSpawner> spawnerList = new ArrayList<ZombieToastSpawner>();
         for (Position key : gameMap.getMap().keySet()) {
             Entity checkSpawner = gameMap.getMap().get(key).get(1);
             if (checkSpawner.getType() == "zombie_toast_spawner") {
@@ -128,8 +127,6 @@ public class DungeonManiaController {
         // Position in front of player
         Position checkPosition;
         Entity tempEntity = gameMap.getMap().get(checkPosition).get(1);
-        // Player position
-        Position playerPosition;
         // ADD PLAYER MOVEMENT
         if (tempEntity.getType().equals("boulder")) {
             Position inFrontOfCheckPosition = new Position(checkPosition.getX() + dir.getX(),checkPosition.getY() + dir.getY(), 0);
