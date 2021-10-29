@@ -19,6 +19,6 @@ public class Treasure extends Utility {
      * Uses treasure to build shields. 
      */
     public void use() {
-        //this.getPlayer().removeItem(this);
+        getPlayer().getInventoryList().remove(this);
     }
 }

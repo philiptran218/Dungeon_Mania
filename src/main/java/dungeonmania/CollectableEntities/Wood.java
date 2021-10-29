@@ -19,6 +19,6 @@ public class Wood extends Utility {
      * Uses wood to build bows and shields. 
      */
     public void use() {
-        //this.getPlayer().removeItem(this);
+        getPlayer().getInventoryList().remove(this);
     }
 }
