@@ -1,8 +1,8 @@
 package dungeonmania.gamemap;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import dungeonmania.Entity;
 import dungeonmania.MovingEntities.ZombieToast;
@@ -13,7 +13,8 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public class StandardState implements GameState{
-    public void spawnZombie(int tickProgress, HashMap<Position, List<Entity>> listOfEntities, Position zombieSpawner, int zombieId) {
+    // Spawns the zombie from the zombie toast spawner
+    public void spawnZombie(int tickProgress, Map<Position, List<Entity>> listOfEntities, Position zombieSpawner, int zombieId) {
         if (tickProgress == 19) {
             // Adds each direction into a list
             List <Direction> directions = new ArrayList<Direction>();
