@@ -10,11 +10,14 @@ import dungeonmania.util.Direction;
 import dungeonmania.Entity;
 import dungeonmania.Inventory;
 import dungeonmania.CollectableEntities.CollectableEntity;
+import dungeonmania.StaticEntities.ZombieToastSpawner;
+import dungeonmania.exceptions.InvalidActionException;
 
 
 public class Player extends MovingEntity implements MovingEntitySubject {
     private List<MovingEntityObserver> listObservers = new ArrayList<MovingEntityObserver>();
     private Inventory inventory = new Inventory(this);
+    private List<Mercenary> bribedMercenaries = new ArrayList<Mercenary>();
 
     public Player(String id, String type, Position pos){
         super(id, type, pos, 10, 10);
@@ -30,7 +33,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         } else {
             // Do nothing
         }
-        pickUp(map, newPos);
+        pickUp(map);
         notifyObservers();
     }
 
@@ -38,7 +41,13 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty();
     }
 
-    public void pickUp(Map<Position, List<Entity>> map, Position pos) {
+    /**
+     * Player picks up all collectable items (CollectableEntity) on their current 
+     * position and adds it to their inventory
+     * @param map
+     */
+    public void pickUp(Map<Position, List<Entity>> map) {
+        Position pos = super.getPos();
         List<Entity> collectables = map.get(new Position(pos.getX(), pos.getY(), 2));
         if (!collectables.isEmpty()) {
             Entity entity = collectables.get(0);
@@ -48,6 +57,54 @@ public class Player extends MovingEntity implements MovingEntitySubject {
             }
         }
     }
+
+    /**
+     * The player bribes the mercenary. The bribe will be successful if the player
+     * has enough gold and is within 2 cardinal tiles from the mercenary
+     * @param map 
+     * @param mercenary mercenary that the player will try to bribe
+     */
+    public void bribeMercenary(Map<Position, List<Entity>> map, Mercenary mercenary) throws InvalidActionException{
+        Position pos = super.getPos();
+        Position mercenaryPos = mercenary.getPos();
+
+        if (inventory.getItem("treasure") != null) {
+            // Player has some treasures
+            if (inventory.getNoItemType("treasure") <= mercenary.getPrice()) {
+                // Player doesnt have enough gold
+                throw new InvalidActionException("Player doesn't have enough gold");
+            } 
+            // Remove gold;
+            for (int i = 1; i < mercenary.getPrice(); i++) {
+                inventory.useItem("treasure");
+            }
+        } else {
+            throw new InvalidActionException("Player doesn't any enough gold");
+        }
+
+        Position difference = Position.calculatePositionBetween(pos, mercenaryPos);
+        if (Math.abs(difference.getX()) + Math.abs(difference.getY()) > 2) {
+            // player more than 2 cardinal tiles from mercenary
+            throw new InvalidActionException("Mercenary too far away");
+        } else {
+            mercenary.bribe();
+            bribedMercenaries.add(mercenary);
+        }
+    }
+
+    public void attackZombieSpawner(Map<Position, List<Entity>> map, ZombieToastSpawner spawner) {
+        Position pos = super.getPos();
+        Position spawnerPos = spawner.getPos();
+
+        Position difference = Position.calculatePositionBetween(pos, spawnerPos);
+        if (Math.abs(difference.getX()) + Math.abs(difference.getY()) > 2) {
+            // player more than 2 cardinal tiles from mercenary
+            throw new InvalidActionException("Mercenary too far away");
+        } else {
+            
+        }     
+    }
+
 
     public Inventory getInventory() {
         return inventory;
