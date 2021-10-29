@@ -68,28 +68,25 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         Position pos = super.getPos();
         Position mercenaryPos = mercenary.getPos();
 
-        if (inventory.getItem("treasure") != null) {
-            // Player has some treasures
-            if (inventory.getNoItemType("treasure") <= mercenary.getPrice()) {
-                // Player doesnt have enough gold
-                throw new InvalidActionException("Player doesn't have enough gold");
-            } 
-            // Remove gold;
-            for (int i = 1; i < mercenary.getPrice(); i++) {
-                inventory.useItem("treasure");
-            }
-        } else {
-            throw new InvalidActionException("Player doesn't any enough gold");
+        if (inventory.getNoItemType("treasure") <= mercenary.getPrice()) {
+            // Player doesnt have enough gold
+            throw new InvalidActionException("Player doesn't have enough gold");
+        } 
+        // Remove gold;
+        for (int i = 1; i < mercenary.getPrice(); i++) {
+            inventory.useItem("treasure");
         }
 
         Position difference = Position.calculatePositionBetween(pos, mercenaryPos);
         if (Math.abs(difference.getX()) + Math.abs(difference.getY()) > 2) {
             // player more than 2 cardinal tiles from mercenary
             throw new InvalidActionException("Mercenary too far away");
-        } else {
-            mercenary.bribe();
-            bribedMercenaries.add(mercenary);
         }
+
+        // Successfully bribe mercenary
+        mercenary.bribe();
+        bribedMercenaries.add(mercenary);
+    
     }
 
     public void attackZombieSpawner(Map<Position, List<Entity>> map, ZombieToastSpawner spawner) {
@@ -97,12 +94,20 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         Position spawnerPos = spawner.getPos();
 
         Position difference = Position.calculatePositionBetween(pos, spawnerPos);
-        if (Math.abs(difference.getX()) + Math.abs(difference.getY()) > 2) {
-            // player more than 2 cardinal tiles from mercenary
-            throw new InvalidActionException("Mercenary too far away");
+        if (Math.abs(difference.getX()) + Math.abs(difference.getY()) > 1) {
+            // player is not cardinally adjacent to spawner
+            throw new InvalidActionException("player not cardinally adjacent to spawner");
+        }
+
+        if (inventory.getItem("sword") != null) {
+            spawner.destroy(map);
+            inventory.getItem("sword").use();
+        } else if (inventory.getItem("bow") != null) {
+            spawner.destroy(map);
+            inventory.getItem("bow").use();
         } else {
-            
-        }     
+            throw new InvalidActionException("player does not have a weapon");
+        }
     }
 
 
