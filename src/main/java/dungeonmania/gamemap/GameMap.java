@@ -77,18 +77,9 @@ public class GameMap {
         List<EntityResponse> entityList = new ArrayList<EntityResponse>();
 
         for (Map.Entry<Position, List<Entity>> entry : this.dungeonMap.entrySet()) {
-            // For each position add the entity to the response list:
-            // First check if it is one element:
-            if (entry.getValue().size() == 1) {
-                Entity e = entry.getValue().get(0);
-                entityList.add(new EntityResponse(e.getId(), e.getType(), e.getPos(), false));
-            } 
-            // Check for stacking:
-            if (entry.getValue().size() > 1) {
-                for (Entity e : entry.getValue()) {
-                    boolean isInteractable = (e.getType().equals("mercenary") || e.getType().equals("zombie_toast_spawner"));
-                    entityList.add(new EntityResponse(e.getId(), e.getType(), e.getPos(), isInteractable));
-                }
+            for (Entity e : entry.getValue()) {
+                boolean isInteractable = (e.getType().equals("mercenary") || e.getType().equals("zombie_toast_spawner"));
+                entityList.add(new EntityResponse(e.getId(), e.getType(), e.getPos(), isInteractable));
             }
         }
         return entityList;
