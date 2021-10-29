@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import dungeonmania.Entity;
-import dungeonmania.gamemap.GameMap;
+import dungeonmania.StaticEntities.FloorSwitch;
 import dungeonmania.util.Position;
 
 public class BouldersGoal implements GoalInterface {
@@ -12,13 +12,11 @@ public class BouldersGoal implements GoalInterface {
     private String goalName = "boulders";
     
     @Override
-    public boolean isGoalComplete(GameMap game) {
-        Map<Position, List<Entity>> map = game.getMap();
+    public boolean isGoalComplete(Map<Position, List<Entity>> map) {
         for(List<Entity> entities : map.values()) {
-            int boulderLayer = 0;
-            int switchLayer = 0;
             for (Entity entity : entities) {
-                if (entity.getType().equals("switch")) {
+                if (entity instanceof FloorSwitch 
+                    && !((FloorSwitch) entity).isUnderBoulder(map)) {
                     return false;
                 }
             }

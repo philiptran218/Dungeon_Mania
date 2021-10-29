@@ -34,6 +34,7 @@ public class GameMap {
     // multiple maps for one dungeon.
     private Map<Position, List<Entity>> dungeonMap;
     private String gameDifficulty;
+    private GoalInterface rootGoal;
     private String goal;
     private String dungeonName;
     private Player player;
@@ -59,6 +60,7 @@ public class GameMap {
         this.mapId = "" + System.currentTimeMillis();
         this.battle = new Battle(difficulty);
         this.dungeonMap = jsonToMap(jsonMap);
+        this.rootGoal = goalJsonToPattern(getGoalsFromJson(jsonMap));
         this.setPlayerInventory(jsonMap);
         this.setObservers();
     }
@@ -331,5 +333,33 @@ public class GameMap {
             player.registerObserver(e);
         }
     }
+    
+    public String goalPatternToString(GoalInterface goal, String currentGoals, Map<Position, List<Entity>> map) {
+        if (goal.getGoalName().equals("AND")) {
+            for (GoalInterface childGoal : goal.getChildren()) {
+                currentGoals = currentGoals + goalPatternToString(childGoal, currentGoals, map);
+                currentGoals = currentGoals + " AND ";
+            }
+            return currentGoals;
+        } else if (goal.getGoalName().equals("OR")) {
+            for (GoalInterface childGoal : goal.getChildren()) {
+                currentGoals = currentGoals + goalPatternToString(childGoal, currentGoals, map);
+                currentGoals = currentGoals + " OR ";
+            }
+            return currentGoals;
+        } else {
+            if (!goal.isGoalComplete(map)) {
+                return currentGoals + ":" + goal.getGoalName();
+            } else {
+                return currentGoals;
+            }
+        }
+    }
+    public JsonObject getGoalsFromJson (JsonObject dungeon) {
+        return dungeon.getAsJsonObject("goal-condition");
+    }
 
+    public GoalInterface getRootGoal() {
+        return rootGoal;
+    }
 }

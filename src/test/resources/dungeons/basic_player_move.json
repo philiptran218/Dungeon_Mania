@@ -89,5 +89,7 @@
         "type": "wall"
       }
     ],
-    "inventory": ["sword"]
+    "goal-condition": {
+      "goal": "boulder"
+    }
   }

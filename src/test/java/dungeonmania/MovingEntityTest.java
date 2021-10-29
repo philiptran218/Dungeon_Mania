@@ -47,7 +47,7 @@ public class MovingEntityTest {
         // Create new game
         DungeonResponse createNew = controller.newGame("basic_player_move", "Peaceful");
         // Get id of player:
-        String playerId = getEntityId(new Position(1, 1), createNew);
+        String playerId = getEntityId(new Position(1, 1, 3), createNew);
 
         // Moving the player:
         temp = controller.tick(null, Direction.RIGHT);
