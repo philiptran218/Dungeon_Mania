@@ -4,13 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
 import dungeonmania.Entity;
 
 
-public abstract class MovingEntity extends Entity{
+public abstract class MovingEntity extends Entity implements MovingEntityObserver {
     private double health;
     private double attackDamage;
     private Position playerLocation;
@@ -50,6 +52,9 @@ public abstract class MovingEntity extends Entity{
     }
 
 
+
+
+
     ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters
     public double getHealth() {
@@ -76,4 +81,11 @@ public abstract class MovingEntity extends Entity{
         this.playerLocation = playerLocation;
     }
     
+
+    @Override
+    public void update(MovingEntitySubject obj) {
+        this.setPlayerLocation(((Player) obj).getPos());
+    }
+
+
 }

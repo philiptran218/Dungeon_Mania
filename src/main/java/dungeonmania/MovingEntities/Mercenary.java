@@ -4,13 +4,15 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
 import dungeonmania.Entity;
 
 
-public class Mercenary extends MovingEntity implements MovingEntityObserver{
+public class Mercenary extends MovingEntity {
     private MercenaryState enemyState;
     private MercenaryState allyState;
     private MercenaryState state;
@@ -39,11 +41,28 @@ public class Mercenary extends MovingEntity implements MovingEntityObserver{
         return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty();
     }
 
-    @Override
-    public void update(MovingEntitySubject obj) {
-        super.setPlayerLocation(((Player) obj).getPos());
-    }
 
+    public void moveAway(Map<Position, List<Entity>> map) {
+        Position playerPos = this.getPlayerLocation();
+        Position pos = super.getPos();
+        
+        List<Position> adjacentPos = pos.getAdjacentPositions();
+
+        List<Position> cardinallyAdjacentPos = adjacentPos.stream().filter(e -> Position.isCardinallyAdjacent(pos, e)).collect(Collectors.toList());
+        cardinallyAdjacentPos.add(pos);
+
+        int distance = Integer.MIN_VALUE;
+        Position newPos = pos;
+
+        for (Position tempPos: cardinallyAdjacentPos) {
+            if (Position.distance(playerPos, tempPos) > distance && this.canPass(map, tempPos)) {
+                newPos = tempPos;
+                distance = Position.distance(playerPos, tempPos);
+            }
+        }
+
+        this.moveToPos(map, new Position(newPos.getX(), newPos.getY(), 3));
+    }
 
 }
 
