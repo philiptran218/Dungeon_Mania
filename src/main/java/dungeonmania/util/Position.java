@@ -109,4 +109,22 @@ public final class Position {
         adjacentPositions.add(new Position(x-1, y));
         return adjacentPositions;
     }
+
+    // Our own added Methods
+    /**
+     * Gets the square of the distance between 2 positions, ignoring the layer component
+     * @return  The square of the distance between 2 positions
+     */
+    public static int distance(Position a, Position b) {
+        return (a.getX() - b.getX())*(a.getX() - b.getX()) + (a.getY() - b.getY())*(a.getY() - b.getY());
+    }
+    
+    /**
+     * Checks if 2 Positions are cardinally adjacent (up, down, left, right). Ignores layer
+     * @return true if the positions are cardinally adjacent, false otherwise
+     */
+    public static boolean isCardinallyAdjacent(Position a, Position b) {
+        return distance(a, b) == 1;
+    }
+
 }

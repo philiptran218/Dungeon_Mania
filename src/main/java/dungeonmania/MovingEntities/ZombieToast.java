@@ -4,13 +4,14 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
 import dungeonmania.Entity;
 
 
-public class ZombieToast extends MovingEntity implements MovingEntityObserver{
+public class ZombieToast extends MovingEntity {
     private boolean armour;
 
     public ZombieToast(String id, String type, Position pos) {
@@ -57,24 +58,30 @@ public class ZombieToast extends MovingEntity implements MovingEntityObserver{
 
     }
 
-    
-    public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
-        List<Entity> entities = map.get(pos);
-        for (Entity entity: entities) {
-            switch(entity.getType()) {
-                case "wall":
-                    return false;
-                case "boulder":
-                    return false;
-                case "door":
-                    return false;
+    public void moveAway(Map<Position, List<Entity>> map) {
+        Position playerPos = this.getPlayerLocation();
+        Position pos = super.getPos();
+        
+        List<Position> adjacentPos = pos.getAdjacentPositions();
+
+        List<Position> cardinallyAdjacentPos = adjacentPos.stream().filter(e -> Position.isCardinallyAdjacent(pos, e)).collect(Collectors.toList());
+        cardinallyAdjacentPos.add(pos);
+
+        int distance = Integer.MIN_VALUE;
+        Position newPos = pos;
+
+        for (Position tempPos: cardinallyAdjacentPos) {
+            if (Position.distance(playerPos, tempPos) > distance && this.canPass(map, tempPos)) {
+                newPos = tempPos;
+                distance = Position.distance(playerPos, tempPos);
             }
         }
-        return true;
+
+        this.moveToPos(map, new Position(newPos.getX(), newPos.getY(), 3));
+    }
+    
+    public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
+        return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty();
     }
 
-    @Override
-    public void update(MovingEntitySubject obj) {
-        super.setPlayerLocation(((Player) obj).getPos());
-    }
 }

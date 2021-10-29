@@ -16,23 +16,13 @@ public class TheOneRing extends CombatItems {
     }
 
     /**
-     * If the player moves onto TheOneRing, it is added to their
-     * inventory.
-     * @param player
-     */
-    public void pickUp(Player player) {
-        this.setPlayer(player);
-        
-        // Add the ring to player inventory here
-        // Also maybe remove it from Map's list of entities.
-    }
-
-    /**
      * Revives the player if their health falls to 0. Removing TheOneRing from
      * inventory should be done separately.
      */
-    public void revive() {
+    public void use() {
         this.getPlayer().setHealth(100);
+        // Then remove the item from inventory
+        //this.getPlayer().getInventory.remove(this);
     }
 
 }

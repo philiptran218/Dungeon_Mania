@@ -30,7 +30,8 @@ public class GameMapTest {
     // json files properly.
     @Test
     public void testMapToListOfEntityResponse() {
-        GameMap map = new GameMap("Peaceful", getTestJsonPath("file1"));
+        JsonObject j = getTestJsonPath("file1");
+        GameMap map = new GameMap("Peaceful", j.get("map-name").getAsString(), j);
 
         List<EntityResponse> entityList = map.mapToListEntityResponse();
         
@@ -57,7 +58,8 @@ public class GameMapTest {
     @Test
     public void testNoLayerFromReadingJsonMap () {
         // Load game:
-        GameMap map = new GameMap("Peaceful", getTestJsonPath("file1"));
+        JsonObject j = getTestJsonPath("file1");
+        GameMap map = new GameMap("Peaceful", j.get("map-name").getAsString(), j);
 
         for (EntityResponse i : map.mapToListEntityResponse()) {
            assertEquals(i.getPosition().getLayer(), 0);
@@ -67,9 +69,9 @@ public class GameMapTest {
     // Check if we are processing the third layer sucessfully:
     @Test
     public void testLayerFromReadingJsonMap() {
-
+        JsonObject j = getTestJsonPath("test_layer");
         // Load game:
-        GameMap map = new GameMap("Peaceful", getTestJsonPath("test_layer"));
+        GameMap map = new GameMap("Peaceful", j.get("map-name").getAsString(), j);
 
         for (EntityResponse i : map.mapToListEntityResponse()) {
             assertEquals(i.getPosition().getLayer(), 3);

@@ -1,5 +1,6 @@
 package dungeonmania.CollectableEntities;
 
+import dungeonmania.MovingEntities.Player;
 import dungeonmania.util.Position;
 
 public class Armour extends CombatItems {
@@ -41,6 +42,12 @@ public class Armour extends CombatItems {
     }
 
     /**
+     * Won't need to be called, since armour is only used in battles.
+     */
+    public void use() {
+    }
+
+    /**
      * Called when the combat item is being used in battle.
      * Its durability is reduced by 1 and its damage reduction value is returned for
      * use in damage calculation.
@@ -48,7 +55,14 @@ public class Armour extends CombatItems {
      */
     public double usedInCombat() {
         reduceDurability();
+        checkNoDurability();
         return REDUCE_DAMAGE;
+    }
+
+    public void checkNoDurability() {
+        if (durability == 0) {
+            // Remove the entity from inventory
+        }
     }
 
 }

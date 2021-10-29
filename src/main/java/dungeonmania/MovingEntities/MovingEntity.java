@@ -4,13 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
 import dungeonmania.Entity;
 
 
-public abstract class MovingEntity extends Entity{
+public abstract class MovingEntity extends Entity implements MovingEntityObserver {
     private double health;
     private double attackDamage;
     private Position playerLocation;
@@ -33,6 +35,8 @@ public abstract class MovingEntity extends Entity{
      */
     public abstract boolean canPass(Map<Position, List<Entity>> map, Position pos);
 
+    public abstract void move(Map<Position, List<Entity>> map);
+
     public void moveInDir(Map<Position, List<Entity>> map, Direction direction) {
         map.get(super.getPos()).remove(this);
         
@@ -46,6 +50,9 @@ public abstract class MovingEntity extends Entity{
         super.setPos(newPos);
         map.get(newPos).add(this);
     }
+
+
+
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -74,4 +81,11 @@ public abstract class MovingEntity extends Entity{
         this.playerLocation = playerLocation;
     }
     
+
+    @Override
+    public void update(MovingEntitySubject obj) {
+        this.setPlayerLocation(((Player) obj).getPos());
+    }
+
+
 }
