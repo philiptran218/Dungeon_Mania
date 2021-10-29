@@ -190,7 +190,7 @@ public class GameMap {
         this.width = width;
         this.height = height;
         Map<Position, List<Entity>> map = new HashMap<>();
-        for (int k = 0; k < 4; k++) {
+        for (int k = 0; k < 5; k++) {
             for (int i = 0; i < width; i++) { // width
                 for (int j = 0; j < height; j++) { // height
                     map.put(new Position(i, j, k), new ArrayList<Entity>());

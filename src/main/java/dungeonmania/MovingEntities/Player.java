@@ -10,6 +10,7 @@ import dungeonmania.util.Direction;
 import dungeonmania.Entity;
 import dungeonmania.Inventory;
 import dungeonmania.CollectableEntities.CollectableEntity;
+import dungeonmania.StaticEntities.Boulder;
 import dungeonmania.StaticEntities.ZombieToastSpawner;
 import dungeonmania.exceptions.InvalidActionException;
 
@@ -30,15 +31,27 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         Position newPos = super.getPos().translateBy(direction);        
         if (canPass(map, newPos)) {
             moveInDir(map, direction);
-        } else {
-            // Do nothing
+        } else if (canPush(map, newPos, direction)) {   
+            // Player can move, but pushes a boulder
+
+            moveInDir(map, direction);
         }
         pickUp(map);
         notifyObservers();
     }
 
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
-        return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty();
+        return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty() && 
+                map.get(new Position(pos.getX(), pos.getY(), 4)).isEmpty();
+    }
+
+    public boolean canPush(Map<Position, List<Entity>> map, Position pos, Direction direction) {
+        if (!map.get(new Position(pos.getX(), pos.getY(), 4)).isEmpty()) {
+            // Has boulder
+            Boulder boulder = (Boulder) map.get(new Position(pos.getX(), pos.getY(), 4)).get(0);
+            return boulder.canBePushed(map, direction);
+        }
+        return false;
     }
 
     /**
