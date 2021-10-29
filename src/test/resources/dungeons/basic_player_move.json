@@ -88,5 +88,6 @@
         "y": 3,
         "type": "wall"
       }
-    ]
+    ],
+    "inventory": ["sword"]
   }
