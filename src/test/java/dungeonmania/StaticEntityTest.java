@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -125,7 +126,7 @@ public class StaticEntityTest {
         temp = newDungeon.tick(null, Direction.RIGHT);
         assertTrue(isEntityOnTile(temp, new Position(6, 1), playerId));
     }
-    // Tests if a zombie is spawned in the correct tick by checking the number of mobs in the 
+    // Tests if a zombie is spawned in the correct tick by checking if the mob is spawned
     @Test
     public void testZombieSpawner() {
         DungeonManiaController newDungeon = new DungeonManiaController();
@@ -146,8 +147,38 @@ public class StaticEntityTest {
         temp = newDungeon.tick(null, Direction.UP);
         temp = newDungeon.tick(null, Direction.UP);
         temp = newDungeon.tick(null, Direction.UP);
-        assertNotNull(getEntityId(new Position(2, 1), createNew));
-        String zombie = getEntityId(new Position(2, 1), createNew);
-        assertTrue(isEntityOnTile(temp, new Position(2, 1), zombie));
+        assertNotNull(getEntityId(new Position(3, 2), createNew));
+        String zombie = getEntityId(new Position(3, 2), createNew);
+        assertTrue(isEntityOnTile(temp, new Position(3, 2), zombie));
+    }
+    // Tests if a player can destroy the zombie toast spawner
+    @Test
+    public void testInteractionZombieSpawner() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse temp;
+        DungeonResponse createNew = newDungeon.newGame("zombie_toast_spawner", "Hard");
+        temp = newDungeon.tick(null, Direction.RIGHT);
+        String spawner = getEntityId(new Position(3, 1), createNew);
+        newDungeon.interact(spawner);
+        assertFalse(isEntityOnTile(temp, new Position(3, 1), spawner));
+    }
+    // Tests if an exception is thrown if player is not in range of spawner
+    @Test
+    public void testNotInRangeException() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse createNew = newDungeon.newGame("zombie_toast_spawner", "Hard");
+        String spawner = getEntityId(new Position(3, 1), createNew);
+        assertThrows(InvalidActionException.class, () -> newDungeon.interact(spawner));
+    }
+    // Tests if an exception is thrown if player tries to destroy spawner without a weapon
+    @Test
+    public void testNoWeaponException() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse createNew = newDungeon.newGame("zombie_toast_spawner", "Hard");
+        String spawner = getEntityId(new Position(3, 1), createNew);
+        newDungeon.tick(null, Direction.DOWN);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        assertThrows(InvalidActionException.class, () -> newDungeon.interact(spawner));
     }
 }
