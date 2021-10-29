@@ -34,16 +34,18 @@ public class Bow extends CombatItems {
     }
 
     /**
-     * Won't need to be called as bow is only used in battles.
-     */
-    public void use() {
-    }
-
-    /**
      * Reduces the durability if it has been used
      */
     public void reduceDurability() {
         durability = durability - 1;
+    }
+
+    /**
+     * Used to interact with enemy spawners.
+     */
+    public void use() {
+        reduceDurability();
+        checkNoDurability();
     }
 
     /**
