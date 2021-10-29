@@ -200,10 +200,17 @@ public class DungeonManiaController {
             if (isAdjacent == false) {
                 throw new InvalidActionException("Player is not cardinally adjacent to spawner");
             }
-            if (playerEntity.getInventory().getItem("sword") == null) {
+            if (playerEntity.getInventory().getItem("sword") == null && playerEntity.getInventory().getItem("bow") == null) {
                 throw new InvalidActionException("Player does not have a weapon");
             }
+
             // Destroys the zombie toast spawner
+            if (playerEntity.getInventory().getItem("sword") != null) {
+                playerEntity.getInventory().getItem("sword").use();
+            }
+            else {
+                playerEntity.getInventory().getItem("bow").use();
+            }
             gameMap.getMap().get(entityPosition).remove(1);
         }
         return returnDungeonResponse();
