@@ -159,7 +159,7 @@ public class DungeonManiaController {
 
         Inventory playerInv = playerEntity.getInventory();
         if (buildable.equals("bow")) {
-            if (playerInv.getNoItemType("wood") < 1 && playerInv.getNoItemType("arrow") < 3) {
+            if (playerInv.getNoItemType("wood") < 1 || playerInv.getNoItemType("arrow") < 3) {
                 throw new InvalidActionException("Not enough materials!");
             }
             playerInv.useItem("wood");
@@ -171,7 +171,7 @@ public class DungeonManiaController {
         }
         // Otherwise we are crafting a shield
         else {
-            if (playerInv.getNoItemType("wood") < 2 && (playerInv.getNoItemType("treasure") < 1 || playerInv.getNoItemType("key") < 1)) {
+            if (playerInv.getNoItemType("wood") < 2 || (playerInv.getNoItemType("treasure") < 1 && playerInv.getNoItemType("key") < 1)) {
                 throw new InvalidActionException("Not enough materials!");
             }
             playerInv.useItem("wood");
