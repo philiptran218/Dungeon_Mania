@@ -124,7 +124,7 @@ public class DungeonManiaController {
         // Player position
         Position playerPosition;
         // ADD PLAYER MOVEMENT
-        if (tempEntity.getType() == "boulder") {
+        if (!tempEntity.getType().equals("boulder")) {
             Position inFrontOfCheckPosition = new Position(checkPosition.getX() + dir.getX(),checkPosition.getY() + dir.getY(), 0);
             List <Entity> tempList = gameMap.getMap().get(inFrontOfCheckPosition);
             if (tempList.get(1) == null && tempList.get(3) == null) {
@@ -150,7 +150,7 @@ public class DungeonManiaController {
         //         }
         //     }
         // }
-        if (tempEntity.getType() == "portal") {
+        if (tempEntity.getType().equals("portal")) {
             Portal portal = (Portal) tempEntity;
             Position teleportLocation = portal.getTeleportLocation();
             // Add code for playermovement
@@ -191,7 +191,7 @@ public class DungeonManiaController {
             throw new IllegalArgumentException();
         }
         // If the player wants to destroy the zombie toast spawner
-        if (type == "zombie_toast_spawner") {
+        if (type.equals("zombie_toast_spawner")) {
             Player playerEntity = null;
             boolean isAdjacent = false;
             // Checks if the interaction is valid
