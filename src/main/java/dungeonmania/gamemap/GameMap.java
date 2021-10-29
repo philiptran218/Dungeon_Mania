@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
 import dungeonmania.Inventory;
+import dungeonmania.Battles.Battle;
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.Goals.*;
 import dungeonmania.MovingEntities.MovingEntity;
@@ -39,6 +40,7 @@ public class GameMap {
     private String mapId;
     private int width;
     private int height;
+    private Battle battle;
 
     // ******************************************
     // Need to make varibales to game state here:
@@ -55,6 +57,7 @@ public class GameMap {
         this.gameDifficulty = difficulty;
         this.dungeonName = name;
         this.mapId = "" + System.currentTimeMillis();
+        this.battle = new Battle(difficulty);
         this.dungeonMap = jsonToMap(jsonMap);
         this.setPlayerInventory(jsonMap);
         this.setObservers();
@@ -209,7 +212,7 @@ public class GameMap {
             Position pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
 
             // Create the entity object, by factory method:
-            Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, obj.get("key"), this.gameDifficulty);
+            Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, obj.get("key"), this.battle);
             // Set player:
             if (type.equals("player")) {
                 this.player = (Player) temp;
@@ -230,7 +233,7 @@ public class GameMap {
             JsonObject obj = entity.getAsJsonObject();
             String type = obj.get("type").getAsString();
             Position pos = new Position(0, 0, -1);
-            Entity collectable = EntityFactory.getEntityObject("" + System.currentTimeMillis(), type, pos, obj.get("key"), this.gameDifficulty);
+            Entity collectable = EntityFactory.getEntityObject("" + System.currentTimeMillis(), type, pos, obj.get("key"), this.battle);
             player.getInventory().put(collectable);
         }
     }

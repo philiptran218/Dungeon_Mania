@@ -9,7 +9,7 @@ import dungeonmania.StaticEntities.*;
 import dungeonmania.util.Position;
 
 public class EntityFactory {
-    public static Entity getEntityObject(String id, String type, Position pos, JsonElement keyId, String difficulty) {
+    public static Entity getEntityObject(String id, String type, Position pos, JsonElement keyId, Battle battle) {
         
         Position movingPos = new Position(pos.getX(), pos.getY(), 3);
         Position collectPos = new Position(pos.getX(), pos.getY(), 2);
@@ -44,9 +44,9 @@ public class EntityFactory {
             case "key":
                 return new Key(id, type, collectPos, keyId.getAsInt());
             case "invincibility_potion": 
-                return new InvincibilityPotion(id, type, collectPos, new Battle(difficulty));
+                return new InvincibilityPotion(id, type, collectPos, battle);
             case "invisibility_potion": 
-                return new InvisibilityPotion(id, type, collectPos, new Battle(difficulty));
+                return new InvisibilityPotion(id, type, collectPos, battle);
             case "wood": 
                 return new Wood(id, type, collectPos);
             case "arrow": 
