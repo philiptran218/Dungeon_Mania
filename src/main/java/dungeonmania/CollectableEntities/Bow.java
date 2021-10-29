@@ -62,7 +62,7 @@ public class Bow extends CombatItems {
 
     public void checkNoDurability() {
         if (durability == 0) {
-            // Remove the entity from inventory
+            getPlayer().getInventoryList().remove(this);
         }
     }
     
