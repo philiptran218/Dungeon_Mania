@@ -34,7 +34,7 @@ public class GameMap {
     private Map<Position, List<Entity>> dungeonMap;
     private String gameDifficulty;
     private GoalInterface rootGoal;
-    private String goals;
+    private String goal;
     private String dungeonName;
     private Player player;
     private String mapId;
@@ -57,8 +57,7 @@ public class GameMap {
         this.dungeonName = name;
         this.mapId = "" + System.currentTimeMillis();
         this.dungeonMap = jsonToMap(jsonMap);
-        this.rootGoal = goalJsonToPattern(getGoalsFromDungeon(jsonMap));
-        this.goals = goalPatternToString(rootGoal, "", jsonToMap(jsonMap));
+        this.rootGoal = goalJsonToPattern(getGoalsFromJson(jsonMap));
         this.setPlayerInventory(jsonMap);
         this.setObservers();
     }
@@ -146,7 +145,7 @@ public class GameMap {
         main.put("height", getMapHeight());
         main.put("game-mode", this.gameDifficulty);
         main.put("map-name", this.dungeonName);
-        main.put("goal-condition", this.getGoals());
+        main.put("goal-condition", this.getGoal());
 
         JSONArray inventory = new JSONArray();
         for (CollectableEntity e : player.getInventoryList()) {
@@ -268,12 +267,8 @@ public class GameMap {
         return mapId;
     }
 
-    public String getGoals() {
-        return this.goals;
-    }
-
-    public void setGoals(String goals) {
-        this.goals = goals;
+    public String getGoal() {
+        return goal;
     }
 
     public int getMapHeight() {
@@ -295,21 +290,21 @@ public class GameMap {
     /**
      * Convert JsonObject containing goals into a composite pattern
      */
-    public GoalInterface goalJsonToPattern(JsonObject jsonMap) {
-        if (jsonMap.get("goal").getAsString().equals("AND")) {
+    public GoalInterface goalJsonToPattern(JsonObject jsonGoal) {
+        if (jsonGoal.get("goal").getAsString().equals("AND")) {
             GoalInterface goal = new AndGoal();
-            for (JsonElement entity : jsonMap.getAsJsonArray("subgoals")) {
+            for (JsonElement entity : jsonGoal.getAsJsonArray("subgoals")) {
                 goal.add(goalJsonToPattern(entity.getAsJsonObject()));
             }
             return goal;
-        } else if (jsonMap.get("goal").getAsString().equals("OR")) {
+        } else if (jsonGoal.get("goal").getAsString().equals("OR")) {
             GoalInterface goal = new OrGoal();
-            for (JsonElement entity : jsonMap.getAsJsonArray("subgoals")) {
+            for (JsonElement entity : jsonGoal.getAsJsonArray("subgoals")) {
                 goal.add(goalJsonToPattern(entity.getAsJsonObject()));
             }
             return goal;
         } else {
-            return GoalFactory.getGoal(jsonMap.get("goal").getAsString());
+            return GoalFactory.getGoal(jsonGoal.get("goal").getAsString());
         }
     }
 
@@ -318,7 +313,7 @@ public class GameMap {
             player.registerObserver(e);
         }
     }
-
+    
     public String goalPatternToString(GoalInterface goal, String currentGoals, Map<Position, List<Entity>> map) {
         if (goal.getGoalName().equals("AND")) {
             for (GoalInterface childGoal : goal.getChildren()) {
@@ -340,8 +335,7 @@ public class GameMap {
             }
         }
     }
-
-    public JsonObject getGoalsFromDungeon (JsonObject dungeon) {
+    public JsonObject getGoalsFromJson (JsonObject dungeon) {
         return dungeon.getAsJsonObject("goal-condition");
     }
 

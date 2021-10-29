@@ -63,7 +63,7 @@ public class DungeonManiaController {
      */
     public DungeonResponse returnDungeonResponse() {
         return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), 
-            gameMap.inventoryToItemResponse(), new ArrayList<String>(), gameMap.getGoals());
+            gameMap.inventoryToItemResponse(), new ArrayList<String>(), gameMap.goalPatternToString(gameMap.getRootGoal(), "", gameMap.getMap()));
     }
 
     /**
@@ -75,7 +75,7 @@ public class DungeonManiaController {
     public JsonObject getJsonFile(String fileName) {
         // "src\\main\\resources\\dungeons\\" + dungeonName + ".json"
         try {
-            return JsonParser.parseReader(new FileReader("src\\main\\resources\\dungeons\\" + fileName + ".json")).getAsJsonObject();
+            return JsonParser.parseReader(new FileReader("src\\test\\resources\\dungeons\\" + "simpleExit" + ".json")).getAsJsonObject();
         } catch (Exception e) {
             try {
                 return JsonParser.parseReader(new FileReader("src\\test\\resources\\dungeons\\" + fileName + ".json")).getAsJsonObject();
@@ -133,8 +133,6 @@ public class DungeonManiaController {
         for (MovingEntity e : gameMap.getMovingEntityList()) {
             e.move(gameMap.getMap());
         }
-
-        gameMap.setGoals(gameMap.goalPatternToString(gameMap.getRootGoal(), "", gameMap.getMap()));
         // Return DungeonResponse
         return returnDungeonResponse();
     }

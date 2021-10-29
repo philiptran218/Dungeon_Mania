@@ -44,11 +44,12 @@ public class GoalTest {
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
         DungeonResponse tmp = controller.newGame("simpleExit", "Peaceful");
-        for (int i = 0; i < 10; i++) {
+        System.out.println(tmp.getGoals());
+        for (int i = 0; i < 3; i++) {
             tmp = controller.tick(null, Direction.RIGHT);
             System.out.println(tmp.getGoals());
         }
-        assertFalse("".equals(tmp.getGoals()));
+        assertTrue("".equals(tmp.getGoals()));
     }
 
     /**
