@@ -65,7 +65,7 @@ public class GameMap {
     public GameMap(String name) {
         this(getSavedMap(name).get("game-mode").getAsString(), getSavedMap(name).get("map-name").getAsString(), getSavedMap(name));
     }
-
+    
     /**
      * Takes an the json map object then looks at entity field and 
      * returns all entities on the map as a list of entity response.
