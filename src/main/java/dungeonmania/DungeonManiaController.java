@@ -3,6 +3,7 @@ package dungeonmania;
 import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.StaticEntities.Boulder;
+import dungeonmania.StaticEntities.Door;
 import dungeonmania.StaticEntities.FloorSwitch;
 import dungeonmania.StaticEntities.Portal;
 import dungeonmania.StaticEntities.StaticEntity;
@@ -132,28 +133,17 @@ public class DungeonManiaController {
                 gameMap.getMap().get(checkPosition).remove(tempEntity);
             }
         }
-        // PROBABLY NOT NEEDED
-        // if (tempEntity.getType() == "switch") {
-        //     List <Entity> tempList = gameMap.getMap().get(checkPosition);
-        //     if (tempList.get(1).getType() == "boulder") {
-        //         Position inFrontOfCheckPosition = new Position(checkPosition.getX() + dir.getX(),checkPosition.getY() + dir.getY(), 0);
-        //         List <Entity> entitiesOnPosition = gameMap.getMap().get(inFrontOfCheckPosition);
-        //         if (entitiesOnPosition.get(1) == null && entitiesOnPosition.get(3) == null) {
-        //             Entity newBoulder = tempList.get(1);
-        //             gameMap.getMap().get(inFrontOfCheckPosition).add(1, newBoulder);
-        //             gameMap.getMap().get(checkPosition).remove(newBoulder);
-        //         }
-        //         else if (entitiesOnPosition.get(0).getType() == "switch" && entitiesOnPosition.get(1) == null) {
-        //             Entity newBoulder = tempList.get(1);
-        //             gameMap.getMap().get(inFrontOfCheckPosition).add(1, newBoulder);
-        //             gameMap.getMap().get(checkPosition).remove(newBoulder);
-        //         }
-        //     }
-        // }
         if (tempEntity.getType().equals("portal")) {
             Portal portal = (Portal) tempEntity;
             Position teleportLocation = portal.getTeleportLocation();
             // Add code for playermovement
+        }
+        if (tempEntity.getType().equals("door")) {
+            Door door = (Door) tempEntity;
+            if (door.isLocked() && playerEntity.getKey(door.getKeyId()) != null) {
+                door.unlock();
+                // CHANGE ANIMATION FOR DOOR
+            }
         }
         // Check inventory in item.
         /*
