@@ -166,8 +166,7 @@ public class GameMap {
 
         for (Map.Entry<Position, List<Entity>> entry : this.dungeonMap.entrySet()) {
             Position p = entry.getKey();
-            if (entry.getValue().size() == 1) {
-                Entity e = entry.getValue().get(0);
+            for (Entity e : entry.getValue()) {
                 JSONObject temp = new JSONObject();
                 temp.put("x", p.getX());
                 temp.put("y", p.getY());
@@ -179,6 +178,7 @@ public class GameMap {
                 }
                 entities.put(temp);
             }
+            
         }
         main.put("entities", entities);
         return main;
