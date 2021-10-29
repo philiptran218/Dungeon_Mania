@@ -146,18 +146,12 @@ public class DungeonManiaController {
     }
 
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
-        if (!buildable.equals("bow") && !buildable.equals("shield")) {
+        if (!(buildable.equals("bow") || buildable.equals("shield"))) {
             throw new IllegalArgumentException();
         }
-        Player playerEntity = null;
-        for (Position key : gameMap.getMap().keySet()) {
-            List<Entity> entitiesList = gameMap.getMap().get(key);
-            if (gameMap.getMap().get(key).get(3) instanceof Player) {
-                playerEntity = (Player) gameMap.getMap().get(key).get(3);
-            }
-        }
+        Player player = gameMap.getPlayer();
 
-        Inventory playerInv = playerEntity.getInventory();
+        Inventory playerInv = player.getInventory();
         if (buildable.equals("bow")) {
             if (playerInv.getNoItemType("wood") < 1 || playerInv.getNoItemType("arrow") < 3) {
                 throw new InvalidActionException("Not enough materials!");
@@ -166,8 +160,8 @@ public class DungeonManiaController {
             playerInv.useItem("arrow");
             playerInv.useItem("arrow");
             playerInv.useItem("arrow");
-            Bow newBow = new Bow("bow" + playerEntity.getBowId(), null);
-            playerEntity.getInventory().put(newBow);
+            Bow newBow = new Bow("bow" + player.getBowId(), "bow", null);
+            player.getInventory().put(newBow);
         }
         // Otherwise we are crafting a shield
         else {
@@ -181,8 +175,8 @@ public class DungeonManiaController {
             } else {
                 playerInv.useItem("key");
             }
-            Shield newShield = new Shield("shield" + playerEntity.getShieldId(), null);
-            playerEntity.getInventory().put(newShield);
+            Shield newShield = new Shield("shield" + player.getShieldId(), "shield", null);
+            player.getInventory().put(newShield);
         }
         return returnDungeonResponse();
     }
