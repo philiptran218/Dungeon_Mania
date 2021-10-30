@@ -16,12 +16,11 @@ public class TheOneRing extends CombatItems {
     }
 
     /**
-     * Revives the player if their health falls to 0. Removing TheOneRing from
-     * inventory should be done separately.
+     * Revives the player if their health falls to 0.
      */
     public void use() {
         this.getPlayer().setHealth(100);
-        getPlayer().getInventoryList().remove(this);
+        getPlayer().getInventoryList().remove((CollectableEntity)this);
     }
 
 }

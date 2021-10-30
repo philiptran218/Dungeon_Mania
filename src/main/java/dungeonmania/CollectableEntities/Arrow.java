@@ -18,6 +18,6 @@ public class Arrow extends Utility {
      * Uses arrows to build bows.
      */
     public void use() {
-        getPlayer().getInventoryList().remove(this);
+        getPlayer().getInventoryList().remove((CollectableEntity)this);
     }
 }
