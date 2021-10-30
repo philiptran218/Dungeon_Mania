@@ -86,7 +86,6 @@ public class Mercenary extends MovingEntity {
     }
     public Armour getArmour() {
         Armour armour = this.armour;
-        this.armour = null;
         return armour;
     }
 
