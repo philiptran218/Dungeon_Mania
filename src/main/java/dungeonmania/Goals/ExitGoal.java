@@ -15,12 +15,7 @@ public class ExitGoal implements GoalInterface {
     @Override
     public boolean isGoalComplete(Map<Position, List<Entity>> map) {
         for(List<Entity> entities : map.values()) {
-            for (Entity entity : entities) {
-                if (entity instanceof Player) {
-                    System.out.println("PLAYER");
-                    System.out.println(entity.getPos().getX() + " " + entity.getPos().getY() + " " + entity.getPos().getLayer());
-                }
-                
+            for (Entity entity : entities) {  
                 if (entity instanceof Exit 
                     && ((Exit) entity).isUnderPlayer(map)) {
                     return true;

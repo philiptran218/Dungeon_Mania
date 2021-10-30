@@ -5,11 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.event.SwingPropertyChangeSupport;
+
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
 import dungeonmania.Entity;
 import dungeonmania.Inventory;
 import dungeonmania.CollectableEntities.CollectableEntity;
+import dungeonmania.CollectableEntities.Treasure;
 import dungeonmania.StaticEntities.Boulder;
 import dungeonmania.StaticEntities.ZombieToastSpawner;
 import dungeonmania.exceptions.InvalidActionException;
@@ -65,7 +68,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         if (!collectables.isEmpty()) {
             Entity entity = collectables.get(0);
             if (entity instanceof CollectableEntity) {
-                this.inventory.put(entity);
+                this.inventory.put(entity, this);
                 collectables.remove(entity);
             }
         }
@@ -93,10 +96,11 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         }
         
         // Remove gold;
-        for (int i = 1; i < mercenary.getPrice(); i++) {
-            inventory.useItem("treasure");
+        for (int i = 0; i < mercenary.getPrice(); i++) {
+            if (inventory.getItem("treasure") instanceof Treasure) {
+                ((Treasure) inventory.getItem("treasure")).use();
+            }
         }
-
         // Successfully bribe mercenary
         mercenary.bribe();
         bribedMercenaries.add(mercenary);

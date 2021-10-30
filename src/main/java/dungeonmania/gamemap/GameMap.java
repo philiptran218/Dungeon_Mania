@@ -59,7 +59,7 @@ public class GameMap {
         this.mapId = "" + System.currentTimeMillis();
         this.battle = new Battle(difficulty);
         this.dungeonMap = jsonToMap(jsonMap);
-        this.rootGoal = goalJsonToPattern(getGoalsFromJson(jsonMap));
+        this.rootGoal = GoalHelper.getGoalPattern(jsonMap);
         this.setPlayerInventory(jsonMap);
         this.setObservers();
     }
@@ -150,7 +150,7 @@ public class GameMap {
         main.put("height", getMapHeight());
         main.put("game-mode", this.gameDifficulty);
         main.put("map-name", this.dungeonName);
-        main.put("goal-condition", this.getGoal());
+        main.put("goal-condition", GoalHelper.goalPatternToJson(this.getRootGoal()));
 
         JSONArray inventory = new JSONArray();
         for (CollectableEntity e : player.getInventoryList()) {
@@ -238,7 +238,7 @@ public class GameMap {
             String type = obj.get("type").getAsString();
             Position pos = new Position(0, 0, -1);
             Entity collectable = EntityFactory.getEntityObject("" + System.currentTimeMillis(), type, pos, obj.get("key"), this.battle);
-            player.getInventory().put(collectable);
+            player.getInventory().put(collectable, player);
         }
     }
 
@@ -289,8 +289,8 @@ public class GameMap {
         return mapId;
     }
 
-    public String getGoal() {
-        return goal;
+    public String getGoals() {
+        return GoalHelper.goalPatternToString(this.getRootGoal(), this.getMap());
     }
 
     public int getMapHeight() {
@@ -309,56 +309,10 @@ public class GameMap {
         return this.dungeonName;
     }
 
-    /**
-     * Convert JsonObject containing goals into a composite pattern
-     */
-    public GoalInterface goalJsonToPattern(JsonObject jsonGoal) {
-        if (jsonGoal.get("goal").getAsString().equals("AND")) {
-            GoalInterface goal = new AndGoal();
-            for (JsonElement entity : jsonGoal.getAsJsonArray("subgoals")) {
-                goal.add(goalJsonToPattern(entity.getAsJsonObject()));
-            }
-            return goal;
-        } else if (jsonGoal.get("goal").getAsString().equals("OR")) {
-            GoalInterface goal = new OrGoal();
-            for (JsonElement entity : jsonGoal.getAsJsonArray("subgoals")) {
-                goal.add(goalJsonToPattern(entity.getAsJsonObject()));
-            }
-            return goal;
-        } else {
-            return GoalFactory.getGoal(jsonGoal.get("goal").getAsString());
-        }
-    }
-
     public void setObservers() {
         for (MovingEntity e : getMovingEntityList()) {
             player.registerObserver(e);
         }
-    }
-    
-    public String goalPatternToString(GoalInterface goal, String currentGoals, Map<Position, List<Entity>> map) {
-        if (goal.getGoalName().equals("AND")) {
-            for (GoalInterface childGoal : goal.getChildren()) {
-                currentGoals = currentGoals + goalPatternToString(childGoal, currentGoals, map);
-                currentGoals = currentGoals + " AND ";
-            }
-            return currentGoals;
-        } else if (goal.getGoalName().equals("OR")) {
-            for (GoalInterface childGoal : goal.getChildren()) {
-                currentGoals = currentGoals + goalPatternToString(childGoal, currentGoals, map);
-                currentGoals = currentGoals + " OR ";
-            }
-            return currentGoals;
-        } else {
-            if (!goal.isGoalComplete(map)) {
-                return currentGoals + ":" + goal.getGoalName();
-            } else {
-                return currentGoals;
-            }
-        }
-    }
-    public JsonObject getGoalsFromJson (JsonObject dungeon) {
-        return dungeon.getAsJsonObject("goal-condition");
     }
 
     public GoalInterface getRootGoal() {
