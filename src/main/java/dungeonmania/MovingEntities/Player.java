@@ -51,6 +51,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
             int keyId = ((Door) e).getKeyId();
             if (inventory.getKey(keyId) != null) {
                 e.setType("door_unlocked");
+                inventory.getKey(keyId).use();
                 map.get(new Position(newPos.getX(), newPos.getY(), 4)).add(e);
                 // Remove the door on current layer and
                 map.get(doorLayer).remove(e);
