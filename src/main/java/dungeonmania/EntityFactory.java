@@ -35,7 +35,7 @@ public class EntityFactory {
             case "spider": 
                 return new Spider(id, type, movingPos);
             case "zombie_toast": 
-                return new ZombieToast(id, type, staticPos);
+                return new ZombieToast(id, type, movingPos);
             case "mercenary": 
                 return new Mercenary(id, type, movingPos);
             case "treasure": 

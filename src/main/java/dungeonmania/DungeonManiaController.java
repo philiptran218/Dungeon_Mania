@@ -114,14 +114,6 @@ public class DungeonManiaController {
     }
 
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
-        // Ticks the zombie toast spawner
-        for (Map.Entry<Position, List<Entity>> entry : gameMap.getMap().entrySet()) {
-            for(Entity e : entry.getValue()) {
-                if (e.getType().equals("zombie_toast_spawner")) {
-                    ((ZombieToastSpawner) e).tick(e.getPos(), gameMap.getMap(), gameMap.getGameState());
-                }
-            }
-        }
         // If itemUsed is NULL move the player:
         if (itemUsed == null) {
             gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
@@ -145,6 +137,14 @@ public class DungeonManiaController {
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
             e.move(gameMap.getMap());
+        }
+        // Ticks the zombie toast spawner
+        for (Map.Entry<Position, List<Entity>> entry : gameMap.getMap().entrySet()) {
+            for(Entity e : entry.getValue()) {
+                if (e.getType().equals("zombie_toast_spawner")) {
+                    ((ZombieToastSpawner) e).tick(e.getPos(), gameMap.getMap(), gameMap.getGameState());
+                }
+            }
         }
         // Return DungeonResponse
         return returnDungeonResponse();

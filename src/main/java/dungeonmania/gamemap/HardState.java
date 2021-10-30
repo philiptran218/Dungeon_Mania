@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import dungeonmania.Entity;
+import dungeonmania.EntityFactory;
 import dungeonmania.CollectableEntities.CollectableEntity;
 import dungeonmania.MovingEntities.ZombieToast;
 import dungeonmania.StaticEntities.Door;
@@ -17,39 +18,21 @@ public class HardState implements GameState {
     private String mode = "Hard";
 
    // Spawns the zombie from the zombie toast spawner
-    public int spawnZombie(int tickProgress, Map<Position, List<Entity>> listOfEntities, Position zombieSpawner) {
-        if (tickProgress == 14) {  
+    public int spawnZombie(int tickProgress, Map<Position, List<Entity>> gameMap, Position zombieSpawner) {
+        if (tickProgress == 2) { 
             // Adds each direction into a list
-            List <Position> directions = new ArrayList<Position>();
-            directions.add(Direction.UP.getOffset());
-            directions.add(Direction.RIGHT.getOffset());
-            directions.add(Direction.DOWN.getOffset());
-            directions.add(Direction.LEFT.getOffset());
+            List<Position> cardinallyAdjacentPos = zombieSpawner.getCardinallyAdjacentPositions();
             // Checks the surrounding positions for any open spots
-            for (Position dir : directions) {
-                Position checkOpenPosition = zombieSpawner.translateBy(dir);
-                List <Entity> entitiesOnPosition = listOfEntities.get(checkOpenPosition);
+            for (Position dir : cardinallyAdjacentPos) {
+                List <Entity> entitiesOnPosition = gameMap.get(dir.asLayer(1));
+                List <Entity> mobsOnPosition = gameMap.get(dir.asLayer(3));
                 // If an open spot is found, a zombie is spawned
-                if (entitiesOnPosition.isEmpty() || entitiesOnPosition.get(0).getType() == "portal" ||
-                    entitiesOnPosition.get(0).getType() == "exit"|| entitiesOnPosition.get(0) instanceof CollectableEntity) {
-                    ZombieToast newZombie = new ZombieToast("" + System.currentTimeMillis(), "zombie_toast", checkOpenPosition);
-                    entitiesOnPosition.add(newZombie);
+                if (entitiesOnPosition.isEmpty() && mobsOnPosition.isEmpty()) {
+                    //Entity newZombie = EntityFactory.getEntityObject("" + System.currentTimeMillis(), "zombie_toast", checkOpenPosition.asLayer(3), null, null);
+                    ZombieToast newZombie = new ZombieToast("" + System.currentTimeMillis(), "zombie_toast", dir.asLayer(3));
+                    gameMap.get(dir.asLayer(3)).add(newZombie);
                     break;
-                }
-                else if (entitiesOnPosition.get(0).getType() == "switch" && entitiesOnPosition.get(1) != null) {
-                    ZombieToast newZombie = new ZombieToast("" + System.currentTimeMillis(), "zombie_toast", checkOpenPosition);
-                    entitiesOnPosition.add(newZombie);
-                    break;
-                }
-                // Zombie is spawned if the door is unlocked
-                else if (entitiesOnPosition.get(0) instanceof Door) {
-                    Door checkLocked = (Door) entitiesOnPosition.get(0);
-                    if (checkLocked.isLocked() == false) {
-                        Entity newZombie = new ZombieToast("" + System.currentTimeMillis(), "zombie_toast", checkOpenPosition);
-                        entitiesOnPosition.add(newZombie);
-                        break;
-                    }
-                }
+                } 
             }
             // Increments the zombie id and resets the tick progress
             tickProgress = 0;
