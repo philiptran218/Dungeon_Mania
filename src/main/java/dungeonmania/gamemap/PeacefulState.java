@@ -8,7 +8,7 @@ import dungeonmania.util.Position;
 
 public class PeacefulState implements GameState{
     private String mode = "Peaceful";
-    public int spawnZombie(int tickProgress, Map<Position, List<Entity>> listOfEntities, Position zombieSpawner) {
+    public int spawnZombie(int tickProgress, Map<Position, List<Entity>> gameMap, Position zombieSpawner) {
         return 0;
     }
 
