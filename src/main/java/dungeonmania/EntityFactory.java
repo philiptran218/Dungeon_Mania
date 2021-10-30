@@ -11,6 +11,7 @@ import dungeonmania.util.Position;
 public class EntityFactory {
     public static Entity getEntityObject(String id, String type, Position pos, JsonElement keyId, Battle battle) {
         
+        Position otherPos = new Position(pos.getX(), pos.getY(), 4);
         Position movingPos = new Position(pos.getX(), pos.getY(), 3);
         Position collectPos = new Position(pos.getX(), pos.getY(), 2);
         Position staticPos = new Position(pos.getX(), pos.getY(), 1);
@@ -22,13 +23,13 @@ public class EntityFactory {
             case "exit": 
                 return new Exit(id, type, absolPos);
             case "boulder": 
-                return new Boulder(id, type, new Position(pos.getX(), pos.getY(), 4));     
+                return new Boulder(id, type, otherPos);     
             case "switch": 
                 return new FloorSwitch(id, type, absolPos);
             case "door": 
                 return new Door(id, type, staticPos, keyId.getAsInt());
             case "portal": 
-                return new Portal(id, type, collectPos);
+                return new Portal(id, type, otherPos);
             case "zombie_toast_spawner": 
                 return new ZombieToastSpawner(id, type, staticPos);
             case "spider": 
