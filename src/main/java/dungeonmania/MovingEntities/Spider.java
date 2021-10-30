@@ -94,7 +94,7 @@ public class Spider extends MovingEntity {
     }
 
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
-        return (map.get(new Position(pos.getX(), pos.getY(), 4))).isEmpty();
+        return !isPassingBoulder(map, pos);
     }
 
     public void setPath() {

@@ -82,7 +82,8 @@ public class ZombieToast extends MovingEntity {
     }
     
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
-        return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty();
+        return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty() && 
+                !super.isPassingBoulder(map, pos);    
     }
 
     public boolean hasArmour() {
