@@ -37,7 +37,7 @@ public class NormalState implements BattleState {
             }
             
             // Performs an attack if player has an allied mercenary
-            for (Mercenary merc : p1.getBribedMercenaries()) {
+            for (MovingEntity merc : p1.getBribedMercenaries()) {
                 healthModifier(p2, damageCalculation(merc), merc.getHealth());
 
             }
