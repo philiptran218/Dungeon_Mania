@@ -2,6 +2,7 @@ package dungeonmania;
 
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
+import dungeonmania.CollectableEntities.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.DungeonResponse;
@@ -156,6 +157,38 @@ public class DungeonManiaController {
     }
 
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
-        return null;
+        if (!(buildable.equals("bow") || buildable.equals("shield"))) {
+            throw new IllegalArgumentException();
+        }
+        Player player = gameMap.getPlayer();
+
+        Inventory playerInv = player.getInventory();
+        if (buildable.equals("bow")) {
+            if (playerInv.getNoItemType("wood") < 1 || playerInv.getNoItemType("arrow") < 3) {
+                throw new InvalidActionException("Not enough materials!");
+            }
+            playerInv.useItem("wood");
+            playerInv.useItem("arrow");
+            playerInv.useItem("arrow");
+            playerInv.useItem("arrow");
+            Bow newBow = new Bow("" + System.currentTimeMillis(), "bow", null);
+            player.getInventory().put(newBow, player);
+        }
+        // Otherwise we are crafting a shield
+        else {
+            if (playerInv.getNoItemType("wood") < 2 || (playerInv.getNoItemType("treasure") < 1 && playerInv.getNoItemType("key") < 1)) {
+                throw new InvalidActionException("Not enough materials!");
+            }
+            playerInv.useItem("wood");
+            playerInv.useItem("wood");
+            if (playerInv.getNoItemType("treasure") >= 1 ) {
+                playerInv.useItem("treasure");
+            } else {
+                playerInv.useItem("key");
+            }
+            Shield newShield = new Shield("" + System.currentTimeMillis(), "shield", null);
+            player.getInventory().put(newShield, player);
+        }
+        return returnDungeonResponse();
     }
 }
