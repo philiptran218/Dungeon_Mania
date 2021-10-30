@@ -1,16 +1,10 @@
 package dungeonmania.StaticEntities;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import dungeonmania.Entity;
-import dungeonmania.MovingEntities.Player;
 import dungeonmania.gamemap.GameState;
-import dungeonmania.gamemap.HardState;
-import dungeonmania.gamemap.PeacefulState;
-import dungeonmania.gamemap.StandardState;
-import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public class ZombieToastSpawner extends StaticEntity {
