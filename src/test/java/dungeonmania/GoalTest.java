@@ -5,9 +5,21 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import dungeonmania.response.models.DungeonResponse;
+import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
+import dungeonmania.util.Position;
 
 public class GoalTest {
+
+    // Gets the id of entity on a position:
+    public String getEntityId(Position pos, DungeonResponse response) {
+    for (EntityResponse entity : response.getEntities()) {
+        if (entity.getPosition().equals(pos) && entity.getPosition().getLayer() == pos.getLayer()) {
+            return entity.getId();
+        }
+    }
+    return null;
+}
 
     /**
      * Test getting to exit
@@ -34,10 +46,12 @@ public class GoalTest {
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
         DungeonResponse tmp = controller.newGame("simpleEnemies", "Standard");
+        String spawnerId = getEntityId(new Position(4, 1, 1), tmp);
         assertTrue(":enemies".equals(tmp.getGoals()));
         for (int i = 0; i < 4; i++) {
             tmp = controller.tick(null, Direction.RIGHT);
         }
+        tmp = controller.interact(spawnerId);
         assertTrue("".equals(tmp.getGoals()));
     }
 
