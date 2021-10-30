@@ -162,10 +162,6 @@ public class DungeonManiaController {
             gameMap.getMap().get(e.getPos()).remove(e);
         }
 
-
-
-        gameMap.spawnSpider();
-
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
             e.move(gameMap.getMap());
@@ -178,12 +174,9 @@ public class DungeonManiaController {
                 }
             }
         }
-<<<<<<< HEAD
-=======
 
         gameMap.spawnSpider();
 
->>>>>>> master
         // Return DungeonResponse
         return returnDungeonResponse();
     }
