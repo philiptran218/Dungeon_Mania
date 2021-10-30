@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import dungeonmania.CollectableEntities.CollectableEntity;
+import dungeonmania.CollectableEntities.InvincibilityPotion;
+import dungeonmania.CollectableEntities.InvisibilityPotion;
 import dungeonmania.CollectableEntities.Key;
 
 public class Inventory {
@@ -68,6 +70,15 @@ public class Inventory {
         return null;
     }
 
+    public CollectableEntity getItemById(String id) {
+        for (CollectableEntity item : entities) {
+            if (item.getId().equals(id)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
     /**
      * Returns the key with the given keyId (separate from getItem since keys
      * have unique integer id's)
@@ -92,6 +103,20 @@ public class Inventory {
      */
     public void useItem(String type) {
         getItem(type).use();
+    }
+
+    /**
+     * Ticks the durability of potions if they are currently active.
+     */
+    public void tickPotions() {
+        InvincibilityPotion invincPotion = (InvincibilityPotion) getItem("invincibility_potion");
+        if (invincPotion.getIsActive()) {
+            invincPotion.tickDuration();
+        }
+        InvisibilityPotion invisPotion = (InvisibilityPotion) getItem("invisibility_potion");
+        if (invisPotion.getIsActive()) {
+            invisPotion.tickDuration();
+        }
     }
 
 }

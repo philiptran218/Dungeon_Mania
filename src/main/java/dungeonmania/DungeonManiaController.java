@@ -117,13 +117,14 @@ public class DungeonManiaController {
             gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
         } else {
             // Get the entity on map:
-            Entity c = gameMap.getPlayer().getItem(itemUsed);
+            Entity c = gameMap.getPlayer().getInventory().getItemById(itemUsed);
+            
             if (!getUsableItems().contains(c.getType())) {
-                throw new IllegalArgumentException("Invalid item used.");
+                throw new IllegalArgumentException("Cannot use item.");
             }
 
             // Check inventory in item.
-            if (!gameMap.getPlayer().hasItem(itemUsed)) {
+            if (!gameMap.getPlayer().hasItem(c.getType())) {
                 throw new InvalidActionException("Player does not have the item.");
             }
         }

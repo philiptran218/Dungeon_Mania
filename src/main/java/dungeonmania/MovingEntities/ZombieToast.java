@@ -9,14 +9,15 @@ import java.util.stream.Collectors;
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
 import dungeonmania.Entity;
+import dungeonmania.CollectableEntities.Armour;
 
 
 public class ZombieToast extends MovingEntity {
-    private boolean armour;
+    private Armour armour;
 
     public ZombieToast(String id, String type, Position pos) {
         super(id, type, pos, 4, 4);
-        this.armour = generateArmour();
+        //this.armour = generateArmour();
 
     }
 
@@ -59,7 +60,7 @@ public class ZombieToast extends MovingEntity {
     }
 
     public void moveAway(Map<Position, List<Entity>> map) {
-        Position playerPos = this.getPlayerLocation();
+        Position playerPos = this.getPlayerPos();
         Position pos = super.getPos();
         
         List<Position> adjacentPos = pos.getAdjacentPositions();
@@ -84,4 +85,17 @@ public class ZombieToast extends MovingEntity {
         return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty();
     }
 
+    public boolean hasArmour() {
+        return this.armour != null;
+    }
+    public Armour getArmour() {
+        Armour armour = this.armour;
+        this.armour = null;
+        return armour;
+    }
+
+    public void setArmour(Armour armour) {
+        this.armour = armour;
+    }
+    
 }

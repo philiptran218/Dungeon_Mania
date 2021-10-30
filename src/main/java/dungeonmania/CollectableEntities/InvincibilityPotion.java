@@ -75,7 +75,7 @@ public class InvincibilityPotion extends Potion {
                 getBattle().setInitialState();
                 // Set movement here as well....
             }
-            getPlayer().getInventoryList().remove(this);
+            getPlayer().getInventoryList().remove((CollectableEntity)this);
         }
     }
 

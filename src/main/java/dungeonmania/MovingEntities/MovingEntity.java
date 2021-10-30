@@ -15,7 +15,7 @@ import dungeonmania.Entity;
 public abstract class MovingEntity extends Entity implements MovingEntityObserver {
     private double health;
     private double attackDamage;
-    private Position playerLocation;
+    private Position playerPos;
 
     /**
      * 
@@ -66,6 +66,7 @@ public abstract class MovingEntity extends Entity implements MovingEntityObserve
         map.get(newPos).add(this);
     }
 
+    public abstract boolean hasArmour();
 
 
 
@@ -88,18 +89,18 @@ public abstract class MovingEntity extends Entity implements MovingEntityObserve
         this.attackDamage = attackDamage;
     }
 
-    public Position getPlayerLocation() {
-        return playerLocation;
+    public Position getPlayerPos() {
+        return playerPos;
     }
 
-    public void setPlayerLocation(Position playerLocation) {
-        this.playerLocation = playerLocation;
+    public void setPlayerPos(Position playerPos) {
+        this.playerPos = playerPos;
     }
     
 
     @Override
     public void update(MovingEntitySubject obj) {
-        this.setPlayerLocation(((Player) obj).getPos());
+        this.setPlayerPos(((Player) obj).getPos());
     }
 
 
