@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
-import org.json.JSONML;
 import org.json.JSONObject;
 
 import dungeonmania.Entity;
@@ -80,21 +78,21 @@ public class GoalHelper {
                 }
             }
             return String.join(" AND ", currentGoals);
-        } else if (goal.getGoalName().equals("OR")) {
+        } else if (goal.getGoalName().equals("OR") && !goal.isGoalComplete(map)) {
             for (GoalInterface childGoal : goal.getChildren()) {
                 if (!childGoal.isGoalComplete(map)) {
                     currentGoals.add(goalPatternToString(childGoal, map));
                 }
             }
             return String.join(" OR ", currentGoals);
+        }
+        if (!goal.getGoalName().equals("OR") && !goal.isGoalComplete(map)) {
+            return ":" + goal.getGoalName();
         } else {
-            if (!goal.isGoalComplete(map)) {
-                return ":" + goal.getGoalName();
-            } else {
-                return "";
-            }
+            return "";
         }
     }
+    
     public static JsonObject getGoalsFromJson (JsonObject dungeon) {
         return dungeon.getAsJsonObject("goal-condition");
     }

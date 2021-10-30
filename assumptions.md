@@ -22,3 +22,8 @@
 - Allied mercenaries will only fight an enemy if the player is already fighting that enemy.
 - Enemies will not fight against the player's allied mercenaries; they will only fight the player.
 - If the player loots armour from an enemy, the armour will still retain its current durability.
+
+# Assumptions for Goals:
+- Every map must have at least one goal
+- All goals must be valid goals
+- Goals must be structured correctly within the dungeon .json file

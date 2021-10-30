@@ -1,39 +1,13 @@
 package dungeonmania;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import com.google.gson.JsonObject;
 
 import org.junit.jupiter.api.Test;
 
 import dungeonmania.response.models.DungeonResponse;
-import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
-import dungeonmania.util.Position;
 
 public class GoalTest {
-    // Gets the id of entity on a position:
-    public String getEntityId(Position pos, DungeonResponse response) {
-        for (EntityResponse entity : response.getEntities()) {
-            if (entity.getPosition().equals(pos) && entity.getPosition().getLayer() == pos.getLayer()) {
-                return entity.getId();
-            }
-        }
-        return null;
-    }
-    // Test helper: Checks if entity on a given position.
-    public boolean isEntityOnTile(DungeonResponse response, Position pos, String id) {
-        for (EntityResponse entity : response.getEntities()) {
-            if (entity.getId() == id) {
-                return entity.getPosition().equals(pos);
-            }
-        }
-        return false;
-    }
 
     /**
      * Test getting to exit
@@ -44,10 +18,9 @@ public class GoalTest {
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
         DungeonResponse tmp = controller.newGame("simpleExit", "Peaceful");
-        System.out.println(tmp.getGoals());
+        assertTrue(":exit".equals(tmp.getGoals()));
         for (int i = 0; i < 3; i++) {
             tmp = controller.tick(null, Direction.RIGHT);
-            System.out.println(tmp.getGoals());
         }
         assertTrue("".equals(tmp.getGoals()));
     }
@@ -61,8 +34,8 @@ public class GoalTest {
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
         DungeonResponse tmp = controller.newGame("simpleEnemies", "Standard");
-
-        for (int i = 0; i < 3; i++) {
+        assertTrue(":enemies".equals(tmp.getGoals()));
+        for (int i = 0; i < 4; i++) {
             tmp = controller.tick(null, Direction.RIGHT);
         }
         assertTrue("".equals(tmp.getGoals()));
@@ -77,11 +50,11 @@ public class GoalTest {
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
         DungeonResponse tmp = controller.newGame("simpleBoulder", "Standard");
-
+        assertTrue(":boulders".equals(tmp.getGoals()));
         for (int i = 0; i < 2; i++) {
             tmp = controller.tick(null, Direction.RIGHT);
-            assertTrue("".equals(tmp.getGoals()));
         }
+        assertTrue("".equals(tmp.getGoals()));
     }
 
     /**
@@ -92,8 +65,8 @@ public class GoalTest {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
-        DungeonResponse tmp = controller.newGame("simpleExit", "Peaceful");
-
+        DungeonResponse tmp = controller.newGame("simpleTreasure", "Peaceful");
+        assertTrue(":treasure".equals(tmp.getGoals()));
         for (int i = 0; i < 3; i++) {
             tmp = controller.tick(null, Direction.RIGHT);
         }
@@ -101,66 +74,55 @@ public class GoalTest {
     }
 
     /**
-     * Test irrelevant goal. In this test, the goal will be Treasure, so if the
-     * player reaches Exit, the game should not end.
-     */
-    @Test
-    public void IrrelevantGoal() {
-    }
-
-    /**
-     * Test destroying all enemies AND getting to exit 
-     * (Pass - Both goals are complete)
-     */
-    @Test
-    public void EnemiesAndExitGoalPass() {
-    }
-
-    /**
      * Test destroying all enemies AND getting to exit
      * (Fail - Exit is achieved but Enemies is not achieved)
      */
     @Test
-    public void EnemiesAndExitGoalFail() {
+    public void TreasureAndExitGoal() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("simpleTreasureAndExit", "Peaceful");
+        assertTrue(":treasure AND :exit".equals(tmp.getGoals()));
+        for (int i = 0; i < 3; i++) {
+            tmp = controller.tick(null, Direction.RIGHT);
+        }
+        assertTrue(":exit".equals(tmp.getGoals()));
+        for (int i = 0; i < 2; i++) {
+            tmp = controller.tick(null, Direction.LEFT);
+        }
+        assertTrue("".equals(tmp.getGoals()));
     }
 
     /**
-     * Test collecting all treasures OR having a boulder on all floor switches
-     * (Pass - Only Treasure achieved)
+     * Test collecting all treasures OR reaching exit
+     * (Pass - Reaching exit achieved)
      */
     @Test
-    public void TreasureOrBoulderGoalPass1() {
+    public void TreasureOrExitGoalPass() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("simpleTreasureOrExit", "Peaceful");
+        assertTrue(":treasure OR :exit".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.RIGHT);
+        assertTrue("".equals(tmp.getGoals()));
     }
 
     /**
-     * Test collecting all treasures OR having a boulder on all floor switches
-     * (Pass - Only Boulder achieved)
-     */
-    @Test
-    public void TreasureOrBoulderGoalPass2() {
-    }
-    
-    /**
-     * Test collecting all treasures OR having a boulder on all floor switches
-     * (Pass - Treasure and Boulder achieved)
-     */
-    @Test
-    public void TreasureOrBoulderGoalPass3() {
-    }
-
-    /**
-     * Test complex goal (Exit AND (Enemies OR Treasure))
+     * Test complex goal (Treasure AND (Boulders OR Exit))
      * (Pass - Exit and one of Enemies or Treasure is )
      */
     @Test
     public void ComplexGoalPass() {
-    }
-
-    /**
-     * Test complex goal (Exit AND (Enemies OR Treasure))
-     * (Fail - Only Enemies and Treasure are achieved)
-     */
-    @Test
-    public void ComplexGoalFail() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("simpleTreasureAND(BouldersORExit)", "Peaceful");
+        System.out.println(tmp.getGoals());
+        assertTrue(":treasure AND :boulders OR :exit".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.RIGHT);
+        tmp = controller.tick(null, Direction.DOWN);
+        assertTrue("".equals(tmp.getGoals()));
     }
 }
