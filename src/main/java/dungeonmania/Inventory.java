@@ -59,9 +59,9 @@ public class Inventory {
         return count;
     }
 
-    public CollectableEntity getItem(String type) {
+    public CollectableEntity getItem(String id) {
         for (CollectableEntity item : entities) {
-            if (item.getType().equals(type)) {
+            if (item.getId().equals(id)) {
                 return item;
             }
         }
