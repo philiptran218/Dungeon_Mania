@@ -21,3 +21,8 @@
 - If the player is invincible and attacking an enemy equipped with armour, this will reduce the armour's durability. Similarly, if the player is invincible and attacks an enemy, this will reduce the weapons' durability.
 - Allied mercenaries will only fight an enemy if the player is already fighting that enemy.
 - Enemies will not fight against the player's allied mercenaries; they will only fight the player.
+
+# Assumptions for Goals:
+- Every map must have at least one goal
+- All goals must be valid goals
+- Goals must be structured correctly within the dungeon .json file
