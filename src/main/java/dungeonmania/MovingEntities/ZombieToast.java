@@ -93,5 +93,9 @@ public class ZombieToast extends MovingEntity {
         this.armour = null;
         return armour;
     }
+
+    public void setArmour(Armour armour) {
+        this.armour = armour;
+    }
     
 }
