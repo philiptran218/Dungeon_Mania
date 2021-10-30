@@ -171,7 +171,7 @@ public class DungeonManiaController {
             playerInv.useItem("arrow");
             playerInv.useItem("arrow");
             playerInv.useItem("arrow");
-            Bow newBow = new Bow("bow" + player.getBowId(), "bow", null);
+            Bow newBow = new Bow("" + System.currentTimeMillis(), "bow", null);
             player.getInventory().put(newBow, player);
         }
         // Otherwise we are crafting a shield
@@ -186,7 +186,7 @@ public class DungeonManiaController {
             } else {
                 playerInv.useItem("key");
             }
-            Shield newShield = new Shield("shield" + player.getShieldId(), "shield", null);
+            Shield newShield = new Shield("" + System.currentTimeMillis(), "shield", null);
             player.getInventory().put(newShield, player);
         }
         return returnDungeonResponse();
