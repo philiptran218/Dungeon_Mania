@@ -89,6 +89,10 @@ public class Mercenary extends MovingEntity {
         return armour;
     }
 
+    public void setArmour(Armour armour) {
+        this.armour = armour;
+    }
+
     public int getBattleRadius() {
         return battleRadius;
     }
