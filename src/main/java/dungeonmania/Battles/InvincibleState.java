@@ -1,8 +1,10 @@
 package dungeonmania.Battles;
 
 import dungeonmania.CollectableEntities.*;
+import dungeonmania.MovingEntities.Mercenary;
 import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.MovingEntities.Player;
+import dungeonmania.MovingEntities.ZombieToast;
 
 public class InvincibleState implements BattleState {
 
@@ -12,6 +14,7 @@ public class InvincibleState implements BattleState {
      */
     public void fight(Player p1, MovingEntity p2) {
         usedWeapons(p1);
+        usedArmour(p2);
         p2.setHealth(0);
     }
 
@@ -29,6 +32,37 @@ public class InvincibleState implements BattleState {
         }
         if (bow != null) {
             bow.usedInCombat();
+        }
+    }
+
+    /**
+     * Reduces durability of the enemy's armour (if they have armour).
+     * @param p2
+     */
+    public void usedArmour(MovingEntity p2) {
+        if (p2 instanceof Mercenary) {
+            Mercenary merc = (Mercenary) p2;
+            Armour armour = merc.getArmour();
+
+            if (armour != null) {
+                armour.reduceDurability();
+                // Remove armour if it is broken.
+                if (armour.getDurability() == 0) {
+                    //merc.setArmour(null);
+                }
+            }
+        }
+        else if (p2 instanceof ZombieToast) {
+            ZombieToast zombie = (ZombieToast) p2;
+            Armour armour = zombie.getArmour();
+
+            if (armour != null) {
+                armour.reduceDurability();
+                // Remove armour if it is broken.
+                if (armour.getDurability() == 0) {
+                    //merc.setArmour(null);
+                }
+            }
         }
     }
 }
