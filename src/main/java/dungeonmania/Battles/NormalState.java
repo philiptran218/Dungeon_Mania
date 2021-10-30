@@ -4,6 +4,7 @@ import dungeonmania.CollectableEntities.*;
 import dungeonmania.MovingEntities.Mercenary;
 import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.MovingEntities.Player;
+import dungeonmania.MovingEntities.ZombieToast;
 
 public class NormalState implements BattleState {
     
@@ -38,8 +39,9 @@ public class NormalState implements BattleState {
             
             // Performs an attack if player has an allied mercenary
             for (MovingEntity merc : p1.getBribedMercenaries()) {
-                healthModifier(p2, damageCalculation(merc), merc.getHealth());
-
+                if (p2.getHealth() > 0) {
+                    healthModifier(p2, damageCalculation(merc), merc.getHealth());
+                }
             }
 
             // Then enemy attacks player (if the enemy is still alive)
@@ -89,12 +91,43 @@ public class NormalState implements BattleState {
                 multiplier *= armour.usedInCombat();
             }
             newHealth = p2.getHealth() - ((health * (dmg * multiplier)) / 10);
-            p2.setHealth(newHealth);
+        }
+        else if (p2 instanceof Mercenary) {
+            Mercenary merc = (Mercenary) p2;
+            Armour armour = merc.getArmour();
+            double multiplier = 1;
+
+            if (armour != null) {
+                multiplier *= armour.getReduceDamage();
+                armour.reduceDurability();
+
+                // Remove armour if it is broken.
+                if (armour.getDurability() == 0) {
+                    //merc.setArmour(null);
+                }
+            }
+            newHealth = p2.getHealth() - ((health * (dmg * multiplier)) / 5);
+        }
+        else if (p2 instanceof ZombieToast) {
+            ZombieToast zombie = (ZombieToast) p2;
+            Armour armour = zombie.getArmour();
+            double multiplier = 1;
+
+            if (armour != null) {
+                multiplier *= armour.getReduceDamage();
+                armour.reduceDurability();
+
+                // Remove armour if it is broken.
+                if (armour.getDurability() == 0) {
+                    //zombie.setArmour(null);
+                }
+            }
+            newHealth = p2.getHealth() - ((health * (dmg * multiplier)) / 5);
         }
         else {
             newHealth = p2.getHealth() - ((health * dmg) / 5);
-            p2.setHealth(newHealth);
         }
+        p2.setHealth(newHealth);
     }
 
 }
