@@ -7,5 +7,7 @@ public interface GameState {
     public int spawnZombie(int tickProgress);
     // Player stats
     
+    // Get gamemode as string:
+    public String getMode();
         
 }

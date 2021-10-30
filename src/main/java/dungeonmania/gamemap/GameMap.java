@@ -32,15 +32,16 @@ public class GameMap {
     // Need to figure something to stand in for entity, or we might need 
     // multiple maps for one dungeon.
     private Map<Position, List<Entity>> dungeonMap;
-    private String gameDifficulty;
     private GoalInterface rootGoal;
-    private String goal;
     private String dungeonName;
-    private Player player;
     private String mapId;
+    private Player player;
+    private Battle battle;
+    private GameState gameState;
     private int width;
     private int height;
-    private Battle battle;
+
+
 
     // ******************************************
     // Need to make varibales to game state here:
@@ -54,7 +55,6 @@ public class GameMap {
      * @param jsonMap
      */
     public GameMap(String difficulty, String name, JsonObject jsonMap) {
-        this.gameDifficulty = difficulty;
         this.dungeonName = name;
         this.mapId = "" + System.currentTimeMillis();
         this.battle = new Battle(difficulty);
@@ -62,6 +62,7 @@ public class GameMap {
         this.rootGoal = GoalHelper.getGoalPattern(jsonMap);
         this.setPlayerInventory(jsonMap);
         this.setObservers();
+        this.setGameState(difficulty);
     }
 
     /**
@@ -70,6 +71,21 @@ public class GameMap {
      */
     public GameMap(String name) {
         this(getSavedMap(name).get("game-mode").getAsString(), getSavedMap(name).get("map-name").getAsString(), getSavedMap(name));
+    }
+
+    /**
+     * Given difficulty of the name as a string, set the state of 
+     * the game respectively.
+     * @param difficulty (String)
+     */
+    public void setGameState(String difficulty) {
+        if (difficulty.equals("Peaceful")) {
+            this.gameState = new PeacefulState();
+        } else if (difficulty.equals("Standard")) {
+            this.gameState = new StandardState();
+        } else {
+            this.gameState = new HardState();
+        }
     }
     
     /**
@@ -148,7 +164,7 @@ public class GameMap {
         // Add all fields:
         main.put("width", getMapWidth());
         main.put("height", getMapHeight());
-        main.put("game-mode", this.gameDifficulty);
+        main.put("game-mode", this.gameState.getMode());
         main.put("map-name", this.dungeonName);
         main.put("goal-condition", GoalHelper.goalPatternToJson(this.getRootGoal()));
 
@@ -293,16 +309,16 @@ public class GameMap {
         return GoalHelper.goalPatternToString(this.getRootGoal(), this.getMap());
     }
 
+    public GameState getGameState() {
+        return this.gameState;
+    }
+
     public int getMapHeight() {
         return this.height;
     }
 
     public int getMapWidth() {
         return this.width;
-    }
-
-    public String getDifficulty() {
-        return this.gameDifficulty;
     }
 
     public String getDungeonName() {
