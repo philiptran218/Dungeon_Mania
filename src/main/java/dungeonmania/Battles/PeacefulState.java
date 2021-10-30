@@ -21,7 +21,7 @@ public class PeacefulState implements BattleState {
     /**
      * Since the difficulty is on Peaceful, only the player can attack.
      */
-    public void fight(Player p1, MovingEntity p2) {
+    public MovingEntity fight(Player p1, MovingEntity p2) {
 
         while (p2.getHealth() > 0) {
             healthModifier(p2, damageCalculation(p1), p1.getHealth());
@@ -40,6 +40,7 @@ public class PeacefulState implements BattleState {
         }
         spawnOneRing(p1);
         p1.lootBody(p2);
+        return p2;
     }
 
     /**

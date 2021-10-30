@@ -23,7 +23,7 @@ public class EntityFactory {
             case "exit": 
                 return new Exit(id, type, absolPos);
             case "boulder": 
-                return new Boulder(id, type, otherPos);     
+                return new Boulder(id, type, staticPos);     
             case "switch": 
                 return new FloorSwitch(id, type, absolPos);
             case "door": 
@@ -31,7 +31,7 @@ public class EntityFactory {
             case "portal": 
                 return new Portal(id, type, otherPos);
             case "zombie_toast_spawner": 
-                return new ZombieToastSpawner(id, type, staticPos);
+                return new ZombieToastSpawner(id, type, movingPos);
             case "spider": 
                 return new Spider(id, type, movingPos);
             case "zombie_toast": 

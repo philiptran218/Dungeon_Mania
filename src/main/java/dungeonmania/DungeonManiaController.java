@@ -129,7 +129,39 @@ public class DungeonManiaController {
             if (!gameMap.getPlayer().hasItem(c.getType())) {
                 throw new InvalidActionException("Player does not have the item.");
             }
+
+            // Otherwise player can use the item
+            gameMap.getPlayer().getInventory().getItemById(itemUsed).use();
         }
+        
+        // Move all the moving entities by one tick:
+        for (MovingEntity e : gameMap.getMovingEntityList()) {
+            if (!(e.getPos().equals(e.getPlayerPos()) && !e.getType().equals("mercenary"))) {
+                e.move(gameMap.getMap());
+            }
+        }
+        
+        // Player battles enemies on the same tile
+        List<MovingEntity> removeEntity = new ArrayList<>();
+        for (MovingEntity e : gameMap.getMovingEntityList()) { 
+            if (e instanceof Mercenary) {
+                Mercenary merc = (Mercenary) e;
+                if (e.getPos().equals(e.getPlayerPos()) && !merc.isAlly()) {
+                    removeEntity.add(gameMap.getBattle().fight(gameMap.getPlayer(), e));
+                }
+            }
+            else {
+                if (e.getPos().equals(gameMap.getPlayer().getPos()) && !(e instanceof Player)) {
+                    removeEntity.add(gameMap.getBattle().fight(gameMap.getPlayer(), e));
+                }
+            }
+        }
+        // Remove dead entities from list after battle is finished
+        // Remove the entity from the map:
+        for (Entity e : removeEntity) {
+            gameMap.getMap().get(e.getPos()).remove(e);
+        }
+
 
 
         gameMap.spawnSpider();
@@ -146,6 +178,12 @@ public class DungeonManiaController {
                 }
             }
         }
+<<<<<<< HEAD
+=======
+
+        gameMap.spawnSpider();
+
+>>>>>>> master
         // Return DungeonResponse
         return returnDungeonResponse();
     }

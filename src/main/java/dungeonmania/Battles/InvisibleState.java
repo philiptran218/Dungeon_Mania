@@ -7,7 +7,7 @@ public class InvisibleState implements BattleState {
     /**
      * Since the player is invisible, no fighting occurs.
      */
-    public void fight(Player p1, MovingEntity p2) {
-        return;
+    public MovingEntity fight(Player p1, MovingEntity p2) {
+        return null;
     }
 }

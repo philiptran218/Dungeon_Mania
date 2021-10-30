@@ -6,13 +6,18 @@ import java.util.Map;
 
 import javax.swing.event.SwingPropertyChangeSupport;
 
+import org.json.JSONObject;
+
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
 import dungeonmania.Entity;
+import dungeonmania.EntityFactory;
 import dungeonmania.Inventory;
 import dungeonmania.CollectableEntities.CollectableEntity;
 import dungeonmania.CollectableEntities.Treasure;
 import dungeonmania.StaticEntities.Boulder;
+import dungeonmania.StaticEntities.StaticEntity;
+import dungeonmania.StaticEntities.*;
 import dungeonmania.StaticEntities.ZombieToastSpawner;
 import dungeonmania.exceptions.InvalidActionException;
 
@@ -30,28 +35,41 @@ public class Player extends MovingEntity implements MovingEntitySubject {
 
     }
     public void move(Map<Position, List<Entity>> map, Direction direction) {
-        Position newPos = super.getPos().translateBy(direction);        
+        Position newPos = super.getPos().translateBy(direction);    
+        Position doorLayer = new Position(newPos.getX(), newPos.getY(), 1);
+
         if (canPass(map, newPos)) {
             moveInDir(map, direction);
         } else if (canPush(map, newPos, direction)) {   
             // Player can move, but pushes a boulder
-            Boulder boulder = (Boulder) map.get(new Position(newPos.getX(), newPos.getY(), 4)).get(0);
+            Boulder boulder = (Boulder) map.get(new Position(newPos.getX(), newPos.getY(), 1)).get(0);
             boulder.push(map, direction);
             moveInDir(map, direction);
+        } else if (map.get(doorLayer).get(0) != null && map.get(doorLayer).get(0).getType().equals("door")) {
+            Entity e = map.get(doorLayer).get(0);
+            // Check if the door and key matches:
+            int keyId = ((Door) e).getKeyId();
+            if (inventory.getKey(keyId) != null) {
+                e.setType("door_unlocked");
+                map.get(new Position(newPos.getX(), newPos.getY(), 4)).add(e);
+                // Remove the door on current layer and
+                map.get(doorLayer).remove(e);
+                moveInDir(map, direction);
+            }
         }
+
         pickUp(map);
         notifyObservers();
     }
 
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
-        return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty() && 
-                !super.isPassingBoulder(map, pos);
+        return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty();
     }
 
     public boolean canPush(Map<Position, List<Entity>> map, Position pos, Direction direction) {
         if (super.isPassingBoulder(map, pos)) {
             // Has boulder
-            Boulder boulder = (Boulder) map.get(new Position(pos.getX(), pos.getY(), 4)).get(0);
+            Boulder boulder = (Boulder) map.get(new Position(pos.getX(), pos.getY(), 1)).get(0);
             return boulder.canBePushed(map, direction);
         }
         return false;
@@ -67,9 +85,14 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         List<Entity> collectables = map.get(new Position(pos.getX(), pos.getY(), 2));
         if (!collectables.isEmpty()) {
             Entity entity = collectables.get(0);
-            if (entity instanceof CollectableEntity) {
+            if (entity.getType().equals("key") && inventory.getNoItemType("key") > 0) {
+                // Entity is a key and player is already holding a key
+                // Dont pick it up
+            } else {
+                // Pickup the item
                 this.inventory.put(entity, this);
                 collectables.remove(entity);
+
             }
         }
     }

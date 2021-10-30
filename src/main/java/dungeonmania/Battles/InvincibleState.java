@@ -14,12 +14,13 @@ public class InvincibleState implements BattleState {
      * Since the player is invincible, they will win any fight immediately. This will
      * still reduce the durability of the player's weapons.
      */
-    public void fight(Player p1, MovingEntity p2) {
+    public MovingEntity fight(Player p1, MovingEntity p2) {
         usedWeapons(p1);
         usedArmour(p2);
         p2.setHealth(0);
         spawnOneRing(p1);
         p1.lootBody(p2);
+        return p2;
     }
 
      /**
