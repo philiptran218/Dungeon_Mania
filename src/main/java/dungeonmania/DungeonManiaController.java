@@ -2,7 +2,6 @@ package dungeonmania;
 
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
-import dungeonmania.CollectableEntities.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.DungeonResponse;
@@ -17,22 +16,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class DungeonManiaController {
     private GameMap gameMap;
-    /**
-     * Empty Constructor
-     */
+
     public DungeonManiaController() {
     }
 
-    /**
-     * Get the json file with all pixel for entities.
-     * @return
-     */
     public String getSkin() {
         return "default";
     }
@@ -44,9 +36,11 @@ public class DungeonManiaController {
     public List<String> getGameModes() {
         return Arrays.asList("Standard", "Peaceful", "Hard");
     }
+
     public List<String> getUsableItems() {
         return Arrays.asList("bomb", "health_potion", "invincibility_potion", "invisibility_potion", null);
     }
+
     /**
      * /dungeons
      * 
@@ -78,7 +72,7 @@ public class DungeonManiaController {
     public JsonObject getJsonFile(String fileName) {
         // "src\\main\\resources\\dungeons\\" + dungeonName + ".json"
         try {
-            return JsonParser.parseReader(new FileReader("src\\test\\resources\\dungeons\\" + "player_pickup_item" + ".json")).getAsJsonObject();
+            return JsonParser.parseReader(new FileReader("src\\main\\resources\\dungeons\\" + fileName + ".json")).getAsJsonObject();
         } catch (Exception e) {
             try {
                 return JsonParser.parseReader(new FileReader("src\\test\\resources\\dungeons\\" + fileName + ".json")).getAsJsonObject();
@@ -87,7 +81,7 @@ public class DungeonManiaController {
             }
         }
     }
-
+    
     public DungeonResponse newGame(String dungeonName, String gameMode) throws IllegalArgumentException {
         if (!getGameModes().contains(gameMode)) {
             throw new IllegalArgumentException("Game mode does not exist.");
@@ -112,37 +106,21 @@ public class DungeonManiaController {
     }
 
     public List<String> allGames() {
-        return new ArrayList<>();
+        try {
+            return FileLoader.listFileNamesInResourceDirectory("/saved_games");
+        } catch (IOException e) {
+            return new ArrayList<>();
+        }
     }
 
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
         // Ticks the zombie toast spawner
-        for (Position key : gameMap.getMap().keySet()) {
-            Entity checkSpawner = gameMap.getMap().get(key).get(1);
-            if (checkSpawner.getType() == "zombie_toast_spawner") {
-                ZombieToastSpawner tickSpawner = (ZombieToastSpawner) checkSpawner;
-                tickSpawner.tick(key, gameMap.getMap());
+        for (Map.Entry<Position, List<Entity>> entry : gameMap.getMap().entrySet()) {
+            for(Entity e : entry.getValue()) {
+                if (e.getType().equals("zombie_toast_spawner")) {
+                    ((ZombieToastSpawner) e).tick(e.getPos(), gameMap.getMap(), gameMap.getGameState());
+                }
             }
-        }
-        // Position dir = movementDirection.getOffset();
-        // // Position in front of player
-        // Position checkPosition;
-        // Entity tempEntity = gameMap.getMap().get(checkPosition).get(1);
-        // if (tempEntity.getType().equals("portal")) {
-        //     Portal portal = (Portal) tempEntity;
-        //     Position teleportLocation = portal.getTeleportLocation();
-        //     // Add code for playermovement
-        // }
-        // if (tempEntity.getType().equals("door")) {
-        //     Door door = (Door) tempEntity;
-        //     if (door.isLocked() && playerEntity.getKey(door.getKeyId()) != null) {
-        //         door.setLocked(false);
-        //         // CHANGE ANIMATION FOR DOOR
-        //     }
-        // }
-        // Check if the item is valid.
-        if (!getUsableItems().contains(itemUsed)) {
-            throw new IllegalArgumentException("Invalid item used.");
         }
         // If itemUsed is NULL move the player:
         if (itemUsed == null) {
@@ -161,14 +139,6 @@ public class DungeonManiaController {
             }
         }
 
-        // Ticks the zombie toast spawner
-        for (Map.Entry<Position, List<Entity>> entry : gameMap.getMap().entrySet()) {
-            for(Entity e : entry.getValue()) {
-                if (e.getType().equals("zombie_toast_spawner")) {
-                    ((ZombieToastSpawner) e).tick(e.getPos(), gameMap.getMap(), gameMap.getGameState());
-                }
-            }
-        }
 
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
@@ -197,39 +167,6 @@ public class DungeonManiaController {
     }
 
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
-        if (!(buildable.equals("bow") || buildable.equals("shield"))) {
-            throw new IllegalArgumentException();
-        }
-        Player player = gameMap.getPlayer();
-
-        Inventory playerInv = player.getInventory();
-        if (buildable.equals("bow")) {
-            if (playerInv.getNoItemType("wood") < 1 || playerInv.getNoItemType("arrow") < 3) {
-                throw new InvalidActionException("Not enough materials!");
-            }
-            playerInv.useItem("wood");
-            playerInv.useItem("arrow");
-            playerInv.useItem("arrow");
-            playerInv.useItem("arrow");
-            Bow newBow = new Bow("" + System.currentTimeMillis(), "bow", null);
-            player.getInventory().put(newBow, player);
-        }
-        // Otherwise we are crafting a shield
-        else {
-            if (playerInv.getNoItemType("wood") < 2 || (playerInv.getNoItemType("treasure") < 1 && playerInv.getNoItemType("key") < 1)) {
-                throw new InvalidActionException("Not enough materials!");
-            }
-            playerInv.useItem("wood");
-            playerInv.useItem("wood");
-            if (playerInv.getNoItemType("treasure") >= 1 ) {
-                playerInv.useItem("treasure");
-            } else {
-                playerInv.useItem("key");
-            }
-            Shield newShield = new Shield("" + System.currentTimeMillis(), "shield", null);
-            player.getInventory().put(newShield, player);
-        }
-        return returnDungeonResponse();
+        return null;
     }
-
 }

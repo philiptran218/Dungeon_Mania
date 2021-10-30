@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import dungeonmania.Entity;
+import dungeonmania.CollectableEntities.CollectableEntity;
 import dungeonmania.MovingEntities.ZombieToast;
 import dungeonmania.StaticEntities.Door;
 import dungeonmania.StaticEntities.Exit;
@@ -16,42 +17,48 @@ public class HardState implements GameState {
     private String mode = "Hard";
 
    // Spawns the zombie from the zombie toast spawner
-   public void spawnZombie(int tickProgress, Map<Position, List<Entity>> listOfEntities, Position zombieSpawner) {
-    if (tickProgress == 14) {  
-        // Adds each direction into a list
-        List <Direction> directions = new ArrayList<Direction>();
-        directions.add(Direction.UP);
-        directions.add(Direction.RIGHT);
-        directions.add(Direction.DOWN);
-        directions.add(Direction.LEFT);
-        // Checks the surrounding positions for any open spots
-        for (Direction dir : directions) {
-            Position checkOpenPosition = zombieSpawner.translateBy(dir);
-            List <Entity> entitiesOnPosition = listOfEntities.get(checkOpenPosition);
-            // If an open spot is found, a zombie is spawned
-            if (entitiesOnPosition.get(3) == null || entitiesOnPosition.get(1) == null ||
-                entitiesOnPosition.get(1) instanceof Exit || entitiesOnPosition.get(1) instanceof Portal) {
-                ZombieToast newZombie = new ZombieToast("" + System.currentTimeMillis(), "zombie_toast", checkOpenPosition);
-                entitiesOnPosition.add(newZombie);
-                break;
-            }
-            // Zombie is spawned if the door is unlocked
-            else if (entitiesOnPosition.get(1) instanceof Door) {
-                Door checkLocked = (Door) entitiesOnPosition.get(0);
-                if (checkLocked.isLocked() == false) {
-                    Entity newZombie = new ZombieToast("" + System.currentTimeMillis(), "zombie_toast", checkOpenPosition);
+    public int spawnZombie(int tickProgress, Map<Position, List<Entity>> listOfEntities, Position zombieSpawner) {
+        if (tickProgress == 14) {  
+            // Adds each direction into a list
+            List <Position> directions = new ArrayList<Position>();
+            directions.add(Direction.UP.getOffset());
+            directions.add(Direction.RIGHT.getOffset());
+            directions.add(Direction.DOWN.getOffset());
+            directions.add(Direction.LEFT.getOffset());
+            // Checks the surrounding positions for any open spots
+            for (Position dir : directions) {
+                Position checkOpenPosition = zombieSpawner.translateBy(dir);
+                List <Entity> entitiesOnPosition = listOfEntities.get(checkOpenPosition);
+                // If an open spot is found, a zombie is spawned
+                if (entitiesOnPosition.isEmpty() || entitiesOnPosition.get(0).getType() == "portal" ||
+                    entitiesOnPosition.get(0).getType() == "exit"|| entitiesOnPosition.get(0) instanceof CollectableEntity) {
+                    ZombieToast newZombie = new ZombieToast("" + System.currentTimeMillis(), "zombie_toast", checkOpenPosition);
                     entitiesOnPosition.add(newZombie);
                     break;
                 }
+                else if (entitiesOnPosition.get(0).getType() == "switch" && entitiesOnPosition.get(1) != null) {
+                    ZombieToast newZombie = new ZombieToast("" + System.currentTimeMillis(), "zombie_toast", checkOpenPosition);
+                    entitiesOnPosition.add(newZombie);
+                    break;
+                }
+                // Zombie is spawned if the door is unlocked
+                else if (entitiesOnPosition.get(0) instanceof Door) {
+                    Door checkLocked = (Door) entitiesOnPosition.get(0);
+                    if (checkLocked.isLocked() == false) {
+                        Entity newZombie = new ZombieToast("" + System.currentTimeMillis(), "zombie_toast", checkOpenPosition);
+                        entitiesOnPosition.add(newZombie);
+                        break;
+                    }
+                }
             }
+            // Increments the zombie id and resets the tick progress
+            tickProgress = 0;
         }
-        // Increments the zombie id and resets the tick progress
-        tickProgress = 1;
-    }
         // Increments the ticks
         else {
             tickProgress++;
         }
+        return tickProgress;
     }
 
     @Override

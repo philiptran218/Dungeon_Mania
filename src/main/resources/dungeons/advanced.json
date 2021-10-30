@@ -602,6 +602,17 @@
         "x": 17,
         "y": 15,
         "type": "wall"
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "type": "zombie_toast_spawner"
+      },
+      {
+        "x": 2,
+        "y": 1,
+        "key": 1,
+        "type": "door"
       }
     ],
     "goal-condition": {
