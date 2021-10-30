@@ -136,6 +136,9 @@ public class DungeonManiaController {
             if (!gameMap.getPlayer().hasItem(c.getType())) {
                 throw new InvalidActionException("Player does not have the item.");
             }
+
+            // Otherwise player can use the item
+            gameMap.getPlayer().getInventory().getItemById(itemUsed).use();
         }
         
         // Move all the moving entities by one tick:
@@ -144,6 +147,25 @@ public class DungeonManiaController {
                 e.move(gameMap.getMap());
             }
         }
+        
+        // Player battles enemies on the same tile
+        List<MovingEntity> removeEntity = new ArrayList<>();
+        for (MovingEntity e : gameMap.getMovingEntityList()) { 
+            if (e instanceof Mercenary) {
+                Mercenary merc = (Mercenary) e;
+                if (e.getPos().equals(e.getPlayerPos()) && !merc.isAlly()) {
+                    removeEntity.add(gameMap.getBattle().fight(gameMap.getPlayer(), e));
+                }
+            }
+            else {
+                if (e.getPos().equals(e.getPlayerPos()) && !(e instanceof Player)) {
+                    removeEntity.add(gameMap.getBattle().fight(gameMap.getPlayer(), e));
+                }
+            }
+        }
+        // Remove dead entities from list after battle is finished
+        gameMap.getMovingEntityList().removeAll(removeEntity);
+
 
         // Ticks the zombie toast spawner
         for (Map.Entry<Position, List<Entity>> entry : gameMap.getMap().entrySet()) {

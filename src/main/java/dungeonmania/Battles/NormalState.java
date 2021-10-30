@@ -28,7 +28,7 @@ public class NormalState implements BattleState {
      * Conducts the normal actions for fighting. p1 is the player and
      * p2 is the enemy.
      */
-    public void fight(Player p1, MovingEntity p2) {
+    public MovingEntity fight(Player p1, MovingEntity p2) {
 
         while (p1.getHealth() > 0 && p2.getHealth() > 0) {
             // Player attacks enemy first
@@ -60,6 +60,10 @@ public class NormalState implements BattleState {
         if (p1.getHealth() > 0) {
             p1.lootBody(p2);
             spawnOneRing(p1);
+            return p2;
+        }
+        else {
+            return p1;
         }
     }
 
