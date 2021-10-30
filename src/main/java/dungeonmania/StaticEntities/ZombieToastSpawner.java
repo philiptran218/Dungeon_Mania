@@ -15,17 +15,13 @@ import dungeonmania.MovingEntities.Player;
 
 public class ZombieToastSpawner extends StaticEntity {
     private int tickProgress = 0;
-    GameState state;
-    GameState hardState;
-    GameState standardState;
+    private int zombieId = 0;
     /**
      * Constructor for ZombieToastSpawner
      */
     public ZombieToastSpawner(String id, String type, Position pos) {
         super(id, type, pos);
         super.setCanStandOn(false);
-        hardState = new HardState();
-        standardState = new StandardState();
     }
     public Player canSpawnerBeDestroyed(Position entityPosition, Map<Position, List<Entity>> gameMap, boolean isAdjacent, Player playerEntity) {
         // Add all the directions into a list
@@ -63,8 +59,8 @@ public class ZombieToastSpawner extends StaticEntity {
     /**
      * Spawns the zombie in 15 or 20 ticks depending on the game mode
      */
-    public void tick() {
-        tickProgress = state.spawnZombie(tickProgress);
+    public void tick(Position zombieSpawner, Map<Position, List<Entity>> listOfEntities, GameState state) {
+        state.spawnZombie(tickProgress, listOfEntities, zombieSpawner);
     }
 
     public void destroy(Map<Position, List<Entity>> map) {
