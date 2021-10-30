@@ -69,7 +69,7 @@ public abstract class MovingEntity extends Entity implements MovingEntityObserve
     public abstract boolean hasArmour();
 
     public boolean isPassingBoulder(Map<Position, List<Entity>> map, Position pos) {
-        List<Entity> entities = map.get(new Position(pos.getX(), pos.getY(), 4));
+        List<Entity> entities = map.get(new Position(pos.getX(), pos.getY(), 1));
         if (entities.size() == 0) {
             return false;
         } else {
