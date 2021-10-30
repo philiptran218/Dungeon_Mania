@@ -1,5 +1,7 @@
 package dungeonmania.Battles;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.MovingEntities.Mercenary;
 import dungeonmania.MovingEntities.MovingEntity;
@@ -48,8 +50,17 @@ public class NormalState implements BattleState {
             if (p2.getHealth() > 0) {
                 healthModifier(p1, damageCalculation(p2), p2.getHealth());
             }
+            // If player is dead, check for The One Ring
+            if (p1.getHealth() <= 0 && p1.hasItem("one_ring")) {
+                p1.getInventory().useItem("one_ring");
+            }
         }
-
+        // If player wins the battle, random chance of spawning The One Ring and check enemy
+        // for lootable armour
+        if (p1.getHealth() > 0) {
+            p1.lootBody(p2);
+            spawnOneRing(p1);
+        }
     }
 
     /**
@@ -128,6 +139,17 @@ public class NormalState implements BattleState {
             newHealth = p2.getHealth() - ((health * dmg) / 5);
         }
         p2.setHealth(newHealth);
+    }
+
+    public void spawnOneRing(Player p1) {
+        int num = ThreadLocalRandom.current().nextInt(0,10);
+        // num = 0,1,2,3,4,5,6,7,8,9
+
+        // 10% chance that The One Ring spawns after winning a battle
+        if (num > 8) {
+            TheOneRing ring = new TheOneRing("" + System.currentTimeMillis(), "one_ring", null);
+            p1.getInventory().put(ring, p1);
+        }
     }
 
 }

@@ -1,5 +1,7 @@
 package dungeonmania.Battles;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.MovingEntities.Mercenary;
 import dungeonmania.MovingEntities.MovingEntity;
@@ -16,6 +18,8 @@ public class InvincibleState implements BattleState {
         usedWeapons(p1);
         usedArmour(p2);
         p2.setHealth(0);
+        spawnOneRing(p1);
+        p1.lootBody(p2);
     }
 
      /**
@@ -63,6 +67,17 @@ public class InvincibleState implements BattleState {
                     zombie.setArmour(null);
                 }
             }
+        }
+    }
+
+    public void spawnOneRing(Player p1) {
+        int num = ThreadLocalRandom.current().nextInt(0,10);
+        // num = 0,1,2,3,4,5,6,7,8,9
+
+        // 10% chance that The One Ring spawns after winning a battle
+        if (num > 8) {
+            TheOneRing ring = new TheOneRing("" + System.currentTimeMillis(), "one_ring", null);
+            p1.getInventory().put(ring, p1);
         }
     }
 }
