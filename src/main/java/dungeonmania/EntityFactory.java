@@ -23,7 +23,7 @@ public class EntityFactory {
             case "exit": 
                 return new Exit(id, type, absolPos);
             case "boulder": 
-                return new Boulder(id, type, otherPos);     
+                return new Boulder(id, type, staticPos);     
             case "switch": 
                 return new FloorSwitch(id, type, absolPos);
             case "door": 
