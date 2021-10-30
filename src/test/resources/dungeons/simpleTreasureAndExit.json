@@ -76,14 +76,27 @@
             "type": "player"
         },
         {
-            "x": 4,
+            "x": 2,
             "y": 1,
             "type": "exit"
+        },
+        {
+            "x": 4,
+            "y": 1,
+            "type": "treasure"
         }
     ],
     "width": 6,
     "height": 6,
     "goal-condition": {
-        "goal": "exit"
+        "goal": "AND",
+        "subgoals": [
+            {
+                "goal": "treasure"
+            },
+            {
+                "goal": "exit"
+            }
+        ]
     }
 }

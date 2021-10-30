@@ -88,5 +88,8 @@
         "y": 3,
         "type": "wall"
       }
-    ]
+    ],
+    "goal-condition": {
+      "goal": "boulder"
+    }
   }

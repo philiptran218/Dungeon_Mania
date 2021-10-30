@@ -74,7 +74,7 @@ public class Spider extends MovingEntity {
      * @param map
      */
     public void moveAway(Map<Position, List<Entity>> map) {
-        Position playerPos = this.getPlayerLocation();
+        Position playerPos = this.getPlayerPos();
         Position pos = super.getPos();
         
         List<Position> cardinallyAdjacentPos = path.stream().filter(e -> Position.isCardinallyAdjacent(pos, e)).collect(Collectors.toList());
@@ -94,17 +94,8 @@ public class Spider extends MovingEntity {
     }
 
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
-        List<Entity> StaticEntities = map.get(new Position(pos.getX(), pos.getY(), 1));
-        if (StaticEntities.isEmpty()) {
-            return true;
-        } else if (!StaticEntities.get(0).getType().equals("boulder")) {
-            return true;
-        } else {
-            return false;
-        }
+        return (map.get(new Position(pos.getX(), pos.getY(), 4))).isEmpty();
     }
-
-
 
     public void setPath() {
         this.path.add(startPos.translateBy(Direction.UP));
@@ -116,4 +107,9 @@ public class Spider extends MovingEntity {
         this.path.add(startPos.translateBy(Direction.LEFT));
         this.path.add(startPos.translateBy(Direction.LEFT).translateBy(Direction.UP));
     }
+
+    public boolean hasArmour() {
+        return false;
+    }
+    
 }

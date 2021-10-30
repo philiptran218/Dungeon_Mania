@@ -1,19 +1,13 @@
 package dungeonmania;
 
-import dungeonmania.CollectableEntities.Bow;
-import dungeonmania.CollectableEntities.CollectableEntity;
-import dungeonmania.CollectableEntities.Shield;
-import dungeonmania.MovingEntities.MovingEntity;
-import dungeonmania.MovingEntities.Player;
-import dungeonmania.MovingEntities.ZombieToast;
+import dungeonmania.MovingEntities.*;
+import dungeonmania.StaticEntities.*;
+import dungeonmania.CollectableEntities.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.DungeonResponse;
-import dungeonmania.response.models.EntityResponse;
-import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
-import dungeonmania.util.Position;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -65,7 +59,7 @@ public class DungeonManiaController {
      */
     public DungeonResponse returnDungeonResponse() {
         return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), 
-            gameMap.inventoryToItemResponse(), new ArrayList<String>(), "Goals");
+            gameMap.inventoryToItemResponse(), new ArrayList<String>(), gameMap.getGoals());
     }
 
     /**
@@ -119,30 +113,47 @@ public class DungeonManiaController {
     }
 
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
-        // Check if the item is valid.
-        if (!getUsableItems().contains(itemUsed)) {
-            throw new IllegalArgumentException("Invalid item used.");
-        }
+        // If itemUsed is NULL move the player:
+        if (itemUsed == null) {
+            gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
+        } else {
+            // Get the entity on map:
+            Entity c = gameMap.getPlayer().getInventory().getItemById(itemUsed);
+            
+            if (!getUsableItems().contains(c.getType())) {
+                throw new IllegalArgumentException("Cannot use item.");
+            }
 
-        // Check inventory in item.
-        if (!gameMap.getPlayer().hasItem(itemUsed) && itemUsed != null) {
-            throw new InvalidActionException("Player does not have the item.");
+            // Check inventory in item.
+            if (!gameMap.getPlayer().hasItem(c.getType())) {
+                throw new InvalidActionException("Player does not have the item.");
+            }
         }
-        
-        // Move the player:
-        gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
 
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
             e.move(gameMap.getMap());
         }
-
         // Return DungeonResponse
         return returnDungeonResponse();
     }
 
     public DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {
-        return null;
+        // Checks if the entity is on the map.
+        if (gameMap.getEntityOnMap(entityId) == null) {
+            throw new IllegalArgumentException("Entity does not exist.");
+        }
+        Entity e = gameMap.getEntityOnMap(entityId);
+
+        if (e.getType().equals("mercenary")) {
+            gameMap.getPlayer().bribeMercenary(gameMap.getMap(), (Mercenary) e);
+        } else if (e.getType().equals("zombie_toast_spawner")) {
+            gameMap.getPlayer().attackZombieSpawner(gameMap.getMap(), (ZombieToastSpawner) e);
+        } else {
+            throw new IllegalArgumentException("Entity not interactable");
+        }
+
+        return returnDungeonResponse();
     }
 
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
@@ -161,7 +172,7 @@ public class DungeonManiaController {
             playerInv.useItem("arrow");
             playerInv.useItem("arrow");
             Bow newBow = new Bow("bow" + player.getBowId(), "bow", null);
-            player.getInventory().put(newBow);
+            player.getInventory().put(newBow, player);
         }
         // Otherwise we are crafting a shield
         else {
@@ -176,7 +187,7 @@ public class DungeonManiaController {
                 playerInv.useItem("key");
             }
             Shield newShield = new Shield("shield" + player.getShieldId(), "shield", null);
-            player.getInventory().put(newShield);
+            player.getInventory().put(newShield, player);
         }
         return returnDungeonResponse();
     }

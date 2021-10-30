@@ -61,7 +61,7 @@ public class Shield extends CombatItems {
 
     public void checkNoDurability() {
         if (durability == 0) {
-            // Remove the entity from inventory
+            getPlayer().getInventoryList().remove((CollectableEntity)this);
         }
     }
 

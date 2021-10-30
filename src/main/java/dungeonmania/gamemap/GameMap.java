@@ -17,10 +17,11 @@ import org.json.JSONObject;
 import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
 import dungeonmania.Inventory;
+import dungeonmania.Battles.Battle;
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.Goals.*;
+import dungeonmania.MovingEntities.Mercenary;
 import dungeonmania.MovingEntities.MovingEntity;
-import dungeonmania.MovingEntities.MovingEntityObserver;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.response.models.EntityResponse;
@@ -32,12 +33,14 @@ public class GameMap {
     // multiple maps for one dungeon.
     private Map<Position, List<Entity>> dungeonMap;
     private String gameDifficulty;
+    private GoalInterface rootGoal;
     private String goal;
     private String dungeonName;
     private Player player;
     private String mapId;
     private int width;
     private int height;
+    private Battle battle;
 
     // ******************************************
     // Need to make varibales to game state here:
@@ -52,9 +55,12 @@ public class GameMap {
      */
     public GameMap(String difficulty, String name, JsonObject jsonMap) {
         this.gameDifficulty = difficulty;
-        this.dungeonMap = jsonToMap(jsonMap);
-        this.mapId = "" + System.currentTimeMillis();
         this.dungeonName = name;
+        this.mapId = "" + System.currentTimeMillis();
+        this.battle = new Battle(difficulty);
+        this.dungeonMap = jsonToMap(jsonMap);
+        this.rootGoal = GoalHelper.getGoalPattern(jsonMap);
+        this.setPlayerInventory(jsonMap);
         this.setObservers();
     }
 
@@ -65,7 +71,7 @@ public class GameMap {
     public GameMap(String name) {
         this(getSavedMap(name).get("game-mode").getAsString(), getSavedMap(name).get("map-name").getAsString(), getSavedMap(name));
     }
-
+    
     /**
      * Takes an the json map object then looks at entity field and 
      * returns all entities on the map as a list of entity response.
@@ -75,26 +81,21 @@ public class GameMap {
         List<EntityResponse> entityList = new ArrayList<EntityResponse>();
 
         for (Map.Entry<Position, List<Entity>> entry : this.dungeonMap.entrySet()) {
-            // For each position add the entity to the response list:
-            // First check if it is one element:
-            if (entry.getValue().size() == 1) {
-                Entity e = entry.getValue().get(0);
-                entityList.add(new EntityResponse(e.getId(), e.getType(), e.getPos(), false));
-            } 
-            // Check for stacking:
-            if (entry.getValue().size() > 1) {
-                int layer = 0;
-                for (Entity e : entry.getValue()) {
-                    int x = e.getPos().getX();
-                    int y = e.getPos().getY();
-                    entityList.add(new EntityResponse(e.getId(), e.getType(), new Position(x, y, layer), false));
-                    layer++;
+            for (Entity e : entry.getValue()) {
+                boolean isInteractable = (e.getType().equals("mercenary") || e.getType().equals("zombie_toast_spawner"));
+                if (e.getType().equals("mercenary") && ((Mercenary) e).isAlly()){
+                    isInteractable = false;
                 }
+                entityList.add(new EntityResponse(e.getId(), e.getType(), e.getPos(), isInteractable));
             }
         }
         return entityList;
     }
     
+    /**
+     * Converts the player into item response.
+     * @return List of items as a list of item response.
+     */
     public List<ItemResponse> inventoryToItemResponse() {
         List<ItemResponse> itemResponse = new ArrayList<>();
         Inventory i = player.getInventory();
@@ -149,12 +150,22 @@ public class GameMap {
         main.put("height", getMapHeight());
         main.put("game-mode", this.gameDifficulty);
         main.put("map-name", this.dungeonName);
-        main.put("goal-condition", this.getGoal());
+        main.put("goal-condition", GoalHelper.goalPatternToJson(this.getRootGoal()));
+
+        JSONArray inventory = new JSONArray();
+        for (CollectableEntity e : player.getInventoryList()) {
+            JSONObject c = new JSONObject();
+            c.put("type", e.getType());
+            if (e.getType().equals("key")) {
+                c.put("key", ((Key) e).getKeyId());
+            }
+            inventory.put(c);
+        }   
+        main.put("inventory", inventory);
 
         for (Map.Entry<Position, List<Entity>> entry : this.dungeonMap.entrySet()) {
             Position p = entry.getKey();
-            if (entry.getValue().size() == 1) {
-                Entity e = entry.getValue().get(0);
+            for (Entity e : entry.getValue()) {
                 JSONObject temp = new JSONObject();
                 temp.put("x", p.getX());
                 temp.put("y", p.getY());
@@ -166,6 +177,7 @@ public class GameMap {
                 }
                 entities.put(temp);
             }
+            
         }
         main.put("entities", entities);
         return main;
@@ -178,7 +190,7 @@ public class GameMap {
         this.width = width;
         this.height = height;
         Map<Position, List<Entity>> map = new HashMap<>();
-        for (int k = 0; k < 4; k++) {
+        for (int k = 0; k < 5; k++) {
             for (int i = 0; i < width; i++) { // width
                 for (int j = 0; j < height; j++) { // height
                     map.put(new Position(i, j, k), new ArrayList<Entity>());
@@ -194,11 +206,8 @@ public class GameMap {
      * @return Map<Position, List<Entity>> form of a map corresponding to jsonMap
      */
     public Map<Position, List<Entity>> jsonToMap(JsonObject jsonMap) {
-        // Add goals to the map:
-        this.goal = jsonMap.get("goal-condition").toString();
         // Initialise the map:
         Map<Position, List<Entity>> newMap = createInitialisedMap(jsonMap.get("width").getAsInt(), jsonMap.get("height").getAsInt());
-
         Integer i = 0;
         for (JsonElement entity : jsonMap.getAsJsonArray("entities")) {
             // Get all attributes:
@@ -207,7 +216,7 @@ public class GameMap {
             Position pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
 
             // Create the entity object, by factory method:
-            Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, obj.get("key"));
+            Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, obj.get("key"), this.battle);
             // Set player:
             if (type.equals("player")) {
                 this.player = (Player) temp;
@@ -216,6 +225,21 @@ public class GameMap {
             i++;
         }
         return newMap;
+    }
+
+    public void setPlayerInventory(JsonObject jsonMap) {
+        // Case when the player does not exist.
+        if (jsonMap.getAsJsonArray("inventory") == null) {
+            return;
+        }
+        // Look at the inventory field in json file.
+        for (JsonElement entity : jsonMap.getAsJsonArray("inventory")) {
+            JsonObject obj = entity.getAsJsonObject();
+            String type = obj.get("type").getAsString();
+            Position pos = new Position(0, 0, -1);
+            Entity collectable = EntityFactory.getEntityObject("" + System.currentTimeMillis(), type, pos, obj.get("key"), this.battle);
+            player.getInventory().put(collectable, player);
+        }
     }
 
     /**
@@ -234,6 +258,23 @@ public class GameMap {
         }
         return entityList;
     }
+    
+    /**
+     * Given the id of an entity, search the map and return the
+     * entity with the respective id.
+     * @param id (String)
+     * @return Entity with given id (String).
+     */
+    public Entity getEntityOnMap(String id) {
+        for (Map.Entry<Position, List<Entity>> entry : dungeonMap.entrySet()) {
+            for (Entity e : entry.getValue()) {
+                if (e.getId().equals(id)) {
+                    return e;
+                }
+            }
+        }
+        return null;
+    }
 
     // Getter and setters:
     public Player getPlayer() {
@@ -248,8 +289,8 @@ public class GameMap {
         return mapId;
     }
 
-    public String getGoal() {
-        return goal;
+    public String getGoals() {
+        return GoalHelper.goalPatternToString(this.getRootGoal(), this.getMap());
     }
 
     public int getMapHeight() {
@@ -268,31 +309,13 @@ public class GameMap {
         return this.dungeonName;
     }
 
-    /**
-     * Convert JsonObject containing goals into a composite pattern
-     */
-    public GoalInterface goalJsonToPattern(JsonObject jsonGoal) {
-        if (jsonGoal.get("goal").getAsString().equals("AND")) {
-            GoalInterface goal = new AndGoal();
-            for (JsonElement entity : jsonGoal.getAsJsonArray("subgoals")) {
-                goal.add(goalJsonToPattern(entity.getAsJsonObject()));
-            }
-            return goal;
-        } else if (jsonGoal.get("goal").getAsString().equals("OR")) {
-            GoalInterface goal = new OrGoal();
-            for (JsonElement entity : jsonGoal.getAsJsonArray("subgoals")) {
-                goal.add(goalJsonToPattern(entity.getAsJsonObject()));
-            }
-            return goal;
-        } else {
-            return GoalFactory.getGoal(jsonGoal.get("goal").getAsString());
-        }
-    }
-
     public void setObservers() {
         for (MovingEntity e : getMovingEntityList()) {
             player.registerObserver(e);
         }
     }
 
+    public GoalInterface getRootGoal() {
+        return rootGoal;
+    }
 }

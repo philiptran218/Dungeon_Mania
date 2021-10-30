@@ -15,7 +15,7 @@ import dungeonmania.Entity;
 public abstract class MovingEntity extends Entity implements MovingEntityObserver {
     private double health;
     private double attackDamage;
-    private Position playerLocation;
+    private Position playerPos;
 
     /**
      * 
@@ -35,8 +35,17 @@ public abstract class MovingEntity extends Entity implements MovingEntityObserve
      */
     public abstract boolean canPass(Map<Position, List<Entity>> map, Position pos);
 
+    /**
+     * The default move of the MovingEntity in a tic
+     * @param map
+     */
     public abstract void move(Map<Position, List<Entity>> map);
 
+    /**
+     * Move the MovingEntity in a direction
+     * @param map
+     * @param direction
+     */
     public void moveInDir(Map<Position, List<Entity>> map, Direction direction) {
         map.get(super.getPos()).remove(this);
         
@@ -44,6 +53,12 @@ public abstract class MovingEntity extends Entity implements MovingEntityObserve
         super.setPos(newPos);
         map.get(newPos).add(this);
     }
+
+    /**
+     * Moves the MovingEntity to a given Position on the map
+     * @param map
+     * @param newPos
+     */
     public void moveToPos(Map<Position, List<Entity>> map, Position newPos) {
         map.get(super.getPos()).remove(this);
 
@@ -51,6 +66,7 @@ public abstract class MovingEntity extends Entity implements MovingEntityObserve
         map.get(newPos).add(this);
     }
 
+    public abstract boolean hasArmour();
 
 
 
@@ -73,18 +89,18 @@ public abstract class MovingEntity extends Entity implements MovingEntityObserve
         this.attackDamage = attackDamage;
     }
 
-    public Position getPlayerLocation() {
-        return playerLocation;
+    public Position getPlayerPos() {
+        return playerPos;
     }
 
-    public void setPlayerLocation(Position playerLocation) {
-        this.playerLocation = playerLocation;
+    public void setPlayerPos(Position playerPos) {
+        this.playerPos = playerPos;
     }
     
 
     @Override
     public void update(MovingEntitySubject obj) {
-        this.setPlayerLocation(((Player) obj).getPos());
+        this.setPlayerPos(((Player) obj).getPos());
     }
 
 
