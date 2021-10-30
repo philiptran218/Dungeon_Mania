@@ -63,8 +63,8 @@ public class Battle {
         return difficulty;
     }
 
-    public void fight(Player p1, MovingEntity p2) {
-        state.fight(p1, p2);
+    public MovingEntity fight(Player p1, MovingEntity p2) {
+        return state.fight(p1, p2);
     }
 
     /**
