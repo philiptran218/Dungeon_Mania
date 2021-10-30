@@ -66,6 +66,7 @@ public abstract class MovingEntity extends Entity implements MovingEntityObserve
         map.get(newPos).add(this);
     }
 
+    public abstract boolean hasArmour();
 
 
 

@@ -107,4 +107,9 @@ public class Spider extends MovingEntity {
         this.path.add(startPos.translateBy(Direction.LEFT));
         this.path.add(startPos.translateBy(Direction.LEFT).translateBy(Direction.UP));
     }
+
+    public boolean hasArmour() {
+        return false;
+    }
+    
 }

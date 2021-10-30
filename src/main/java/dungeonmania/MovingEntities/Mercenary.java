@@ -10,12 +10,14 @@ import java.util.stream.Collectors;
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
 import dungeonmania.Entity;
+import dungeonmania.CollectableEntities.Armour;
 
 
 public class Mercenary extends MovingEntity {
     private MercenaryState enemyState;
     private MercenaryState allyState;
     private MercenaryState state;
+    private Armour armour;
     private int price = 1;
 
     private int battleRadius;
@@ -31,7 +33,9 @@ public class Mercenary extends MovingEntity {
         // num = 0,1,2,3,4,5,6,7,8,9
 
         // 30% chance that zombie spawns with armour
-        return num >= 7;
+        if (num > 7) {
+        }
+        return false;
     }
 
     public void move(Map<Position, List<Entity>> map){
@@ -74,5 +78,16 @@ public class Mercenary extends MovingEntity {
     public boolean isAlly() {
         return state.equals(allyState);
     }
+
+    public boolean hasArmour() {
+        return this.armour != null;
+    }
+    public Armour getArmour() {
+        Armour armour = this.armour;
+        this.armour = null;
+        return armour;
+    }
+
+    
 }
 
