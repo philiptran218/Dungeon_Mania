@@ -140,6 +140,8 @@ public class DungeonManiaController {
         }
 
 
+        gameMap.spawnSpider();
+
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
             e.move(gameMap.getMap());

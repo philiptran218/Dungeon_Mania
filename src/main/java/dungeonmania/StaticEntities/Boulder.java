@@ -34,9 +34,17 @@ public class Boulder extends StaticEntity {
             }
         }
         // Can be pushed, push boulder
-        map.get(new Position(pos.getX(), pos.getY(), 4)).clear();
-        (map.get(new Position(newPos.getX(), newPos.getY(), 4))).add(this);
-        super.setPos(new Position(newPos.getX(), newPos.getY(), 4));
         return true;
+    }
+
+    /**
+     * Pushes a boulder in a direction, updates map
+     */
+    public void push(Map<Position, List<Entity>> map, Direction direction) {
+        Position pos = super.getPos();
+        Position newPos = pos.translateBy(direction);
+        map.get(pos).clear();
+        map.get(newPos).add(this);
+        super.setPos(newPos);
     }
 }
