@@ -147,7 +147,7 @@ public class DungeonManiaController {
                 e.move(gameMap.getMap());
             }
         }
-
+        
         // Player battles enemies on the same tile
         List<MovingEntity> removeEntity = new ArrayList<>();
         for (MovingEntity e : gameMap.getMovingEntityList()) { 
