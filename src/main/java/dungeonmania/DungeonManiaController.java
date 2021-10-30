@@ -137,6 +137,13 @@ public class DungeonManiaController {
                 throw new InvalidActionException("Player does not have the item.");
             }
         }
+        
+        // Move all the moving entities by one tick:
+        for (MovingEntity e : gameMap.getMovingEntityList()) {
+            if (!(e.getPos().equals(e.getPlayerPos()) && !e.getType().equals("mercenary"))) {
+                e.move(gameMap.getMap());
+            }
+        }
 
         // Ticks the zombie toast spawner
         for (Map.Entry<Position, List<Entity>> entry : gameMap.getMap().entrySet()) {
@@ -149,10 +156,6 @@ public class DungeonManiaController {
 
         gameMap.spawnSpider();
 
-        // Move all the moving entities by one tick:
-        for (MovingEntity e : gameMap.getMovingEntityList()) {
-            e.move(gameMap.getMap());
-        }
         // Return DungeonResponse
         return returnDungeonResponse();
     }
