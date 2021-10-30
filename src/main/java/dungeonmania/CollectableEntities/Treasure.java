@@ -16,11 +16,10 @@ public class Treasure extends Utility {
     }
 
     /**
-     * Uses treasure to build shields. 
+     * Uses treasure to build shields or bribe mercenaries. 
      */
-    @Override
     public void use() {
-        getPlayer().getInventoryList().remove(this);
+        getPlayer().getInventoryList().remove((CollectableEntity) this);
     }
 
 }
