@@ -21,7 +21,7 @@ public class HealthPotion extends Potion {
      */
     public void use() {
         getPlayer().setHealth(100);
-        getPlayer().getInventoryList().remove(this);
+        getPlayer().getInventoryList().remove((CollectableEntity)this);
     }
     
 }

@@ -73,7 +73,7 @@ public class Battle {
      * @return
      */
     public Boolean hasBow(Player p) {
-        Bow bow = (Bow) p.getInventory().getItem("Bow");
+        Bow bow = (Bow) p.getInventory().getItem("bow");
         
         if (bow == null) {
             return false;

@@ -74,7 +74,7 @@ public class Spider extends MovingEntity {
      * @param map
      */
     public void moveAway(Map<Position, List<Entity>> map) {
-        Position playerPos = this.getPlayerLocation();
+        Position playerPos = this.getPlayerPos();
         Position pos = super.getPos();
         
         List<Position> cardinallyAdjacentPos = path.stream().filter(e -> Position.isCardinallyAdjacent(pos, e)).collect(Collectors.toList());
@@ -107,4 +107,9 @@ public class Spider extends MovingEntity {
         this.path.add(startPos.translateBy(Direction.LEFT));
         this.path.add(startPos.translateBy(Direction.LEFT).translateBy(Direction.UP));
     }
+
+    public boolean hasArmour() {
+        return false;
+    }
+    
 }

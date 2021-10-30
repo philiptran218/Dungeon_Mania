@@ -13,8 +13,9 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public class StandardState implements GameState{
-    // Spawns the zombie from the zombie toast spawner
-    public void spawnZombie(int tickProgress, Map<Position, List<Entity>> listOfEntities, Position zombieSpawner, int zombieId) {
+    private String mode = "Standard";
+     // Spawns the zombie from the zombie toast spawner
+     public void spawnZombie(int tickProgress, Map<Position, List<Entity>> listOfEntities, Position zombieSpawner) {
         if (tickProgress == 19) {
             // Adds each direction into a list
             List <Direction> directions = new ArrayList<Direction>();
@@ -29,7 +30,7 @@ public class StandardState implements GameState{
                 // Spawns the zombie if there are no entities in the way
                 if (entitiesOnPosition.get(3) == null || entitiesOnPosition.get(1) == null ||
                     entitiesOnPosition.get(1) instanceof Exit || entitiesOnPosition.get(1) instanceof Portal) {
-                    ZombieToast newZombie = new ZombieToast("Zombie" + zombieId, "zombie_toast", checkOpenPosition);
+                    ZombieToast newZombie = new ZombieToast("" + System.currentTimeMillis(), "zombie_toast", checkOpenPosition);
                     entitiesOnPosition.add(newZombie);
                     break;
                 }
@@ -37,20 +38,24 @@ public class StandardState implements GameState{
                 else if (entitiesOnPosition.get(1) instanceof Door) {
                     Door checkLocked = (Door) entitiesOnPosition.get(0);
                     if (checkLocked.isLocked() == false) {
-                        Entity newZombie = new ZombieToast("Zombie" + zombieId, "zombie_toast", checkOpenPosition);
+                        Entity newZombie = new ZombieToast("" + System.currentTimeMillis(), "zombie_toast", checkOpenPosition);
                         entitiesOnPosition.add(newZombie);
                         break;
                     }
                 }
             }
             // Resets the tick progress and increments the zombie id
-            zombieId++;
             tickProgress = 1;
         }
         // Increments the zombie id
         else {
             tickProgress++;
         }
+    }
+
+    @Override
+    public String getMode() {
+        return mode;
     }
 
 }

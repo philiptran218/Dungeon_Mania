@@ -2,6 +2,7 @@ package dungeonmania;
 
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
+import dungeonmania.CollectableEntities.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.DungeonResponse;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -21,10 +23,16 @@ import com.google.gson.JsonParser;
 
 public class DungeonManiaController {
     private GameMap gameMap;
-
+    /**
+     * Empty Constructor
+     */
     public DungeonManiaController() {
     }
 
+    /**
+     * Get the json file with all pixel for entities.
+     * @return
+     */
     public String getSkin() {
         return "default";
     }
@@ -141,14 +149,24 @@ public class DungeonManiaController {
             gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
         } else {
             // Get the entity on map:
-            Entity c = gameMap.getPlayer().getItem(itemUsed);
+            Entity c = gameMap.getPlayer().getInventory().getItemById(itemUsed);
+            
             if (!getUsableItems().contains(c.getType())) {
-                throw new IllegalArgumentException("Invalid item used.");
+                throw new IllegalArgumentException("Cannot use item.");
             }
 
             // Check inventory in item.
-            if (!gameMap.getPlayer().hasItem(itemUsed)) {
+            if (!gameMap.getPlayer().hasItem(c.getType())) {
                 throw new InvalidActionException("Player does not have the item.");
+            }
+        }
+
+        // Ticks the zombie toast spawner
+        for (Map.Entry<Position, List<Entity>> entry : gameMap.getMap().entrySet()) {
+            for(Entity e : entry.getValue()) {
+                if (e.getType().equals("zombie_toast_spawner")) {
+                    ((ZombieToastSpawner) e).tick(e.getPos(), gameMap.getMap(), gameMap.getGameState());
+                }
             }
         }
 
@@ -179,7 +197,39 @@ public class DungeonManiaController {
     }
 
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
-        return null;
+        if (!(buildable.equals("bow") || buildable.equals("shield"))) {
+            throw new IllegalArgumentException();
+        }
+        Player player = gameMap.getPlayer();
+
+        Inventory playerInv = player.getInventory();
+        if (buildable.equals("bow")) {
+            if (playerInv.getNoItemType("wood") < 1 || playerInv.getNoItemType("arrow") < 3) {
+                throw new InvalidActionException("Not enough materials!");
+            }
+            playerInv.useItem("wood");
+            playerInv.useItem("arrow");
+            playerInv.useItem("arrow");
+            playerInv.useItem("arrow");
+            Bow newBow = new Bow("" + System.currentTimeMillis(), "bow", null);
+            player.getInventory().put(newBow, player);
+        }
+        // Otherwise we are crafting a shield
+        else {
+            if (playerInv.getNoItemType("wood") < 2 || (playerInv.getNoItemType("treasure") < 1 && playerInv.getNoItemType("key") < 1)) {
+                throw new InvalidActionException("Not enough materials!");
+            }
+            playerInv.useItem("wood");
+            playerInv.useItem("wood");
+            if (playerInv.getNoItemType("treasure") >= 1 ) {
+                playerInv.useItem("treasure");
+            } else {
+                playerInv.useItem("key");
+            }
+            Shield newShield = new Shield("" + System.currentTimeMillis(), "shield", null);
+            player.getInventory().put(newShield, player);
+        }
+        return returnDungeonResponse();
     }
 
 }

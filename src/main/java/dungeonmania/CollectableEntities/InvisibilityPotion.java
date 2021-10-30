@@ -80,7 +80,7 @@ public class InvisibilityPotion extends Potion {
                 getBattle().setBattleState(getBattle().getInvincibleState()); 
                 // Set invincible movement here...
             }
-            getPlayer().getInventoryList().remove(this);
+            getPlayer().getInventoryList().remove((CollectableEntity)this);
         }
     }
 

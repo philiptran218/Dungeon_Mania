@@ -80,20 +80,25 @@ public class Player extends MovingEntity implements MovingEntitySubject {
      * @param mercenary mercenary that the player will try to bribe
      */
     public void bribeMercenary(Map<Position, List<Entity>> map, Mercenary mercenary) throws InvalidActionException{
+        if (mercenary.isAlly()) {
+            // mercenary is an ally, dont bribe him;
+            return;
+        }
         Position pos = super.getPos();
         Position mercenaryPos = mercenary.getPos();
-
-        if (inventory.getNoItemType("treasure") < mercenary.getPrice()) {
-            // Player doesnt have enough gold
-            throw new InvalidActionException("Player doesn't have enough gold");
-        }
 
         Position difference = Position.calculatePositionBetween(pos, mercenaryPos);
         if (Math.abs(difference.getX()) + Math.abs(difference.getY()) > 2) {
             // player more than 2 cardinal tiles from mercenary
             throw new InvalidActionException("Mercenary too far away");
         }
-        
+
+        if (inventory.getNoItemType("treasure") < mercenary.getPrice()) {
+            // Player doesnt have enough gold
+            throw new InvalidActionException("Player doesn't have enough gold");
+        }
+
+
         // Remove gold;
         for (int i = 0; i < mercenary.getPrice(); i++) {
             if (inventory.getItem("treasure") instanceof Treasure) {
@@ -158,6 +163,27 @@ public class Player extends MovingEntity implements MovingEntitySubject {
      */
     public CollectableEntity getItem(String item) {
         return inventory.getItem(item);
+    }
+
+    public void lootBody(Map<Position, List<Entity>> map, MovingEntity deadBody) {
+        if (deadBody.hasArmour()) {
+            // Take armour from the dead body
+            if (deadBody instanceof ZombieToast) {
+                this.inventory.put(((ZombieToast)deadBody).getArmour(), this);
+            } else if (deadBody instanceof Mercenary) {
+                this.inventory.put(((Mercenary)deadBody).getArmour(), this);
+            }
+        }
+    }
+    
+    public boolean hasArmour() {
+        return false;
+    }
+
+
+
+    public List<Mercenary> getBribedMercenaries() {
+        return bribedMercenaries;
     }
 
     ////////////////////////////////////////////////////////////////////////////
