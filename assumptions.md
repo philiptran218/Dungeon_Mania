@@ -18,3 +18,6 @@
 
 - Player always attacks first, then the enemy attacks.
 - If difficulty is set to Peaceful, the player can still attack enemies but enemies cannot attack the player.
+- If the player is invincible and attacking an enemy equipped with armour, this will reduce the armour's durability. Similarly, if the player is invincible and attacks an enemy, this will reduce the weapons' durability.
+- Allied mercenaries will only fight an enemy if the player is already fighting that enemy.
+- Enemies will not fight against the player's allied mercenaries; they will only fight the player.
