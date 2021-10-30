@@ -120,15 +120,6 @@ public class DungeonManiaController {
         // // Position in front of player
         // Position checkPosition;
         // Entity tempEntity = gameMap.getMap().get(checkPosition).get(1);
-        // // ADD PLAYER MOVEMENT
-        // if (tempEntity.getType().equals("boulder")) {
-        //     Position inFrontOfCheckPosition = new Position(checkPosition.getX() + dir.getX(),checkPosition.getY() + dir.getY(), 0);
-        //     List <Entity> tempList = gameMap.getMap().get(inFrontOfCheckPosition);
-        //     if (tempList.get(1) == null && tempList.get(3) == null) {
-        //         tempList.add(1, tempEntity);
-        //         gameMap.getMap().get(checkPosition).remove(tempEntity);
-        //     }
-        // }
         // if (tempEntity.getType().equals("portal")) {
         //     Portal portal = (Portal) tempEntity;
         //     Position teleportLocation = portal.getTeleportLocation();
@@ -137,7 +128,7 @@ public class DungeonManiaController {
         // if (tempEntity.getType().equals("door")) {
         //     Door door = (Door) tempEntity;
         //     if (door.isLocked() && playerEntity.getKey(door.getKeyId()) != null) {
-        //         door.unlock();
+        //         door.setLocked(false);
         //         // CHANGE ANIMATION FOR DOOR
         //     }
         // }

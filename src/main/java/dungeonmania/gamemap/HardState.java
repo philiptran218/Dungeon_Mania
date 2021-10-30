@@ -36,7 +36,7 @@ public class HardState implements GameState {
                 // Zombie is spawned if the door is unlocked
                 else if (entitiesOnPosition.get(1) instanceof Door) {
                     Door checkLocked = (Door) entitiesOnPosition.get(0);
-                    if (checkLocked.getCanStandOn() == true) {
+                    if (checkLocked.isLocked() == false) {
                         Entity newZombie = new ZombieToast("Zombie" + zombieId, "zombie_toast", checkOpenPosition);
                         entitiesOnPosition.add(newZombie);
                         break;

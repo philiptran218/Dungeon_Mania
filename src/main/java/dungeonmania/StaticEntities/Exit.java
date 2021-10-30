@@ -10,7 +10,6 @@ import dungeonmania.Entity;
 public class Exit extends StaticEntity{
     public Exit(String id, String type, Position pos) {
         super(id, type, pos);
-        super.setCanStandOn(true);
         super.setType("exit");
     }
 
