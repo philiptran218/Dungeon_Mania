@@ -60,7 +60,7 @@ public class ZombieToast extends MovingEntity {
     }
 
     public void moveAway(Map<Position, List<Entity>> map) {
-        Position playerPos = this.getPlayerLocation();
+        Position playerPos = this.getPlayerPos();
         Position pos = super.getPos();
         
         List<Position> adjacentPos = pos.getAdjacentPositions();
