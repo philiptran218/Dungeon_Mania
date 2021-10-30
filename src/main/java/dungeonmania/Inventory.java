@@ -17,9 +17,11 @@ public class Inventory {
     private Player player;
     private List<CollectableEntity> entities = new ArrayList<>(); 
 
-    public void put(Entity entity){
+    public void put(Entity entity, Player player){
         if (entity instanceof CollectableEntity) {
-            this.entities.add((CollectableEntity) entity);
+            CollectableEntity ent = (CollectableEntity) entity;
+            ent.setPlayer(player);
+            this.entities.add(ent);
         }
     }
 
@@ -59,9 +61,9 @@ public class Inventory {
         return count;
     }
 
-    public CollectableEntity getItem(String id) {
+    public CollectableEntity getItem(String type) {
         for (CollectableEntity item : entities) {
-            if (item.getId().equals(id)) {
+            if (item.getType().equals(type)) {
                 return item;
             }
         }

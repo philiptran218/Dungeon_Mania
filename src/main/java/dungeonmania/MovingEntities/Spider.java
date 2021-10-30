@@ -94,17 +94,8 @@ public class Spider extends MovingEntity {
     }
 
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
-        List<Entity> StaticEntities = map.get(new Position(pos.getX(), pos.getY(), 1));
-        if (StaticEntities.isEmpty()) {
-            return true;
-        } else if (!StaticEntities.get(0).getType().equals("boulder")) {
-            return true;
-        } else {
-            return false;
-        }
+        return (map.get(new Position(pos.getX(), pos.getY(), 4))).isEmpty();
     }
-
-
 
     public void setPath() {
         this.path.add(startPos.translateBy(Direction.UP));
