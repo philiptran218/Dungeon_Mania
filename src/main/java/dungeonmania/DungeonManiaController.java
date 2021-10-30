@@ -70,7 +70,7 @@ public class DungeonManiaController {
     public JsonObject getJsonFile(String fileName) {
         // "src\\main\\resources\\dungeons\\" + dungeonName + ".json"
         try {
-            return JsonParser.parseReader(new FileReader("src\\main\\resources\\dungeons\\" + fileName + ".json")).getAsJsonObject();
+            return JsonParser.parseReader(new FileReader("src\\test\\resources\\dungeons\\" + "player_pickup_item" + ".json")).getAsJsonObject();
         } catch (Exception e) {
             try {
                 return JsonParser.parseReader(new FileReader("src\\test\\resources\\dungeons\\" + fileName + ".json")).getAsJsonObject();
@@ -108,14 +108,14 @@ public class DungeonManiaController {
     }
 
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
-        // // Ticks the zombie toast spawner
-        // for (Position key : gameMap.getMap().keySet()) {
-        //     Entity checkSpawner = gameMap.getMap().get(key).get(1);
-        //     if (checkSpawner.getType() == "zombie_toast_spawner") {
-        //         ZombieToastSpawner tickSpawner = (ZombieToastSpawner) checkSpawner;
-        //         tickSpawner.tick(key, gameMap.getMap());
-        //     }
-        // }
+        // Ticks the zombie toast spawner
+        for (Position key : gameMap.getMap().keySet()) {
+            Entity checkSpawner = gameMap.getMap().get(key).get(1);
+            if (checkSpawner.getType() == "zombie_toast_spawner") {
+                ZombieToastSpawner tickSpawner = (ZombieToastSpawner) checkSpawner;
+                tickSpawner.tick(key, gameMap.getMap());
+            }
+        }
         // Position dir = movementDirection.getOffset();
         // // Position in front of player
         // Position checkPosition;
