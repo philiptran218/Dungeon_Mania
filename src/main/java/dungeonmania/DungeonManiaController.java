@@ -7,6 +7,7 @@ import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
+import dungeonmania.util.Position;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -107,39 +108,39 @@ public class DungeonManiaController {
     }
 
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
-        // Ticks the zombie toast spawner
-        for (Position key : gameMap.getMap().keySet()) {
-            Entity checkSpawner = gameMap.getMap().get(key).get(1);
-            if (checkSpawner.getType() == "zombie_toast_spawner") {
-                ZombieToastSpawner tickSpawner = (ZombieToastSpawner) checkSpawner;
-                tickSpawner.tick(key, gameMap.getMap());
-            }
-        }
-        Position dir = movementDirection.getOffset();
-        // Position in front of player
-        Position checkPosition;
-        Entity tempEntity = gameMap.getMap().get(checkPosition).get(1);
-        // ADD PLAYER MOVEMENT
-        if (tempEntity.getType().equals("boulder")) {
-            Position inFrontOfCheckPosition = new Position(checkPosition.getX() + dir.getX(),checkPosition.getY() + dir.getY(), 0);
-            List <Entity> tempList = gameMap.getMap().get(inFrontOfCheckPosition);
-            if (tempList.get(1) == null && tempList.get(3) == null) {
-                tempList.add(1, tempEntity);
-                gameMap.getMap().get(checkPosition).remove(tempEntity);
-            }
-        }
-        if (tempEntity.getType().equals("portal")) {
-            Portal portal = (Portal) tempEntity;
-            Position teleportLocation = portal.getTeleportLocation();
-            // Add code for playermovement
-        }
-        if (tempEntity.getType().equals("door")) {
-            Door door = (Door) tempEntity;
-            if (door.isLocked() && playerEntity.getKey(door.getKeyId()) != null) {
-                door.unlock();
-                // CHANGE ANIMATION FOR DOOR
-            }
-        }
+        // // Ticks the zombie toast spawner
+        // for (Position key : gameMap.getMap().keySet()) {
+        //     Entity checkSpawner = gameMap.getMap().get(key).get(1);
+        //     if (checkSpawner.getType() == "zombie_toast_spawner") {
+        //         ZombieToastSpawner tickSpawner = (ZombieToastSpawner) checkSpawner;
+        //         tickSpawner.tick(key, gameMap.getMap());
+        //     }
+        // }
+        // Position dir = movementDirection.getOffset();
+        // // Position in front of player
+        // Position checkPosition;
+        // Entity tempEntity = gameMap.getMap().get(checkPosition).get(1);
+        // // ADD PLAYER MOVEMENT
+        // if (tempEntity.getType().equals("boulder")) {
+        //     Position inFrontOfCheckPosition = new Position(checkPosition.getX() + dir.getX(),checkPosition.getY() + dir.getY(), 0);
+        //     List <Entity> tempList = gameMap.getMap().get(inFrontOfCheckPosition);
+        //     if (tempList.get(1) == null && tempList.get(3) == null) {
+        //         tempList.add(1, tempEntity);
+        //         gameMap.getMap().get(checkPosition).remove(tempEntity);
+        //     }
+        // }
+        // if (tempEntity.getType().equals("portal")) {
+        //     Portal portal = (Portal) tempEntity;
+        //     Position teleportLocation = portal.getTeleportLocation();
+        //     // Add code for playermovement
+        // }
+        // if (tempEntity.getType().equals("door")) {
+        //     Door door = (Door) tempEntity;
+        //     if (door.isLocked() && playerEntity.getKey(door.getKeyId()) != null) {
+        //         door.unlock();
+        //         // CHANGE ANIMATION FOR DOOR
+        //     }
+        // }
         // Check if the item is valid.
         if (!getUsableItems().contains(itemUsed)) {
             throw new IllegalArgumentException("Invalid item used.");
