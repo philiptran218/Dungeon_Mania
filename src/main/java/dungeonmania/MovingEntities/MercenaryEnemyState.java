@@ -19,7 +19,25 @@ public class MercenaryEnemyState implements MercenaryState{
 
     @Override
     public void move(Map<Position, List<Entity>> map) {
-        Position playerPos = mercenary.getPlayerLocation();
+        Position playerPos = mercenary.getPlayerPos();
+        Position pos = mercenary.getPos();
+
+        double distance = Math.sqrt(Position.distance(playerPos, pos));
+
+        if (distance <= mercenary.getBattleRadius()) {
+            // Check if player will fight
+            if (map.get(playerPos).size() > 1) {
+                // Player will fight with an enemy, move twice
+                moveDefault(map);
+            }
+
+        }
+
+        moveDefault(map);
+    }
+    
+    public void moveDefault(Map<Position, List<Entity>> map) {
+        Position playerPos = mercenary.getPlayerPos();
         Position pos = mercenary.getPos();
         
         List<Position> adjacentPos = pos.getAdjacentPositions();
@@ -38,6 +56,6 @@ public class MercenaryEnemyState implements MercenaryState{
         }
 
         mercenary.moveToPos(map, new Position(newPos.getX(), newPos.getY(), 3));
+        mercenary.setPreviousPlayerPos(playerPos);
     }
-    
 }
