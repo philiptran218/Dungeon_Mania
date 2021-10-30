@@ -70,6 +70,15 @@ public class Inventory {
         return null;
     }
 
+    public CollectableEntity getItemById(String id) {
+        for (CollectableEntity item : entities) {
+            if (item.getId().equals(id)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
     /**
      * Returns the key with the given keyId (separate from getItem since keys
      * have unique integer id's)
