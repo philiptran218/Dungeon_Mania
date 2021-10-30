@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import com.google.gson.*;
 
@@ -23,6 +24,7 @@ import dungeonmania.Goals.*;
 import dungeonmania.MovingEntities.Mercenary;
 import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.MovingEntities.Player;
+import dungeonmania.MovingEntities.Spider;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
@@ -292,6 +294,46 @@ public class GameMap {
         return null;
     }
 
+    /**
+     * Spawns a spider on the map with a one in ten chance.
+     */
+    public void spawnSpider() {
+        int spiders = 0;
+        for (MovingEntity e : getMovingEntityList()) {
+            if (e.getType().equals("spider")) {
+                spiders++;
+            }
+        }
+        // Square too small:
+        if(width < 2 || height < 2) {
+            return;
+        }
+        // Check conditions
+        Random random = new Random();
+        if (random.nextInt(10) == 4 && spiders < 5) {
+            Random x = new Random();
+            Random y = new Random();
+            // New x and y positions
+            int xPos = x.nextInt(width - 2) + 1;
+            int yPos = y.nextInt(height - 2) + 1;
+            // Loop through to check restrictions
+            for (Map.Entry<Position, List<Entity>> entry : dungeonMap.entrySet()) {
+                for (Entity e : entry.getValue()) {
+                    boolean currSquare = ((e.getPos().getX() == xPos) && (e.getPos().getY() == yPos));
+                    boolean checkAbove = ((e.getPos().getX() == xPos) && (e.getPos().getY() == yPos - 1));
+                    if (e.getType().equals("player") && currSquare || 
+                        (e.getType().equals("boulder") && (currSquare || checkAbove))) {
+                        return;
+                    }
+                }
+            }
+            // Create the spider:
+            Position newSpider = new Position(xPos, yPos, 3);
+            dungeonMap.get(newSpider).add(new Spider("" + System.currentTimeMillis(), "spider", newSpider));
+        }
+        
+    }
+
     // Getter and setters:
     public Player getPlayer() {
         return this.player;
@@ -333,5 +375,9 @@ public class GameMap {
 
     public GoalInterface getRootGoal() {
         return rootGoal;
+    }
+    public static void main(String[] args) {
+        Random r = new Random();
+        System.out.println(r.nextInt(2));
     }
 }
