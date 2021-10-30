@@ -19,11 +19,21 @@ public class PeacefulState implements BattleState {
      * Since the difficulty is on Peaceful, only the player can attack.
      */
     public void fight(Player p1, MovingEntity p2) {
-        healthModifier(p2, damageCalculation(p1), p1.getHealth());
 
-        // Performs a second attack
-        if (p2.getHealth() > 0 && this.getBattle().hasBow(p1)) {
+        while (p2.getHealth() > 0) {
             healthModifier(p2, damageCalculation(p1), p1.getHealth());
+
+            // Performs a second attack
+            if (p2.getHealth() > 0 && this.getBattle().hasBow(p1)) {
+                healthModifier(p2, damageCalculation(p1), p1.getHealth());
+            }
+
+            // Performs an attack if player has an allied mercenary
+            for (MovingEntity merc : p1.getBribedMercenaries()) {
+                if (p2.getHealth() > 0) {
+                    healthModifier(p2, damageCalculation(merc), merc.getHealth());
+                }
+            }
         }
     }
 
@@ -31,22 +41,63 @@ public class PeacefulState implements BattleState {
      * Checks for base dmg, swords and bows that can modify damage.
      * @param p1
      */
-    public double damageCalculation(Player p1) {
-        double dmg = p1.getAttackDamage();
-        Sword sword = (Sword) p1.getInventory().getItem("sword");
-        Bow bow = (Bow) p1.getInventory().getItem("bow");
+    public double damageCalculation(MovingEntity p1) {
+        if (p1 instanceof Player) {
+            Player plyr = (Player) p1;
+            double dmg = plyr.getAttackDamage();
+            Sword sword = (Sword) plyr.getInventory().getItem("sword");
+            Bow bow = (Bow) plyr.getInventory().getItem("bow");
 
-        if (sword != null) {
-            dmg += sword.usedInCombat();
+            if (sword != null) {
+                dmg += sword.usedInCombat();
+            }
+            if (bow != null) {
+                dmg += bow.usedInCombat();
+            }
+            return dmg;
         }
-        if (bow != null) {
-            dmg += bow.usedInCombat();
+        else {
+            return p1.getAttackDamage();
         }
-        return dmg;
     }
 
     public void healthModifier(MovingEntity p2, double dmg, double health) {
-        double newHealth = p2.getHealth() - ((health * dmg) / 5);
+        double newHealth;
+        if (p2 instanceof Mercenary) {
+            Mercenary merc = (Mercenary) p2;
+            Armour armour = merc.getArmour();
+            double multiplier = 1;
+
+            if (armour != null) {
+                multiplier *= armour.getReduceDamage();
+                armour.reduceDurability();
+
+                // Remove armour if it is broken.
+                if (armour.getDurability() == 0) {
+                    //merc.setArmour(null);
+                }
+            }
+            newHealth = p2.getHealth() - ((health * (dmg * multiplier)) / 5);
+        }
+        else if (p2 instanceof ZombieToast) {
+            ZombieToast zombie = (ZombieToast) p2;
+            Armour armour = zombie.getArmour();
+            double multiplier = 1;
+
+            if (armour != null) {
+                multiplier *= armour.getReduceDamage();
+                armour.reduceDurability();
+
+                // Remove armour if it is broken.
+                if (armour.getDurability() == 0) {
+                    //zombie.setArmour(null);
+                }
+            }
+            newHealth = p2.getHealth() - ((health * (dmg * multiplier)) / 5);
+        }
+        else {
+            newHealth = p2.getHealth() - ((health * dmg) / 5);
+        }
         p2.setHealth(newHealth);
     }
 
