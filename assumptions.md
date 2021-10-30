@@ -17,3 +17,8 @@
 
 - Player always attacks first, then the enemy attacks.
 - If difficulty is set to Peaceful, the player can still attack enemies but enemies cannot attack the player.
+
+# Assumptions for Goals:
+- Every map must have at least one goal
+- All goals must be valid goals
+- Goals must be structured correctly within the dungeon .json file
