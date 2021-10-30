@@ -68,9 +68,14 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         List<Entity> collectables = map.get(new Position(pos.getX(), pos.getY(), 2));
         if (!collectables.isEmpty()) {
             Entity entity = collectables.get(0);
-            if (entity instanceof CollectableEntity) {
+            if (entity.getType().equals("key") && inventory.getNoItemType("key") > 0) {
+                // Entity is a key and player is already holding a key
+                // Dont pick it up
+            } else {
+                // Pickup the item
                 this.inventory.put(entity, this);
                 collectables.remove(entity);
+
             }
         }
     }

@@ -31,7 +31,7 @@ public class EntityFactory {
             case "portal": 
                 return new Portal(id, type, otherPos);
             case "zombie_toast_spawner": 
-                return new ZombieToastSpawner(id, type, staticPos);
+                return new ZombieToastSpawner(id, type, movingPos);
             case "spider": 
                 return new Spider(id, type, movingPos);
             case "zombie_toast": 
