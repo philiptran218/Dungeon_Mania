@@ -106,6 +106,8 @@ public class GoalTest {
         DungeonResponse tmp = controller.newGame("simpleTreasureOrExit", "Peaceful");
         assertTrue(":treasure OR :exit".equals(tmp.getGoals()));
         tmp = controller.tick(null, Direction.RIGHT);
+        assertTrue(":treasure OR :exit".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.DOWN);
         assertTrue("".equals(tmp.getGoals()));
     }
 
