@@ -1,6 +1,9 @@
 package dungeonmania.Battles;
 
 import dungeonmania.MovingEntities.*;
+
+import java.util.concurrent.ThreadLocalRandom;
+
 import dungeonmania.CollectableEntities.*;
 
 public class PeacefulState implements BattleState {
@@ -35,6 +38,8 @@ public class PeacefulState implements BattleState {
                 }
             }
         }
+        spawnOneRing(p1);
+        p1.lootBody(p2);
     }
 
     /**
@@ -99,6 +104,17 @@ public class PeacefulState implements BattleState {
             newHealth = p2.getHealth() - ((health * dmg) / 5);
         }
         p2.setHealth(newHealth);
+    }
+
+    public void spawnOneRing(Player p1) {
+        int num = ThreadLocalRandom.current().nextInt(0,10);
+        // num = 0,1,2,3,4,5,6,7,8,9
+
+        // 10% chance that The One Ring spawns after winning a battle
+        if (num > 8) {
+            TheOneRing ring = new TheOneRing("" + System.currentTimeMillis(), "one_ring", null);
+            p1.getInventory().put(ring, p1);
+        }
     }
 
 }
