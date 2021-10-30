@@ -30,6 +30,7 @@
         "invincibility_potion": "images/tileset/items/potion_10.png",
         "sword": "images/tileset/items/sword_silver.png",
         "zombie_toast": "images/tileset/entities/zombie_00.png",
-        "door": "images/tileset/walls/wooden/door_locked_silver.png"
+        "door": "images/tileset/walls/wooden/door_locked_silver.png",
+        "enemies": "images/tileset/entities/zombie_00.png"
     }
 }

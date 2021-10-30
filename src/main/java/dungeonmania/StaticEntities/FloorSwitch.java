@@ -16,7 +16,7 @@ public class FloorSwitch extends StaticEntity {
 
     public boolean isUnderBoulder(Map<Position, List<Entity>> map) {
         Position pos = super.getPos();
-        List<Entity> entities = map.get(new Position(pos.getX(), pos.getY(), 1));
+        List<Entity> entities = map.get(new Position(pos.getX(), pos.getY(), 4));
         if (entities.isEmpty()) {
             return false;
         }

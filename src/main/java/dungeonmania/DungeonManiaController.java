@@ -58,7 +58,7 @@ public class DungeonManiaController {
      */
     public DungeonResponse returnDungeonResponse() {
         return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), 
-            gameMap.inventoryToItemResponse(), new ArrayList<String>(), gameMap.goalPatternToString(gameMap.getRootGoal(), "", gameMap.getMap()));
+            gameMap.inventoryToItemResponse(), new ArrayList<String>(), gameMap.getGoals());
     }
 
     /**
