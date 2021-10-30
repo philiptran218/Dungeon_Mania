@@ -48,7 +48,7 @@ public class InvincibleState implements BattleState {
                 armour.reduceDurability();
                 // Remove armour if it is broken.
                 if (armour.getDurability() == 0) {
-                    //merc.setArmour(null);
+                    merc.setArmour(null);
                 }
             }
         }
@@ -60,7 +60,7 @@ public class InvincibleState implements BattleState {
                 armour.reduceDurability();
                 // Remove armour if it is broken.
                 if (armour.getDurability() == 0) {
-                    //merc.setArmour(null);
+                    zombie.setArmour(null);
                 }
             }
         }

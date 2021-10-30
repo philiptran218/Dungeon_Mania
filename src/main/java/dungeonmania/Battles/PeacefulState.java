@@ -74,7 +74,7 @@ public class PeacefulState implements BattleState {
 
                 // Remove armour if it is broken.
                 if (armour.getDurability() == 0) {
-                    //merc.setArmour(null);
+                    merc.setArmour(null);
                 }
             }
             newHealth = p2.getHealth() - ((health * (dmg * multiplier)) / 5);
@@ -90,7 +90,7 @@ public class PeacefulState implements BattleState {
 
                 // Remove armour if it is broken.
                 if (armour.getDurability() == 0) {
-                    //zombie.setArmour(null);
+                    zombie.setArmour(null);
                 }
             }
             newHealth = p2.getHealth() - ((health * (dmg * multiplier)) / 5);
