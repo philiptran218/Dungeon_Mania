@@ -7,22 +7,30 @@ import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
+import dungeonmania.util.Position;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class DungeonManiaController {
     private GameMap gameMap;
-
+    /**
+     * Empty Constructor
+     */
     public DungeonManiaController() {
     }
 
+    /**
+     * Get the json file with all pixel for entities.
+     * @return
+     */
     public String getSkin() {
         return "default";
     }
@@ -126,6 +134,15 @@ public class DungeonManiaController {
             // Check inventory in item.
             if (!gameMap.getPlayer().hasItem(c.getType())) {
                 throw new InvalidActionException("Player does not have the item.");
+            }
+        }
+
+        // Ticks the zombie toast spawner
+        for (Map.Entry<Position, List<Entity>> entry : gameMap.getMap().entrySet()) {
+            for(Entity e : entry.getValue()) {
+                if (e.getType().equals("zombie_toast_spawner")) {
+                    ((ZombieToastSpawner) e).tick(e.getPos(), gameMap.getMap(), gameMap.getGameState());
+                }
             }
         }
 
