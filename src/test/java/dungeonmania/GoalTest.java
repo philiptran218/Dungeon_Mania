@@ -1,19 +1,11 @@
 package dungeonmania;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import com.google.gson.JsonObject;
 
 import org.junit.jupiter.api.Test;
 
 import dungeonmania.response.models.DungeonResponse;
-import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
-import dungeonmania.util.Position;
 
 public class GoalTest {
 
@@ -118,18 +110,19 @@ public class GoalTest {
     }
 
     /**
-     * Test complex goal (Exit AND (Enemies OR Treasure))
+     * Test complex goal (Treasure AND (Boulders OR Exit))
      * (Pass - Exit and one of Enemies or Treasure is )
      */
     @Test
     public void ComplexGoalPass() {
-    }
-
-    /**
-     * Test complex goal (Exit AND (Enemies OR Treasure))
-     * (Fail - Only Enemies and Treasure are achieved)
-     */
-    @Test
-    public void ComplexGoalFail() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("simpleTreasureAND(BouldersORExit)", "Peaceful");
+        System.out.println(tmp.getGoals());
+        assertTrue(":treasure AND :boulders OR :exit".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.RIGHT);
+        tmp = controller.tick(null, Direction.DOWN);
+        assertTrue("".equals(tmp.getGoals()));
     }
 }

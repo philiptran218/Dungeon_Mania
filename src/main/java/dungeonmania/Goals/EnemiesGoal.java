@@ -3,6 +3,7 @@ package dungeonmania.Goals;
 import java.util.List;
 
 import dungeonmania.Entity;
+import dungeonmania.MovingEntities.Mercenary;
 import dungeonmania.util.Position;
 
 import java.util.Map;
@@ -44,8 +45,11 @@ public class EnemiesGoal implements GoalInterface {
             case "spider":
                 return true;
             case "mercenary":
-                // Check if mercenary is enemy or ally
-                return true;
+                if (((Mercenary) entity).isAlly()) {
+                    return false;
+                } else {
+                    return true;
+                }
             default:
                 return false;
         }

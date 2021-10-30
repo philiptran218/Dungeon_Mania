@@ -22,7 +22,7 @@
         },
         {
             "x": 2,
-            "y": 4,
+            "y": 5,
             "type": "wall"
         },
         {
@@ -47,25 +47,43 @@
         },
         {
             "x": 2,
-            "y": 3,
+            "y": 2,
             "type": "treasure"
         },
         {
             "x": 2,
             "y": 1,
             "type": "exit"
+        },
+        {
+            "x": 2,
+            "y": 3,
+            "type": "boulder"
+        },
+        {
+            "x": 2,
+            "y": 4,
+            "type": "switch"
         }
     ],
     "width": 7,
     "height": 7,
     "goal-condition": {
-        "goal": "OR",
+        "goal": "AND",
         "subgoals": [
             {
                 "goal": "treasure"
             },
             {
-                "goal": "exit"
+                "goal": "OR",
+                "subgoals": [
+                    {
+                        "goal": "boulders"
+                    },
+                    {
+                        "goal": "exit"
+                    }
+                ]
             }
         ]
     }
