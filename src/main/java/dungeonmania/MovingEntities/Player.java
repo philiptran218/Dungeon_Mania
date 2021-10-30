@@ -36,7 +36,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
             moveInDir(map, direction);
         } else if (canPush(map, newPos, direction)) {   
             // Player can move, but pushes a boulder
-            Boulder boulder = (Boulder) map.get(new Position(newPos.getX(), newPos.getY(), 4)).get(0);
+            Boulder boulder = (Boulder) map.get(new Position(newPos.getX(), newPos.getY(), 1)).get(0);
             boulder.push(map, direction);
             moveInDir(map, direction);
         }
@@ -45,14 +45,13 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     }
 
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
-        return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty() && 
-                !super.isPassingBoulder(map, pos);
+        return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty();
     }
 
     public boolean canPush(Map<Position, List<Entity>> map, Position pos, Direction direction) {
         if (super.isPassingBoulder(map, pos)) {
             // Has boulder
-            Boulder boulder = (Boulder) map.get(new Position(pos.getX(), pos.getY(), 4)).get(0);
+            Boulder boulder = (Boulder) map.get(new Position(pos.getX(), pos.getY(), 1)).get(0);
             return boulder.canBePushed(map, direction);
         }
         return false;
