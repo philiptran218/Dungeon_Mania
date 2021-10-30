@@ -158,13 +158,16 @@ public class DungeonManiaController {
                 }
             }
             else {
-                if (e.getPos().equals(e.getPlayerPos()) && !(e instanceof Player)) {
+                if (e.getPos().equals(gameMap.getPlayer().getPos()) && !(e instanceof Player)) {
                     removeEntity.add(gameMap.getBattle().fight(gameMap.getPlayer(), e));
                 }
             }
         }
         // Remove dead entities from list after battle is finished
-        gameMap.getMovingEntityList().removeAll(removeEntity);
+        // Remove the entity from the map:
+        for (Entity e : removeEntity) {
+            gameMap.getMap().get(e.getPos()).remove(e);
+        }
 
 
         // Ticks the zombie toast spawner
