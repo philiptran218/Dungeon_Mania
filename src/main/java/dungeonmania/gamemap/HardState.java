@@ -1,17 +1,10 @@
 package dungeonmania.gamemap;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import dungeonmania.Entity;
-import dungeonmania.EntityFactory;
-import dungeonmania.CollectableEntities.CollectableEntity;
 import dungeonmania.MovingEntities.ZombieToast;
-import dungeonmania.StaticEntities.Door;
-import dungeonmania.StaticEntities.Exit;
-import dungeonmania.StaticEntities.Portal;
-import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public class HardState implements GameState {
