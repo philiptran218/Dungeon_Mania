@@ -81,12 +81,16 @@ public class GoalHelper {
             }
             return String.join(" AND ", currentGoals);
         } else if (goal.getGoalName().equals("OR")) {
-            for (GoalInterface childGoal : goal.getChildren()) {
-                if (!childGoal.isGoalComplete(map)) {
-                    currentGoals.add(goalPatternToString(childGoal, map));
+            if (goal.isGoalComplete(map)) {
+                return "";
+            } else {
+                for (GoalInterface childGoal : goal.getChildren()) {
+                    if (!childGoal.isGoalComplete(map)) {
+                        currentGoals.add(goalPatternToString(childGoal, map));
+                    }
                 }
+                return String.join(" OR ", currentGoals);
             }
-            return String.join(" OR ", currentGoals);
         } else {
             if (!goal.isGoalComplete(map)) {
                 return ":" + goal.getGoalName();
