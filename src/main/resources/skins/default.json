@@ -33,6 +33,8 @@
         "enemies": "images/tileset/entities/zombie_00.png",
         "boulders": "images/tileset/entities/boulder_00.png",
         "zombie_toast_spawner": "images/tileset/entities/zombie_spawner.png",
-        "door": "images/tileset/walls/wooden/door_locked_silver.png"
+        "door": "images/tileset/walls/wooden/door_locked_silver.png",
+        "key": "images/tileset/items/key_silver.png",
+        "door_unlocked": "images/tileset/walls/wooden/door_unlocked.png"
     }
 }
