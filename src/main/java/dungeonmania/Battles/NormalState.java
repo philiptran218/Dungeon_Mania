@@ -1,6 +1,7 @@
 package dungeonmania.Battles;
 
 import dungeonmania.CollectableEntities.*;
+import dungeonmania.MovingEntities.Mercenary;
 import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.MovingEntities.Player;
 
@@ -26,20 +27,27 @@ public class NormalState implements BattleState {
      */
     public void fight(Player p1, MovingEntity p2) {
 
-        // Player attacks enemy first
-        healthModifier(p2, damageCalculation(p1), p1.getHealth());
-
-        // Performs a second attack
-        if (p2.getHealth() > 0 && this.getBattle().hasBow(p1)) {
+        while (p1.getHealth() > 0 && p2.getHealth() > 0) {
+            // Player attacks enemy first
             healthModifier(p2, damageCalculation(p1), p1.getHealth());
-        }
-        // Then enemy attacks player (if the enemy is still alive)
-        if (p2.getHealth() > 0) {
-            healthModifier(p1, damageCalculation(p2), p2.getHealth());
+
+            // Performs a second attack
+            if (p2.getHealth() > 0 && this.getBattle().hasBow(p1)) {
+                healthModifier(p2, damageCalculation(p1), p1.getHealth());
+            }
+            
+            // Performs an attack if player has an allied mercenary
+            for (Mercenary merc : p1.getBribedMercenaries()) {
+                healthModifier(p2, damageCalculation(merc), merc.getHealth());
+
+            }
+
+            // Then enemy attacks player (if the enemy is still alive)
+            if (p2.getHealth() > 0) {
+                healthModifier(p1, damageCalculation(p2), p2.getHealth());
+            }
         }
 
-        // Once battle is done, controller should check if the player or enemy
-        // is dead, if so, they are removed from the map.
     }
 
     /**
