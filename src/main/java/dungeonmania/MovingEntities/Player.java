@@ -7,13 +7,18 @@ import java.util.Map;
 
 import javax.swing.event.SwingPropertyChangeSupport;
 
+import org.json.JSONObject;
+
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
 import dungeonmania.Entity;
+import dungeonmania.EntityFactory;
 import dungeonmania.Inventory;
 import dungeonmania.CollectableEntities.CollectableEntity;
 import dungeonmania.CollectableEntities.Treasure;
 import dungeonmania.StaticEntities.Boulder;
+import dungeonmania.StaticEntities.StaticEntity;
+import dungeonmania.StaticEntities.*;
 import dungeonmania.StaticEntities.ZombieToastSpawner;
 import dungeonmania.exceptions.InvalidActionException;
 
@@ -31,7 +36,9 @@ public class Player extends MovingEntity implements MovingEntitySubject {
 
     }
     public void move(Map<Position, List<Entity>> map, Direction direction) {
-        Position newPos = super.getPos().translateBy(direction);        
+        Position newPos = super.getPos().translateBy(direction);    
+        Position doorLayer = new Position(newPos.getX(), newPos.getY(), 1);
+
         if (canPass(map, newPos)) {
             moveInDir(map, direction);
         } else if (canPush(map, newPos, direction)) {   
@@ -39,7 +46,19 @@ public class Player extends MovingEntity implements MovingEntitySubject {
             Boulder boulder = (Boulder) map.get(new Position(newPos.getX(), newPos.getY(), 1)).get(0);
             boulder.push(map, direction);
             moveInDir(map, direction);
+        } else if (map.get(doorLayer).get(0) != null && map.get(doorLayer).get(0).getType().equals("door")) {
+            Entity e = map.get(doorLayer).get(0);
+            // Check if the door and key matches:
+            int keyId = ((Door) e).getKeyId();
+            if (inventory.getKey(keyId) != null) {
+                e.setType("door_unlocked");
+                map.get(new Position(newPos.getX(), newPos.getY(), 4)).add(e);
+                // Remove the door on current layer and
+                map.get(doorLayer).remove(e);
+                moveInDir(map, direction);
+            }
         }
+
         pickUp(map);
         notifyObservers();
     }
