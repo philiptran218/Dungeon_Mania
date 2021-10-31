@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 
 import org.junit.jupiter.api.Test;
 
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
@@ -236,4 +237,46 @@ public class MovingEntityTest {
         assertTrue(isEntityOnTile(temp, new Position(2, 1), zombieId) || isEntityOnTile(temp, new Position(1, 2), zombieId));
         
     }
+    // ************************************************************ \\ 
+    //               Test for Mercenary Basic Movements
+    // ************************************************************ \\ 
+    /**
+     * Test bribing a mercenary
+     */
+    @Test
+    public void testBribeMercenaryMovement() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("simpleMercWithTreasure", "Standard");
+        String MercId = getEntityId(new Position(4, 1, 3), tmp);
+        assertTrue(":enemies".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.RIGHT);
+        tmp = controller.interact(MercId);
+        assertTrue("".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.RIGHT);
+    }
+    @Test
+    public void testMercenaryTooFar() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("mercenary", "Standard");
+        String MercId = getEntityId(new Position(6, 1, 3), tmp);
+        tmp = controller.tick(null, Direction.RIGHT);
+        assertThrows(InvalidActionException.class, () -> controller.interact(MercId));
+    }
+    @Test
+    public void noTreasureToBribe() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("mercenary", "Standard");
+        String MercId = getEntityId(new Position(6, 1, 3), tmp);
+        tmp = controller.tick(null, Direction.DOWN);
+        tmp = controller.tick(null, Direction.RIGHT);
+        tmp = controller.tick(null, Direction.RIGHT);
+        assertThrows(InvalidActionException.class, () -> controller.interact(MercId));
+    }
+    
 }
