@@ -35,6 +35,16 @@ public class CollectableEntityTest {
         }
         return null;
     }
+    // Gets the id of entity on a position:
+    public String getEntityId(Position pos, DungeonResponse response, String type) {
+        for (EntityResponse entity : response.getEntities()) {
+            if (entity.getPosition().equals(pos) && entity.getPosition().getLayer() == pos.getLayer()
+                && entity.getType().equals(type)) {
+                return entity.getId();
+            }
+        }
+        return null;
+    }
 
     // Tests for CollectableEntities:
 
@@ -175,5 +185,18 @@ public class CollectableEntityTest {
         newDungeon.newGame("build_bow", "Peaceful");
         newDungeon.tick(null, Direction.RIGHT);
         assertThrows(IllegalArgumentException.class, () -> newDungeon.build("invalid"));
+    }
+
+    // Test for invincible potion
+    @Test
+    public void testInviniciblePotion() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse tmp = newDungeon.newGame("invincibleWithEnemies", "Standard");
+        String potionId = getEntityId(new Position(2, 1, 2), tmp);
+        newDungeon.tick(null, Direction.RIGHT);
+        tmp = newDungeon.tick(potionId,null);
+        String mercenaryId = getEntityId(new Position(2, 1, 3), tmp);
+        newDungeon.tick(null, Direction.RIGHT);
+        assertTrue(isEntityOnTile(tmp, new Position(5, 1), mercenaryId));
     }
 }
