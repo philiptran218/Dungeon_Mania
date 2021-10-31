@@ -117,15 +117,13 @@ public class DungeonManiaController {
             gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
         } else {
             // Get the entity on map:
-            Entity c = gameMap.getPlayer().getInventory().getItemById(itemUsed);
-            
+            CollectableEntity c = gameMap.getPlayer().getInventory().getItemById(itemUsed);
+            // Check inventory in item.
+            if (c == null) {
+                throw new InvalidActionException("Player does not have the item.");
+            }
             if (!getUsableItems().contains(c.getType())) {
                 throw new IllegalArgumentException("Cannot use item.");
-            }
-
-            // Check inventory in item.
-            if (!gameMap.getPlayer().hasItem(c.getType())) {
-                throw new InvalidActionException("Player does not have the item.");
             }
             // Check if item is a bomb
             if (gameMap.getPlayer().getInventory().getItemById(itemUsed).getType().equals("bomb")) {

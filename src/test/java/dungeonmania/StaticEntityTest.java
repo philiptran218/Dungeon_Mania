@@ -122,6 +122,33 @@ public class StaticEntityTest {
         String zombie = getEntityId(new Position(2, 2, 3), temp);
         assertTrue(isEntityOnTile(temp, new Position(2, 2, 3), zombie));
     }
+    @Test
+    public void testZombieSpawnerStandard() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawn", "Standard");
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        String zombie = getEntityId(new Position(2, 2, 3), temp);
+        assertTrue(isEntityOnTile(temp, new Position(2, 2, 3), zombie));
+    }
     // Tests if a player can destroy the zombie toast spawner
     @Test
     public void testInteractionZombieSpawner() {

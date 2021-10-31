@@ -199,4 +199,33 @@ public class CollectableEntityTest {
         newDungeon.tick(null, Direction.RIGHT);
         assertTrue(isEntityOnTile(tmp, new Position(5, 1), mercenaryId));
     }
+    @Test
+    public void testUseTreasure() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse tmp = newDungeon.newGame("mercenary", "Peaceful");
+        String treasure = getEntityId(new Position(2, 1, 2), tmp);
+        newDungeon.tick(null, Direction.RIGHT);
+        assertThrows(IllegalArgumentException.class, () -> newDungeon.tick(treasure, null));
+    }
+    @Test
+    public void testItemNotInInventory() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse tmp = newDungeon.newGame("advanced", "Peaceful");
+        String invinc = getEntityId(new Position(11, 10, 2), tmp);
+        assertThrows(InvalidActionException.class, () -> newDungeon.tick(invinc, null));
+    }
+    @Test
+    public void testEntityExists() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse tmp = newDungeon.newGame("advanced", "Peaceful");
+        String entity = getEntityId(new Position(2, 2, 2), tmp);
+        assertThrows(IllegalArgumentException.class, () -> newDungeon.interact(entity));
+    }
+    @Test
+    public void testEntityNotInteractable() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse tmp = newDungeon.newGame("advanced", "Peaceful");
+        String entity = getEntityId(new Position(0, 2, 1), tmp);
+        assertThrows(IllegalArgumentException.class, () -> newDungeon.interact(entity));
+    }
 }
