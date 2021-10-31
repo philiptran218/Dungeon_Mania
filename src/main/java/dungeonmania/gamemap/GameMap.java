@@ -82,7 +82,7 @@ public class GameMap {
      */
     public DungeonResponse returnDungeonResponse() {
         return new DungeonResponse(getMapId(), getDungeonName(), mapToListEntityResponse(), 
-            inventoryToItemResponse(), getBuildables(), getGoals());
+            player.getInventoryResponse(), getBuildables(), getGoals());
     }
 
     /**
@@ -127,20 +127,6 @@ public class GameMap {
             buildable.add("shield");
         }
         return buildable;
-    }
-
-    /**
-     * Converts the player's inventory into a list of item response.
-     * @return List<ItemResponse> List of ItemResponse.
-     */
-    public List<ItemResponse> inventoryToItemResponse() {
-        List<ItemResponse> itemResponse = new ArrayList<>();
-        Inventory i = player.getInventory();
-        // Loop through the player and adds his items to the list
-        for (CollectableEntity c : i.getInventory()) {
-            itemResponse.add(new ItemResponse(c.getId(), c.getType()));
-        }
-        return itemResponse;
     }
 
     /**
