@@ -120,7 +120,7 @@ public class CollectableEntityTest {
         inv = newDungeon.tick(null, Direction.LEFT).getInventory();
         inv = newDungeon.tick(null, Direction.LEFT).getInventory();
         assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("health_potion")));
-        inv = newDungeon.tick("health_potion", Direction.LEFT).getInventory();
+        inv = newDungeon.tick("health_potion", null).getInventory();
         assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("health_potion")));
     }
     // Test 4: test that each entity performs their intended functions
@@ -149,8 +149,7 @@ public class CollectableEntityTest {
         newDungeon.tick(null, Direction.UP);
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick("bomb", null);
-        
-
+        //assertFalse(isEntityOnTile(temp, new Position(3, 1, 3), spawner));
     }
     // SOME NOTES FOR COLLECTABLE ENTITIES:
     // - armour and theOneRing is added to inventory after defeating an enemy with it

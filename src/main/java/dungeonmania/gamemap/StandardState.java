@@ -20,7 +20,6 @@ public class StandardState implements GameState{
                 List <Entity> mobsOnPosition = gameMap.get(dir.asLayer(3));
                 // If an open spot is found, a zombie is spawned
                 if (entitiesOnPosition.isEmpty() && mobsOnPosition.isEmpty()) {
-                    //Entity newZombie = EntityFactory.getEntityObject("" + System.currentTimeMillis(), "zombie_toast", checkOpenPosition.asLayer(3), null, null);
                     ZombieToast newZombie = new ZombieToast("" + System.currentTimeMillis(), "zombie_toast", dir.asLayer(3));
                     gameMap.get(dir.asLayer(3)).add(newZombie);
                     break;
