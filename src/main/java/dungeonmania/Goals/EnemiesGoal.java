@@ -23,7 +23,8 @@ public class EnemiesGoal implements GoalInterface {
         }
         return true;
     }
-
+    
+    @Override
     public void add(GoalInterface goal) {
     }
 

@@ -27,14 +27,18 @@
         "spider": "images/tileset/entities/spider_00.png",
         "mercenary": "images/tileset/entities/ranger.png",
         "switch": "images/tileset/floor_switch.png",
+        "health_potion": "images/tileset/items/potion_4.png",
         "invincibility_potion": "images/tileset/items/potion_10.png",
+        "invisibility_potion": "images/tileset/items/potion_2.png",
         "sword": "images/tileset/items/sword_silver.png",
         "zombie_toast": "images/tileset/entities/zombie_00.png",
-        "enemies": "images/tileset/entities/zombie_00.png",
+        "enemies": "images/tileset/entities/zombie_03.png",
         "boulders": "images/tileset/entities/boulder_00.png",
         "zombie_toast_spawner": "images/tileset/entities/zombie_spawner.png",
         "door": "images/tileset/walls/wooden/door_locked_silver.png",
         "key": "images/tileset/items/key_silver.png",
-        "door_unlocked": "images/tileset/walls/wooden/door_unlocked.png"
+        "door_unlocked": "images/tileset/walls/wooden/door_unlocked.png",
+        "one_ring": "images/tileset/items/ring_0_special.png",
+        "shield": "images/tileset/items/shield.png"
     }
 }

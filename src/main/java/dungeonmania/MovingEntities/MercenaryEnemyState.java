@@ -58,4 +58,27 @@ public class MercenaryEnemyState implements MercenaryState{
         mercenary.moveToPos(map, new Position(newPos.getX(), newPos.getY(), 3));
         mercenary.setPreviousPlayerPos(playerPos);
     }
+
+    @Override
+    public void moveAway(Map<Position, List<Entity>> map) {
+        Position playerPos = mercenary.getPlayerPos();
+        Position pos = mercenary.getPos();
+        
+        List<Position> adjacentPos = pos.getAdjacentPositions();
+
+        List<Position> cardinallyAdjacentPos = adjacentPos.stream().filter(e -> Position.isCardinallyAdjacent(pos, e)).collect(Collectors.toList());
+        cardinallyAdjacentPos.add(pos);
+
+        int distance = Integer.MIN_VALUE;
+        Position newPos = pos;
+
+        for (Position tempPos: cardinallyAdjacentPos) {
+            if (Position.distance(playerPos, tempPos) > distance && mercenary.canPass(map, tempPos)) {
+                newPos = tempPos;
+                distance = Position.distance(playerPos, tempPos);
+            }
+        }
+
+        mercenary.moveToPos(map, new Position(newPos.getX(), newPos.getY(), 3));
+    }
 }

@@ -23,6 +23,20 @@ public class Spider extends MovingEntity {
     }
 
     public void move(Map<Position, List<Entity>> map) {
+        List<Entity> entities = map.get(super.getPlayerPos()).stream()
+                                                             .filter(e -> e.getType().equals("player"))
+                                                             .collect(Collectors.toList());
+        Player player = (Player) entities.get(0);
+
+        if (player.getInvincDuration() > 0) {
+            moveAway(map);
+        }
+        else {
+            moveNormal(map);
+        }
+    }
+
+    public void moveNormal(Map<Position, List<Entity>> map) {
         if (super.getPos().equals(startPos)) {
             // Spider has just spawned, move up
             Position newPos = this.path.get(0);

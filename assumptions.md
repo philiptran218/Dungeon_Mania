@@ -1,5 +1,14 @@
 # Assumptions for Dungeon Mania
 
+# Assumptions for Static Entities:
+- If a boulder and a mob move to the same spot at the same time, the mobs do not move.
+- If there is no open spot for a zombie toast to spawn, no zombie toast will spawn.
+- Zombie toasts spawns from the top position. If that space is already occupied, it will check the right position and keeps going in a clockwise direction until a free spot is found.
+- There can only be one static entity in one block.
+- Zombies can spawn on an exit, portal or unlocked door.
+- If the player has both a sword and a bow, the player will use a sword to destroy the zombie toast spawner.
+- Portals can't be destroyed by a bomb.
+
 # Assumptions for Collectable Entities:
 
 - Player can collect an unlimited number of entities (with the exception of key).
@@ -7,6 +16,7 @@
 - TheOneRing is used immediately after the player dies (the player is not given a choice to use it or not).
 - If both invincibility and invisibility potions are active at the same time, priority will be given to the invisibility potion.
 - If a sword or bow is used to destroy a zombie toast spawner, this will also reduce the weapon's durability.
+- Bomb explodes immediately if placed next to a switch with a boulder on top.
 - Player can only have one potion active at a time for each type (if the player already has an active invincibility potion, they cannot use another one. However, they can use an invisibility potion since it is a different type).
 
 # Assumptions for Buildable Entities:

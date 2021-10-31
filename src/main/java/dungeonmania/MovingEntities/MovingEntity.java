@@ -1,5 +1,6 @@
 package dungeonmania.MovingEntities;
 
+import dungeonmania.Entity;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;

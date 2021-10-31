@@ -31,11 +31,11 @@ public class EntityFactory {
             case "portal": 
                 return new Portal(id, type, otherPos);
             case "zombie_toast_spawner": 
-                return new ZombieToastSpawner(id, type, movingPos);
+                return new ZombieToastSpawner(id, type, staticPos);
             case "spider": 
                 return new Spider(id, type, movingPos);
             case "zombie_toast": 
-                return new ZombieToast(id, type, staticPos);
+                return new ZombieToast(id, type, movingPos);
             case "mercenary": 
                 return new Mercenary(id, type, movingPos);
             case "treasure": 
@@ -45,9 +45,9 @@ public class EntityFactory {
             case "key":
                 return new Key(id, type, collectPos, keyId.getAsInt());
             case "invincibility_potion": 
-                return new InvincibilityPotion(id, type, collectPos, battle);
+                return new InvincibilityPotion(id, type, collectPos);
             case "invisibility_potion": 
-                return new InvisibilityPotion(id, type, collectPos, battle);
+                return new InvisibilityPotion(id, type, collectPos);
             case "wood": 
                 return new Wood(id, type, collectPos);
             case "arrow": 
@@ -65,7 +65,7 @@ public class EntityFactory {
             case "shield": 
                 return new Shield(id, type, collectPos);
             case "player": 
-                return new Player(id, type, movingPos);
+                return new Player(id, type, movingPos, battle);
             default: 
                 return null;
         }

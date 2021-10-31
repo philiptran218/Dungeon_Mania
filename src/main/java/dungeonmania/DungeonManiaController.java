@@ -136,10 +136,16 @@ public class DungeonManiaController {
             if (!gameMap.getPlayer().hasItem(c.getType())) {
                 throw new InvalidActionException("Player does not have the item.");
             }
-
+            // Check if item is a bomb
+            if (gameMap.getPlayer().getInventory().getItemById(itemUsed).getType().equals("bomb")) {
+                Bomb bomb = (Bomb) gameMap.getPlayer().getInventory().getItemById(itemUsed);
+                gameMap.getMap().get(gameMap.getPlayer().getPos().asLayer(2)).add(bomb);
+            }
             // Otherwise player can use the item
             gameMap.getPlayer().getInventory().getItemById(itemUsed).use();
         }
+        // Ticks the duration of any active potions
+        gameMap.getPlayer().tickPotions();
         
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
@@ -163,10 +169,13 @@ public class DungeonManiaController {
                 }
             }
         }
-        // Remove dead entities from list after battle is finished
-        // Remove the entity from the map:
-        for (Entity e : removeEntity) {
-            gameMap.getMap().get(e.getPos()).remove(e);
+        if (!removeEntity.contains(null)) {
+            // Remove dead entities from list after battle is finished
+            // Remove the entity from the map:
+            for (Entity e : removeEntity) {
+                gameMap.getMap().get(e.getPos()).remove(e);
+            }
+
         }
 
 
@@ -237,9 +246,5 @@ public class DungeonManiaController {
             player.getInventory().put(newShield, player);
         }
         return returnDungeonResponse();
-    }
-    public static void main(String[] args) {
-        DungeonManiaController d = new DungeonManiaController();
-        System.out.println(d.allGames().contains("test"));
     }
 }

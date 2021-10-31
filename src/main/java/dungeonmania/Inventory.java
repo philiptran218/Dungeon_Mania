@@ -104,19 +104,4 @@ public class Inventory {
     public void useItem(String type) {
         getItem(type).use();
     }
-
-    /**
-     * Ticks the durability of potions if they are currently active.
-     */
-    public void tickPotions() {
-        InvincibilityPotion invincPotion = (InvincibilityPotion) getItem("invincibility_potion");
-        if (invincPotion.getIsActive()) {
-            invincPotion.tickDuration();
-        }
-        InvisibilityPotion invisPotion = (InvisibilityPotion) getItem("invisibility_potion");
-        if (invisPotion.getIsActive()) {
-            invisPotion.tickDuration();
-        }
-    }
-
 }

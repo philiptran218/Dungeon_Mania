@@ -10,7 +10,7 @@ public interface GameState {
     // Different method of combat
 
     // Mob Spawning
-    public void spawnZombie(int tickProgress, Map<Position, List<Entity>> listOfEntities, Position zombieSpawner);
+    public int spawnZombie(int tickProgress, Map<Position, List<Entity>> gameMap, Position zombieSpawner);
     // Player stats
     
     // Get gamemode as string:

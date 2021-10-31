@@ -329,7 +329,9 @@ public class GameMap {
             }
             // Create the spider:
             Position newSpider = new Position(xPos, yPos, 3);
-            dungeonMap.get(newSpider).add(new Spider("" + System.currentTimeMillis(), "spider", newSpider));
+            Spider spider = new Spider("" + System.currentTimeMillis(), "spider", newSpider);
+            dungeonMap.get(newSpider).add(spider);
+            player.registerObserver(spider);
         }
         
     }

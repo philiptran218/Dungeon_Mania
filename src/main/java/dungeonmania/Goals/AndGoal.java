@@ -6,7 +6,7 @@ import java.util.Map;
 import dungeonmania.Entity;
 import dungeonmania.util.Position;
 
-public class AndGoal extends CompositeGoal implements GoalInterface{
+public class AndGoal extends CompositeGoal {
     private String goalName = "AND";
     
     public boolean isGoalComplete(Map<Position, List<Entity>> map) {

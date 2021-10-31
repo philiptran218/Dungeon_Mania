@@ -10,13 +10,13 @@ import dungeonmania.util.Position;
 public class Boulder extends StaticEntity {
     /** 
      * Constructor for Boulder
+     * @param id
+     * @param type
+     * @param pos
      */
     public Boulder(String id, String type, Position pos) {
         super(id, type, pos);
-        super.setCanStandOn(false);
     }
-    // If a spider and boulder is about to move into the same spot at the same time.
-
     /** 
     * Checks if a boulder can be pushed
     * @param map
@@ -39,6 +39,8 @@ public class Boulder extends StaticEntity {
 
     /**
      * Pushes a boulder in a direction, updates map
+     * @param map
+     * @param direction
      */
     public void push(Map<Position, List<Entity>> map, Direction direction) {
         Position pos = super.getPos();
