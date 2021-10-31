@@ -62,15 +62,6 @@ public class DungeonManiaController {
     }
 
     /**
-     * Returns a dungeon response based on the current state of the game.
-     * @return DungeonResponse on the current state of map.
-     */
-    public DungeonResponse returnDungeonResponse() {
-        return new DungeonResponse(gameMap.getMapId(), gameMap.getDungeonName(), gameMap.mapToListEntityResponse(), 
-            gameMap.inventoryToItemResponse(), new ArrayList<String>(), gameMap.getGoals());
-    }
-
-    /**
      * Given a file name it will go to the source folder and locate dungeon map,
      * and if not found it will go into the test tolder to locate the test json 
      * file and return it as a json object.
@@ -96,20 +87,20 @@ public class DungeonManiaController {
         // Set map:
         this.gameMap = new GameMap(gameMode, dungeonName, getJsonFile(dungeonName));
         // Return DungeonResponse
-        return returnDungeonResponse();
+        return gameMap.returnDungeonResponse();
     }
     
     public DungeonResponse saveGame(String name) throws IllegalArgumentException {
         // Advanced 
         this.gameMap.saveMapAsJson(name);
         // Return DungeonResponse
-        return returnDungeonResponse();
+        return gameMap.returnDungeonResponse();
     }
 
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
         this.gameMap = new GameMap(name);
         // Return DungeonResponse
-        return returnDungeonResponse();
+        return gameMap.returnDungeonResponse();
     }
 
     public List<String> allGames() {
@@ -191,7 +182,7 @@ public class DungeonManiaController {
         gameMap.spawnSpider();
 
         // Return DungeonResponse
-        return returnDungeonResponse();
+        return gameMap.returnDungeonResponse();
     }
 
     public DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {
@@ -209,7 +200,7 @@ public class DungeonManiaController {
             throw new IllegalArgumentException("Entity not interactable");
         }
 
-        return returnDungeonResponse();
+        return gameMap.returnDungeonResponse();
     }
 
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
@@ -245,6 +236,6 @@ public class DungeonManiaController {
             Shield newShield = new Shield("" + System.currentTimeMillis(), "shield", null);
             player.getInventory().put(newShield, player);
         }
-        return returnDungeonResponse();
+        return gameMap.returnDungeonResponse();
     }
 }
