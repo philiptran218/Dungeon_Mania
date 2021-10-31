@@ -114,21 +114,6 @@ public class CollectableEntityTest {
         temp = newDungeon.tick(bombId, null);
         assertFalse(temp.getInventory().stream().anyMatch(itm -> itm.getType().equals("bomb")));
     }
-    // Test that the bomb explodes if a boulder is on an adjacent switch
-    @Test
-    public void testBomb() {
-        DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse createNew = newDungeon.newGame("bomb", "Peaceful");
-        DungeonResponse temp;
-        String switchId = getEntityId(new Position(3, 1, 0), createNew);
-        String boulder = getEntityId(new Position(2, 1, 1), createNew);
-        temp = newDungeon.tick(null, Direction.DOWN);
-        temp = newDungeon.tick(null, Direction.UP);
-        temp = newDungeon.tick(null, Direction.RIGHT);
-        temp = newDungeon.tick("bomb", null);
-        assertFalse(isEntityOnTile(temp, new Position(3, 1, 1), boulder));
-        assertFalse(isEntityOnTile(temp, new Position(3, 1, 0), switchId));        
-    }
         
     // Tests for BuildableEntities (included in CollectableEntities):
 
@@ -187,16 +172,4 @@ public class CollectableEntityTest {
         assertThrows(IllegalArgumentException.class, () -> newDungeon.build("invalid"));
     }
 
-    // Test for invincible potion
-    @Test
-    public void testInviniciblePotion() {
-        DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse tmp = newDungeon.newGame("invincibleWithEnemies", "Standard");
-        String potionId = getEntityId(new Position(2, 1, 2), tmp);
-        newDungeon.tick(null, Direction.RIGHT);
-        tmp = newDungeon.tick(potionId,null);
-        String mercenaryId = getEntityId(new Position(2, 1, 3), tmp);
-        newDungeon.tick(null, Direction.RIGHT);
-        assertTrue(isEntityOnTile(tmp, new Position(5, 1), mercenaryId));
-    }
 }

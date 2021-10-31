@@ -72,4 +72,36 @@ public class BattleTest {
         assertFalse(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
     }
 
+    // Tests using shields in combat (should run down durability)
+    @Test
+    public void testShieldFight() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("buildable_battle", "Hard");
+
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.build("shield");
+        newDungeon.tick(null, Direction.RIGHT);
+        // This movement should fight the mercenary (and use the player's shield)
+        DungeonResponse temp = newDungeon.tick(null, Direction.RIGHT);
+        assertFalse(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
+    }
+
+    @Test
+    public void testZeroDurability() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("mercenary_onslaught", "Hard");
+
+
+        
+
+
+
+    }
+
 }
