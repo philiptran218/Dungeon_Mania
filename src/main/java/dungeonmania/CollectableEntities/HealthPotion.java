@@ -20,7 +20,7 @@ public class HealthPotion extends Potion {
      * Called when the player wants to consume the potion.
      */
     public void use() {
-        getPlayer().setHealth(100);
+        getPlayer().setHealth(20);
         getPlayer().getInventoryList().remove((CollectableEntity)this);
     }
     

@@ -33,7 +33,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     private Battle battle;
 
     public Player(String id, String type, Position pos, Battle battle){
-        super(id, type, pos, 10, 10);
+        super(id, type, pos, 20, 2);
         this.setBattle(battle);
     }
 
