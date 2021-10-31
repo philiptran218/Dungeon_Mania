@@ -1,6 +1,7 @@
 package dungeonmania.MovingEntities;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     private Battle battle;
     private int invisDuration = 0;
     private int invincDuration = 0;
+    private List<String> useableItems = Arrays.asList("bomb", "health_potion", "invincibility_potion", "invisibility_potion", null);
 
     /**
      * Constructor for the player.
@@ -150,6 +152,33 @@ public class Player extends MovingEntity implements MovingEntitySubject {
 
             }
         }
+    }
+
+    /**
+     * Player uses items
+     * @param map
+     * @param itemUsed
+     * @throws IllegalArgumentException
+     */
+    public void useItem(Map<Position, List<Entity>> map, String itemUsed) throws IllegalArgumentException {
+        Entity item = inventory.getItemById(itemUsed);
+        if (!useableItems.contains(item.getType())) {
+            // Cannot use the item
+            throw new IllegalArgumentException("Cannot use item.");
+        }
+
+        if (!this.hasItem(item.getType())) {
+            // Player does not have the item
+            throw new InvalidActionException("Player does not have the item.");
+        }
+
+        if (this.inventory.getNoItemType("bomb") > 0) {
+            // Item is a bomb
+            Bomb bomb = (Bomb) this.inventory.getItemById(itemUsed);
+            map.get(super.getPos().asLayer(2)).add(bomb);
+            bomb.setPos(super.getPos().asLayer(2));
+        }
+        this.inventory.getItemById(itemUsed).use();
     }
 
     /**

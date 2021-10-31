@@ -55,14 +55,6 @@ public class DungeonManiaController {
     }
 
     /**
-     * Return a list of useable items.
-     * @return List<String> List of all usable items (string).
-     */
-    public List<String> getUsableItems() {
-        return Arrays.asList("bomb", "health_potion", "invincibility_potion", "invisibility_potion", null);
-    }
-
-    /**
      * /dungeons
      * 
      * Done for you.
@@ -166,24 +158,9 @@ public class DungeonManiaController {
             gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
         } else {
             // Get the entity on map:
-            Entity c = gameMap.getPlayer().getInventory().getItemById(itemUsed);
-            
-            if (!getUsableItems().contains(c.getType())) {
-                throw new IllegalArgumentException("Cannot use item.");
-            }
-
-            // Check inventory in item.
-            if (!gameMap.getPlayer().hasItem(c.getType())) {
-                throw new InvalidActionException("Player does not have the item.");
-            }
-            // Check if item is a bomb
-            if (gameMap.getPlayer().getInventory().getItemById(itemUsed).getType().equals("bomb")) {
-                Bomb bomb = (Bomb) gameMap.getPlayer().getInventory().getItemById(itemUsed);
-                gameMap.getMap().get(gameMap.getPlayer().getPos().asLayer(2)).add(bomb);
-            }
-            // Otherwise player can use the item
-            gameMap.getPlayer().getInventory().getItemById(itemUsed).use();
+            gameMap.getPlayer().useItem(gameMap.getMap(), itemUsed);
         }
+
         // Ticks the duration of any active potions
         gameMap.getPlayer().tickPotions();
         
