@@ -1,22 +1,21 @@
 package dungeonmania.MovingEntities;
 
 import dungeonmania.Entity;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
-import dungeonmania.Entity;
 
 
 public abstract class MovingEntity extends Entity implements MovingEntityObserver {
     private double health;
     private double attackDamage;
     private Position playerPos;
+
+    // ********************************************************************************************\\
+    //                                         Functions                                           \\
+    // ********************************************************************************************\\
 
     /**
      * 
@@ -67,8 +66,18 @@ public abstract class MovingEntity extends Entity implements MovingEntityObserve
         map.get(newPos).add(this);
     }
 
+    /**
+     * Abstract function, do nothing.
+     * @return ...
+     */
     public abstract boolean hasArmour();
 
+    /**
+     * Checks if the entity is moving to a position with a boulder.
+     * @param map
+     * @param pos
+     * @return True if that position has a boulder, false otherwise.
+     */
     public boolean isPassingBoulder(Map<Position, List<Entity>> map, Position pos) {
         List<Entity> entities = map.get(new Position(pos.getX(), pos.getY(), 1));
         if (entities.size() == 0) {
@@ -80,9 +89,18 @@ public abstract class MovingEntity extends Entity implements MovingEntityObserve
 
     }
 
+    /**
+     * Updating the player position.
+     */
+    @Override
+    public void update(MovingEntitySubject obj) {
+        this.setPlayerPos(((Player) obj).getPos());
+    }
 
-    ////////////////////////////////////////////////////////////////////////////
-    // Getters and Setters
+    // ********************************************************************************************\\
+    //                                   Getter and setters:                                       \\
+    // ********************************************************************************************\\
+
     public double getHealth() {
         return health;
     }
@@ -106,12 +124,5 @@ public abstract class MovingEntity extends Entity implements MovingEntityObserve
     public void setPlayerPos(Position playerPos) {
         this.playerPos = playerPos;
     }
-    
-
-    @Override
-    public void update(MovingEntitySubject obj) {
-        this.setPlayerPos(((Player) obj).getPos());
-    }
-
 
 }

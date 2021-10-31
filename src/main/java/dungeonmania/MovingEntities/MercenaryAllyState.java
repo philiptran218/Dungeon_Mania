@@ -1,22 +1,30 @@
 package dungeonmania.MovingEntities;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import dungeonmania.util.Position;
-import dungeonmania.util.Direction;
 import dungeonmania.Entity;
 
 public class MercenaryAllyState implements MercenaryState{
     private Mercenary mercenary;
 
+    /**
+     * Constructor for mecenary ally state.
+     * @param mercenary
+     */
     public MercenaryAllyState(Mercenary mercenary) {
         this.mercenary = mercenary;
     }
 
+    // ********************************************************************************************\\
+    //                                         Functions                                           \\
+    // ********************************************************************************************\\
+
+    /**
+     * Auto-moves the mecenary as an ally.
+     */
     @Override
     public void move(Map<Position, List<Entity>> map) {
         Position playerPos = mercenary.getPlayerPos();
@@ -48,8 +56,11 @@ public class MercenaryAllyState implements MercenaryState{
         mercenary.setPreviousPlayerPos(playerPos);
     }
 
+    /**
+     * Moves away from the player.
+     */
     public void moveAway(Map<Position, List<Entity>> map) {
         move(map);
     }
-    
+
 }
