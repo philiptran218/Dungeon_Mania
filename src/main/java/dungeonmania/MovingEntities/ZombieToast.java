@@ -16,7 +16,7 @@ public class ZombieToast extends MovingEntity {
     private Armour armour;
 
     public ZombieToast(String id, String type, Position pos) {
-        super(id, type, pos, 4, 4);
+        super(id, type, pos, 10, 1);
         this.armour = generateArmour();
 
     }
