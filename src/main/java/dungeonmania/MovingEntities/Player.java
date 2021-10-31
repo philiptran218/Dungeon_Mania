@@ -214,6 +214,10 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         this.battle = battle;
     }
 
+    public Battle getBattle() {
+        return battle;
+    }
+
     public List<Mercenary> getBribedMercenaries() {
         return bribedMercenaries;
     }

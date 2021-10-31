@@ -51,7 +51,7 @@ public class Mercenary extends MovingEntity {
         if (player.getInvisDuration() > 0) {
             return;
         }
-        else if (player.getInvincDuration() > 0) {
+        else if (player.getInvincDuration() > 0 && !player.getBattle().getDifficulty().equals("Hard")) {
             state.moveAway(map);
         }
         else {
