@@ -38,6 +38,52 @@ public class GoalTest {
     }
 
     /**
+     * Test destroying a zombie
+     */
+    @Test
+    public void ZombieGoal() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("simpleZombieToast", "Standard");
+        assertTrue(":enemies".equals(tmp.getGoals()));
+        for (int i = 0; i < 3; i++) {
+            tmp = controller.tick(null, Direction.RIGHT);
+        }
+        assertTrue("".equals(tmp.getGoals()));
+    }
+
+    /**
+     * Test destroying a mercenary
+     */
+    @Test
+    public void KillMercenaryGoal() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("simpleMerc", "Standard");
+        assertTrue(":enemies".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.RIGHT);
+        assertTrue("".equals(tmp.getGoals()));
+    }
+
+    /**
+     * Test bribing a mercenary
+     */
+    @Test
+    public void BribeMercenaryGoal() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("simpleMercWithTreasure", "Standard");
+        String MercId = getEntityId(new Position(4, 1, 3), tmp);
+        assertTrue(":enemies".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.RIGHT);
+        tmp = controller.interact(MercId);
+        assertTrue("".equals(tmp.getGoals()));
+    }
+
+    /**
      * Test destroying all enemies and spawners
      */
     @Test
