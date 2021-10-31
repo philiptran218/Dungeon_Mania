@@ -81,11 +81,13 @@ public class GoalTest {
         DungeonResponse tmp = controller.newGame("simpleMerc", "Standard");
         assertTrue(":enemies".equals(tmp.getGoals()));
         tmp = controller.tick(null, Direction.RIGHT);
+        tmp = controller.tick(null, Direction.LEFT);
         assertTrue("".equals(tmp.getGoals()));
     }
 
     /**
-     * Test bribing a mercenary
+     * Test bribing a mercenary. Sometimes a spider may spawn which will cause
+     * the test to fail.
      */
     @Test
     public void testBribeMercenaryGoal() {

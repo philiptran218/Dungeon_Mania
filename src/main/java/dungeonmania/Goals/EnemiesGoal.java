@@ -9,9 +9,14 @@ import dungeonmania.util.Position;
 import java.util.Map;
 
 public class EnemiesGoal implements GoalInterface {
-    
     private String goalName = "enemies";
 
+    /**
+     * Loops through the map and checks if all enemies and spawners have been destroyed.
+     * 
+     * @param  map the current state of the map.
+     * @return complete - a bollean which is ture if the goal is complete and false if not.
+     */
     @Override
     public boolean isGoalComplete(Map<Position, List<Entity>> map) {
         for(List<Entity> entities : map.values()) {
