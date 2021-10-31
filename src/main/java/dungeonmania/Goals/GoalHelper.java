@@ -71,7 +71,7 @@ public class GoalHelper {
 
     public static String goalPatternToString(GoalInterface goal, Map<Position, List<Entity>> map) {
         List<String> currentGoals = new ArrayList<String>();
-        if (goal.getGoalName().equals("AND")) {
+        if (goal.getGoalName().equals("AND") && !goal.isGoalComplete(map)) {
             for (GoalInterface childGoal : goal.getChildren()) {
                 if (!childGoal.isGoalComplete(map)) {
                     currentGoals.add(goalPatternToString(childGoal, map));

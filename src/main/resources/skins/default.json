@@ -30,11 +30,12 @@
         "invincibility_potion": "images/tileset/items/potion_10.png",
         "sword": "images/tileset/items/sword_silver.png",
         "zombie_toast": "images/tileset/entities/zombie_00.png",
-        "enemies": "images/tileset/entities/zombie_00.png",
+        "enemies": "images/tileset/entities/zombie_03.png",
         "boulders": "images/tileset/entities/boulder_00.png",
         "zombie_toast_spawner": "images/tileset/entities/zombie_spawner.png",
         "door": "images/tileset/walls/wooden/door_locked_silver.png",
         "key": "images/tileset/items/key_silver.png",
-        "door_unlocked": "images/tileset/walls/wooden/door_unlocked.png"
+        "door_unlocked": "images/tileset/walls/wooden/door_unlocked.png",
+        "one_ring": "images/tileset/items/ring_0_special.png"
     }
 }
