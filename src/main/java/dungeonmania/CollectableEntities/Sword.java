@@ -24,14 +24,6 @@ public class Sword extends CombatItems {
     public void setDurability(int num) {
         durability = num;
     }
-    
-    public int getDurability() {
-        return durability;
-    }
-
-    public double getDamage() {
-        return DAMAGE;
-    }
 
     /**
      * Reduces the durability if it has been used

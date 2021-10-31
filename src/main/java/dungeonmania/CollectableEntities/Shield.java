@@ -24,14 +24,6 @@ public class Shield extends CombatItems {
     public void setDurability(int num) {
         durability = num;
     }
-    
-    public int getDurability() {
-        return durability;
-    }
-
-    public double getReduceDamage() {
-        return REDUCE_DAMAGE;
-    }
 
     /**
      * Reduces the durability if it has been used
