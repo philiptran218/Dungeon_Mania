@@ -20,18 +20,9 @@ public class Bow extends CombatItems {
         this.setDurability(INITIAL_DURABILITY);
     }
 
-    // Getters and Setters
-    public void setDurability(int num) {
-        durability = num;
-    }
-    
-    public int getDurability() {
-        return durability;
-    }
-
-    public double getDamage() {
-        return DAMAGE;
-    }
+    // ********************************************************************************************\\
+    //                                        Functions                                            \\
+    // ********************************************************************************************\\
 
     /**
      * Reduces the durability if it has been used
@@ -60,10 +51,29 @@ public class Bow extends CombatItems {
         return DAMAGE;
     }
 
+    /**
+     * Check the durability of the armour and if durability is zero 
+     * remove it from the inventory.
+     */
     public void checkNoDurability() {
         if (durability == 0) {
             getPlayer().getInventoryList().remove((CollectableEntity)this);
         }
     }
+
+    // ********************************************************************************************\\
+    //                                    Getters and Setters                                      \\
+    // ********************************************************************************************\\
     
+    public void setDurability(int num) {
+        durability = num;
+    }
+    
+    public int getDurability() {
+        return durability;
+    }
+
+    public double getDamage() {
+        return DAMAGE;
+    }
 }

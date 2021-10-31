@@ -1,6 +1,5 @@
 package dungeonmania.CollectableEntities;
 
-import dungeonmania.MovingEntities.Player;
 import dungeonmania.util.Position;
 
 public class HealthPotion extends Potion {

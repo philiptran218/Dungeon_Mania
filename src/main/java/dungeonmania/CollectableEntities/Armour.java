@@ -1,6 +1,5 @@
 package dungeonmania.CollectableEntities;
 
-import dungeonmania.MovingEntities.Player;
 import dungeonmania.util.Position;
 
 public class Armour extends CombatItems {
@@ -11,31 +10,21 @@ public class Armour extends CombatItems {
     private int durability;
     
     /**
-     * Constructor for Armour
-     * @param id
-     * @param type
-     * @param pos
+     * Constructor for armour.
+     * @param id (String)
+     * @param type (String)
+     * @param pos (Position)
      */
     public Armour(String id, String type, Position pos) {
         super(id, type, pos);
         this.setDurability(INITIAL_DURABILITY);
     }
 
-    // Getters and Setters
-    public void setDurability(int num) {
-        durability = num;
-    }
-    
-    public int getDurability() {
-        return durability;
-    }
-
-    public double getReduceDamage() {
-        return REDUCE_DAMAGE;
-    }
-
+    // ********************************************************************************************\\
+    //                                         Functions                                           \\
+    // ********************************************************************************************\\
     /**
-     * Reduces the durability if it has been used
+     * Reduces the durability if it has been used.
      */
     public void reduceDurability() {
         durability = durability - 1;
@@ -51,7 +40,7 @@ public class Armour extends CombatItems {
      * Called when the combat item is being used in battle.
      * Its durability is reduced by 1 and its damage reduction value is returned for
      * use in damage calculation.
-     * @return the damage count of the combat item
+     * @return the damage count of the combat item.
      */
     public double usedInCombat() {
         reduceDurability();
@@ -59,10 +48,29 @@ public class Armour extends CombatItems {
         return REDUCE_DAMAGE;
     }
 
+    /**
+     * Check the durability of the armour and if durability is zero 
+     * remove it from the inventory.
+     */
     public void checkNoDurability() {
         if (durability == 0) {
             getPlayer().getInventoryList().remove((CollectableEntity)this);
         }
+    }
+
+    // ********************************************************************************************\\
+    //                                     Getters and Setters                                     \\
+    // ********************************************************************************************\\
+    public void setDurability(int num) {
+        durability = num;
+    }
+    
+    public int getDurability() {
+        return durability;
+    }
+
+    public double getReduceDamage() {
+        return REDUCE_DAMAGE;
     }
 
 }
