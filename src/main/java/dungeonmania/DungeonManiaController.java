@@ -136,7 +136,11 @@ public class DungeonManiaController {
             if (!gameMap.getPlayer().hasItem(c.getType())) {
                 throw new InvalidActionException("Player does not have the item.");
             }
-
+            // Check if item is a bomb
+            if (gameMap.getPlayer().getInventory().getItemById(itemUsed).getType().equals("bomb")) {
+                Bomb bomb = (Bomb) gameMap.getPlayer().getInventory().getItemById(itemUsed);
+                gameMap.getMap().get(gameMap.getPlayer().getPos().asLayer(2)).add(bomb);
+            }
             // Otherwise player can use the item
             gameMap.getPlayer().getInventory().getItemById(itemUsed).use();
         }
