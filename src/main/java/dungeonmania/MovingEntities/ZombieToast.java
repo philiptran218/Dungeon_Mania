@@ -54,7 +54,7 @@ public class ZombieToast extends MovingEntity {
                                                              .collect(Collectors.toList());
         Player player = (Player) entities.get(0);
 
-        if (player.getInvincDuration() > 0) {
+        if (player.getInvincDuration() > 0 && !player.getBattle().getDifficulty().equals("Hard")) {
             moveAway(map);
         }
         else {
@@ -73,7 +73,6 @@ public class ZombieToast extends MovingEntity {
         if (canPass(map, newPos)) {
             super.moveInDir(map, direction);
         }
-
     }
 
     public void moveAway(Map<Position, List<Entity>> map) {

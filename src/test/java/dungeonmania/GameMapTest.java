@@ -1,5 +1,6 @@
 package dungeonmania;
 
+import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,66 +17,31 @@ import org.junit.jupiter.api.Test;
 
 import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.EntityResponse;
+import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 
 public class GameMapTest {
+    public void deleteSavedGames(String fileName) {
+        File file = new File("src/main/resources/saved_games/" + fileName + ".json");
+        System.out.println("Deleting " + fileName + " " + file.delete());
+        file.delete();
+    }
+
     // Helper function to get the json test files:
     public JsonObject getTestJsonPath(String fileName) {
         DungeonManiaController n = new DungeonManiaController();
         return n.getJsonFile(fileName);
     }
 
-    // Test mapToListEntityResponse, to check whether or not it processes 
-    // json files properly.
-    @Test
-    public void testMapToListOfEntityResponse() {
-        JsonObject j = getTestJsonPath("file1");
-        GameMap map = new GameMap("Peaceful", j.get("map-name").getAsString(), j);
-
-        List<EntityResponse> entityList = map.mapToListEntityResponse();
-        
-        // Manually make the array:
-        List<EntityResponse> tested = new ArrayList<>();
-        tested.add(new EntityResponse("0", "wall", new Position(0, 0), false));
-        tested.add(new EntityResponse("1", "wall", new Position(1, 1), false));
-        tested.add(new EntityResponse("2", "wall", new Position(2, 2), false));
-
-        // Loop through both to check if both responses contain the same information:
-        for (int i = 0; i < 3; i++) {
-            // Assign entity response
-            EntityResponse a = entityList.get(i);
-            EntityResponse b = tested.get(i);
-
-            // Check interior of entity:
-            //assertEquals(a.getId(), b.getId());
-            assertEquals(a.getPosition(), b.getPosition());
-            assertEquals(a.getType(), b.getType());
-        }
-    }
-
-    // Check if we are sucessfully ignoring the third layer:
-    @Test
-    public void testNoLayerFromReadingJsonMap () {
-        // Load game:
-        JsonObject j = getTestJsonPath("file1");
-        GameMap map = new GameMap("Peaceful", j.get("map-name").getAsString(), j);
-
-        for (EntityResponse i : map.mapToListEntityResponse()) {
-           assertEquals(i.getPosition().getLayer(), 0);
-        }
-    }
-
-    // Check if we are processing the third layer sucessfully:
-    @Test
-    public void testLayerFromReadingJsonMap() {
-        JsonObject j = getTestJsonPath("test_layer");
-        // Load game:
-        GameMap map = new GameMap("Peaceful", j.get("map-name").getAsString(), j);
-
-        for (EntityResponse i : map.mapToListEntityResponse()) {
-            assertEquals(i.getPosition().getLayer(), 3);
-        }
+    @Test 
+    void testLoadMapFunction() {
+        assertDoesNotThrow(() -> {
+            DungeonManiaController d = new DungeonManiaController();
+            d.newGame("key_door_saving", "Peaceful");
+            d.saveGame("saved");
+        });
+        deleteSavedGames("saved");
     }
 
 }   
