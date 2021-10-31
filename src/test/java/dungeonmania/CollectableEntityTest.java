@@ -104,35 +104,6 @@ public class CollectableEntityTest {
         temp = newDungeon.tick(bombId, null);
         assertFalse(temp.getInventory().stream().anyMatch(itm -> itm.getType().equals("bomb")));
     }
-
-    // Test that bomb gets removed from inventory once used
-    @Test
-    public void testUseBomb() {
-        DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("bomb", "Peaceful");
-        List<ItemResponse> inv;
-        inv = newDungeon.tick(null, Direction.DOWN).getInventory();
-        inv = newDungeon.tick("bomb", null).getInventory();
-        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("bomb")));
-    }
-
-    // Tests using the health potion and removing it from inventory
-    @Test
-    public void testUseHealthPotion() {
-        DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("player_pickup_item", "Peaceful");
-        List<ItemResponse> inv;
-        inv = newDungeon.tick(null, Direction.RIGHT).getInventory();
-        inv = newDungeon.tick(null, Direction.RIGHT).getInventory();
-        inv = newDungeon.tick(null, Direction.RIGHT).getInventory();
-        inv = newDungeon.tick(null, Direction.UP).getInventory();
-        inv = newDungeon.tick(null, Direction.LEFT).getInventory();
-        inv = newDungeon.tick(null, Direction.LEFT).getInventory();
-        assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("health_potion")));
-        inv = newDungeon.tick("health_potion", null).getInventory();
-        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("health_potion")));
-    }
-    
     // Test that the bomb explodes if a boulder is on an adjacent switch
     @Test
     public void testBomb() {

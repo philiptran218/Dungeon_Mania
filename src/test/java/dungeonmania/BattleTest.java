@@ -41,6 +41,11 @@ public class BattleTest {
         newDungeon.tick(null, Direction.UP);
         newDungeon.tick(null, Direction.UP);
         newDungeon.tick(null, Direction.UP);
+        newDungeon.tick(null, Direction.UP);
+        newDungeon.tick(null, Direction.UP);
+        newDungeon.tick(null, Direction.UP);
+        newDungeon.tick(null, Direction.UP);
+        newDungeon.tick(null, Direction.UP);
         // Should kill the spider in combat
         DungeonResponse temp = newDungeon.tick(null, Direction.RIGHT);
         assertFalse(temp.getEntities().stream().anyMatch(e -> e.getType().equals("spider")));
