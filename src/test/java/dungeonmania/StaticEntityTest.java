@@ -50,18 +50,6 @@ public class StaticEntityTest {
         temp = newDungeon.tick(null, Direction.UP);
         assertTrue(isEntityOnTile(temp, new Position(1, 1), playerId));
     }
-    // Checks if the exit works properly by moving player into the exit and seeing if the game ends
-    @Test
-    public void testExit() {
-        // Create dungeon controller
-        DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse temp;
-        DungeonResponse createNew = newDungeon.newGame("exit", "Peaceful");
-        String playerId = getEntityId(new Position(1, 1), createNew);
-        temp = newDungeon.tick(null, Direction.RIGHT);
-        temp = newDungeon.tick(null, Direction.RIGHT);
-        // FINISH GAME
-    }
     // Checks if the boulder can be pushed by moving the player into a boulder
     @Test
     public void testBoulder() {
@@ -77,19 +65,6 @@ public class StaticEntityTest {
         temp = newDungeon.tick(null, Direction.RIGHT);
         assertTrue(isEntityOnTile(temp, new Position(3, 1), playerId));
         assertTrue(isEntityOnTile(temp, new Position(4, 1), boulder));
-    }
-    // Checks if the switch can be triggered by moving the boulder onto a switch
-    @Test
-    public void testSwitch() {
-        DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse temp;
-        DungeonResponse createNew = newDungeon.newGame("boulders", "Peaceful");
-        String playerId = getEntityId(new Position(1, 1), createNew);
-        temp = newDungeon.tick(null, Direction.RIGHT);
-        temp = newDungeon.tick(null, Direction.LEFT);
-        temp = newDungeon.tick(null, Direction.DOWN);
-        temp = newDungeon.tick(null, Direction.RIGHT);
-        //FINISH GAME
     }
     // Checks if the door is working by unlocking a locked door with a key
     @Test

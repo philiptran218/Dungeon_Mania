@@ -15,13 +15,6 @@ public class ZombieToastSpawner extends StaticEntity {
     public ZombieToastSpawner(String id, String type, Position pos) {
         super(id, type, pos);
     }
-    // Getters and setters
-    public int getTickProgress() {
-        return tickProgress;
-    }
-    public void setTickProgress(int tickProgress) {
-        this.tickProgress = tickProgress;
-    }
     /**
      * Spawns the zombie in 15 or 20 ticks depending on the game mode
      */
