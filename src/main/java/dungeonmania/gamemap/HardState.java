@@ -9,8 +9,7 @@ import dungeonmania.util.Position;
 
 public class HardState implements GameState {
     private String mode = "Hard";
-
-   // Spawns the zombie from the zombie toast spawner
+    // Spawns the zombie from the zombie toast spawner
     public int spawnZombie(int tickProgress, Map<Position, List<Entity>> gameMap, Position zombieSpawner) {
         if (tickProgress == 14) { 
             // Adds each direction into a list

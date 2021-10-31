@@ -87,7 +87,7 @@ public class CollectableEntityTest {
         newDungeon.newGame("bomb", "Peaceful");
         List<ItemResponse> inv;
         inv = newDungeon.tick(null, Direction.DOWN).getInventory();
-        inv = newDungeon.tick("bomb", Direction.DOWN).getInventory();
+        inv = newDungeon.tick("bomb", null).getInventory();
         assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("bomb")));
     }
     @Test
@@ -121,8 +121,16 @@ public class CollectableEntityTest {
         // Have to set up situations for the entities to be used.
         // Best to separate these out.
     }
-
-    // SOME NOTES FOR COLLECTABLEENTITIES:
+    @Test
+    public void testBomb() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("bomb", "Peaceful");
+        newDungeon.tick(null, Direction.DOWN);
+        newDungeon.tick(null, Direction.UP);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick("bomb", null);
+    }
+    // SOME NOTES FOR COLLECTABLE ENTITIES:
     // - armour and theOneRing is added to inventory after defeating an enemy with it
     // - key disappears completely after being used (does not get melted/cannot be used to craft)
     
