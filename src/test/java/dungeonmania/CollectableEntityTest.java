@@ -13,9 +13,27 @@ import org.junit.jupiter.api.Test;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.*;
 import dungeonmania.util.Direction;
+import dungeonmania.util.Position;
 
 public class CollectableEntityTest {
-
+     // Test helper: Checks if entity on a given position.
+     public boolean isEntityOnTile(DungeonResponse response, Position pos, String id) {
+        for (EntityResponse entity : response.getEntities()) {
+            if (entity.getId() == id) {
+                return entity.getPosition().equals(pos);
+            }
+        }
+        return false;
+    }
+    // Gets the id of entity on a position:
+    public String getEntityId(Position pos, DungeonResponse response) {
+        for (EntityResponse entity : response.getEntities()) {
+            if (entity.getPosition().equals(pos) && entity.getPosition().getLayer() == pos.getLayer()) {
+                return entity.getId();
+            }
+        }
+        return null;
+    }
     // Testing ideas for actual CollectableEntities:
 
     // Test 1: check that the entity can be picked up by the player.
@@ -124,11 +142,15 @@ public class CollectableEntityTest {
     @Test
     public void testBomb() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("bomb", "Peaceful");
+        DungeonResponse createNew = newDungeon.newGame("bomb", "Peaceful");
+        String switchId = getEntityId(new Position(3, 1, 0), createNew);
+        String boulder = getEntityId(new Position(3, 1, 1), createNew);
         newDungeon.tick(null, Direction.DOWN);
         newDungeon.tick(null, Direction.UP);
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick("bomb", null);
+        
+
     }
     // SOME NOTES FOR COLLECTABLE ENTITIES:
     // - armour and theOneRing is added to inventory after defeating an enemy with it
