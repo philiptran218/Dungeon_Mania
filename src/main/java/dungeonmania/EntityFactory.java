@@ -31,11 +31,11 @@ public class EntityFactory {
             case "portal": 
                 return new Portal(id, type, otherPos);
             case "zombie_toast_spawner": 
-                return new ZombieToastSpawner(id, type, movingPos);
+                return new ZombieToastSpawner(id, type, staticPos);
             case "spider": 
                 return new Spider(id, type, movingPos);
             case "zombie_toast": 
-                return new ZombieToast(id, type, staticPos);
+                return new ZombieToast(id, type, movingPos);
             case "mercenary": 
                 return new Mercenary(id, type, movingPos);
             case "treasure": 
