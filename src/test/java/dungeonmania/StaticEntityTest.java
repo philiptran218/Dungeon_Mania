@@ -94,11 +94,10 @@ public class StaticEntityTest {
     @Test
     public void testPortal() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse temp;
-        DungeonResponse createNew = newDungeon.newGame("portals", "Peaceful");
-        String playerId = getEntityId(new Position(1, 1, 3), createNew);
+        DungeonResponse temp = newDungeon.newGame("portals", "Peaceful");
+        String playerId = getEntityId(new Position(1, 1, 3), temp);
         temp = newDungeon.tick(null, Direction.RIGHT);
-        assertTrue(isEntityOnTile(temp, new Position(6, 1, 3), playerId));
+        assertTrue(isEntityOnTile(temp, new Position(5, 1, 3), playerId));
     }
     // Tests if a zombie is spawned in the correct tick by checking if the mob is spawned
     @Test
