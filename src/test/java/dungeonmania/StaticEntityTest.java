@@ -17,7 +17,6 @@ import dungeonmania.util.Position;
 
 import org.junit.jupiter.api.Test;
 
-import dungeonmania.exceptions.InvalidActionException;
 
 public class StaticEntityTest {
     // Test helper: Checks if entity on a given position.
@@ -45,10 +44,10 @@ public class StaticEntityTest {
         DungeonManiaController newDungeon = new DungeonManiaController();
         DungeonResponse temp;
         DungeonResponse createNew = newDungeon.newGame("advanced", "Peaceful");
-        String playerId = getEntityId(new Position(1, 1), createNew);
+        String playerId = getEntityId(new Position(1, 1, 3), createNew);
         // Move up and checks if wall stops the player 
         temp = newDungeon.tick(null, Direction.UP);
-        assertTrue(isEntityOnTile(temp, new Position(1, 1), playerId));
+        assertTrue(isEntityOnTile(temp, new Position(1, 1, 3), playerId));
     }
     // Checks if the boulder can be pushed by moving the player into a boulder
     @Test
@@ -56,15 +55,15 @@ public class StaticEntityTest {
         DungeonManiaController newDungeon = new DungeonManiaController();
         DungeonResponse temp;
         DungeonResponse createNew = newDungeon.newGame("boulders", "Peaceful");
-        String playerId = getEntityId(new Position(1, 1), createNew);
-        String boulder = getEntityId(new Position(2, 1), createNew);
+        String playerId = getEntityId(new Position(2, 2, 3), createNew);
+        String boulder = getEntityId(new Position(3, 2, 1), createNew);
         temp = newDungeon.tick(null, Direction.RIGHT);
-        assertTrue(isEntityOnTile(temp, new Position(2, 1), playerId));
-        assertTrue(isEntityOnTile(temp, new Position(3, 1), boulder));
+        assertTrue(isEntityOnTile(temp, new Position(3, 2, 3), playerId));
+        assertTrue(isEntityOnTile(temp, new Position(4, 2, 1), boulder));
         temp = newDungeon.tick(null, Direction.RIGHT);
         temp = newDungeon.tick(null, Direction.RIGHT);
-        assertTrue(isEntityOnTile(temp, new Position(3, 1), playerId));
-        assertTrue(isEntityOnTile(temp, new Position(4, 1), boulder));
+        assertTrue(isEntityOnTile(temp, new Position(4, 2, 3), playerId));
+        assertTrue(isEntityOnTile(temp, new Position(5, 2, 1), boulder));
     }
     // Checks if the door is working by unlocking a locked door with a key
     @Test
@@ -72,10 +71,10 @@ public class StaticEntityTest {
         DungeonManiaController newDungeon = new DungeonManiaController();
         DungeonResponse temp;
         DungeonResponse createNew = newDungeon.newGame("door", "Peaceful");
-        String playerId = getEntityId(new Position(1, 1), createNew);
+        String playerId = getEntityId(new Position(1, 1, 3), createNew);
         temp = newDungeon.tick(null, Direction.RIGHT);
         temp = newDungeon.tick(null, Direction.RIGHT);
-        assertTrue(isEntityOnTile(temp, new Position(3, 1), playerId));
+        assertTrue(isEntityOnTile(temp, new Position(3, 1, 3), playerId));
     }
     // Checks if the door is actually locked by moving towards the door without a key
     @Test
@@ -83,13 +82,13 @@ public class StaticEntityTest {
         DungeonManiaController newDungeon = new DungeonManiaController();
         DungeonResponse temp;
         DungeonResponse createNew = newDungeon.newGame("door", "Peaceful");
-        String playerId = getEntityId(new Position(1, 1), createNew);
+        String playerId = getEntityId(new Position(1, 1, 3), createNew);
         temp = newDungeon.tick(null, Direction.DOWN);
         temp = newDungeon.tick(null, Direction.RIGHT);
         temp = newDungeon.tick(null, Direction.RIGHT);
         temp = newDungeon.tick(null, Direction.RIGHT);
         temp = newDungeon.tick(null, Direction.UP);
-        assertTrue(isEntityOnTile(temp, new Position(3, 2), playerId));
+        assertTrue(isEntityOnTile(temp, new Position(3, 2, 3), playerId));
     }
     // Checks if the portal works with the player by moving the player into a portal and checking the location
     @Test
@@ -97,9 +96,9 @@ public class StaticEntityTest {
         DungeonManiaController newDungeon = new DungeonManiaController();
         DungeonResponse temp;
         DungeonResponse createNew = newDungeon.newGame("portals", "Peaceful");
-        String playerId = getEntityId(new Position(1, 1), createNew);
+        String playerId = getEntityId(new Position(1, 1, 3), createNew);
         temp = newDungeon.tick(null, Direction.RIGHT);
-        assertTrue(isEntityOnTile(temp, new Position(6, 1), playerId));
+        assertTrue(isEntityOnTile(temp, new Position(6, 1, 3), playerId));
     }
     // Tests if a zombie is spawned in the correct tick by checking if the mob is spawned
     @Test
@@ -122,9 +121,9 @@ public class StaticEntityTest {
         temp = newDungeon.tick(null, Direction.UP);
         temp = newDungeon.tick(null, Direction.UP);
         temp = newDungeon.tick(null, Direction.UP);
-        assertNotNull(getEntityId(new Position(3, 2), createNew));
-        String zombie = getEntityId(new Position(3, 2), createNew);
-        assertTrue(isEntityOnTile(temp, new Position(3, 2), zombie));
+        assertNotNull(getEntityId(new Position(3, 2, 3), createNew));
+        String zombie = getEntityId(new Position(3, 2, 3), createNew);
+        assertTrue(isEntityOnTile(temp, new Position(3, 2, 3), zombie));
     }
     // Tests if a player can destroy the zombie toast spawner
     @Test
@@ -133,16 +132,16 @@ public class StaticEntityTest {
         DungeonResponse temp;
         DungeonResponse createNew = newDungeon.newGame("zombie_toast_spawner", "Hard");
         temp = newDungeon.tick(null, Direction.RIGHT);
-        String spawner = getEntityId(new Position(3, 1), createNew);
+        String spawner = getEntityId(new Position(3, 1, 1), createNew);
         newDungeon.interact(spawner);
-        assertFalse(isEntityOnTile(temp, new Position(3, 1), spawner));
+        assertFalse(isEntityOnTile(temp, new Position(3, 1, 3), spawner));
     }
     // Tests if an exception is thrown if player is not in range of spawner
     @Test
     public void testNotInRangeException() {
         DungeonManiaController newDungeon = new DungeonManiaController();
         DungeonResponse createNew = newDungeon.newGame("zombie_toast_spawner", "Hard");
-        String spawner = getEntityId(new Position(3, 1), createNew);
+        String spawner = getEntityId(new Position(3, 1, 1), createNew);
         assertThrows(InvalidActionException.class, () -> newDungeon.interact(spawner));
     }
     // Tests if an exception is thrown if player tries to destroy spawner without a weapon
@@ -150,7 +149,7 @@ public class StaticEntityTest {
     public void testNoWeaponException() {
         DungeonManiaController newDungeon = new DungeonManiaController();
         DungeonResponse createNew = newDungeon.newGame("zombie_toast_spawner", "Hard");
-        String spawner = getEntityId(new Position(3, 1), createNew);
+        String spawner = getEntityId(new Position(3, 1, 1), createNew);
         newDungeon.tick(null, Direction.DOWN);
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);

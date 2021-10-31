@@ -165,10 +165,13 @@ public class DungeonManiaController {
                 }
             }
         }
-        // Remove dead entities from list after battle is finished
-        // Remove the entity from the map:
-        for (Entity e : removeEntity) {
-            gameMap.getMap().get(e.getPos()).remove(e);
+        if (!removeEntity.contains(null)) {
+            // Remove dead entities from list after battle is finished
+            // Remove the entity from the map:
+            for (Entity e : removeEntity) {
+                gameMap.getMap().get(e.getPos()).remove(e);
+            }
+
         }
 
 

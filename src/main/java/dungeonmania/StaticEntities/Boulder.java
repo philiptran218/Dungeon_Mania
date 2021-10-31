@@ -39,6 +39,8 @@ public class Boulder extends StaticEntity {
 
     /**
      * Pushes a boulder in a direction, updates map
+     * @param map
+     * @param direction
      */
     public void push(Map<Position, List<Entity>> map, Direction direction) {
         Position pos = super.getPos();
