@@ -48,12 +48,26 @@ public class ZombieToast extends MovingEntity {
         return null;
     }
 
+    public void move(Map<Position, List<Entity>> map) {
+        List<Entity> entities = map.get(super.getPlayerPos()).stream()
+                                                             .filter(e -> e.getType().equals("player"))
+                                                             .collect(Collectors.toList());
+        Player player = (Player) entities.get(0);
+
+        if (player.getInvincDuration() > 0 && !player.getBattle().getDifficulty().equals("Hard")) {
+            moveAway(map);
+        }
+        else {
+            moveNormal(map);
+        }
+    }
+
     /**
      * Moves the zombie in its tick phase. If the random direction choosen cannot
      * be passed by the zombie, the zombie does nothing
      * @param map
      */
-    public void move(Map<Position, List<Entity>> map) {
+    public void moveNormal(Map<Position, List<Entity>> map) {
         Direction direction  = Randomdirection();
         Position newPos = super.getPos().translateBy(direction);
         if (canPass(map, newPos)) {

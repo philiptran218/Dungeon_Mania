@@ -214,6 +214,10 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         this.battle = battle;
     }
 
+    public Battle getBattle() {
+        return battle;
+    }
+
     public List<Mercenary> getBribedMercenaries() {
         return bribedMercenaries;
     }
@@ -242,7 +246,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         if (invisDuration > 0) {
             battle.setBattleState(battle.getInvisibleState());
         }
-        else if (invincDuration > 0) {
+        else if (invincDuration > 0 && !battle.getDifficulty().equals("Hard")) {
             battle.setBattleState(battle.getInvincibleState());
         }
         else {
