@@ -57,10 +57,10 @@ public class GameMap {
         this.mapId = "" + System.currentTimeMillis();
         this.battle = new Battle(difficulty);
         this.dungeonMap = jsonToMap(jsonMap);
-        this.rootGoal = GoalHelper.getGoalPattern(jsonMap);
         this.setPlayerInventory(jsonMap);
         this.setObservers();
-        this.setGameState(difficulty);
+        this.gameState = MapHelper.createGameState(difficulty);
+        this.rootGoal = GoalHelper.getGoalPattern(jsonMap);
     }
 
     /**
@@ -68,22 +68,8 @@ public class GameMap {
      * @param name (String)
      */
     public GameMap(String name) {
-        this(getSavedMap(name).get("game-mode").getAsString(), getSavedMap(name).get("map-name").getAsString(), getSavedMap(name));
-    }
-
-    /**
-     * Given difficulty of the name as a string, set the state of 
-     * the game respectively.
-     * @param difficulty (String)
-     */
-    public void setGameState(String difficulty) {
-        if (difficulty.equals("Peaceful")) {
-            this.gameState = new PeacefulState();
-        } else if (difficulty.equals("Standard")) {
-            this.gameState = new StandardState();
-        } else {
-            this.gameState = new HardState();
-        }
+        this(MapHelper.getSavedMap(name).get("game-mode").getAsString(), 
+            MapHelper.getSavedMap(name).get("map-name").getAsString(), MapHelper.getSavedMap(name));
     }
     
     /**
@@ -141,20 +127,6 @@ public class GameMap {
     }
 
     /**
-     * Given the name of a saved file, attempts to look for the game
-     * and return it as a JsonObject
-     * @param name (String)
-     * @return JsonObject file of the saved game.
-     */
-    public static JsonObject getSavedMap(String name) {
-        try {
-            return JsonParser.parseReader(new FileReader("src\\main\\resources\\saved_games\\" + name + ".json")).getAsJsonObject();
-        } catch (Exception e) {
-            throw new IllegalArgumentException("File not found.");
-        }
-    }
-
-    /**
      * Takes the current map of the game and converts it to 
      * a json object.
      * @return JsonObject of the current state of the map.
@@ -203,46 +175,29 @@ public class GameMap {
     }
 
     /**
-     * Initialises the map given the width and the length with empty lists.
-     * @param width (int)
-     * @param height (int)
-     * @return Map<Position, List<Entity>> of all entities on the map.
-     */
-    public Map<Position, List<Entity>> createInitialisedMap(int width, int height) {
-        this.width = width;
-        this.height = height;
-        Map<Position, List<Entity>> map = new HashMap<>();
-        // Initialise everything on the map to empty list
-        for (int k = 0; k < 5; k++) {
-            for (int i = 0; i < width; i++) { // width
-                for (int j = 0; j < height; j++) { // height
-                    map.put(new Position(i, j, k), new ArrayList<Entity>());
-                }
-            }
-        }
-        return map;
-    }
-
-    /**
      * Takes in a json object, and turns it into a Map<Position, Entity>
      * and returns it.
      * @return Map<Position, List<Entity>> form of a map corresponding to jsonMap
      */
     public Map<Position, List<Entity>> jsonToMap(JsonObject jsonMap) {
         // Initialise the map:
-        Map<Position, List<Entity>> newMap = createInitialisedMap(jsonMap.get("width").getAsInt(), jsonMap.get("height").getAsInt());
+        this.width = jsonMap.get("width").getAsInt();
+        this.height = jsonMap.get("height").getAsInt();
+        Map<Position, List<Entity>> newMap = MapHelper.createInitialisedMap(width, height);
+        Integer i = 0;
         for (JsonElement entity : jsonMap.getAsJsonArray("entities")) {
             // Get all attributes:
             JsonObject obj = entity.getAsJsonObject();
             String type = obj.get("type").getAsString();
             Position pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
             // Create the entity object, by factory method
-            Entity temp = EntityFactory.getEntityObject("" + System.currentTimeMillis(), type, pos, obj.get("key"), this.battle);
+            Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, obj.get("key"), this.battle);
             // Set player on the map
             if (type.equals("player")) {
                 this.player = (Player) temp;
             }
             newMap.get(temp.getPos()).add(temp);
+            i++;
         }
         return newMap;
     }
