@@ -47,5 +47,9 @@ public class MercenaryAllyState implements MercenaryState{
 
         mercenary.setPreviousPlayerPos(playerPos);
     }
+
+    public void moveAway(Map<Position, List<Entity>> map) {
+        move(map);
+    }
     
 }

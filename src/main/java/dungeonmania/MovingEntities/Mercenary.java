@@ -40,7 +40,21 @@ public class Mercenary extends MovingEntity {
     }
 
     public void move(Map<Position, List<Entity>> map){
-        state.move(map);
+        
+        List<Entity> entities = map.get(super.getPlayerPos()).stream()
+                                                             .filter(e -> e.getType().equals("player"))
+                                                             .collect(Collectors.toList());
+        Player player = (Player) entities.get(0);
+        
+        if (player.getInvisDuration() > 0) {
+            return;
+        }
+        else if (player.getInvincDuration() > 0) {
+            state.moveAway(map);
+        }
+        else {
+            state.move(map);
+        }
     }
 
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
@@ -49,27 +63,6 @@ public class Mercenary extends MovingEntity {
 
     public void bribe() {
         this.state = allyState;
-    }
-    public void moveAway(Map<Position, List<Entity>> map) {
-        Position playerPos = this.getPlayerPos();
-        Position pos = super.getPos();
-        
-        List<Position> adjacentPos = pos.getAdjacentPositions();
-
-        List<Position> cardinallyAdjacentPos = adjacentPos.stream().filter(e -> Position.isCardinallyAdjacent(pos, e)).collect(Collectors.toList());
-        cardinallyAdjacentPos.add(pos);
-
-        int distance = Integer.MIN_VALUE;
-        Position newPos = pos;
-
-        for (Position tempPos: cardinallyAdjacentPos) {
-            if (Position.distance(playerPos, tempPos) > distance && this.canPass(map, tempPos)) {
-                newPos = tempPos;
-                distance = Position.distance(playerPos, tempPos);
-            }
-        }
-
-        this.moveToPos(map, new Position(newPos.getX(), newPos.getY(), 3));
     }
 
     public int getPrice() {
