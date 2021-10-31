@@ -1,6 +1,7 @@
 package dungeonmania;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -92,16 +93,25 @@ public class BattleTest {
         assertFalse(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
     }
 
+    // Tests that 
     @Test
     public void testZeroDurability() {
         DungeonManiaController newDungeon = new DungeonManiaController();
         newDungeon.newGame("mercenary_onslaught", "Hard");
+        DungeonResponse temp;
 
-
-        
-
-
-
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        temp = newDungeon.tick(null, Direction.RIGHT);
+        assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
+        temp = newDungeon.tick(null, Direction.RIGHT);
+        assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
+        temp = newDungeon.tick(null, Direction.RIGHT);
+        assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
+        temp = newDungeon.tick(null, Direction.RIGHT);
+        assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
+        temp = newDungeon.tick(null, Direction.RIGHT);
+        assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
     }
 
 }
