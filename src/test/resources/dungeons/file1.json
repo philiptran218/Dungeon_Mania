@@ -5,22 +5,13 @@
     "entities": [
       {
         "x": 0,
-        "y": 0,
-        "type": "wall"
-      },
-      {
-        "x": 1,
         "y": 1,
-        "type": "wall"
-      },
-      {
-        "x": 2,
-        "y": 2,
-        "type": "wall"
+        "type": "player"
       }
     ],
     "map-name" : "custom",
     "goal-condition": {
       "goal": "boulders"
-    }
+    },
+    "inventory": []
 }

@@ -59,6 +59,9 @@ test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
     ignoreFailures = true
+    tasks.withType(Test) {
+        maxParallelForks = 1
+    }
 }
 
 jacocoTestReport {

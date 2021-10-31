@@ -9,27 +9,18 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import dungeonmania.exceptions.InvalidActionException;
-import dungeonmania.response.models.DungeonResponse;
-
 import org.junit.jupiter.api.Test;
 
-import dungeonmania.exceptions.InvalidActionException;
 
-
-public class DungeonManiaControllerTest {
+public class GameTestsDMC {
     // Helper:
     public String getUnix() {
         return "" + System.currentTimeMillis();
     }
 
-    public void deleteSavedGames() {
-        DungeonManiaController d = new DungeonManiaController();
-        File file;
-        for (String s : d.allGames()) {
-            file = new File("src/main/resources/saved_games/" + s + ".json");
-            file.delete();
-        }
+    public void deleteSavedGames(String fileName) {
+        File file = new File("src/main/resources/saved_games/" + fileName + ".json");
+        file.delete();
     }
 
     // Test newGame:
@@ -58,26 +49,20 @@ public class DungeonManiaControllerTest {
         DungeonManiaController newDungeon = new DungeonManiaController();
         
         // Try invalid dungeon names and game modes
-        assertThrows(IllegalArgumentException.class, () -> newDungeon.newGame("Incorrect Dungeon Name", "Peaceful"));
+        assertThrows(IllegalArgumentException.class, () -> newDungeon.newGame("IncorrectDungeonName", "Peaceful"));
         assertThrows(IllegalArgumentException.class, () -> newDungeon.newGame("advanced", "Incorrect game mode"));
         assertThrows(IllegalArgumentException.class, () -> newDungeon.newGame("Incorrect", "Incorrect"));
     }
-
-    // Test saveGames:
+    
     @Test
-    public void testSavingOneGame() {
-        deleteSavedGames();
+    public void testSaveGame() throws InterruptedException {
         // Create dungeon controller
         DungeonManiaController newDungeon = new DungeonManiaController();
-
-        // Create a game and saving it:
-        assertDoesNotThrow(() ->  {
-            newDungeon.newGame("player_wall_interaction", "Peaceful");
-            newDungeon.saveGame(getUnix());
-            TimeUnit.SECONDS.sleep(1);
-        });
-        assertTrue(newDungeon.allGames().size() == 1);
-        deleteSavedGames();
+        // Create multiple games:
+        newDungeon.newGame("file1", "Peaceful");
+        newDungeon.saveGame("test");
+        Thread.sleep(3000);
+        deleteSavedGames("test");
     }
 
     // Test loadGame:
@@ -91,50 +76,15 @@ public class DungeonManiaControllerTest {
     }
 
     @Test
-    public void testLoadGame() {
-        // Create dungeon controller
-        deleteSavedGames();
+    public void testLoadGame() throws InterruptedException {
         DungeonManiaController newDungeon = new DungeonManiaController();
-
+        assertTrue(newDungeon.allGames().isEmpty());
         // Create, save, and loading the game
-        assertDoesNotThrow(() ->  {
-            newDungeon.newGame("advanced", "Peaceful");
-            newDungeon.saveGame("newgame");
-            newDungeon.loadGame("newgame");
-        });
+        newDungeon.newGame("advanced", "Peaceful");
+        newDungeon.saveGame("test_loading");
+        Thread.sleep(3000);
+        newDungeon.loadGame("test_loading");
+        deleteSavedGames("test_loading");
     }
 
-    @Test
-    public void testGetAllGamesFunctionForEmptyController() {
-        // Create dungeon controller
-        DungeonManiaController newDungeon = new DungeonManiaController();
-
-        // Attempt to get the list of all games
-        assertEquals(newDungeon.allGames().size(), 0);
-    }
-
-    @Test
-    public void testGetAllGamesFunctionForMultipleSavedGames() {
-        // Create dungeon controller
-        deleteSavedGames();
-        DungeonManiaController newDungeon = new DungeonManiaController();
-
-        // Create multiple games:
-        assertDoesNotThrow(() ->  {
-            DungeonResponse game1 = newDungeon.newGame("advanced", "Peaceful");
-            newDungeon.saveGame(game1.getDungeonId());
-
-            DungeonResponse game2 = newDungeon.newGame("advanced", "Peaceful");
-            newDungeon.saveGame(game2.getDungeonId());
-            TimeUnit.SECONDS.sleep(1);
-        });
-        
-        // Check if there are indeed two games saved:
-        assertEquals(newDungeon.allGames().size(), 2);
-    }
-
-    @Test
-    public void testDelete() {
-        deleteSavedGames();
-    }
 }
