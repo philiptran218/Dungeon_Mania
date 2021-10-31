@@ -2,6 +2,8 @@ package dungeonmania;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
+
 import org.junit.jupiter.api.Test;
 
 import dungeonmania.response.models.DungeonResponse;
@@ -30,6 +32,23 @@ public class GoalTest {
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
         DungeonResponse tmp = controller.newGame("simpleExit", "Peaceful");
+        assertTrue(":exit".equals(tmp.getGoals()));
+        for (int i = 0; i < 3; i++) {
+            tmp = controller.tick(null, Direction.RIGHT);
+        }
+        assertTrue("".equals(tmp.getGoals()));
+    }
+
+    /**
+     * Test getting to exit with zombie in the way.
+     */
+    @Test
+    public void testExitWithZombieGoal() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("zombiesCoverExit", "Peaceful");
+        System.out.println(tmp.getGoals());
         assertTrue(":exit".equals(tmp.getGoals()));
         for (int i = 0; i < 3; i++) {
             tmp = controller.tick(null, Direction.RIGHT);
@@ -197,10 +216,29 @@ public class GoalTest {
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
         DungeonResponse tmp = controller.newGame("simpleTreasureAND(BouldersORExit)", "Peaceful");
-        System.out.println(tmp.getGoals());
         assertTrue(":treasure AND :boulders OR :exit".equals(tmp.getGoals()));
         tmp = controller.tick(null, Direction.RIGHT);
         tmp = controller.tick(null, Direction.DOWN);
         assertTrue("".equals(tmp.getGoals()));
+    }
+
+    /**
+     * Test saving and loading
+     * @throws InterruptedException
+     */
+    @Test
+    public void SaveGoalPass() throws InterruptedException {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("simpleTreasureAND(BouldersORExit)", "Peaceful");
+        assertTrue(":treasure AND :boulders OR :exit".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.RIGHT);
+        tmp = controller.saveGame("simpleTreasureAND(BouldersORExit)");
+        Thread.sleep(3000);
+        tmp = controller.loadGame("simpleTreasureAND(BouldersORExit)");
+        assertTrue(":boulders OR :exit".equals(tmp.getGoals()));
+        File file = new File("src/main/resources/saved_games/simpleTreasureAND(BouldersORExit).json");
+        file.delete();
     }
 }

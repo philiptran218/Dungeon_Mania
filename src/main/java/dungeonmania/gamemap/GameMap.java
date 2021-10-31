@@ -213,6 +213,8 @@ public class GameMap {
                     temp.put("key", ((Key) e).getKeyId());
                 } else if (e.getType().equals("door")) {
                     temp.put("key", ((Door) e).getKeyId());
+                }else if (e.getType().equals("portal")) {
+                    temp.put("key", ((Portal) e).getPortalId());
                 }
                 entities.put(temp);
             }

@@ -225,6 +225,7 @@ public class MovingEntityTest {
     // ************************************************************ \\ 
     //               Test for Zombie Basic Movements
     // ************************************************************ \\ 
+    
     @Test
     public void testNormalZombieMovement () {
         // Create controller
@@ -234,8 +235,23 @@ public class MovingEntityTest {
         // Get id of player:
         String zombieId = getEntityId(new Position(2, 2, 3), temp);
         temp = controller.tick(null, Direction.UP);
-        assertTrue(isEntityOnTile(temp, new Position(2, 1), zombieId) || isEntityOnTile(temp, new Position(1, 2), zombieId));
-        
+        assertTrue(isEntityOnTile(temp, new Position(2, 1), zombieId) 
+                                    || isEntityOnTile(temp, new Position(1, 2), zombieId)
+                                    || isEntityOnTile(temp, new Position(2, 2), zombieId));  
+    }
+
+    @Test
+    public void testBiggerZombieMovement () {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse temp = controller.newGame("zombieMovementBigger", "Standard");
+        // Get id of player:
+        String zombieId = getEntityId(new Position(2, 2, 3), temp);
+        temp = controller.tick(null, Direction.UP);
+        assertTrue(isEntityOnTile(temp, new Position(2, 1), zombieId) 
+                                    || isEntityOnTile(temp, new Position(1, 2), zombieId)
+                                    || isEntityOnTile(temp, new Position(2, 2), zombieId)); 
     }
     // ************************************************************ \\ 
     //               Test for Mercenary Basic Movements
