@@ -1,0 +1,33 @@
+{
+    "width": 3,
+    "height": 3,
+    "entities": [
+      {
+        "x": 0,
+        "y": 0,
+        "type": "player"
+      },
+      {
+        "x": 1,
+        "y": 1,
+        "key": 1,
+        "type": "key"
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "type": "exit"
+      },
+      {
+        "x": 1,
+        "y": 0,
+        "key": 1,
+        "type": "door"
+      }
+    ],
+    "map-name" : "custom",
+    "goal-condition": {
+      "goal": "exit"
+    },
+    "inventory": []
+}

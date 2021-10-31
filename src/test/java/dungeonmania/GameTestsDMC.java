@@ -75,16 +75,4 @@ public class GameTestsDMC {
         assertThrows(IllegalArgumentException.class, () -> newDungeon.loadGame("non existent game"));
     }
 
-    @Test
-    public void testLoadGame() throws InterruptedException {
-        DungeonManiaController newDungeon = new DungeonManiaController();
-        assertTrue(newDungeon.allGames().isEmpty());
-        // Create, save, and loading the game
-        newDungeon.newGame("advanced", "Peaceful");
-        newDungeon.saveGame("test_loading");
-        Thread.sleep(3000);
-        newDungeon.loadGame("test_loading");
-        deleteSavedGames("test_loading");
-    }
-
 }
