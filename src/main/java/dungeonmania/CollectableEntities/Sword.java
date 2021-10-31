@@ -5,9 +5,8 @@ import dungeonmania.util.Position;
 
 public class Sword extends CombatItems {
 
-    private static final double DAMAGE = 10;
-    // Leave at 20 for now, change it later
-    private static final int INITIAL_DURABILITY = 20;
+    private static final double DAMAGE = 1;
+    private static final int INITIAL_DURABILITY = 10;
     private int durability;
     
     /**
