@@ -51,7 +51,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
             Boulder boulder = (Boulder) map.get(newPos.asLayer(1)).get(0);
             boulder.push(map, direction);
             moveInDir(map, direction);
-        } else if (map.get(doorLayer).get(0) != null && map.get(doorLayer).get(0).getType().equals("door")) {
+        } else if (!map.get(doorLayer).isEmpty() && map.get(doorLayer).get(0).getType().equals("door")) {
             Entity e = map.get(doorLayer).get(0);
             // Check if the door and key matches:
             int keyId = ((Door) e).getKeyId();
@@ -73,7 +73,12 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     }
 
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
-        return map.get(pos.asLayer(1)).isEmpty();
+        List<Entity> entities = map.get(pos.asLayer(4));
+        if (entities.size() == 1) {
+            return entities.get(0).getType().equals("door_unlocked");
+        } else {
+            return map.get(pos.asLayer(1)).isEmpty();
+        }
     }
 
     public boolean canPush(Map<Position, List<Entity>> map, Position pos, Direction direction) {
@@ -86,8 +91,8 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     }
 
     public boolean canTeleport(Map<Position, List<Entity>> map, Position pos, Direction direction) {
-        List<Entity> entities = map.get(pos.asLayer(0));
-        if (entities == null) {
+        List<Entity> entities = map.get(pos.asLayer(4));
+        if (entities.size() == 0) {
             // Player not on portal
             return false;
         }
