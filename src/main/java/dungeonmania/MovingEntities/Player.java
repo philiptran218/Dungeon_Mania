@@ -124,7 +124,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
             return false;
         }
         Entity e = entities.get(0);
-        if (e.getType().equals("portal")) {
+        if (e instanceof Portal) {
             // Is a portal, check if exiting position of exit portal can be exited from by the player
             Position exitPos = ((Portal) e).getTeleportPos(map, direction);
             return this.canPass(map, exitPos.asLayer(3));

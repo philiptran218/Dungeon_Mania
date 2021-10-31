@@ -194,7 +194,7 @@ public class GameMap {
                 temp.put("y", entry.getKey().getY());
 
                 if (e instanceof Portal) {
-                    temp.put("Colour", ((Portal) e).getType());
+                    temp.put("colour", ((Portal) e).getType());
                     temp.put("type", "portal");
                 } else {
                     temp.put("type", e.getType());
