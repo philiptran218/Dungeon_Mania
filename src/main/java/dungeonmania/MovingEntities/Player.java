@@ -39,15 +39,16 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     public void move(Map<Position, List<Entity>> map) {
 
     }
+
     public void move(Map<Position, List<Entity>> map, Direction direction) {
         Position newPos = super.getPos().translateBy(direction);    
-        Position doorLayer = new Position(newPos.getX(), newPos.getY(), 1);
+        Position doorLayer = newPos.asLayer(1);
 
         if (canPass(map, newPos)) {
             moveInDir(map, direction);
         } else if (canPush(map, newPos, direction)) {   
             // Player can move, but pushes a boulder
-            Boulder boulder = (Boulder) map.get(new Position(newPos.getX(), newPos.getY(), 1)).get(0);
+            Boulder boulder = (Boulder) map.get(newPos.asLayer(1)).get(0);
             boulder.push(map, direction);
             moveInDir(map, direction);
         } else if (map.get(doorLayer).get(0) != null && map.get(doorLayer).get(0).getType().equals("door")) {
@@ -62,6 +63,9 @@ public class Player extends MovingEntity implements MovingEntitySubject {
                 map.get(doorLayer).remove(e);
                 moveInDir(map, direction);
             }
+        } else if (canTeleport(map, newPos, direction)) {
+            Portal portal = (Portal) map.get(newPos.asLayer(4)).get(0);
+            portal.teleport(map, this, direction);
         }
 
         pickUp(map);
@@ -69,14 +73,29 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     }
 
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
-        return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty();
+        return map.get(pos.asLayer(1)).isEmpty();
     }
 
     public boolean canPush(Map<Position, List<Entity>> map, Position pos, Direction direction) {
         if (super.isPassingBoulder(map, pos)) {
             // Has boulder
-            Boulder boulder = (Boulder) map.get(new Position(pos.getX(), pos.getY(), 1)).get(0);
+            Boulder boulder = (Boulder) map.get(pos.asLayer(1)).get(0);
             return boulder.canBePushed(map, direction);
+        }
+        return false;
+    }
+
+    public boolean canTeleport(Map<Position, List<Entity>> map, Position pos, Direction direction) {
+        List<Entity> entities = map.get(pos.asLayer(0));
+        if (entities == null) {
+            // Player not on portal
+            return false;
+        }
+        Entity e = entities.get(0);
+        if (e.getType().equals("portal")) {
+            // Is a portal, check if exiting position of exit portal can be exited from by the player
+            Position exitPos = ((Portal) e).getTeleportPos(map, direction);
+            return this.canPass(map, exitPos.asLayer(3));
         }
         return false;
     }
