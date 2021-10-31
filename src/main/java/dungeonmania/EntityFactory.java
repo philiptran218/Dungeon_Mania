@@ -29,7 +29,7 @@ public class EntityFactory {
             case "door": 
                 return new Door(id, type, staticPos, keyId.getAsInt());
             case "portal": 
-                return new Portal(id, type, otherPos);
+                return new Portal(id, type, otherPos,keyId.getAsInt());
             case "zombie_toast_spawner": 
                 return new ZombieToastSpawner(id, type, staticPos);
             case "spider": 
