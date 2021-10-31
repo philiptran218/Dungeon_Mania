@@ -35,9 +35,15 @@ public class BattleTest {
     // Testing no weapon combat against a spider
     @Test
     public void basicBattle() {
-        
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("spider", "Hard");
 
-
+        newDungeon.tick(null, Direction.UP);
+        newDungeon.tick(null, Direction.UP);
+        newDungeon.tick(null, Direction.UP);
+        // Should kill the spider in combat
+        DungeonResponse temp = newDungeon.tick(null, Direction.RIGHT);
+        assertFalse(temp.getEntities().stream().anyMatch(e -> e.getType().equals("spider")));
     }
 
     // Tests using buildable weapons to kill a mercenary
@@ -60,9 +66,5 @@ public class BattleTest {
         DungeonResponse temp = newDungeon.tick(null, Direction.RIGHT);
         assertFalse(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
     }
-
-
-
-
 
 }
