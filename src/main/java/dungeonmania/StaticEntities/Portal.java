@@ -26,7 +26,7 @@ public class Portal extends StaticEntity {
 
 
     public void teleport(Map<Position, List<Entity>> map, MovingEntity entity, Direction direction) {
-        Position newPos = teleportPos.translateBy(direction).asLayer(3);
+        Position newPos = teleportPos.asLayer(3);
         entity.moveToPos(map, newPos);
     }
 
