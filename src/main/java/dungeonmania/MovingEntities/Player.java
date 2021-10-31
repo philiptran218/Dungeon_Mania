@@ -21,6 +21,7 @@ import dungeonmania.StaticEntities.StaticEntity;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.StaticEntities.ZombieToastSpawner;
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.response.models.ItemResponse;
 
 
 public class Player extends MovingEntity implements MovingEntitySubject {
@@ -197,6 +198,19 @@ public class Player extends MovingEntity implements MovingEntitySubject {
      */
     public List<CollectableEntity> getInventoryList() {
         return inventory.getInventory();
+    }
+    
+    /**
+     * Converts the player's inventory into a list of item response.
+     * @return List<ItemResponse> List of ItemResponse.
+     */
+    public List<ItemResponse> getInventoryResponse() {
+        List<ItemResponse> itemResponse = new ArrayList<>();
+        // Loop through the player and adds his items to the lists
+        for (CollectableEntity c : inventory.getInventory()) {
+            itemResponse.add(new ItemResponse(c.getId(), c.getType()));
+        }
+        return itemResponse;
     }
 
     /**
