@@ -144,6 +144,8 @@ public class DungeonManiaController {
             // Otherwise player can use the item
             gameMap.getPlayer().getInventory().getItemById(itemUsed).use();
         }
+        // Ticks the duration of any active potions
+        gameMap.getPlayer().tickPotions();
         
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
@@ -167,10 +169,13 @@ public class DungeonManiaController {
                 }
             }
         }
-        // Remove dead entities from list after battle is finished
-        // Remove the entity from the map:
-        for (Entity e : removeEntity) {
-            gameMap.getMap().get(e.getPos()).remove(e);
+        if (!removeEntity.contains(null)) {
+            // Remove dead entities from list after battle is finished
+            // Remove the entity from the map:
+            for (Entity e : removeEntity) {
+                gameMap.getMap().get(e.getPos()).remove(e);
+            }
+
         }
 
 
