@@ -80,11 +80,6 @@ public class Portal extends StaticEntity {
         }
     }
 
-    // List of all colours of the portal:
-    public static List<String> portalCOlours() {
-        return Arrays.asList("BLUE", "RED", "YELLOW", "GREY");
-    }
-
     /**
      * Getter for teleportPos
      * @return where the portal leads to 
@@ -93,7 +88,7 @@ public class Portal extends StaticEntity {
         for (Position keys : map.keySet()) {
             if (map.get(keys).size() == 1) {
                 Entity entity = map.get(keys).get(0);
-                if (entity.getType().equals("portal") && ((Portal) entity).getPortalId() == portalId && !this.getPos().equals(entity.getPos())) {
+                if (entity instanceof Portal && ((Portal) entity).getPortalId() == portalId && !this.getPos().equals(entity.getPos())) {
                     // Other portal
                     this.teleportPos = entity.getPos().translateBy(direction);
                     return entity.getPos().translateBy(direction);
