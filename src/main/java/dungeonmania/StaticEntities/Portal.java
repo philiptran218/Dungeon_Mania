@@ -1,5 +1,6 @@
 package dungeonmania.StaticEntities;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,7 @@ public class Portal extends StaticEntity {
     public Portal(String id, String type, Position pos, int portalId) {
         super(id, type, pos);
         this.portalId = portalId;
+        setType(getPortalColour(portalId));
     }
 
 
@@ -40,6 +42,48 @@ public class Portal extends StaticEntity {
         this.otherPortal = otherPortal;
     }
 
+    /**
+     * Set the colour of the portal:
+     * 1 --> Blue
+     * 2 --> Red
+     * 3 --> Yellow
+     * 4 --> Grey
+     * @param id
+     */
+    public static String getPortalColour(int id) {
+        switch (id) {
+            case 1:
+                return "BLUE";
+            case 2:
+                return "RED";
+            case 3:
+                return "YELLOW";
+            case 4:
+                return "GREY";
+            default: 
+                return null;
+        }
+    }
+
+    public static int colourToId(String colour) {
+        switch (colour) {
+            case "BLUE":
+                return 1;
+            case "RED":
+                return 2;
+            case "YELLOW":
+                return 3;
+            case "GREY":
+                return 4;
+            default: 
+                return 0;
+        }
+    }
+
+    // List of all colours of the portal:
+    public static List<String> portalCOlours() {
+        return Arrays.asList("BLUE", "RED", "YELLOW", "GREY");
+    }
 
     /**
      * Getter for teleportPos
