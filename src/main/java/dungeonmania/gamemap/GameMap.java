@@ -212,6 +212,7 @@ public class GameMap {
         this.width = width;
         this.height = height;
         Map<Position, List<Entity>> map = new HashMap<>();
+        // Initialise everything on the map to empty list
         for (int k = 0; k < 5; k++) {
             for (int i = 0; i < width; i++) { // width
                 for (int j = 0; j < height; j++) { // height
@@ -343,9 +344,9 @@ public class GameMap {
         }
     }
 
-    // ****************************************************\\
-    //                 Getter and setters:                 \\
-    // ****************************************************\\
+    // *************************************************************************************\\
+    //                                  Getter and setters:                                 \\
+    // *************************************************************************************\\
 
     public Player getPlayer() {
         return this.player; 
