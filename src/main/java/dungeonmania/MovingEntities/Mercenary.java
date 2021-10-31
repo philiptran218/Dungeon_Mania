@@ -1,15 +1,12 @@
 package dungeonmania.MovingEntities;
 
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
+import java.util.List;
 import java.util.stream.Collectors;
+import java.util.concurrent.ThreadLocalRandom;
 
-import dungeonmania.util.Position;
-import dungeonmania.util.Direction;
 import dungeonmania.Entity;
+import dungeonmania.util.Position;
 import dungeonmania.CollectableEntities.Armour;
 
 
@@ -17,11 +14,17 @@ public class Mercenary extends MovingEntity {
     private MercenaryState enemyState;
     private MercenaryState allyState;
     private MercenaryState state;
+    private Position previousPlayerPos;
     private Armour armour;
     private int price = 1;
-    private Position previousPlayerPos;
-
     private int battleRadius = 3;
+
+    /**
+     * Constructor for mercenary.
+     * @param id
+     * @param type
+     * @param pos
+     */
     public Mercenary(String id, String type, Position pos) {
         super(id, type, pos, 15, 2);
         this.enemyState = new MercenaryEnemyState(this);
@@ -30,6 +33,14 @@ public class Mercenary extends MovingEntity {
         this.armour = generateArmour();
     }
 
+    // ********************************************************************************************\\
+    //                                         Functions                                           \\
+    // ********************************************************************************************\\
+
+    /**
+     * Randomly generates amour.
+     * @return New object armour, else null.
+     */
     public Armour generateArmour() {
         int num = ThreadLocalRandom.current().nextInt(0,10);
         // num = 0,1,2,3,4,5,6,7,8,9
@@ -41,13 +52,18 @@ public class Mercenary extends MovingEntity {
         return null;
     }
 
+    /**
+     * Automatic movement of mecernary around the map tracking 
+     * the player.
+     */
     public void move(Map<Position, List<Entity>> map){
-        
+        // Entity list to add all entities with respect to player.
         List<Entity> entities = map.get(super.getPlayerPos()).stream()
                                                              .filter(e -> e.getType().equals("player"))
                                                              .collect(Collectors.toList());
         Player player = (Player) entities.get(0);
         
+        // Movement based on potion consumption
         if (player.getInvisDuration() > 0) {
             return;
         }
@@ -59,32 +75,47 @@ public class Mercenary extends MovingEntity {
         }
     }
 
+    /**
+     * Checks is the mecenary can pass a certain position.
+     */
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
         return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty();    
     }
 
+    /**
+     * Changing the state of the mecenary to ally.
+     */
     public void bribe() {
         this.state = allyState;
     }
 
-    public int getPrice() {
-        return price;
-    }
-
+    /**
+     * Checks the state of the ally.
+     * @return
+     */
     public boolean isAlly() {
         return state.equals(allyState);
     }
 
+    /**
+     * Checks if the mercenary owns armour
+     * @return True is mecenary has armour, false otherwise.
+     */
     public boolean hasArmour() {
         return this.armour != null;
     }
-    public Armour getArmour() {
-        Armour armour = this.armour;
-        return armour;
-    }
+
+    // ********************************************************************************************\\
+    //                                   Getter and setters:                                       \\
+    // ********************************************************************************************\\
 
     public void setArmour(Armour armour) {
         this.armour = armour;
+    }
+
+    public Armour getArmour() {
+        Armour armour = this.armour;
+        return armour;
     }
 
     public int getBattleRadius() {
@@ -99,6 +130,8 @@ public class Mercenary extends MovingEntity {
         this.previousPlayerPos = previousPlayerPos;
     }
 
-    
+    public int getPrice() {
+        return price;
+    }
 }
 

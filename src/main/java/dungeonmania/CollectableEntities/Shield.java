@@ -1,6 +1,5 @@
 package dungeonmania.CollectableEntities;
 
-import dungeonmania.MovingEntities.Player;
 import dungeonmania.util.Position;
 
 public class Shield extends CombatItems {
@@ -18,19 +17,6 @@ public class Shield extends CombatItems {
     public Shield(String id, String type, Position pos) {
         super(id, type, pos);
         this.setDurability(INITIAL_DURABILITY);
-    }
-
-    // Getters and Setters
-    public void setDurability(int num) {
-        durability = num;
-    }
-    
-    public int getDurability() {
-        return durability;
-    }
-
-    public double getReduceDamage() {
-        return REDUCE_DAMAGE;
     }
 
     /**
@@ -58,10 +44,29 @@ public class Shield extends CombatItems {
         return REDUCE_DAMAGE;
     }
 
+    /**
+     * Check the durability of the armour and if durability is zero 
+     * remove it from the inventory.
+     */
     public void checkNoDurability() {
         if (durability == 0) {
             getPlayer().getInventoryList().remove((CollectableEntity)this);
         }
     }
 
+    // ********************************************************************************************\\
+    //                                    Getters and Setters                                      \\
+    // ********************************************************************************************\\
+
+    public void setDurability(int num) {
+        durability = num;
+    }
+    
+    public int getDurability() {
+        return durability;
+    }
+
+    public double getReduceDamage() {
+        return REDUCE_DAMAGE;
+    }
 }

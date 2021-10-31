@@ -1,7 +1,5 @@
 package dungeonmania.CollectableEntities;
 
-import dungeonmania.Battles.Battle;
-import dungeonmania.MovingEntities.Player;
 import dungeonmania.util.Position;
 
 public class InvisibilityPotion extends Potion {

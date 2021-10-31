@@ -4,43 +4,53 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.event.SwingPropertyChangeSupport;
-
-import org.json.JSONObject;
-
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
+
 import dungeonmania.Entity;
-import dungeonmania.EntityFactory;
 import dungeonmania.Inventory;
 import dungeonmania.Battles.Battle;
-import dungeonmania.CollectableEntities.CollectableEntity;
-import dungeonmania.CollectableEntities.Treasure;
-import dungeonmania.StaticEntities.Boulder;
-import dungeonmania.StaticEntities.StaticEntity;
+
+import dungeonmania.CollectableEntities.*;
 import dungeonmania.StaticEntities.*;
-import dungeonmania.StaticEntities.ZombieToastSpawner;
+
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.ItemResponse;
 
 
 public class Player extends MovingEntity implements MovingEntitySubject {
     private List<MovingEntityObserver> listObservers = new ArrayList<MovingEntityObserver>();
-    private Inventory inventory = new Inventory(this);
     private List<Mercenary> bribedMercenaries = new ArrayList<Mercenary>();
+    private Inventory inventory = new Inventory(this);
+    private Battle battle;
     private int invisDuration = 0;
     private int invincDuration = 0;
-    private Battle battle;
 
+    /**
+     * Constructor for the player.
+     * @param id
+     * @param type
+     * @param pos
+     * @param battle
+     */
     public Player(String id, String type, Position pos, Battle battle){
         super(id, type, pos, 20, 2);
         this.setBattle(battle);
     }
 
-    public void move(Map<Position, List<Entity>> map) {
+    // ********************************************************************************************\\
+    //                                         Functions                                           \\
+    // ********************************************************************************************\\
 
-    }
+    // Polymorphism
+    public void move(Map<Position, List<Entity>> map) {}
 
+    /**
+     * Given a direction to move in, the player moves in that direction. Checks 
+     * if the player can move on that position.
+     * @param map
+     * @param direction
+     */
     public void move(Map<Position, List<Entity>> map, Direction direction) {
         Position newPos = super.getPos().translateBy(direction);    
         Position doorLayer = newPos.asLayer(1);
@@ -73,6 +83,10 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         notifyObservers();
     }
 
+    /**
+     * Checks if the player can step onto a give position.
+     * @return True is the player can go onto the new position, false otherwise.
+     */
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
         List<Entity> entities = map.get(pos.asLayer(4));
         if (entities.size() == 1) {
@@ -82,6 +96,13 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         }
     }
 
+    /**
+     * Checks if the player can push the entity infront.
+     * @param map
+     * @param pos
+     * @param direction
+     * @return True if can push, false otherwise.
+     */
     public boolean canPush(Map<Position, List<Entity>> map, Position pos, Direction direction) {
         if (super.isPassingBoulder(map, pos)) {
             // Has boulder
@@ -91,6 +112,9 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         return false;
     }
 
+    /**
+     * Checks if the player is able to walk through the teleportor.
+     */
     public boolean canTeleport(Map<Position, List<Entity>> map, Position pos, Direction direction) {
         List<Entity> entities = map.get(pos.asLayer(4));
         if (entities.size() == 0) {
@@ -166,6 +190,13 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     
     }
 
+    /**
+     * Player attacks a designated spawner on the map and the function 
+     * checks if the player can destroy the spawner or not.
+     * checks 
+     * @param map
+     * @param spawner
+     */
     public void attackZombieSpawner(Map<Position, List<Entity>> map, ZombieToastSpawner spawner) {
         Position pos = super.getPos();
         Position spawnerPos = spawner.getPos();
@@ -185,11 +216,6 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         } else {
             throw new InvalidActionException("player does not have a weapon");
         }
-    }
-
-
-    public Inventory getInventory() {
-        return inventory;
     }
 
     /**
@@ -233,6 +259,11 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         return inventory.getItem(item);
     }
 
+    /**
+     * Looks through the inventory of the defeated enermy, and collects armour 
+     * if the body has it.
+     * @param deadBody
+     */
     public void lootBody(MovingEntity deadBody) {
         if (deadBody.hasArmour()) {
             // Take armour from the dead body
@@ -244,35 +275,16 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         }
     }
     
+    /**
+     * Helper function not for player.
+     */
     public boolean hasArmour() {
         return false;
     }
 
-    public void setBattle(Battle battle) {
-        this.battle = battle;
-    }
-
-    public Battle getBattle() {
-        return battle;
-    }
-
-    public List<Mercenary> getBribedMercenaries() {
-        return bribedMercenaries;
-    }
-
-    public void setInvisDuration(int time) {
-        invisDuration = time;
-    }
-    public int getInvisDuration() {
-        return invisDuration;
-    }
-    public void setInvincDuration(int time) {
-        invincDuration = time;
-    }
-    public int getInvincDuration() {
-        return invincDuration;
-    }
-
+    /**
+     * Ticks the time that a potion has been in use for.
+     */
     public void tickPotions() {
         if (invincDuration > 0) {
             invincDuration--;
@@ -292,8 +304,18 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
-    // Observer Pattern
+    /**
+     * Returns a list of bribed meercenaries.
+     * @return List<Mercenary> List of bribed mecernaries.
+     */
+    public List<Mercenary> getBribedMercenaries() {
+        return bribedMercenaries;
+    }
+
+    // ********************************************************************************************\\
+    //                                     Observer Pattern                                        \\
+    // ********************************************************************************************\\
+
     @Override
     public void registerObserver(MovingEntityObserver o) {
         if(! listObservers.contains(o)) {
@@ -310,6 +332,35 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         for (MovingEntityObserver obs: listObservers) {
             obs.update(this);
         }        
+    }
+
+    // ********************************************************************************************\\
+    //                                   Getter and setters:                                       \\
+    // ********************************************************************************************\\
+
+    public void setInvisDuration(int time) {
+        invisDuration = time;
+    }
+    public int getInvisDuration() {
+        return invisDuration;
+    }
+    public void setInvincDuration(int time) {
+        invincDuration = time;
+    }
+    public int getInvincDuration() {
+        return invincDuration;
+    }
+
+    public void setBattle(Battle battle) {
+        this.battle = battle;
+    }
+
+    public Battle getBattle() {
+        return battle;
+    }
+
+    public Inventory getInventory() {
+        return inventory;
     }
 
 }
