@@ -43,6 +43,11 @@ public class EntityFactory {
             case "health_potion": 
                 return new HealthPotion(id, type, collectPos);
             case "key":
+                System.out.println(id);
+                System.out.println(type);
+                System.out.println(collectPos);
+                System.out.println(keyId);
+
                 return new Key(id, type, collectPos, keyId.getAsInt());
             case "invincibility_potion": 
                 return new InvincibilityPotion(id, type, collectPos);

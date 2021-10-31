@@ -128,13 +128,13 @@ public class StaticEntityTest {
     @Test
     public void testInteractionZombieSpawner() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse temp;
-        DungeonResponse createNew = newDungeon.newGame("zombie_toast_spawner", "Hard");
+        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawner", "Hard");
         temp = newDungeon.tick(null, Direction.RIGHT);
-        String spawner = getEntityId(new Position(3, 1, 1), createNew);
-        newDungeon.interact(spawner);
-        assertFalse(isEntityOnTile(temp, new Position(3, 1, 3), spawner));
+        String spawner = getEntityId(new Position(3, 1, 1), temp);
+        temp = newDungeon.interact(spawner);
+        assertFalse(isEntityOnTile(temp, new Position(3, 1, 1), spawner));
     }
+
     // Tests if an exception is thrown if player is not in range of spawner
     @Test
     public void testNotInRangeException() {
