@@ -80,11 +80,6 @@ public class Portal extends StaticEntity {
         }
     }
 
-    // List of all colours of the portal:
-    public static List<String> portalCOlours() {
-        return Arrays.asList("BLUE", "RED", "YELLOW", "GREY");
-    }
-
     /**
      * Getter for teleportPos
      * @return where the portal leads to 
