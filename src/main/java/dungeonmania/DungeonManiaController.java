@@ -238,4 +238,8 @@ public class DungeonManiaController {
         }
         return returnDungeonResponse();
     }
+    public static void main(String[] args) {
+        DungeonManiaController d = new DungeonManiaController();
+        System.out.println(d.allGames().contains("test"));
+    }
 }
