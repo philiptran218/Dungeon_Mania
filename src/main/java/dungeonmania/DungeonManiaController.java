@@ -79,7 +79,7 @@ public class DungeonManiaController {
     public JsonObject getJsonFile(String fileName) {
         // "src\\main\\resources\\dungeons\\" + dungeonName + ".json"
         try {
-            return JsonParser.parseReader(new FileReader("src\\test\\resources\\dungeons\\" + "simpleAllGoals" + ".json")).getAsJsonObject();
+            return JsonParser.parseReader(new FileReader("src\\main\\resources\\dungeons\\" + fileName + ".json")).getAsJsonObject();
         } catch (Exception e) {
             try {
                 return JsonParser.parseReader(new FileReader("src\\test\\resources\\dungeons\\" + fileName + ".json")).getAsJsonObject();
