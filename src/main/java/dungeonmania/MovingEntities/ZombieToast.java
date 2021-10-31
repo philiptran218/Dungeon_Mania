@@ -17,16 +17,19 @@ public class ZombieToast extends MovingEntity {
 
     public ZombieToast(String id, String type, Position pos) {
         super(id, type, pos, 4, 4);
-        //this.armour = generateArmour();
+        this.armour = generateArmour();
 
     }
 
-    public boolean generateArmour() {
+    public Armour generateArmour() {
         int num = ThreadLocalRandom.current().nextInt(0,10);
         // num = 0,1,2,3,4,5,6,7,8,9
 
         // 30% chance that zombie spawns with armour
-        return num >= 7;
+        if (num >= 7) {
+            return new Armour("" + System.currentTimeMillis(), "armour", null);
+        }
+        return null;
     }
 
     public Direction Randomdirection() {
