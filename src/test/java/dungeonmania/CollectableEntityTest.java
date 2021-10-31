@@ -89,6 +89,32 @@ public class CollectableEntityTest {
     // Condition: should not appear in player's inventory
     @Test
     public void testUsedCollectable() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("player_pickup_item", "Peaceful");
+
+        DungeonResponse temp = newDungeon.tick(null, Direction.RIGHT);
+
+        String healthId = getEntityId(new Position(2, 2, 2), temp);
+        String invincibleId = getEntityId(new Position(1, 2, 2), temp);
+        String invisibleId = getEntityId(new Position(1, 3, 2), temp);
+        String bombId = getEntityId(new Position(2, 3, 2), temp);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.DOWN);
+        newDungeon.tick(null, Direction.LEFT);
+        newDungeon.tick(null, Direction.LEFT);
+        newDungeon.tick(null, Direction.LEFT);
+        newDungeon.tick(null, Direction.DOWN);
+        temp = newDungeon.tick(null, Direction.RIGHT);
+
+        temp = newDungeon.tick(healthId, null);
+        assertFalse(temp.getInventory().stream().anyMatch(itm -> itm.getType().equals("health_potion")));
+        temp = newDungeon.tick(invincibleId, null);
+        assertFalse(temp.getInventory().stream().anyMatch(itm -> itm.getType().equals("invincibility_potion")));
+        temp = newDungeon.tick(invisibleId, null);
+        assertFalse(temp.getInventory().stream().anyMatch(itm -> itm.getType().equals("invisibility_potion")));
+        temp = newDungeon.tick(bombId, null);
+        assertFalse(temp.getInventory().stream().anyMatch(itm -> itm.getType().equals("bomb")));
 
         // Create entity, player, map
         // Collect entity and then use it
@@ -143,13 +169,15 @@ public class CollectableEntityTest {
     public void testBomb() {
         DungeonManiaController newDungeon = new DungeonManiaController();
         DungeonResponse createNew = newDungeon.newGame("bomb", "Peaceful");
+        DungeonResponse temp;
         String switchId = getEntityId(new Position(3, 1, 0), createNew);
         String boulder = getEntityId(new Position(3, 1, 1), createNew);
-        newDungeon.tick(null, Direction.DOWN);
-        newDungeon.tick(null, Direction.UP);
-        newDungeon.tick(null, Direction.RIGHT);
-        newDungeon.tick("bomb", null);
-        //assertFalse(isEntityOnTile(temp, new Position(3, 1, 3), spawner));
+        temp = newDungeon.tick(null, Direction.DOWN);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.RIGHT);
+        temp = newDungeon.tick("bomb", null);
+        assertFalse(isEntityOnTile(temp, new Position(3, 1, 1), boulder));
+        assertFalse(isEntityOnTile(temp, new Position(3, 1, 1), boulder));
     }
     // SOME NOTES FOR COLLECTABLE ENTITIES:
     // - armour and theOneRing is added to inventory after defeating an enemy with it
