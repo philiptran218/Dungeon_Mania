@@ -9,11 +9,9 @@ public class Bomb extends CombatItems {
     }
 
     /**
-     * Places the bomb onto the map.
+     * Places the bomb onto the map, and removes it from inventory.
      */
     public void use() {
-        // Remove from inventory, add onto entities map
-        //this.setPos(new Position(0, 0));
+        getPlayer().getInventoryList().remove(this);
     }
-
 }
