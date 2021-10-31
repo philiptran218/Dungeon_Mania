@@ -160,11 +160,11 @@ public class GoalTest {
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
         DungeonResponse tmp = controller.newGame("simpleTreasureAndExit", "Peaceful");
-        assertTrue(":treasure AND :exit".equals(tmp.getGoals()));
+        assertTrue("(:treasure AND :exit)".equals(tmp.getGoals()));
         for (int i = 0; i < 3; i++) {
             tmp = controller.tick(null, Direction.RIGHT);
         }
-        assertTrue(":exit".equals(tmp.getGoals()));
+        assertTrue("(:exit)".equals(tmp.getGoals()));
         for (int i = 0; i < 2; i++) {
             tmp = controller.tick(null, Direction.LEFT);
         }
@@ -181,11 +181,11 @@ public class GoalTest {
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
         DungeonResponse tmp = controller.newGame("simpleTreasureAndBoulderAndExit", "Standard");
-        assertTrue(":treasure AND :boulders AND :exit".equals(tmp.getGoals()));
+        assertTrue("(:treasure AND :boulders AND :exit)".equals(tmp.getGoals()));
         tmp = controller.tick(null, Direction.RIGHT);
-        assertTrue(":boulders AND :exit".equals(tmp.getGoals()));
+        assertTrue("(:boulders AND :exit)".equals(tmp.getGoals()));
         tmp = controller.tick(null, Direction.DOWN);
-        assertTrue(":exit".equals(tmp.getGoals()));
+        assertTrue("(:exit)".equals(tmp.getGoals()));
         tmp = controller.tick(null, Direction.UP);
         tmp = controller.tick(null, Direction.UP);
         assertTrue("".equals(tmp.getGoals()));
@@ -201,9 +201,9 @@ public class GoalTest {
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
         DungeonResponse tmp = controller.newGame("simpleTreasureOrExit", "Peaceful");
-        assertTrue(":treasure OR :exit".equals(tmp.getGoals()));
+        assertTrue("(:treasure OR :exit)".equals(tmp.getGoals()));
         tmp = controller.tick(null, Direction.RIGHT);
-        assertTrue(":treasure OR :exit".equals(tmp.getGoals()));
+        assertTrue("(:treasure OR :exit)".equals(tmp.getGoals()));
         tmp = controller.tick(null, Direction.DOWN);
         assertTrue("".equals(tmp.getGoals()));
     }
@@ -218,7 +218,7 @@ public class GoalTest {
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
         DungeonResponse tmp = controller.newGame("simpleTreasureAND(BouldersORExit)", "Peaceful");
-        assertTrue(":treasure AND :boulders OR :exit".equals(tmp.getGoals()));
+        assertTrue("(:treasure AND (:boulders OR :exit))".equals(tmp.getGoals()));
         tmp = controller.tick(null, Direction.RIGHT);
         tmp = controller.tick(null, Direction.DOWN);
         assertTrue("".equals(tmp.getGoals()));
@@ -234,12 +234,12 @@ public class GoalTest {
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
         DungeonResponse tmp = controller.newGame("simpleTreasureAND(BouldersORExit)", "Peaceful");
-        assertTrue(":treasure AND :boulders OR :exit".equals(tmp.getGoals()));
+        assertTrue("(:treasure AND (:boulders OR :exit))".equals(tmp.getGoals()));
         tmp = controller.tick(null, Direction.RIGHT);
         tmp = controller.saveGame("simpleTreasureAND(BouldersORExit)");
         Thread.sleep(3000);
         tmp = controller.loadGame("simpleTreasureAND(BouldersORExit)");
-        assertTrue(":boulders OR :exit".equals(tmp.getGoals()));
+        assertTrue("((:boulders OR :exit))".equals(tmp.getGoals()));
         File file = new File("src/main/resources/saved_games/simpleTreasureAND(BouldersORExit).json");
         file.delete();
     }

@@ -121,11 +121,10 @@ public class GoalHelper {
      */
     public static String goalPatternToString(GoalInterface goal, Map<Position, List<Entity>> map) {
         if (goal.getGoalName().equals("AND") && !goal.isGoalComplete(map)) {
-            return "(" + String.join(" AND ", getIncompleteChildrenGoals(goal, map) + ")");
+            return "(" + String.join(" AND ", getIncompleteChildrenGoals(goal, map)) + ")";
         } else if (goal.getGoalName().equals("OR") && !goal.isGoalComplete(map)) {
-            return String.join(" OR ", getIncompleteChildrenGoals(goal, map));
-        }
-        if (!goal.getGoalName().equals("OR") && !goal.isGoalComplete(map)) {
+            return "(" + String.join(" OR ", getIncompleteChildrenGoals(goal, map)) + ")";
+        } else if (!goal.isGoalComplete(map)) {
             return ":" + goal.getGoalName();
         } else {
             return "";
@@ -148,9 +147,5 @@ public class GoalHelper {
             }
         }
         return currentGoals;
-    }
-
-    public static void main(String[] args) {
-        System.out.println("("+""+")");    
     }
 }
