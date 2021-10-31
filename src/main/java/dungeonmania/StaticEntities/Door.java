@@ -4,7 +4,6 @@ import dungeonmania.util.Position;
 
 public class Door extends StaticEntity {
     private int keyId;
-    private boolean locked = true;
     /**
      * Constructor for Door
      * @param id
@@ -16,21 +15,9 @@ public class Door extends StaticEntity {
         super(id, type, pos);
         this.keyId = keyId;
     }
-    // Getters and setters
-    public boolean isLocked() {
-        return locked;
-    }
-
-    public void setLocked(boolean locked) {
-        this.locked = locked;
-    }
 
     public int getKeyId() {
         return keyId;
-    }
-
-    public void setKeyId(int keyId) {
-        this.keyId = keyId;
     }
     
 }

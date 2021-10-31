@@ -121,6 +121,7 @@ public class StaticEntityTest {
         temp = newDungeon.tick(null, Direction.UP);
         temp = newDungeon.tick(null, Direction.UP);
         temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
         String zombie = getEntityId(new Position(3, 2, 3), createNew);
         assertTrue(isEntityOnTile(temp, new Position(3, 2, 3), zombie));
     }
