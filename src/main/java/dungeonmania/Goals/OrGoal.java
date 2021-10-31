@@ -6,7 +6,7 @@ import java.util.Map;
 import dungeonmania.Entity;
 import dungeonmania.util.Position;
 
-public class OrGoal extends CompositeGoal implements GoalInterface {
+public class OrGoal extends CompositeGoal {
     
     private String goalName = "OR";
 
