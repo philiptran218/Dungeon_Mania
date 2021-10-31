@@ -1,0 +1,35 @@
+
+{
+    "entities": [
+        {
+            "x": 4,
+            "y": 1,
+            "type": "boulder"
+        },
+        {
+            "x": 3,
+            "y": 2,
+            "type": "spider"
+        },
+        {
+            "x": 1,
+            "y": 1,
+            "type": "player"
+        },
+        {
+            "x": 1,
+            "y": 0,
+            "type": "wall"
+        },
+        {
+            "x": 0,
+            "y": 1,
+            "type": "wall"
+        }
+    ],
+    "width": 6,
+    "height": 6,
+    "goal-condition": {
+        "goal": "enemies"
+    }
+}

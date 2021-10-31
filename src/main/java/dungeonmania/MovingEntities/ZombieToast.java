@@ -73,7 +73,6 @@ public class ZombieToast extends MovingEntity {
         if (canPass(map, newPos)) {
             super.moveInDir(map, direction);
         }
-
     }
 
     public void moveAway(Map<Position, List<Entity>> map) {

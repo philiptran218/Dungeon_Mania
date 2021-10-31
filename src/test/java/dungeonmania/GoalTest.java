@@ -25,7 +25,7 @@ public class GoalTest {
      * Test getting to exit
      */
     @Test
-    public void ExitGoal() {
+    public void testExitGoal() {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
@@ -38,19 +38,61 @@ public class GoalTest {
     }
 
     /**
+     * Test destroying a zombie
+     */
+    @Test
+    public void testZombieGoal() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("simpleZombieToast", "Standard");
+        assertTrue(":enemies".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.RIGHT);
+        assertTrue("".equals(tmp.getGoals()));
+    }
+
+    /**
+     * Test destroying a mercenary
+     */
+    @Test
+    public void testKillMercenaryGoal() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("simpleMerc", "Standard");
+        assertTrue(":enemies".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.RIGHT);
+        assertTrue("".equals(tmp.getGoals()));
+    }
+
+    /**
+     * Test bribing a mercenary
+     */
+    @Test
+    public void testBribeMercenaryGoal() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("simpleMercWithTreasure", "Standard");
+        String MercId = getEntityId(new Position(4, 1, 3), tmp);
+        assertTrue(":enemies".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.RIGHT);
+        tmp = controller.interact(MercId);
+        assertTrue("".equals(tmp.getGoals()));
+    }
+
+    /**
      * Test destroying all enemies and spawners
      */
     @Test
-    public void EnemiesGoal() {
+    public void testEnemiesGoal() {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
         DungeonResponse tmp = controller.newGame("simpleEnemies", "Standard");
-        String spawnerId = getEntityId(new Position(4, 1, 1), tmp);
+        String spawnerId = getEntityId(new Position(1, 1, 1), tmp);
         assertTrue(":enemies".equals(tmp.getGoals()));
-        for (int i = 0; i < 4; i++) {
-            tmp = controller.tick(null, Direction.RIGHT);
-        }
+        tmp = controller.tick(null, Direction.RIGHT);
         tmp = controller.interact(spawnerId);
         assertTrue("".equals(tmp.getGoals()));
     }
@@ -59,7 +101,7 @@ public class GoalTest {
      * Test having a boulder on all floor switches
      */
     @Test
-    public void BouldersGoal() {
+    public void testBouldersGoal() {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
@@ -75,7 +117,7 @@ public class GoalTest {
      * Test collecting all treasures
      */
     @Test
-    public void TreasureGoal() {
+    public void testTreasureGoal() {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
@@ -88,11 +130,11 @@ public class GoalTest {
     }
 
     /**
-     * Test destroying all enemies AND getting to exit
+     * Test collecting treasure AND getting to exit
      * (Fail - Exit is achieved but Enemies is not achieved)
      */
     @Test
-    public void TreasureAndExitGoal() {
+    public void testTreasureAndExitGoal() {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
@@ -105,6 +147,26 @@ public class GoalTest {
         for (int i = 0; i < 2; i++) {
             tmp = controller.tick(null, Direction.LEFT);
         }
+        assertTrue("".equals(tmp.getGoals()));
+    }
+
+    /**
+     * Test kill zombie AND collect treasure AND getting to exit
+     * 
+     */
+    @Test
+    public void testTreasureAndBoulderAndExitGoal() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("simpleTreasureAndBoulderAndExit", "Standard");
+        assertTrue(":treasure AND :boulders AND :exit".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.RIGHT);
+        assertTrue(":boulders AND :exit".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.DOWN);
+        assertTrue(":exit".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.UP);
+        tmp = controller.tick(null, Direction.UP);
         assertTrue("".equals(tmp.getGoals()));
     }
 
