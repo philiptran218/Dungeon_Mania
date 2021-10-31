@@ -1,11 +1,9 @@
 package dungeonmania.gamemap;
 
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -26,6 +24,7 @@ import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.MovingEntities.Spider;
 import dungeonmania.StaticEntities.*;
+import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
@@ -71,7 +70,21 @@ public class GameMap {
         this(MapHelper.getSavedMap(name).get("game-mode").getAsString(), 
             MapHelper.getSavedMap(name).get("map-name").getAsString(), MapHelper.getSavedMap(name));
     }
-    
+
+
+    // ********************************************************************************************\\
+    //                          Dungeon Response Arguments Helper Function                         \\
+    // ********************************************************************************************\\
+
+    /**
+     * Returns a dungeon response based on the current state of the game.
+     * @return DungeonResponse on the current state of map.
+     */
+    public DungeonResponse returnDungeonResponse() {
+        return new DungeonResponse(getMapId(), getDungeonName(), mapToListEntityResponse(), 
+            inventoryToItemResponse(), getBuildables(), getGoals());
+    }
+
     /**
      * Takes an the json map object then looks at entity field and 
      * returns all entities on the map as a list of entity response.
@@ -94,7 +107,28 @@ public class GameMap {
         }
         return entityList;
     }
-    
+
+    /**
+     * Looks through the player's inventory and checks if the
+     * player has enough materials to build a bow or a shield.
+     * @return List<String> List of buildable items.
+     */
+    public List<String> getBuildables() {
+        List<String> buildable = new ArrayList<>();
+        int numWood = player.getInventory().getNoItemType("wood");
+        int numArrow = player.getInventory().getNoItemType("arrow");
+        boolean hasKey = player.hasItem("key");
+        boolean hasTreasure = player.hasItem("treasure");
+
+        // Checks if sufficient materials
+        if (numWood > 0 && numArrow > 2) {
+            buildable.add("bow");
+        } else if (numWood > 1 && (hasKey || hasTreasure)) {
+            buildable.add("shield");
+        }
+        return buildable;
+    }
+
     /**
      * Converts the player's inventory into a list of item response.
      * @return List<ItemResponse> List of ItemResponse.
@@ -108,6 +142,19 @@ public class GameMap {
         }
         return itemResponse;
     }
+
+    /**
+     * Get the goals that needs to be completed for the map.
+     * @return String of goals that needs to be completed.
+     */
+    public String getGoals() {
+        return GoalHelper.goalPatternToString(this.getRootGoal(), this.getMap());
+    }
+
+
+    // ********************************************************************************************\\
+    //                                    Map and Json Functions                                   \\
+    // ********************************************************************************************\\
 
     /**
      * Given the name of the map converts the current game map 
@@ -202,25 +249,10 @@ public class GameMap {
         return newMap;
     }
 
-    /**
-     * Given the jsonMap object, get all player inventory items
-     * and set it to the player.
-     * @param jsonMap (JsonObject)
-     */
-    public void setPlayerInventory(JsonObject jsonMap) {
-        // Case when the player does not exist.
-        if (jsonMap.getAsJsonArray("inventory") == null) {
-            return;
-        }
-        // Look at the inventory field in json file.
-        for (JsonElement entity : jsonMap.getAsJsonArray("inventory")) {
-            JsonObject obj = entity.getAsJsonObject();
-            String type = obj.get("type").getAsString();
-            Position pos = new Position(0, 0, -1);
-            Entity collectable = EntityFactory.getEntityObject("" + System.currentTimeMillis(), type, pos, obj.get("key"), this.battle);
-            player.getInventory().put(collectable, player);
-        }
-    }
+
+    // ********************************************************************************************\\
+    //                                Accessing Entities on Map                                    \\
+    // ********************************************************************************************\\
 
     /**
      * Returns a list of all self moving entities from the game map.
@@ -256,6 +288,10 @@ public class GameMap {
         }
         return null;
     }
+
+    // ********************************************************************************************\\
+    //                                     OTHER FUNCTIONS                                         \\
+    // ********************************************************************************************\\
 
     /**
      * Spawns a spider on the map with a one in ten chance (with
@@ -299,9 +335,31 @@ public class GameMap {
         }
     }
 
-    // *************************************************************************************\\
-    //                                  Getter and setters:                                 \\
-    // *************************************************************************************\\
+    // This function should be in player.
+    /**
+     * Given the jsonMap object, get all player inventory items
+     * and set it to the player.
+     * @param jsonMap (JsonObject)
+     */
+    public void setPlayerInventory(JsonObject jsonMap) {
+        // Case when the player does not exist.
+        if (jsonMap.getAsJsonArray("inventory") == null) {
+            return;
+        }
+        // Look at the inventory field in json file.
+        for (JsonElement entity : jsonMap.getAsJsonArray("inventory")) {
+            JsonObject obj = entity.getAsJsonObject();
+            String type = obj.get("type").getAsString();
+            Position pos = new Position(0, 0, -1);
+            Entity collectable = EntityFactory.getEntityObject("" + System.currentTimeMillis(), type, pos, obj.get("key"), this.battle);
+            player.getInventory().put(collectable, player);
+        }
+    }
+
+
+    // ********************************************************************************************\\
+    //                                   Getter and setters:                                       \\
+    // ********************************************************************************************\\
 
     public Player getPlayer() {
         return this.player; 
@@ -313,10 +371,6 @@ public class GameMap {
 
     public String getMapId() {
         return mapId;
-    }
-
-    public String getGoals() {
-        return GoalHelper.goalPatternToString(this.getRootGoal(), this.getMap());
     }
 
     public GameState getGameState() {
