@@ -7,20 +7,10 @@ import dungeonmania.Entity;
 import dungeonmania.util.Position;
 
 public class FloorSwitch extends StaticEntity {
-    private boolean triggered = false;
 
     public FloorSwitch(String id, String type, Position pos) {
         super(id, type, pos);
-        super.setCanStandOn(true);
         super.setType("switch");
-    }
-    
-    public boolean isTriggered() {
-        return triggered;
-    }
-
-    public void setTriggered(boolean triggered) {
-        this.triggered = triggered;
     }
 
     public boolean isUnderBoulder(Map<Position, List<Entity>> map) {
