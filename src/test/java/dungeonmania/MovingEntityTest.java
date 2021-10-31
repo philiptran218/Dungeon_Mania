@@ -152,5 +152,88 @@ public class MovingEntityTest {
     // ************************************************************ \\ 
     //               Test for Spider Basic Movements
     // ************************************************************ \\ 
+    @Test
+    public void testNormalSpiderMovement () {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse temp = controller.newGame("spider", "Peaceful");
+        // Get id of player:
+        String spiderId = getEntityId(new Position(3, 2, 3), temp);
+        assertTrue(isEntityOnTile(temp, new Position(3, 2), spiderId));
+        temp = controller.tick(null, Direction.UP);
+        assertTrue(isEntityOnTile(temp, new Position(3, 1), spiderId));
+        temp = controller.tick(null, Direction.UP);
+        assertTrue(isEntityOnTile(temp, new Position(4, 1), spiderId));
+        temp = controller.tick(null, Direction.UP);
+        assertTrue(isEntityOnTile(temp, new Position(4, 2), spiderId));
+        temp = controller.tick(null, Direction.UP);
+        assertTrue(isEntityOnTile(temp, new Position(4, 3), spiderId));
+        temp = controller.tick(null, Direction.UP);
+        assertTrue(isEntityOnTile(temp, new Position(3, 3), spiderId));
+        temp = controller.tick(null, Direction.UP);
+        assertTrue(isEntityOnTile(temp, new Position(2, 3), spiderId));
+        temp = controller.tick(null, Direction.UP);
+        assertTrue(isEntityOnTile(temp, new Position(2, 2), spiderId));
+        temp = controller.tick(null, Direction.UP);
+        assertTrue(isEntityOnTile(temp, new Position(2, 1), spiderId));
+        temp = controller.tick(null, Direction.UP);
+        assertTrue(isEntityOnTile(temp, new Position(3, 1), spiderId));
+    }
 
+    @Test
+    public void testBoulderSpiderMovement () {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse temp = controller.newGame("spiderBoulder", "Peaceful");
+        // Get id of player:
+        String spiderId = getEntityId(new Position(3, 2, 3), temp);
+        assertTrue(isEntityOnTile(temp, new Position(3, 2), spiderId));
+        temp = controller.tick(null, Direction.UP);
+        assertTrue(isEntityOnTile(temp, new Position(3, 1), spiderId));
+        temp = controller.tick(null, Direction.UP);
+        assertTrue(isEntityOnTile(temp, new Position(2, 1), spiderId));
+        temp = controller.tick(null, Direction.UP);
+        assertTrue(isEntityOnTile(temp, new Position(2, 2), spiderId));
+        temp = controller.tick(null, Direction.UP);
+        assertTrue(isEntityOnTile(temp, new Position(2, 3), spiderId));
+        temp = controller.tick(null, Direction.UP);
+        assertTrue(isEntityOnTile(temp, new Position(3, 3), spiderId));
+        temp = controller.tick(null, Direction.UP);
+        assertTrue(isEntityOnTile(temp, new Position(4, 3), spiderId));
+        temp = controller.tick(null, Direction.UP);
+        assertTrue(isEntityOnTile(temp, new Position(4, 2), spiderId));
+        temp = controller.tick(null, Direction.UP);
+        assertTrue(isEntityOnTile(temp, new Position(4, 3), spiderId));
+    }
+
+    @Test
+    public void testTrappedSpiderMovement () {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse temp = controller.newGame("spiderTrapped", "Peaceful");
+        // Get id of player:
+        String spiderId = getEntityId(new Position(3, 2, 3), temp);
+        assertTrue(isEntityOnTile(temp, new Position(3, 2), spiderId));
+        temp = controller.tick(null, Direction.UP);
+        assertTrue(isEntityOnTile(temp, new Position(3, 2), spiderId));
+    }
+
+    // ************************************************************ \\ 
+    //               Test for Zombie Basic Movements
+    // ************************************************************ \\ 
+    @Test
+    public void testNormalZombieMovement () {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse temp = controller.newGame("zombieMovement", "Peaceful");
+        // Get id of player:
+        String zombieId = getEntityId(new Position(2, 2, 3), temp);
+        temp = controller.tick(null, Direction.UP);
+        assertTrue(isEntityOnTile(temp, new Position(2, 1), zombieId) || isEntityOnTile(temp, new Position(1, 2), zombieId));
+        
+    }
 }
