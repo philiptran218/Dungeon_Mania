@@ -45,9 +45,9 @@ public class EntityFactory {
             case "key":
                 return new Key(id, type, collectPos, keyId.getAsInt());
             case "invincibility_potion": 
-                return new InvincibilityPotion(id, type, collectPos, battle);
+                return new InvincibilityPotion(id, type, collectPos);
             case "invisibility_potion": 
-                return new InvisibilityPotion(id, type, collectPos, battle);
+                return new InvisibilityPotion(id, type, collectPos);
             case "wood": 
                 return new Wood(id, type, collectPos);
             case "arrow": 
@@ -65,7 +65,7 @@ public class EntityFactory {
             case "shield": 
                 return new Shield(id, type, collectPos);
             case "player": 
-                return new Player(id, type, movingPos);
+                return new Player(id, type, movingPos, battle);
             default: 
                 return null;
         }

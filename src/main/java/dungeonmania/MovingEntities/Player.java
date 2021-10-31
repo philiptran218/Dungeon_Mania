@@ -13,6 +13,7 @@ import dungeonmania.util.Direction;
 import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
 import dungeonmania.Inventory;
+import dungeonmania.Battles.Battle;
 import dungeonmania.CollectableEntities.CollectableEntity;
 import dungeonmania.CollectableEntities.Treasure;
 import dungeonmania.StaticEntities.Boulder;
@@ -26,9 +27,13 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     private List<MovingEntityObserver> listObservers = new ArrayList<MovingEntityObserver>();
     private Inventory inventory = new Inventory(this);
     private List<Mercenary> bribedMercenaries = new ArrayList<Mercenary>();
+    private int invisDuration = 0;
+    private int invincDuration = 0;
+    private Battle battle;
 
-    public Player(String id, String type, Position pos){
+    public Player(String id, String type, Position pos, Battle battle){
         super(id, type, pos, 10, 10);
+        this.setBattle(battle);
     }
 
     public void move(Map<Position, List<Entity>> map) {
@@ -205,10 +210,44 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         return false;
     }
 
-
+    public void setBattle(Battle battle) {
+        this.battle = battle;
+    }
 
     public List<Mercenary> getBribedMercenaries() {
         return bribedMercenaries;
+    }
+
+    public void setInvisDuration(int time) {
+        invisDuration = time;
+    }
+    public int getInvisDuration() {
+        return invisDuration;
+    }
+    public void setInvincDuration(int time) {
+        invincDuration = time;
+    }
+    public int getInvincDuration() {
+        return invincDuration;
+    }
+
+    public void tickPotions() {
+        if (invincDuration > 0) {
+            invincDuration--;
+        }
+        if (invisDuration > 0) {
+            invisDuration--;
+        }
+        // Set battle state depending on active potions
+        if (invisDuration > 0) {
+            battle.setBattleState(battle.getInvisibleState());
+        }
+        else if (invincDuration > 0) {
+            battle.setBattleState(battle.getInvincibleState());
+        }
+        else {
+            battle.setInitialState();
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
