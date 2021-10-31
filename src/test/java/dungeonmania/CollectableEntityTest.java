@@ -129,7 +129,7 @@ public class CollectableEntityTest {
         inv = newDungeon.tick(null, Direction.LEFT).getInventory();
         inv = newDungeon.tick(null, Direction.LEFT).getInventory();
         assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("health_potion")));
-        inv = newDungeon.tick("health_potion", Direction.LEFT).getInventory();
+        inv = newDungeon.tick("health_potion", null).getInventory();
         assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("health_potion")));
     }
     
