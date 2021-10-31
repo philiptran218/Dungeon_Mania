@@ -6,8 +6,7 @@ import dungeonmania.util.Position;
 public class Armour extends CombatItems {
 
     private static final double REDUCE_DAMAGE = 0.5;
-    // Leave at 20 for now, change it later
-    private static final int INITIAL_DURABILITY = 20;
+    private static final int INITIAL_DURABILITY = 10;
     private int durability;
     
     /**

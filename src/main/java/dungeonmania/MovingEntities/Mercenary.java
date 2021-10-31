@@ -23,7 +23,7 @@ public class Mercenary extends MovingEntity {
 
     private int battleRadius = 3;
     public Mercenary(String id, String type, Position pos) {
-        super(id, type, pos, 5, 5);
+        super(id, type, pos, 15, 2);
         this.enemyState = new MercenaryEnemyState(this);
         this.allyState = new MercenaryAllyState(this);
         this.state = enemyState;

@@ -17,7 +17,7 @@ public class Spider extends MovingEntity {
     private int pathPos = 0;
 
     public Spider(String id, String type, Position pos){
-        super(id, type, pos, 3, 3);
+        super(id, type, pos, 5, 1);
         this.startPos = pos;
         this.setPath();
     }

@@ -19,7 +19,7 @@ public class TheOneRing extends CombatItems {
      * Revives the player if their health falls to 0.
      */
     public void use() {
-        this.getPlayer().setHealth(100);
+        this.getPlayer().setHealth(20);
         getPlayer().getInventoryList().remove((CollectableEntity)this);
     }
 
