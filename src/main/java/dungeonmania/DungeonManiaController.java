@@ -140,6 +140,8 @@ public class DungeonManiaController {
             // Otherwise player can use the item
             gameMap.getPlayer().getInventory().getItemById(itemUsed).use();
         }
+        // Ticks the duration of any active potions
+        gameMap.getPlayer().tickPotions();
         
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
