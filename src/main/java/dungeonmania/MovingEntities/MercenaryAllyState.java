@@ -23,7 +23,7 @@ public class MercenaryAllyState implements MercenaryState{
     // ********************************************************************************************\\
 
     /**
-     * Auto-moves the mecenary as an ally.
+     * player is an ally, mercenary follows the player
      */
     @Override
     public void move(Map<Position, List<Entity>> map) {
@@ -57,7 +57,7 @@ public class MercenaryAllyState implements MercenaryState{
     }
 
     /**
-     * Moves away from the player.
+     * Player is invincible, allymercenary moves normally
      */
     public void moveAway(Map<Position, List<Entity>> map) {
         move(map);

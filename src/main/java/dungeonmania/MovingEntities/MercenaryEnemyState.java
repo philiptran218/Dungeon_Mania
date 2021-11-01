@@ -23,7 +23,9 @@ public class MercenaryEnemyState implements MercenaryState{
     // ********************************************************************************************\\
 
     /**
-     * Mecenary movement if it is mecenary is in enermy state.
+     * Mercenary moves - follows the player
+     * Moves twice as fast if the player is in the battle radius
+     * @param map
      */
     @Override
     public void move(Map<Position, List<Entity>> map) {
@@ -43,7 +45,7 @@ public class MercenaryEnemyState implements MercenaryState{
     }
     
     /**
-     * 
+     * Mercenary moves - follows the player
      * @param map
      */
     public void moveDefault(Map<Position, List<Entity>> map) {
@@ -70,7 +72,7 @@ public class MercenaryEnemyState implements MercenaryState{
     }
 
     /**
-     * Moves away from the player when in enermy state.
+     * Moves away from the player when they are invincible
      */
     @Override
     public void moveAway(Map<Position, List<Entity>> map) {
