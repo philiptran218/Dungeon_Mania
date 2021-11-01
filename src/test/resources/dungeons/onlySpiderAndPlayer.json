@@ -1,0 +1,19 @@
+{
+    "entities": [
+        {
+            "x": 0,
+            "y": 0,
+            "type": "player"
+        },
+        {
+            "x": 1,
+            "y": 0,
+            "type": "spider"
+        }
+    ],
+    "width": 2,
+    "height": 1,
+    "goal-condition": {
+        "goal": "enemies"
+    }
+}

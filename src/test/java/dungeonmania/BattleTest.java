@@ -36,16 +36,7 @@ public class BattleTest {
     @Test
     public void basicBattle() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("spider", "Hard");
-
-        newDungeon.tick(null, Direction.UP);
-        newDungeon.tick(null, Direction.UP);
-        newDungeon.tick(null, Direction.UP);
-        newDungeon.tick(null, Direction.UP);
-        newDungeon.tick(null, Direction.UP);
-        newDungeon.tick(null, Direction.UP);
-        newDungeon.tick(null, Direction.UP);
-        newDungeon.tick(null, Direction.UP);
+        newDungeon.newGame("onlySpiderAndPlayer", "Hard");
         // Should kill the spider in combat
         DungeonResponse temp = newDungeon.tick(null, Direction.RIGHT);
         assertFalse(temp.getEntities().stream().anyMatch(e -> e.getType().equals("spider")));
@@ -92,20 +83,19 @@ public class BattleTest {
         assertFalse(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
     }
 
-    // Tests that armour/one ring are used in battle
+    // Tests that weapons are used in battle
     @Test
     public void testZeroDurability() {
         DungeonManiaController newDungeon = new DungeonManiaController();
         newDungeon.newGame("mercenary_onslaught", "Hard");
-        DungeonResponse temp;
+        DungeonResponse temp = null;
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 20; i++) {
             temp = newDungeon.tick(null, Direction.RIGHT);
-            assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
         }
-        // On 9th tick, the last mercenary is killed
-        temp = newDungeon.tick(null, Direction.RIGHT);
         assertFalse(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
+        // Player should still be alive
+        assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("player")));
     }
 
     // Tests fighting against zombies
@@ -132,7 +122,7 @@ public class BattleTest {
         DungeonResponse temp = newDungeon.newGame("invisibility_battle", "Hard");
 
         String invisId = getEntityId(new Position(2, 1, 2), temp);
-        newDungeon.tick(null, Direction.RIGHT);
+        temp = newDungeon.tick(null, Direction.RIGHT);
         assertTrue(temp.getInventory().stream().anyMatch(e -> e.getType().equals("invisibility_potion")));
         temp = newDungeon.tick(invisId, null);
         assertFalse(temp.getInventory().stream().anyMatch(e -> e.getType().equals("invisibility_potion")));
@@ -146,8 +136,7 @@ public class BattleTest {
 
         // Assert that enemies are still alive
         assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
-        assertTrue(temp.getInventory().stream().anyMatch(e -> e.getType().equals("zombie_toast")));
-        assertTrue(temp.getInventory().stream().anyMatch(e -> e.getType().equals("spider")));
+        assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("zombie_toast")));
     }
 
     // Tests using invincible potion and then battling.
@@ -162,5 +151,33 @@ public class BattleTest {
         newDungeon.tick(null, Direction.DOWN);
         temp = newDungeon.tick(null, Direction.RIGHT);
         assertFalse(isEntityOnTile(temp, new Position(2, 1, 3), zombieId));
+    }
+
+    @Test
+    public void testBowCombat() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("onslaught_bow", "Hard");
+        DungeonResponse temp = null;
+
+        for (int i = 0; i < 20; i++) {
+            temp = newDungeon.tick(null, Direction.RIGHT);
+        }
+        assertFalse(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
+        // Player should still be alive
+        assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("player")));
+    }
+
+    @Test 
+    public void testArmourCombat() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("onslaught_armour", "Hard");
+        DungeonResponse temp = null;
+
+        for (int i = 0; i < 20; i++) {
+            temp = newDungeon.tick(null, Direction.RIGHT);
+        }
+        assertFalse(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
+        // Player should still be alive
+        assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("player")));
     }
 }
