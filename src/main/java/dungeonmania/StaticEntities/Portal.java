@@ -1,6 +1,5 @@
 package dungeonmania.StaticEntities;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +11,6 @@ import dungeonmania.util.Position;
 
 public class Portal extends StaticEntity {
     private Position teleportPos;
-    private Portal otherPortal;
     private int portalId;
     /**
      * Constructor for Portal
@@ -30,16 +28,6 @@ public class Portal extends StaticEntity {
     public void teleport(Map<Position, List<Entity>> map, MovingEntity entity, Direction direction) {
         Position newPos = teleportPos.asLayer(3);
         entity.moveToPos(map, newPos);
-    }
-
-
-    public Portal getOtherPortal() {
-        return otherPortal;
-    }
-
-
-    public void setOtherPortal(Portal otherPortal) {
-        this.otherPortal = otherPortal;
     }
 
     /**
@@ -100,7 +88,10 @@ public class Portal extends StaticEntity {
         return null;
     }
 
-
+    /**
+     * Return the portal id.
+     * @return
+     */
     public int getPortalId() {
         return portalId;
     }
