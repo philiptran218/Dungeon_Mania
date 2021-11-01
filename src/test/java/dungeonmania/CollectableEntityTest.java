@@ -111,6 +111,19 @@ public class CollectableEntityTest {
         temp = newDungeon.tick(bombId, null);
         assertFalse(temp.getInventory().stream().anyMatch(itm -> itm.getType().equals("bomb")));
     }
+
+
+    // Tests using an item of an unaccepted type
+    @Test
+    public void testUnusableItem() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse tmp = newDungeon.newGame("simpleTreasure", "Peaceful");
+        String treasure = getEntityId(new Position(4, 1, 2), tmp);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        assertThrows(IllegalArgumentException.class, () -> newDungeon.tick(treasure, null));
+    }
         
     // Tests for BuildableEntities (included in CollectableEntities):
 
@@ -130,9 +143,22 @@ public class CollectableEntityTest {
 
     // Tests if a shield can be built successfully 
     @Test
-    public void testSuccessfulBuildShield() {
+    public void testSuccessfulBuildShieldTreasure() {
         DungeonManiaController newDungeon = new DungeonManiaController();
         newDungeon.newGame("build_shield", "Peaceful");
+        List<ItemResponse> inv;
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.DOWN);
+        newDungeon.tick(null, Direction.LEFT);
+        inv = newDungeon.build("shield").getInventory();
+        assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("shield")));
+    }
+
+    @Test
+    public void testSuccessfulBuildShieldKey() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("build_shield_key", "Peaceful");
         List<ItemResponse> inv;
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
@@ -203,7 +229,7 @@ public class CollectableEntityTest {
         String spiderId = getEntityId(new Position(3, 1, 3), tmp);
         String potionId = getEntityId(new Position(7, 1, 2), tmp);
         tmp = newDungeon.tick(null, Direction.LEFT);
-        tmp = newDungeon.tick(potionId,null);
+        tmp = newDungeon.tick(potionId, null);
         tmp = newDungeon.tick(null, Direction.LEFT);
         tmp = newDungeon.tick(null, Direction.LEFT);
         assertTrue(isEntityOnTile(tmp, new Position(2, 0), spiderId));
