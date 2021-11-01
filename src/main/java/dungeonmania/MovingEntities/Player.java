@@ -160,7 +160,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
      * @param itemUsed
      * @throws IllegalArgumentException
      */
-    public void useItem(Map<Position, List<Entity>> map, String itemUsed) throws IllegalArgumentException {
+    public void useItem(Map<Position, List<Entity>> map, String itemUsed) throws IllegalArgumentException, InvalidActionException {
         Entity item = inventory.getItemById(itemUsed);
         if (item == null) {
             // Player does not have the item
