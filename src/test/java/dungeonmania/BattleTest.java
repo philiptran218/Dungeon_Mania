@@ -30,7 +30,6 @@ public class BattleTest {
         return null;
     }
 
-
     // Tests for Battles:
 
     // Testing no weapon combat against a spider
@@ -93,25 +92,62 @@ public class BattleTest {
         assertFalse(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
     }
 
-    // Tests that 
+    // Tests that armour/one ring are used in battle
     @Test
     public void testZeroDurability() {
         DungeonManiaController newDungeon = new DungeonManiaController();
         newDungeon.newGame("mercenary_onslaught", "Hard");
         DungeonResponse temp;
 
+        for (int i = 0; i < 8; i++) {
+            temp = newDungeon.tick(null, Direction.RIGHT);
+            assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
+        }
+        // On 9th tick, the last mercenary is killed
+        temp = newDungeon.tick(null, Direction.RIGHT);
+        assertFalse(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
+    }
+
+    // Tests fighting against zombies
+    @Test 
+    public void testFightZombies() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("zombie_battle", "Hard");
+
+        for (int i = 0; i < 4; i++) {
+            newDungeon.tick(null, Direction.RIGHT);
+            newDungeon.tick(null, Direction.DOWN);
+            newDungeon.tick(null, Direction.LEFT);
+            newDungeon.tick(null, Direction.UP);
+        }
+        // By now, all zombies should be dead
+        DungeonResponse temp = newDungeon.tick(null, Direction.RIGHT);
+        assertFalse(temp.getEntities().stream().anyMatch(e -> e.getType().equals("zombie_toast")));
+    }
+
+    // Tests fighting while player is invisible (nothing should happen)
+    @Test 
+    public void testInvisibilityFighting() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse temp = newDungeon.newGame("invisibility_battle", "Hard");
+
+        String invisId = getEntityId(new Position(2, 1, 2), temp);
+        newDungeon.tick(null, Direction.RIGHT);
+        assertTrue(temp.getInventory().stream().anyMatch(e -> e.getType().equals("invisibility_potion")));
+        temp = newDungeon.tick(invisId, null);
+        assertFalse(temp.getInventory().stream().anyMatch(e -> e.getType().equals("invisibility_potion")));
+
+        // Once invisible potion is used, player should be able to walk through enemies
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
         temp = newDungeon.tick(null, Direction.RIGHT);
+
+        // Assert that enemies are still alive
         assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
-        temp = newDungeon.tick(null, Direction.RIGHT);
-        assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
-        temp = newDungeon.tick(null, Direction.RIGHT);
-        assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
-        temp = newDungeon.tick(null, Direction.RIGHT);
-        assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
-        temp = newDungeon.tick(null, Direction.RIGHT);
-        assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
+        assertTrue(temp.getInventory().stream().anyMatch(e -> e.getType().equals("zombie_toast")));
+        assertTrue(temp.getInventory().stream().anyMatch(e -> e.getType().equals("spider")));
     }
 
 }
