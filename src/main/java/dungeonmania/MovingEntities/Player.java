@@ -162,14 +162,14 @@ public class Player extends MovingEntity implements MovingEntitySubject {
      */
     public void useItem(Map<Position, List<Entity>> map, String itemUsed) throws IllegalArgumentException {
         Entity item = inventory.getItemById(itemUsed);
+        if (item == null) {
+            // Player does not have the item
+            throw new InvalidActionException("Player does not have the item.");
+        }
+        
         if (!useableItems.contains(item.getType())) {
             // Cannot use the item
             throw new IllegalArgumentException("Cannot use item.");
-        }
-
-        if (!this.hasItem(item.getType())) {
-            // Player does not have the item
-            throw new InvalidActionException("Player does not have the item.");
         }
 
         if (item.getType().equals("bomb")) {
