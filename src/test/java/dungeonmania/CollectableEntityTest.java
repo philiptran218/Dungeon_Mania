@@ -112,6 +112,7 @@ public class CollectableEntityTest {
         assertFalse(temp.getInventory().stream().anyMatch(itm -> itm.getType().equals("bomb")));
     }
 
+    // Tests trying to use a potion even if player does not have it
     @Test
     public void testItemNotInInventory() {
         DungeonManiaController newDungeon = new DungeonManiaController();
@@ -120,11 +121,15 @@ public class CollectableEntityTest {
         assertThrows(InvalidActionException.class, () -> newDungeon.tick(invinc, null));
     }
 
+    // Tests using an item of an unaccepted type
     @Test
     public void testUnusableItem() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse tmp = newDungeon.newGame("advanced", "Peaceful");
-        String treasure = getEntityId(new Position(7, 10, 2), tmp);
+        DungeonResponse tmp = newDungeon.newGame("simpleTreasure", "Peaceful");
+        String treasure = getEntityId(new Position(4, 1, 2), tmp);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
         assertThrows(IllegalArgumentException.class, () -> newDungeon.tick(treasure, null));
     }
         
