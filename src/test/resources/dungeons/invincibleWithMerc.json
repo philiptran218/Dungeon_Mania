@@ -1,11 +1,6 @@
 {
     "entities": [
         {
-            "x": 0,
-            "y": 0,
-            "type": "wall"
-        },
-        {
             "x": 1,
             "y": 0,
             "type": "wall"
@@ -13,6 +8,26 @@
         {
             "x": 2,
             "y": 0,
+            "type": "wall"
+        },
+        {
+            "x": 0,
+            "y": 1,
+            "type": "wall"
+        },
+        {
+            "x": 1,
+            "y": 2,
+            "type": "wall"
+        },
+        {
+            "x": 2,
+            "y": 2,
+            "type": "wall"
+        },
+        {
+            "x": 4,
+            "y": 1,
             "type": "wall"
         },
         {
@@ -21,71 +36,25 @@
             "type": "wall"
         },
         {
-            "x": 4,
-            "y": 0,
-            "type": "wall"
-        },
-        {
-            "x": 5,
-            "y": 0,
-            "type": "wall"
-        },
-        {
-            "x": 5,
-            "y": 2,
-            "type": "wall"
-        },
-        {
-            "x": 0,
-            "y": 1,
-            "type": "wall"
-        },
-        {
-            "x": 0,
-            "y": 2,
-            "type": "wall"
-        },
-        {
-            "x": 1,
-            "y": 2,
-            "type": "wall"
-        },
-        {
-            "x": 2,
-            "y": 2,
-            "type": "wall"
-        },
-        {
             "x": 3,
             "y": 2,
             "type": "wall"
         },
         {
-            "x": 4,
-            "y": 2,
-            "type": "wall"
-        },
-        {
-            "x": 1,
-            "y": 1,
-            "type": "player"
-        },
-        {
-            "x": 2,
-            "y": 1,
-            "type": "invincibility_potion"
-        },
-        {
-            "x": 4,
+            "x": 3,
             "y": 1,
             "type": "mercenary"
         },
         {
-            "x": 6,
+            "x": 8,
             "y": 1,
-            "type": "wall"
+            "type": "player"
+        },
+        {
+            "x": 7,
+            "y": 1,
+            "type": "invincibility_potion"
         }
-
     ],
     "width": 10,
     "height": 10,

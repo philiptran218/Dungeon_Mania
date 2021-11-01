@@ -11,7 +11,6 @@ import dungeonmania.util.Position;
 
 public class Portal extends StaticEntity {
     private Position teleportPos;
-    private Portal otherPortal;
     private int portalId;
     /**
      * Constructor for Portal
@@ -22,6 +21,7 @@ public class Portal extends StaticEntity {
     public Portal(String id, String type, Position pos, int portalId) {
         super(id, type, pos);
         this.portalId = portalId;
+        setType(getPortalColour(portalId));
     }
 
 
@@ -30,16 +30,43 @@ public class Portal extends StaticEntity {
         entity.moveToPos(map, newPos);
     }
 
-
-    public Portal getOtherPortal() {
-        return otherPortal;
+    /**
+     * Set the colour of the portal:
+     * 1 --> Blue
+     * 2 --> Red
+     * 3 --> Yellow
+     * 4 --> Grey
+     * @param id
+     */
+    public static String getPortalColour(int id) {
+        switch (id) {
+            case 1:
+                return "BLUE";
+            case 2:
+                return "RED";
+            case 3:
+                return "YELLOW";
+            case 4:
+                return "GREY";
+            default: 
+                return null;
+        }
     }
 
-
-    public void setOtherPortal(Portal otherPortal) {
-        this.otherPortal = otherPortal;
+    public static int colourToId(String colour) {
+        switch (colour) {
+            case "BLUE":
+                return 1;
+            case "RED":
+                return 2;
+            case "YELLOW":
+                return 3;
+            case "GREY":
+                return 4;
+            default: 
+                return 0;
+        }
     }
-
 
     /**
      * Getter for teleportPos
@@ -49,7 +76,7 @@ public class Portal extends StaticEntity {
         for (Position keys : map.keySet()) {
             if (map.get(keys).size() == 1) {
                 Entity entity = map.get(keys).get(0);
-                if (entity.getType().equals("portal") && ((Portal) entity).getPortalId() == portalId && !this.getPos().equals(entity.getPos())) {
+                if (entity instanceof Portal && ((Portal) entity).getPortalId() == portalId && !this.getPos().equals(entity.getPos())) {
                     // Other portal
                     this.teleportPos = entity.getPos().translateBy(direction);
                     return entity.getPos().translateBy(direction);
@@ -61,7 +88,10 @@ public class Portal extends StaticEntity {
         return null;
     }
 
-
+    /**
+     * Return the portal id.
+     * @return
+     */
     public int getPortalId() {
         return portalId;
     }

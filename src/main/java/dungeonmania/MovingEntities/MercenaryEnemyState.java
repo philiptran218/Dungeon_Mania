@@ -1,22 +1,30 @@
 package dungeonmania.MovingEntities;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import dungeonmania.util.Position;
-import dungeonmania.util.Direction;
 import dungeonmania.Entity;
 
 public class MercenaryEnemyState implements MercenaryState{
     private Mercenary mercenary;
 
+    /**
+     * Constructor for mercenary enermy state.
+     * @param mercenary
+     */
     public MercenaryEnemyState(Mercenary mercenary) {
         this.mercenary = mercenary;
     }
 
+    // ********************************************************************************************\\
+    //                                         Functions                                           \\
+    // ********************************************************************************************\\
+
+    /**
+     * Mecenary movement if it is mecenary is in enermy state.
+     */
     @Override
     public void move(Map<Position, List<Entity>> map) {
         Position playerPos = mercenary.getPlayerPos();
@@ -30,12 +38,14 @@ public class MercenaryEnemyState implements MercenaryState{
                 // Player will fight with an enemy, move twice
                 moveDefault(map);
             }
-
         }
-
         moveDefault(map);
     }
     
+    /**
+     * 
+     * @param map
+     */
     public void moveDefault(Map<Position, List<Entity>> map) {
         Position playerPos = mercenary.getPlayerPos();
         Position pos = mercenary.getPos();
@@ -59,6 +69,9 @@ public class MercenaryEnemyState implements MercenaryState{
         mercenary.setPreviousPlayerPos(playerPos);
     }
 
+    /**
+     * Moves away from the player when in enermy state.
+     */
     @Override
     public void moveAway(Map<Position, List<Entity>> map) {
         Position playerPos = mercenary.getPlayerPos();
@@ -81,4 +94,5 @@ public class MercenaryEnemyState implements MercenaryState{
 
         mercenary.moveToPos(map, new Position(newPos.getX(), newPos.getY(), 3));
     }
+    
 }

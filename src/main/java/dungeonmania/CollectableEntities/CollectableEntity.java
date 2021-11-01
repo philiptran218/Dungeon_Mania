@@ -17,7 +17,15 @@ public abstract class CollectableEntity extends Entity {
         super(id, type, pos);
     }
 
-    // Getters and Setters
+    /**
+     * Abstract function.
+     */
+    abstract public void use();
+
+    // ********************************************************************************************\\
+    //                                    Getters and Setters                                      \\
+    // ********************************************************************************************\\
+
     public void setPlayer(Player player) {
         this.player = player;
     }
@@ -26,5 +34,4 @@ public abstract class CollectableEntity extends Entity {
         return player;
     }
 
-    abstract public void use();
 }

@@ -8,10 +8,15 @@ import dungeonmania.MovingEntities.Player;
 import dungeonmania.StaticEntities.Exit;
 import dungeonmania.util.Position;
 
-public class ExitGoal implements GoalInterface {
-    
+public class ExitGoal implements GoalInterface { 
     private String goalName = "exit";
 
+    /**
+     * Loops through the map and checks if the player is on an exit.
+     * 
+     * @param  map the current state of the map.
+     * @return complete - a bollean which is ture if the goal is complete and false if not.
+     */
     @Override
     public boolean isGoalComplete(Map<Position, List<Entity>> map) {
         for(List<Entity> entities : map.values()) {

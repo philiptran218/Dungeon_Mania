@@ -1,10 +1,7 @@
 package dungeonmania;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -114,21 +111,6 @@ public class CollectableEntityTest {
         temp = newDungeon.tick(bombId, null);
         assertFalse(temp.getInventory().stream().anyMatch(itm -> itm.getType().equals("bomb")));
     }
-    // Test that the bomb explodes if a boulder is on an adjacent switch
-    @Test
-    public void testBomb() {
-        DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse createNew = newDungeon.newGame("bomb", "Peaceful");
-        DungeonResponse temp;
-        String switchId = getEntityId(new Position(3, 1, 0), createNew);
-        String boulder = getEntityId(new Position(2, 1, 1), createNew);
-        temp = newDungeon.tick(null, Direction.DOWN);
-        temp = newDungeon.tick(null, Direction.UP);
-        temp = newDungeon.tick(null, Direction.RIGHT);
-        temp = newDungeon.tick("bomb", null);
-        assertFalse(isEntityOnTile(temp, new Position(3, 1, 1), boulder));
-        assertFalse(isEntityOnTile(temp, new Position(3, 1, 0), switchId));        
-    }
         
     // Tests for BuildableEntities (included in CollectableEntities):
 
@@ -189,15 +171,42 @@ public class CollectableEntityTest {
 
     // Test for invincible potion
     @Test
-    public void testInviniciblePotion() {
+    public void testInviniciblePotionZombie() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse tmp = newDungeon.newGame("invincibleWithEnemies", "Standard");
-        String potionId = getEntityId(new Position(2, 1, 2), tmp);
-        newDungeon.tick(null, Direction.RIGHT);
+        DungeonResponse tmp = newDungeon.newGame("invincibleWithZombie", "Standard");
+        String zombieId = getEntityId(new Position(3, 1, 3), tmp);
+        String potionId = getEntityId(new Position(7, 1, 2), tmp);
+        tmp = newDungeon.tick(null, Direction.LEFT);
         tmp = newDungeon.tick(potionId,null);
-        String mercenaryId = getEntityId(new Position(2, 1, 3), tmp);
-        newDungeon.tick(null, Direction.RIGHT);
-        assertTrue(isEntityOnTile(tmp, new Position(5, 1), mercenaryId));
+        tmp = newDungeon.tick(null, Direction.LEFT);
+        tmp = newDungeon.tick(null, Direction.LEFT);
+        assertTrue(isEntityOnTile(tmp, new Position(1, 1), zombieId));
+    }
+
+    @Test
+    public void testInviniciblePotionMerc() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse tmp = newDungeon.newGame("invincibleWithMerc", "Standard");
+        String mercId = getEntityId(new Position(3, 1, 3), tmp);
+        String potionId = getEntityId(new Position(7, 1, 2), tmp);
+        tmp = newDungeon.tick(null, Direction.LEFT);
+        tmp = newDungeon.tick(potionId,null);
+        tmp = newDungeon.tick(null, Direction.LEFT);
+        tmp = newDungeon.tick(null, Direction.LEFT);
+        assertTrue(isEntityOnTile(tmp, new Position(1, 1), mercId));
+    }
+
+    @Test
+    public void testInviniciblePotionSpider() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse tmp = newDungeon.newGame("invincibleWithSpider", "Standard");
+        String spiderId = getEntityId(new Position(3, 1, 3), tmp);
+        String potionId = getEntityId(new Position(7, 1, 2), tmp);
+        tmp = newDungeon.tick(null, Direction.LEFT);
+        tmp = newDungeon.tick(potionId,null);
+        tmp = newDungeon.tick(null, Direction.LEFT);
+        tmp = newDungeon.tick(null, Direction.LEFT);
+        assertTrue(isEntityOnTile(tmp, new Position(2, 0), spiderId));
     }
     @Test
     public void testUseTreasure() {

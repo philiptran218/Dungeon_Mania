@@ -21,7 +21,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class DungeonManiaController {
+    // Game Map
     private GameMap gameMap;
+
     /**
      * Empty Constructor
      */
@@ -36,16 +38,20 @@ public class DungeonManiaController {
         return "default";
     }
 
+    /**
+     * Language intialisation.
+     * @return String
+     */
     public String getLocalisation() {
         return "en_US";
     }
 
+    /**
+     * Returns a list of game modes.
+     * @return List<String> List of all game modes.
+     */
     public List<String> getGameModes() {
         return Arrays.asList("Standard", "Peaceful", "Hard");
-    }
-
-    public List<String> getUsableItems() {
-        return Arrays.asList("bomb", "health_potion", "invincibility_potion", "invisibility_potion", null);
     }
 
     /**
@@ -80,6 +86,14 @@ public class DungeonManiaController {
         }
     }
     
+    /**
+     * Creates a new game in the ManiaController, and throw IllegalArgumentException
+     * if the dungeon name is not valid or game mode given is not valid.
+     * @param dungeonName (String)
+     * @param gameMode (String)
+     * @return DungeonResponse
+     * @throws IllegalArgumentException
+     */
     public DungeonResponse newGame(String dungeonName, String gameMode) throws IllegalArgumentException {
         if (!getGameModes().contains(gameMode)) {
             throw new IllegalArgumentException("Game mode does not exist.");
@@ -90,6 +104,12 @@ public class DungeonManiaController {
         return gameMap.returnDungeonResponse();
     }
     
+    /**
+     * Save the the current game that is running with the given name.
+     * @param name (String)
+     * @return DungeonResponse
+     * @throws IllegalArgumentException
+     */
     public DungeonResponse saveGame(String name) throws IllegalArgumentException {
         // Advanced 
         this.gameMap.saveMapAsJson(name);
@@ -97,12 +117,23 @@ public class DungeonManiaController {
         return gameMap.returnDungeonResponse();
     }
 
+    /**
+     * Load the game with the given name, throws IllegalArgumentException
+     * if the name provided is not a saved game.
+     * @param name (String)
+     * @return DungeonResponse
+     * @throws IllegalArgumentException
+     */
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
         this.gameMap = new GameMap(name);
         // Return DungeonResponse
         return gameMap.returnDungeonResponse();
     }
 
+    /**
+     * Returns a list of all saved sames.
+     * @return List<String> List of saved games.
+     */
     public List<String> allGames() {
         try {
             return FileLoader.listFileNamesInResourceDirectory("/saved_games");
@@ -111,28 +142,25 @@ public class DungeonManiaController {
         }
     }
 
+    /**
+     * For every entity on the map, update its status whether it is moving the 
+     * entity or static entity exibiting its behaviour. Throws exception when 
+     * the item used is not valid.
+     * @param itemUsed (String)
+     * @param movementDirection (Direction)
+     * @return DungeonResponse
+     * @throws IllegalArgumentException
+     * @throws InvalidActionException
+     */
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
         // If itemUsed is NULL move the player:
         if (itemUsed == null) {
             gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
         } else {
             // Get the entity on map:
-            CollectableEntity c = gameMap.getPlayer().getInventory().getItemById(itemUsed);
-            // Check inventory in item.
-            if (c == null) {
-                throw new InvalidActionException("Player does not have the item.");
-            }
-            if (!getUsableItems().contains(c.getType())) {
-                throw new IllegalArgumentException("Cannot use item.");
-            }
-            // Check if item is a bomb
-            if (gameMap.getPlayer().getInventory().getItemById(itemUsed).getType().equals("bomb")) {
-                Bomb bomb = (Bomb) gameMap.getPlayer().getInventory().getItemById(itemUsed);
-                gameMap.getMap().get(gameMap.getPlayer().getPos().asLayer(2)).add(bomb);
-            }
-            // Otherwise player can use the item
-            gameMap.getPlayer().getInventory().getItemById(itemUsed).use();
+            gameMap.getPlayer().useItem(gameMap.getMap(), itemUsed);
         }
+
         // Ticks the duration of any active potions
         gameMap.getPlayer().tickPotions();
         
@@ -183,6 +211,15 @@ public class DungeonManiaController {
         return gameMap.returnDungeonResponse();
     }
 
+    /**
+     * If an entity is clicked on the frontend and the entity is interactable
+     * passes its id into this function and perform actions as required based 
+     * on which interactable entity it is.
+     * @param entityId (String)
+     * @return DungeonResponse
+     * @throws IllegalArgumentException
+     * @throws InvalidActionException
+     */
     public DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {
         // Checks if the entity is on the map.
         if (gameMap.getEntityOnMap(entityId) == null) {
@@ -201,6 +238,15 @@ public class DungeonManiaController {
         return gameMap.returnDungeonResponse();
     }
 
+    /**
+     * Given a buildable item, build the item using the material in the player's
+     * inventory and removes the items used and add the item crafted into 
+     * the player's inventory.
+     * @param buildable (String)
+     * @return DungeonResponse
+     * @throws IllegalArgumentException
+     * @throws InvalidActionException
+     */
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
         if (!(buildable.equals("bow") || buildable.equals("shield"))) {
             throw new IllegalArgumentException();
