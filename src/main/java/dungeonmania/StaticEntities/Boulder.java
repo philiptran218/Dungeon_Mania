@@ -39,22 +39,25 @@ public class Boulder extends StaticEntity {
     }
 
     /**
-     * Pushes a boulder in a direction, updates map
+     * Pushes a boulder in a direction, detonates a bomb if boulder goes onto a switch
      * @param map
      * @param direction
      */
     public void push(Map<Position, List<Entity>> map, Direction direction) {
-        Position pos = super.getPos();
+        Position pos = super.getPos(); // Boulder position
         Position newPos = pos.translateBy(direction);
         map.get(pos).clear();
         map.get(newPos).add(this);
         super.setPos(newPos);
+
+        pos = super.getPos();
 
         List<Entity> entities = map.get(getPos().asLayer(0));
         if ( entities.size() > 0 && entities.get(0).getType().equals("switch")) {
             // Boulder is on a switch
             List<Position> adjacentPos = pos.getCardinallyAdjacentPositions();
             for (Position tempPos: adjacentPos) {
+
                 List<Entity> collectablEntities = map.get(tempPos.asLayer(2));
                 if (collectablEntities.size() > 0 && collectablEntities.get(0).getType().equals("bomb")) {
                     // contains bomb
