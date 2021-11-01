@@ -1,18 +1,28 @@
 package dungeonmania.Goals;
 
 public class GoalFactory {
-
+	/**
+	 * Creates the respective goal class given the goal type.
+	 * 
+	 * @param goalType - a string representing the type of goal to be made
+	 * @return goal - a GoalInterface object
+	 */
     public static GoalInterface getGoal(String goalType) {
-        GoalInterface goal = null;
-        if (goalType.equals("exit")) {
-			goal = new ExitGoal();
-		} else if (goalType.equals("boulders")) {
-			goal = new BouldersGoal();
-		} else if (goalType.equals("enemies")) { 
-			goal = new EnemiesGoal();
-		} else if (goalType.equals("treasure")) {
-			goal = new TreasureGoal();
+		switch (goalType) {
+			case "exit":
+				return new ExitGoal();
+			case "boulders":
+				return new BouldersGoal();
+			case "enemies":
+				return new EnemiesGoal();
+			case "treasure":
+				return new TreasureGoal();
+			case "AND":
+				return new AndGoal();
+			case "OR":
+				return new OrGoal();
+			default:
+				return null;
 		}
-		return goal;
-    }
+	}
 }

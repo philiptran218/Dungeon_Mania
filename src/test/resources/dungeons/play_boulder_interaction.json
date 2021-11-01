@@ -141,5 +141,10 @@
         "y": 5,
         "type": "boulder"
       }
-    ]
+    ],
+    "width": 10,
+    "height": 10,
+    "goal-condition": {
+        "goal": "enemies"
+    }
 }
