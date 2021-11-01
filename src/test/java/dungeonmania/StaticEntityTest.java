@@ -152,10 +152,19 @@ public class StaticEntityTest {
     public void testDetonateBomb() {
         DungeonManiaController newDungeon = new DungeonManiaController();
         DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "Peaceful");
-        String spawner = getEntityId(new Position(1, 1, 1), createNew);
-        newDungeon.tick(null, Direction.DOWN);
+        DungeonResponse tmp;
+        String playerId = getEntityId(new Position(1, 1, 3), createNew);
+        String boulderId = getEntityId(new Position(3, 2, 1), createNew);
+        String bombId = getEntityId(new Position(3, 4, 2), createNew);
+        String switchId = getEntityId(new Position(3, 3, 2), createNew);
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
-        assertThrows(InvalidActionException.class, () -> newDungeon.interact(spawner));
+        // Explode the bomb:
+        tmp = newDungeon.tick(null, Direction.DOWN);
+        
+        assertFalse(isEntityOnTile(tmp, new Position(3, 3, 1), boulderId));
+        assertFalse(isEntityOnTile(tmp, new Position(3, 4, 2), bombId));
+        assertFalse(isEntityOnTile(tmp, new Position(3, 3, 2), switchId));
+        assertTrue(isEntityOnTile(tmp, new Position(3, 2, 3), playerId));
     }
 }
