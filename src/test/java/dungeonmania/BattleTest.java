@@ -150,4 +150,17 @@ public class BattleTest {
         assertTrue(temp.getInventory().stream().anyMatch(e -> e.getType().equals("spider")));
     }
 
+    // Tests using invincible potion and then battling.
+    @Test
+    public void testInvincibleBattle() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse temp = newDungeon.newGame("invincibleBattle", "Standard");
+        String invincibleId = getEntityId(new Position(1, 0, 2), temp);
+        String zombieId = getEntityId(new Position(2, 1, 3), temp);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(invincibleId, null);
+        newDungeon.tick(null, Direction.DOWN);
+        temp = newDungeon.tick(null, Direction.RIGHT);
+        assertFalse(isEntityOnTile(temp, new Position(2, 1, 3), zombieId));
+    }
 }

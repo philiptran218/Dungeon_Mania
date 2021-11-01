@@ -8,9 +8,14 @@ import dungeonmania.StaticEntities.FloorSwitch;
 import dungeonmania.util.Position;
 
 public class BouldersGoal implements GoalInterface {
-    
     private String goalName = "boulders";
     
+    /**
+     * Loops through the map to check if all floor switches have been activated.
+     * 
+     * @param  map the current state of the map.
+     * @return complete - a bollean which is ture if the goal is complete and false if not.
+     */
     @Override
     public boolean isGoalComplete(Map<Position, List<Entity>> map) {
         for(List<Entity> entities : map.values()) {
