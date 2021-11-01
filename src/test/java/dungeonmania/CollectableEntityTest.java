@@ -112,14 +112,6 @@ public class CollectableEntityTest {
         assertFalse(temp.getInventory().stream().anyMatch(itm -> itm.getType().equals("bomb")));
     }
 
-    // Tests trying to use a potion even if player does not have it
-    @Test
-    public void testItemNotInInventory() {
-        DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse tmp = newDungeon.newGame("advanced", "Peaceful");
-        String invinc = getEntityId(new Position(11, 10, 2), tmp);
-        assertThrows(InvalidActionException.class, () -> newDungeon.tick(invinc, null));
-    }
 
     // Tests using an item of an unaccepted type
     @Test
@@ -241,5 +233,34 @@ public class CollectableEntityTest {
         tmp = newDungeon.tick(null, Direction.LEFT);
         tmp = newDungeon.tick(null, Direction.LEFT);
         assertTrue(isEntityOnTile(tmp, new Position(2, 0), spiderId));
+    }
+    @Test
+    public void testUseTreasure() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse tmp = newDungeon.newGame("mercenary", "Peaceful");
+        String treasure = getEntityId(new Position(2, 1, 2), tmp);
+        newDungeon.tick(null, Direction.RIGHT);
+        assertThrows(IllegalArgumentException.class, () -> newDungeon.tick(treasure, null));
+    }
+    @Test
+    public void testItemNotInInventory() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse tmp = newDungeon.newGame("advanced", "Peaceful");
+        String invinc = getEntityId(new Position(11, 10, 2), tmp);
+        assertThrows(InvalidActionException.class, () -> newDungeon.tick(invinc, null));
+    }
+    @Test
+    public void testEntityExists() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse tmp = newDungeon.newGame("advanced", "Peaceful");
+        String entity = getEntityId(new Position(2, 2, 2), tmp);
+        assertThrows(IllegalArgumentException.class, () -> newDungeon.interact(entity));
+    }
+    @Test
+    public void testEntityNotInteractable() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse tmp = newDungeon.newGame("advanced", "Peaceful");
+        String entity = getEntityId(new Position(0, 2, 1), tmp);
+        assertThrows(IllegalArgumentException.class, () -> newDungeon.interact(entity));
     }
 }

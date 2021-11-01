@@ -113,6 +113,33 @@ public class StaticEntityTest {
         String zombie = getEntityId(new Position(2, 2, 3), temp);
         assertTrue(isEntityOnTile(temp, new Position(2, 2, 3), zombie));
     }
+    @Test
+    public void testZombieSpawnerStandard() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawn", "Standard");
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        String zombie = getEntityId(new Position(2, 2, 3), temp);
+        assertTrue(isEntityOnTile(temp, new Position(2, 2, 3), zombie));
+    }
     // Tests if a player can destroy the zombie toast spawner
     @Test
     public void testInteractionZombieSpawner() {
@@ -123,7 +150,20 @@ public class StaticEntityTest {
         temp = newDungeon.interact(spawner);
         assertFalse(isEntityOnTile(temp, new Position(3, 1, 1), spawner));
     }
-
+    @Test
+    public void testZombieSpawnerBow() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawner_bow", "Standard");
+        String spawner = getEntityId(new Position(3, 1, 1), temp);
+        temp = newDungeon.tick(null, Direction.DOWN);
+        temp = newDungeon.tick(null, Direction.RIGHT);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.DOWN);
+        temp = newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.build("bow");
+        temp = newDungeon.interact(spawner);
+        assertFalse(isEntityOnTile(temp, new Position(3, 1, 1), spawner));
+    }
     // Tests if an exception is thrown if player is not in range of spawner
     @Test
     public void testNotInRangeException() {
