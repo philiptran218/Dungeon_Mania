@@ -172,7 +172,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
             throw new InvalidActionException("Player does not have the item.");
         }
 
-        if (this.inventory.getNoItemType("bomb") > 0) {
+        if (item.getType().equals("bomb")) {
             // Item is a bomb
             Bomb bomb = (Bomb) this.inventory.getItemById(itemUsed);
             map.get(super.getPos().asLayer(2)).add(bomb);

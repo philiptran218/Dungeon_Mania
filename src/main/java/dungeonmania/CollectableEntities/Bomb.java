@@ -7,7 +7,7 @@ import dungeonmania.Entity;
 import dungeonmania.util.Position;
 
 public class Bomb extends CombatItems {
-    private int explosionRadius = 3;
+    private int explosionRadius = 2;
     public Bomb(String id, String type, Position pos) {
         super(id, type, pos);
     }
@@ -28,7 +28,9 @@ public class Bomb extends CombatItems {
                 if (player != null) {
                     entities.clear();
                     entities.add(player);
-                }  
+                }   else {
+                    entities.clear();
+                }
             }
         }
     }
