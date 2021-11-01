@@ -36,16 +36,7 @@ public class BattleTest {
     @Test
     public void basicBattle() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("spider", "Hard");
-
-        newDungeon.tick(null, Direction.UP);
-        newDungeon.tick(null, Direction.UP);
-        newDungeon.tick(null, Direction.UP);
-        newDungeon.tick(null, Direction.UP);
-        newDungeon.tick(null, Direction.UP);
-        newDungeon.tick(null, Direction.UP);
-        newDungeon.tick(null, Direction.UP);
-        newDungeon.tick(null, Direction.UP);
+        newDungeon.newGame("onlySpiderAndPlayer", "Hard");
         // Should kill the spider in combat
         DungeonResponse temp = newDungeon.tick(null, Direction.RIGHT);
         assertFalse(temp.getEntities().stream().anyMatch(e -> e.getType().equals("spider")));
@@ -132,7 +123,7 @@ public class BattleTest {
         DungeonResponse temp = newDungeon.newGame("invisibility_battle", "Hard");
 
         String invisId = getEntityId(new Position(2, 1, 2), temp);
-        newDungeon.tick(null, Direction.RIGHT);
+        temp = newDungeon.tick(null, Direction.RIGHT);
         assertTrue(temp.getInventory().stream().anyMatch(e -> e.getType().equals("invisibility_potion")));
         temp = newDungeon.tick(invisId, null);
         assertFalse(temp.getInventory().stream().anyMatch(e -> e.getType().equals("invisibility_potion")));
@@ -146,8 +137,7 @@ public class BattleTest {
 
         // Assert that enemies are still alive
         assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
-        assertTrue(temp.getInventory().stream().anyMatch(e -> e.getType().equals("zombie_toast")));
-        assertTrue(temp.getInventory().stream().anyMatch(e -> e.getType().equals("spider")));
+        assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("zombie_toast")));
     }
 
     // Tests using invincible potion and then battling.
