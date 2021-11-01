@@ -111,6 +111,22 @@ public class CollectableEntityTest {
         temp = newDungeon.tick(bombId, null);
         assertFalse(temp.getInventory().stream().anyMatch(itm -> itm.getType().equals("bomb")));
     }
+
+    @Test
+    public void testItemNotInInventory() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse tmp = newDungeon.newGame("advanced", "Peaceful");
+        String invinc = getEntityId(new Position(11, 10, 2), tmp);
+        assertThrows(InvalidActionException.class, () -> newDungeon.tick(invinc, null));
+    }
+
+    @Test
+    public void testUnusableItem() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse tmp = newDungeon.newGame("advanced", "Peaceful");
+        String treasure = getEntityId(new Position(7, 10, 2), tmp);
+        assertThrows(IllegalArgumentException.class, () -> newDungeon.tick(treasure, null));
+    }
         
     // Tests for BuildableEntities (included in CollectableEntities):
 
