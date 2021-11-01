@@ -146,9 +146,22 @@ public class CollectableEntityTest {
 
     // Tests if a shield can be built successfully 
     @Test
-    public void testSuccessfulBuildShield() {
+    public void testSuccessfulBuildShieldTreasure() {
         DungeonManiaController newDungeon = new DungeonManiaController();
         newDungeon.newGame("build_shield", "Peaceful");
+        List<ItemResponse> inv;
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.DOWN);
+        newDungeon.tick(null, Direction.LEFT);
+        inv = newDungeon.build("shield").getInventory();
+        assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("shield")));
+    }
+
+    @Test
+    public void testSuccessfulBuildShieldKey() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("build_shield_key", "Peaceful");
         List<ItemResponse> inv;
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
