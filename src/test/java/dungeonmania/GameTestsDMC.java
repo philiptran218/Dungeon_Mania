@@ -75,4 +75,25 @@ public class GameTestsDMC {
         assertThrows(IllegalArgumentException.class, () -> newDungeon.loadGame("non existent game"));
     }
 
+    // Coverage unused functions.
+    @Test
+    public void testAllGameFunctionValid() {
+        assertDoesNotThrow(() -> {
+            // Create dungeon controller
+            DungeonManiaController newDungeon = new DungeonManiaController();
+            Thread.sleep(3000);
+            assertTrue(newDungeon.allGames().size() == 0);
+        });
+    }
+
+    @Test
+    public void testAllGameFunctionInvalid() {
+        assertDoesNotThrow(() -> {
+            // Create dungeon controller
+            DungeonManiaController newDungeon = new DungeonManiaController();
+            Thread.sleep(3000);
+            assertTrue(newDungeon.allGames().size() == 0);
+        });
+    }
+
 }
