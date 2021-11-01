@@ -60,4 +60,13 @@ public class MapHelper {
             return new HardState();
         }
     }
+
+    /**
+     * Given a list, convert the list in to a json object and 
+     * return that jsonObject.
+     * @return JSONObject of the list.
+     */
+    public static JSONObject makeJsonObject() {
+        return null;
+    }
 }

@@ -203,7 +203,7 @@ public class GameMap {
                 } else {
                     temp.put("type", e.getType());
                 }
-
+                
                 if (e.getType().equals("key")) {
                     temp.put("key", ((Key) e).getKeyId());
                 } else if (e.getType().equals("door")) {
