@@ -68,11 +68,4 @@ public class Bow extends CombatItems {
         durability = num;
     }
     
-    public int getDurability() {
-        return durability;
-    }
-
-    public double getDamage() {
-        return DAMAGE;
-    }
 }

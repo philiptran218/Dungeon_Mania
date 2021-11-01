@@ -1,10 +1,7 @@
 package dungeonmania;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -113,21 +110,6 @@ public class CollectableEntityTest {
         assertFalse(temp.getInventory().stream().anyMatch(itm -> itm.getType().equals("invisibility_potion")));
         temp = newDungeon.tick(bombId, null);
         assertFalse(temp.getInventory().stream().anyMatch(itm -> itm.getType().equals("bomb")));
-    }
-    // Test that the bomb explodes if a boulder is on an adjacent switch
-    @Test
-    public void testBomb() {
-        DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse createNew = newDungeon.newGame("bomb", "Peaceful");
-        DungeonResponse temp;
-        String switchId = getEntityId(new Position(3, 1, 0), createNew);
-        String boulder = getEntityId(new Position(2, 1, 1), createNew);
-        temp = newDungeon.tick(null, Direction.DOWN);
-        temp = newDungeon.tick(null, Direction.UP);
-        temp = newDungeon.tick(null, Direction.RIGHT);
-        temp = newDungeon.tick("bomb", null);
-        assertFalse(isEntityOnTile(temp, new Position(3, 1, 1), boulder));
-        assertFalse(isEntityOnTile(temp, new Position(3, 1, 0), switchId));        
     }
         
     // Tests for BuildableEntities (included in CollectableEntities):
