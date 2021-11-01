@@ -306,7 +306,7 @@ public class GameMap {
         }
         // Check conditions
         Random random = new Random();
-        if (random.nextInt(10) == 4 && spiders < 5) {
+        if (random.nextInt(20) == 4 && spiders < 5) {
             Random x = new Random();
             Random y = new Random();
             // New x and y positions

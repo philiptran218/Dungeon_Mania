@@ -113,6 +113,33 @@ public class StaticEntityTest {
         String zombie = getEntityId(new Position(2, 2, 3), temp);
         assertTrue(isEntityOnTile(temp, new Position(2, 2, 3), zombie));
     }
+    @Test
+    public void testZombieSpawnerStandard() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawn", "Standard");
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.UP);
+        String zombie = getEntityId(new Position(2, 2, 3), temp);
+        assertTrue(isEntityOnTile(temp, new Position(2, 2, 3), zombie));
+    }
     // Tests if a player can destroy the zombie toast spawner
     @Test
     public void testInteractionZombieSpawner() {
@@ -123,7 +150,20 @@ public class StaticEntityTest {
         temp = newDungeon.interact(spawner);
         assertFalse(isEntityOnTile(temp, new Position(3, 1, 1), spawner));
     }
-
+    @Test
+    public void testZombieSpawnerBow() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawner_bow", "Standard");
+        String spawner = getEntityId(new Position(3, 1, 1), temp);
+        temp = newDungeon.tick(null, Direction.DOWN);
+        temp = newDungeon.tick(null, Direction.RIGHT);
+        temp = newDungeon.tick(null, Direction.UP);
+        temp = newDungeon.tick(null, Direction.DOWN);
+        temp = newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.build("bow");
+        temp = newDungeon.interact(spawner);
+        assertFalse(isEntityOnTile(temp, new Position(3, 1, 1), spawner));
+    }
     // Tests if an exception is thrown if player is not in range of spawner
     @Test
     public void testNotInRangeException() {
@@ -142,5 +182,131 @@ public class StaticEntityTest {
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
         assertThrows(InvalidActionException.class, () -> newDungeon.interact(spawner));
+    }
+
+    // Testing detonation of bomb:
+    // Tests if an exception is thrown if player tries to destroy spawner without a weapon
+    @Test
+    public void testDetonateBomb() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "Peaceful");
+        DungeonResponse tmp;
+        String playerId = getEntityId(new Position(1, 1, 3), createNew);
+        String boulderId = getEntityId(new Position(3, 2, 1), createNew);
+        String bombId = getEntityId(new Position(3, 4, 2), createNew);
+        String switchId = getEntityId(new Position(3, 3, 2), createNew);
+
+        // Explode the bomb:
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        tmp = newDungeon.tick(null, Direction.DOWN);
+        
+        assertFalse(isEntityOnTile(tmp, new Position(3, 3, 1), boulderId));
+        assertFalse(isEntityOnTile(tmp, new Position(3, 4, 2), bombId));
+        assertFalse(isEntityOnTile(tmp, new Position(3, 3, 2), switchId));
+        assertTrue(isEntityOnTile(tmp, new Position(3, 2, 3), playerId));
+    }
+
+    // Testing detonation of bomb after picking up then placing it
+    // down.
+    @Test
+    public void testDetonateBombAfterPickUp() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "Peaceful");
+        DungeonResponse tmp;
+        String playerId = getEntityId(new Position(1, 1, 3), createNew);
+        String boulderId = getEntityId(new Position(3, 2, 1), createNew);
+        String bombId = getEntityId(new Position(3, 4, 2), createNew);
+        String switchId = getEntityId(new Position(3, 3, 0), createNew);
+
+        // Get bomb:
+        newDungeon.tick(null, Direction.DOWN);
+        newDungeon.tick(null, Direction.DOWN);
+        newDungeon.tick(null, Direction.DOWN);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+
+        // Use the bomb:
+        tmp = newDungeon.tick(bombId, Direction.NONE);
+        assertTrue(isEntityOnTile(tmp, new Position(3, 4, 2), bombId));
+
+        // Push boulder onto the swtich:
+        newDungeon.tick(null, Direction.LEFT);
+        newDungeon.tick(null, Direction.UP);
+        newDungeon.tick(null, Direction.UP);
+        newDungeon.tick(null, Direction.UP);
+        newDungeon.tick(null, Direction.RIGHT);
+        tmp = newDungeon.tick(null, Direction.DOWN);
+        
+        assertFalse(isEntityOnTile(tmp, new Position(3, 3, 1), boulderId));
+        assertFalse(isEntityOnTile(tmp, new Position(3, 4, 2), bombId));
+        assertFalse(isEntityOnTile(tmp, new Position(3, 3, 2), switchId));
+        assertTrue(isEntityOnTile(tmp, new Position(3, 2, 3), playerId));
+    }
+
+    // Testing detonation of bomb after picking up then placing it
+    // down.
+    @Test
+    public void testBombKillMobs() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "Peaceful");
+        DungeonResponse tmp;
+        String playerId = getEntityId(new Position(1, 1, 3), createNew);
+        String boulderId = getEntityId(new Position(3, 2, 1), createNew);
+        String bombId = getEntityId(new Position(3, 4, 2), createNew);
+        String switchId = getEntityId(new Position(3, 3, 0), createNew);
+        String merceId = getEntityId(new Position(4, 6, 3), createNew);
+        String wallId = getEntityId(new Position(4, 3, 1), createNew);
+
+        // Explode the bomb:
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        tmp = newDungeon.tick(null, Direction.DOWN);
+        
+        assertFalse(isEntityOnTile(tmp, new Position(3, 3, 1), boulderId));
+        assertFalse(isEntityOnTile(tmp, new Position(3, 4, 2), bombId));
+        assertFalse(isEntityOnTile(tmp, new Position(3, 3, 2), switchId));
+        assertFalse(isEntityOnTile(tmp, new Position(4, 6, 3), merceId));
+        assertFalse(isEntityOnTile(tmp, new Position(4, 3, 1), wallId));
+        assertTrue(isEntityOnTile(tmp, new Position(3, 2, 3), playerId));
+    }
+
+    // Testing detonation of bomb radius
+    @Test
+    public void testDetonationRadius() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "Peaceful");
+        DungeonResponse tmp;
+        String playerId = getEntityId(new Position(1, 1, 3), createNew);
+        String boulderId = getEntityId(new Position(3, 2, 1), createNew);
+        String bombId = getEntityId(new Position(3, 4, 2), createNew);
+        String switchId = getEntityId(new Position(3, 3, 0), createNew);
+        String merceId = getEntityId(new Position(4, 6, 3), createNew);
+        String wallId = getEntityId(new Position(4, 3, 1), createNew);
+
+        // Pick up bomb
+        newDungeon.tick(null, Direction.DOWN);
+        newDungeon.tick(null, Direction.DOWN);
+        newDungeon.tick(null, Direction.DOWN);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+
+        // Place bomb:
+        newDungeon.tick(null, Direction.LEFT);
+        newDungeon.tick(null, Direction.UP);
+        newDungeon.tick(bombId, Direction.NONE);
+
+        // Explode the bomb:
+        newDungeon.tick(null, Direction.UP);
+        newDungeon.tick(null, Direction.UP);
+        newDungeon.tick(null, Direction.RIGHT);
+        tmp = newDungeon.tick(null, Direction.DOWN);
+
+        assertFalse(isEntityOnTile(tmp, new Position(3, 3, 1), boulderId));
+        assertFalse(isEntityOnTile(tmp, new Position(3, 4, 2), bombId));
+        assertFalse(isEntityOnTile(tmp, new Position(3, 3, 2), switchId));
+        assertFalse(isEntityOnTile(tmp, new Position(4, 6, 3), merceId));
+        assertTrue(isEntityOnTile(tmp, new Position(4, 3, 1), wallId));
+        assertTrue(isEntityOnTile(tmp, new Position(3, 2, 3), playerId));
     }
 }
