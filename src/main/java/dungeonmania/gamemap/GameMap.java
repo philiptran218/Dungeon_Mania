@@ -43,6 +43,9 @@ public class GameMap {
     // Game State: **************
     private GameState gameState;
 
+    // Seed counter used for spider
+    int seed;
+
     /**
      * This constructor used for establishing new games
      * @param difficulty (String)
@@ -305,10 +308,10 @@ public class GameMap {
             return;
         }
         // Check conditions
-        Random random = new Random();
-        if (random.nextInt(20) == 4 && spiders < 5) {
-            Random x = new Random();
-            Random y = new Random();
+        Random random = new Random(seed);
+        if (random.nextInt(10) == 5 && spiders < 5) {
+            Random x = new Random(seed + 1);
+            Random y = new Random(seed + 2);
             // New x and y positions
             int xPos = x.nextInt(width - 2) + 1;
             int yPos = y.nextInt(height - 2) + 1;
@@ -329,6 +332,7 @@ public class GameMap {
             dungeonMap.get(newSpider).add(spider);
             player.registerObserver(spider);
         }
+        seed = seed +124;
     }
 
     // This function should be in player.
