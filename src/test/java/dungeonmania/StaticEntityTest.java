@@ -94,8 +94,7 @@ public class StaticEntityTest {
     @Test
     public void testZombieSpawner() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse temp;
-        DungeonResponse createNew = newDungeon.newGame("zombie_toast_spawner", "Hard");
+        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawn", "Hard");
         temp = newDungeon.tick(null, Direction.UP);
         temp = newDungeon.tick(null, Direction.UP);
         temp = newDungeon.tick(null, Direction.UP);
@@ -111,9 +110,8 @@ public class StaticEntityTest {
         temp = newDungeon.tick(null, Direction.UP);
         temp = newDungeon.tick(null, Direction.UP);
         temp = newDungeon.tick(null, Direction.UP);
-        temp = newDungeon.tick(null, Direction.UP);
-        String zombie = getEntityId(new Position(3, 2, 3), createNew);
-        assertTrue(isEntityOnTile(temp, new Position(3, 2, 3), zombie));
+        String zombie = getEntityId(new Position(2, 2, 3), temp);
+        assertTrue(isEntityOnTile(temp, new Position(2, 2, 3), zombie));
     }
     // Tests if a player can destroy the zombie toast spawner
     @Test

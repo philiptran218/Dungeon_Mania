@@ -232,7 +232,7 @@ public class CollectableEntityTest {
         String spiderId = getEntityId(new Position(3, 1, 3), tmp);
         String potionId = getEntityId(new Position(7, 1, 2), tmp);
         tmp = newDungeon.tick(null, Direction.LEFT);
-        tmp = newDungeon.tick(potionId,null);
+        tmp = newDungeon.tick(potionId, null);
         tmp = newDungeon.tick(null, Direction.LEFT);
         tmp = newDungeon.tick(null, Direction.LEFT);
         assertTrue(isEntityOnTile(tmp, new Position(2, 0), spiderId));
