@@ -280,7 +280,7 @@ public class MovingEntityTest {
         assertThrows(InvalidActionException.class, () -> controller.interact(MercId));
     }
     @Test
-    public void testBribedMovement () {
+    public void testBribedMovement() {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
