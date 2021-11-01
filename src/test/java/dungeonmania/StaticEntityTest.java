@@ -145,4 +145,17 @@ public class StaticEntityTest {
         newDungeon.tick(null, Direction.RIGHT);
         assertThrows(InvalidActionException.class, () -> newDungeon.interact(spawner));
     }
+
+    // Testing detonation of bomb:
+    // Tests if an exception is thrown if player tries to destroy spawner without a weapon
+    @Test
+    public void testDetonateBomb() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "Peaceful");
+        String spawner = getEntityId(new Position(1, 1, 1), createNew);
+        newDungeon.tick(null, Direction.DOWN);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        assertThrows(InvalidActionException.class, () -> newDungeon.interact(spawner));
+    }
 }
