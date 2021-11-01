@@ -76,7 +76,7 @@ public class Mercenary extends MovingEntity {
     }
 
     /**
-     * Checks is the mecenary can pass a certain position.
+     * Checks if the mecenary can pass a certain position.
      */
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
         return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty();    
@@ -91,7 +91,7 @@ public class Mercenary extends MovingEntity {
 
     /**
      * Checks the state of the ally.
-     * @return
+     * @return true if the mercenary is an ally (has been bribed)
      */
     public boolean isAlly() {
         return state.equals(allyState);
