@@ -29,6 +29,16 @@ public class BattleTest {
         }
         return null;
     }
+    // Gets the id of entity on a position:
+    public String getEntityId(Position pos, DungeonResponse response, String type) {
+        for (EntityResponse entity : response.getEntities()) {
+            if (entity.getPosition().equals(pos) && entity.getPosition().getLayer() == pos.getLayer()
+                && entity.getType().equals(type)) {
+                return entity.getId();
+            }
+        }
+        return null;
+    }
 
     // Tests for Battles:
 
@@ -179,5 +189,34 @@ public class BattleTest {
         assertFalse(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
         // Player should still be alive
         assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("player")));
+    }
+    @Test 
+    public void testArmourCombatInvincible() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse temp = newDungeon.newGame("onslaught_armour_invincible", "Hard");
+        String potionId = getEntityId(new Position(2,1,2), temp);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(potionId, null);
+        for (int i = 0; i < 20; i++) {
+            temp = newDungeon.tick(null, Direction.RIGHT);
+        }
+        assertFalse(temp.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
+        // Player should still be alive
+        assertTrue(temp.getEntities().stream().anyMatch(e -> e.getType().equals("player")));
+    }
+
+    @Test
+    public void testBattleWithMerc() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("battleWithAllyMerc", "Standard");
+        String MercId = getEntityId(new Position(4, 1, 3), tmp, "mercenary");
+        assertTrue(":enemies".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.RIGHT);
+        tmp = controller.interact(MercId);
+        tmp = controller.tick(null, Direction.RIGHT);
+        tmp = controller.tick(null, Direction.RIGHT);
+        assertTrue("".equals(tmp.getGoals()));
     }
 }
