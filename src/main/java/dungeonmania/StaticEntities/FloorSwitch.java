@@ -28,10 +28,7 @@ public class FloorSwitch extends StaticEntity {
         if (entities.isEmpty()) {
             return false;
         }
-        if (entities.get(0) instanceof Boulder) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return (entities.get(0) instanceof Boulder);
     }
 }
