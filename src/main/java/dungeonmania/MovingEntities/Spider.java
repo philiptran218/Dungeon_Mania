@@ -11,17 +11,27 @@ import dungeonmania.Entity;
 
 
 public class Spider extends MovingEntity {
+    private List<Position> path = new ArrayList<Position>();
     private Position startPos;
     private boolean clockwise = true; // 1 for clockwise
-    private List<Position> path = new ArrayList<Position>();
     private int pathPos = 0;
 
+    /**
+     * Constructor for spider.
+     * @param id
+     * @param type
+     * @param pos
+     */
     public Spider(String id, String type, Position pos){
         super(id, type, pos, 5, 1);
         this.startPos = pos;
         this.setPath();
     }
 
+    /**
+     * Automated move in a circular path, also checks if the 
+     * move is valid or not.
+     */
     public void move(Map<Position, List<Entity>> map) {
         List<Entity> entities = map.get(super.getPlayerPos()).stream()
                                                              .filter(e -> e.getType().equals("player"))
@@ -36,6 +46,10 @@ public class Spider extends MovingEntity {
         }
     }
 
+    /**
+     * Normal Spider movement in clockwise direction.
+     * @param map
+     */
     public void moveNormal(Map<Position, List<Entity>> map) {
         if (super.getPos().equals(startPos)) {
             // Spider has just spawned, move up
@@ -54,19 +68,16 @@ public class Spider extends MovingEntity {
         if (!canMoveForward && !canMoveBackward) {
             // Spider is trapped, it does not move
             this.clockwise = true;
-
         } else if (!canMoveForward) {
             // Spider can only go anti clockwise
             this.clockwise = false;
             pathPos = backwardMove;
             super.moveToPos(map, this.path.get(backwardMove));
-
         } else if (!canMoveBackward) {
             // Spider can only go clockwise
             this.clockwise = true;
             pathPos = forwardMove;
             super.moveToPos(map, this.path.get(forwardMove));
-            
         } else {
             // can move in either direction
             if (clockwise) {
@@ -78,9 +89,7 @@ public class Spider extends MovingEntity {
                 pathPos = backwardMove;
                 super.moveToPos(map, this.path.get(backwardMove));
             }
-
         }
-
     }
 
     /**
@@ -107,10 +116,18 @@ public class Spider extends MovingEntity {
         this.moveToPos(map, new Position(newPos.getX(), newPos.getY(), 3));
     }
 
+    /**
+     * Checks if the spider is able to move onto the given position.
+     * @return True is the spider can move onto the pos, false otherwise.
+     */
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
         return !isPassingBoulder(map, pos);
     }
 
+    /**
+     * Set the circular path that the spider takes, and append all 
+     * positions to a list.
+     */
     public void setPath() {
         this.path.add(startPos.translateBy(Direction.UP));
         this.path.add(startPos.translateBy(Direction.UP).translateBy(Direction.RIGHT));
@@ -122,8 +139,11 @@ public class Spider extends MovingEntity {
         this.path.add(startPos.translateBy(Direction.LEFT).translateBy(Direction.UP));
     }
 
+    /**
+     * Spider cannot have armour.
+     */
     public boolean hasArmour() {
         return false;
     }
-    
+
 }

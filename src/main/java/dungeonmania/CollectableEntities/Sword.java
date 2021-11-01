@@ -1,6 +1,5 @@
 package dungeonmania.CollectableEntities;
 
-import dungeonmania.MovingEntities.Player;
 import dungeonmania.util.Position;
 
 public class Sword extends CombatItems {
@@ -18,11 +17,6 @@ public class Sword extends CombatItems {
     public Sword(String id, String type, Position pos) {
         super(id, type, pos);
         this.setDurability(INITIAL_DURABILITY);
-    }
-
-    // Getters and Setters
-    public void setDurability(int num) {
-        durability = num;
     }
 
     /**
@@ -52,10 +46,22 @@ public class Sword extends CombatItems {
         return DAMAGE;
     }
 
+    /**
+     * Check the durability of the armour and if durability is zero 
+     * remove it from the inventory.
+     */
     public void checkNoDurability() {
         if (durability == 0) {
             getPlayer().getInventoryList().remove((CollectableEntity)this);
         }
+    }
+
+    // ********************************************************************************************\\
+    //                                    Getters and Setters                                      \\
+    // ********************************************************************************************\\
+
+    public void setDurability(int num) {
+        durability = num;
     }
     
 }

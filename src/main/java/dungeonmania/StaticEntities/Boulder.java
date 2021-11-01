@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import dungeonmania.Entity;
+import dungeonmania.CollectableEntities.Bomb;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
@@ -48,5 +49,20 @@ public class Boulder extends StaticEntity {
         map.get(pos).clear();
         map.get(newPos).add(this);
         super.setPos(newPos);
+
+        List<Entity> entities = map.get(getPos().asLayer(0));
+        if ( entities.size() > 0 && entities.get(0).getType().equals("switch")) {
+            // Boulder is on a switch
+            List<Position> adjacentPos = pos.getCardinallyAdjacentPositions();
+            for (Position tempPos: adjacentPos) {
+                List<Entity> collectablEntities = map.get(tempPos.asLayer(2));
+                if (collectablEntities.size() > 0 && collectablEntities.get(0).getType().equals("bomb")) {
+                    // contains bomb
+                    Bomb bomb = (Bomb) collectablEntities.get(0);
+                    bomb.detonate(map);
+                }
+            }
+        }
+
     }
 }

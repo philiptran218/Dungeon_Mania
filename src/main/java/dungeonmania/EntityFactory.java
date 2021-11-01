@@ -9,7 +9,7 @@ import dungeonmania.StaticEntities.*;
 import dungeonmania.util.Position;
 
 public class EntityFactory {
-    public static Entity getEntityObject(String id, String type, Position pos, JsonElement keyId, Battle battle) {
+    public static Entity getEntityObject(String id, String type, Position pos, JsonElement keyId, int colour, Battle battle) {
         
         Position otherPos = new Position(pos.getX(), pos.getY(), 4);
         Position movingPos = new Position(pos.getX(), pos.getY(), 3);
@@ -29,7 +29,7 @@ public class EntityFactory {
             case "door": 
                 return new Door(id, type, staticPos, keyId.getAsInt());
             case "portal": 
-                return new Portal(id, type, otherPos,keyId.getAsInt());
+                return new Portal(id, type, otherPos, colour);
             case "zombie_toast_spawner": 
                 return new ZombieToastSpawner(id, type, staticPos);
             case "spider": 

@@ -90,16 +90,6 @@ public class StaticEntityTest {
         temp = newDungeon.tick(null, Direction.UP);
         assertTrue(isEntityOnTile(temp, new Position(3, 2, 3), playerId));
     }
-    // Checks if the portal works with the player by moving the player into a portal and checking the location
-    @Test
-    public void testPortal() {
-        DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse temp;
-        DungeonResponse createNew = newDungeon.newGame("portals", "Peaceful");
-        String playerId = getEntityId(new Position(1, 1, 3), createNew);
-        temp = newDungeon.tick(null, Direction.RIGHT);
-        assertTrue(isEntityOnTile(temp, new Position(6, 1, 3), playerId));
-    }
     // Tests if a zombie is spawned in the correct tick by checking if the mob is spawned
     @Test
     public void testZombieSpawner() {

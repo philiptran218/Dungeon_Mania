@@ -17,6 +17,16 @@ public class Key extends Utility {
         this.setKeyId(keyId);
     }
 
+    /**
+     * Is called if the key is used to craft a shield or open a door.
+     */
+    public void use() {
+        getPlayer().getInventoryList().remove(this);
+    }
+
+    // ********************************************************************************************\\
+    //                                    Getters and Setters                                      \\
+    // ********************************************************************************************\\
     // Getters and Setters
     public void setKeyId(int id) {
         keyId = id;
@@ -24,12 +34,5 @@ public class Key extends Utility {
 
     public int getKeyId() {
         return keyId;
-    }
-
-    /**
-     * Is called if the key is used to craft a shield or open a door.
-     */
-    public void use() {
-        getPlayer().getInventoryList().remove(this);
     }
 }

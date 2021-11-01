@@ -1,26 +1,35 @@
 package dungeonmania.MovingEntities;
 
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.concurrent.ThreadLocalRandom;
 
+import dungeonmania.Entity;
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
-import dungeonmania.Entity;
 import dungeonmania.CollectableEntities.Armour;
 
 
 public class ZombieToast extends MovingEntity {
     private Armour armour;
 
+    /**
+     * Constructor for zombie_toast.
+     * @param id
+     * @param type
+     * @param pos
+     */
     public ZombieToast(String id, String type, Position pos) {
         super(id, type, pos, 10, 1);
         this.armour = generateArmour();
 
     }
 
+    /**
+     * Randomly generates armour.
+     * @return
+     */
     public Armour generateArmour() {
         int num = ThreadLocalRandom.current().nextInt(0,10);
         // num = 0,1,2,3,4,5,6,7,8,9
@@ -32,6 +41,10 @@ public class ZombieToast extends MovingEntity {
         return null;
     }
 
+    /**
+     * Selects a random direction and returns that direction.
+     * @return
+     */
     public Direction Randomdirection() {
         int num = ThreadLocalRandom.current().nextInt(0,4);
         // num = 0,1,2,3
@@ -48,6 +61,9 @@ public class ZombieToast extends MovingEntity {
         return null;
     }
 
+    /**
+     * Move the zombie on the map, in a random direction.
+     */
     public void move(Map<Position, List<Entity>> map) {
         List<Entity> entities = map.get(super.getPlayerPos()).stream()
                                                              .filter(e -> e.getType().equals("player"))
@@ -75,6 +91,10 @@ public class ZombieToast extends MovingEntity {
         }
     }
 
+    /**
+     * The function to move the zombie away from the player.
+     * @param map
+     */
     public void moveAway(Map<Position, List<Entity>> map) {
         Position playerPos = this.getPlayerPos();
         Position pos = super.getPos();
@@ -97,13 +117,24 @@ public class ZombieToast extends MovingEntity {
         this.moveToPos(map, new Position(newPos.getX(), newPos.getY(), 3));
     }
     
+    /**
+     * Checks if the zombie can move onto a new position.
+     */
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
         return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty();  
     }
 
+    /**
+     * Checks if the zombie has armour or not.
+     */
     public boolean hasArmour() {
         return this.armour != null;
     }
+
+    // ********************************************************************************************\\
+    //                                   Getter and setters:                                       \\
+    // ********************************************************************************************\\
+    
     public Armour getArmour() {
         Armour armour = this.armour;
         return armour;
@@ -112,5 +143,4 @@ public class ZombieToast extends MovingEntity {
     public void setArmour(Armour armour) {
         this.armour = armour;
     }
-    
 }
