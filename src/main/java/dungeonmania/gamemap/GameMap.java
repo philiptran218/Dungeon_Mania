@@ -121,7 +121,8 @@ public class GameMap {
         // Checks if sufficient materials
         if (numWood > 0 && numArrow > 2) {
             buildable.add("bow");
-        } else if (numWood > 1 && (hasKey || hasTreasure)) {
+        }
+        if (numWood > 1 && (hasKey || hasTreasure)) {
             buildable.add("shield");
         }
         return buildable;
