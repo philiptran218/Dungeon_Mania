@@ -78,10 +78,4 @@ public class PortalTest {
         assertTrue(isEntityOnTile(tmp, new Position(1, 8), id));
     }
 
-    @Test
-    public void testColourConversion() {
-        assertEquals(Portal.colourToId("not valud"), 0);
-        assertEquals(Portal.getPortalColour(-1), null);
-    }
-
 }
