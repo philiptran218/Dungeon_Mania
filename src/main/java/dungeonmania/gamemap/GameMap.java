@@ -198,7 +198,7 @@ public class GameMap {
                 temp.put("y", entry.getKey().getY());
 
                 if (e instanceof Portal) {
-                    temp.put("colour", ((Portal) e).getType());
+                    temp.put("colour", ((Portal) e).getPortalColour());
                     temp.put("type", "portal");
                 } else {
                     temp.put("type", e.getType());
@@ -232,12 +232,8 @@ public class GameMap {
             JsonObject obj = entity.getAsJsonObject();
             String type = obj.get("type").getAsString();
             Position pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
-            int colour = 0;
-            if (obj.get("colour") != null) {
-                colour = Portal.colourToId(obj.get("colour").getAsString());
-            }
             // Create the entity object, by factory method
-            Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, obj.get("key"), colour, this.battle);
+            Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, obj.get("key"), obj.get("colour"), this.battle);
             // Set player on the map
             if (type.equals("player")) {
                 this.player = (Player) temp;
@@ -351,7 +347,7 @@ public class GameMap {
             JsonObject obj = entity.getAsJsonObject();
             String type = obj.get("type").getAsString();
             Position pos = new Position(0, 0, -1);
-            Entity collectable = EntityFactory.getEntityObject("" + System.currentTimeMillis(), type, pos, obj.get("key"), 0, this.battle);
+            Entity collectable = EntityFactory.getEntityObject("" + System.currentTimeMillis(), type, pos, obj.get("key"), null, this.battle);
             player.getInventory().put(collectable, player);
         }
     }
