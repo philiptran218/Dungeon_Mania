@@ -10,19 +10,13 @@ import java.util.Random;
 
 import com.google.gson.*;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
 import dungeonmania.Battles.Battle;
-import dungeonmania.CollectableEntities.*;
 import dungeonmania.Goals.*;
-import dungeonmania.MovingEntities.Mercenary;
-import dungeonmania.MovingEntities.MovingEntity;
-import dungeonmania.MovingEntities.Player;
-import dungeonmania.MovingEntities.Spider;
-import dungeonmania.StaticEntities.*;
+import dungeonmania.MovingEntities.*;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
@@ -169,50 +163,14 @@ public class GameMap {
     public JSONObject mapToJson() {
         // Main object for file
         JSONObject main = new JSONObject();
-        JSONArray entities = new JSONArray();
-
         // Add all fields:
         main.put("width", getMapWidth());
         main.put("height", getMapHeight());
-        main.put("game-mode", this.gameState.getMode());
-        main.put("map-name", this.dungeonName);
-        main.put("goal-condition", GoalHelper.goalPatternToJson(this.getRootGoal()));
-
-        JSONArray inventory = new JSONArray();
-        // Add all inventory items
-        for (CollectableEntity e : player.getInventoryList()) {
-            JSONObject c = new JSONObject();
-            c.put("type", e.getType());
-            if (e.getType().equals("key")) {
-                c.put("key", ((Key) e).getKeyId());
-            }
-            inventory.put(c);
-        }   
-        main.put("inventory", inventory);
-
-        // Add all entities on the map
-        for (Map.Entry<Position, List<Entity>> entry : this.dungeonMap.entrySet()) {
-            for (Entity e : entry.getValue()) {
-                JSONObject temp = new JSONObject();
-                temp.put("x", entry.getKey().getX());
-                temp.put("y", entry.getKey().getY());
-
-                if (e instanceof Portal) {
-                    temp.put("colour", ((Portal) e).getPortalColour());
-                    temp.put("type", "portal");
-                } else {
-                    temp.put("type", e.getType());
-                }
-                
-                if (e.getType().equals("key")) {
-                    temp.put("key", ((Key) e).getKeyId());
-                } else if (e.getType().equals("door")) {
-                    temp.put("key", ((Door) e).getKeyId());
-                }
-                entities.put(temp);
-            }
-        }
-        main.put("entities", entities);
+        main.put("game-mode", gameState.getMode());
+        main.put("map-name", dungeonName);
+        main.put("goal-condition", GoalHelper.goalPatternToJson(getRootGoal()));
+        main.put("inventory", MapHelper.inventoryToJson(player.getInventoryList()));
+        main.put("entities", MapHelper.mapToJSON(dungeonMap));
         return main;
     }
 
@@ -230,10 +188,11 @@ public class GameMap {
         for (JsonElement entity : jsonMap.getAsJsonArray("entities")) {
             // Get all attributes:
             JsonObject obj = entity.getAsJsonObject();
-            String type = obj.get("type").getAsString();
             Position pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
+            String type = obj.get("type").getAsString();
             // Create the entity object, by factory method
-            Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, obj.get("key"), obj.get("colour"), this.battle);
+            Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, 
+                obj.get("key"), obj.get("colour"), this.battle);
             // Set player on the map
             if (type.equals("player")) {
                 this.player = (Player) temp;
@@ -287,7 +246,7 @@ public class GameMap {
     // ********************************************************************************************\\
     //                                     OTHER FUNCTIONS                                         \\
     // ********************************************************************************************\\
-
+    
     /**
      * Spawns a spider on the map with a one in ten chance (with
      * restrictions).
