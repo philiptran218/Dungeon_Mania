@@ -18,10 +18,7 @@ import dungeonmania.EntityFactory;
 import dungeonmania.Battles.Battle;
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.Goals.*;
-import dungeonmania.MovingEntities.Mercenary;
-import dungeonmania.MovingEntities.MovingEntity;
-import dungeonmania.MovingEntities.Player;
-import dungeonmania.MovingEntities.Spider;
+import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
@@ -169,50 +166,14 @@ public class GameMap {
     public JSONObject mapToJson() {
         // Main object for file
         JSONObject main = new JSONObject();
-        JSONArray entities = new JSONArray();
-
         // Add all fields:
         main.put("width", getMapWidth());
         main.put("height", getMapHeight());
-        main.put("game-mode", this.gameState.getMode());
-        main.put("map-name", this.dungeonName);
-        main.put("goal-condition", GoalHelper.goalPatternToJson(this.getRootGoal()));
-
-        JSONArray inventory = new JSONArray();
-        // Add all inventory items
-        for (CollectableEntity e : player.getInventoryList()) {
-            JSONObject c = new JSONObject();
-            c.put("type", e.getType());
-            if (e.getType().equals("key")) {
-                c.put("key", ((Key) e).getKeyId());
-            }
-            inventory.put(c);
-        }   
-        main.put("inventory", inventory);
-
-        // Add all entities on the map
-        for (Map.Entry<Position, List<Entity>> entry : this.dungeonMap.entrySet()) {
-            for (Entity e : entry.getValue()) {
-                JSONObject temp = new JSONObject();
-                temp.put("x", entry.getKey().getX());
-                temp.put("y", entry.getKey().getY());
-
-                if (e instanceof Portal) {
-                    temp.put("colour", ((Portal) e).getPortalColour());
-                    temp.put("type", "portal");
-                } else {
-                    temp.put("type", e.getType());
-                }
-                
-                if (e.getType().equals("key")) {
-                    temp.put("key", ((Key) e).getKeyId());
-                } else if (e.getType().equals("door")) {
-                    temp.put("key", ((Door) e).getKeyId());
-                }
-                entities.put(temp);
-            }
-        }
-        main.put("entities", entities);
+        main.put("game-mode", gameState.getMode());
+        main.put("map-name", dungeonName);
+        main.put("goal-condition", GoalHelper.goalPatternToJson(getRootGoal()));
+        main.put("inventory", MapHelper.inventoryToJson(player.getInventoryList()));
+        main.put("entities", MapHelper.mapToJSON(dungeonMap));
         return main;
     }
 
@@ -287,7 +248,7 @@ public class GameMap {
     // ********************************************************************************************\\
     //                                     OTHER FUNCTIONS                                         \\
     // ********************************************************************************************\\
-
+    
     /**
      * Spawns a spider on the map with a one in ten chance (with
      * restrictions).
