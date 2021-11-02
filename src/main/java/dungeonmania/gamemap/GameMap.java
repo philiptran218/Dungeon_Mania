@@ -10,16 +10,13 @@ import java.util.Random;
 
 import com.google.gson.*;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
 import dungeonmania.Battles.Battle;
-import dungeonmania.CollectableEntities.*;
 import dungeonmania.Goals.*;
 import dungeonmania.MovingEntities.*;
-import dungeonmania.StaticEntities.*;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
@@ -191,10 +188,11 @@ public class GameMap {
         for (JsonElement entity : jsonMap.getAsJsonArray("entities")) {
             // Get all attributes:
             JsonObject obj = entity.getAsJsonObject();
-            String type = obj.get("type").getAsString();
             Position pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
+            String type = obj.get("type").getAsString();
             // Create the entity object, by factory method
-            Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, obj.get("key"), obj.get("colour"), this.battle);
+            Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, 
+                obj.get("key"), obj.get("colour"), this.battle);
             // Set player on the map
             if (type.equals("player")) {
                 this.player = (Player) temp;
