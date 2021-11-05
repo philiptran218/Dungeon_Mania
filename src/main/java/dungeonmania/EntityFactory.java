@@ -16,6 +16,7 @@ public class EntityFactory {
         Position collectPos = new Position(pos.getX(), pos.getY(), 2);
         Position staticPos = new Position(pos.getX(), pos.getY(), 1);
         Position absolPos = new Position(pos.getX(), pos.getY(), 0);
+        Position negativePos = new Position(pos.getX(), pos.getY(), -1);
 
         switch (type) {
             case "wall": 
@@ -28,6 +29,8 @@ public class EntityFactory {
                 return new FloorSwitch(id, type, absolPos);
             case "door": 
                 return new Door(id, type, staticPos, keyId.getAsInt());
+            case "door_unlocked":
+                return new Door(id, type, negativePos, keyId.getAsInt());
             case "portal": 
                 return new Portal(id, type, otherPos, colour.getAsString());
             case "zombie_toast_spawner": 

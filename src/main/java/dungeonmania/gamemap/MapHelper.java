@@ -28,7 +28,7 @@ public class MapHelper {
     public static Map<Position, List<Entity>> createInitialisedMap(int width, int height) {
         Map<Position, List<Entity>> map = new HashMap<>();
         // Initialise everything on the map to empty list
-        for (int k = 0; k < 5; k++) {
+        for (int k = -1; k < 5; k++) {
             for (int i = 0; i < width; i++) { // width
                 for (int j = 0; j < height; j++) { // height
                     map.put(new Position(i, j, k), new ArrayList<Entity>());
