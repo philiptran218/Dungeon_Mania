@@ -2,14 +2,13 @@ package dungeonmania;
 
 import com.google.gson.JsonObject;
 
-import dungeonmania.Battles.Battle;
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.util.Position;
 
 public class EntityFactory {
-    public static Entity getEntityObject(String id, Position pos, JsonObject jsonObj, Battle battle) {
+    public static Entity getEntityObject(String id, Position pos, JsonObject jsonObj) {
         // Fields
         String type = jsonObj.get("type").getAsString();
         
@@ -33,7 +32,7 @@ public class EntityFactory {
             case "door": 
                 return new Door(id, type, staticPos, jsonObj.get("key").getAsInt());
             case "door_unlocked":
-                return new Door(id, type, negativePos, jsonObj.get("key").getAsInt());
+                return new Door(id, "door_unlocked", negativePos, jsonObj.get("key").getAsInt());
             case "portal": 
                 return new Portal(id, type, otherPos, jsonObj.get("colour").getAsString());
             case "zombie_toast_spawner":
@@ -71,7 +70,7 @@ public class EntityFactory {
             case "shield": 
                 return new Shield(id, type, collectPos);
             case "player": 
-                return new Player(id, type, movingPos, battle);
+                return new Player(id, type, movingPos);
             default: 
                 return null;
         }

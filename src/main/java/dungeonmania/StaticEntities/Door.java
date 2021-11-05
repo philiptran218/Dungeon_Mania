@@ -27,7 +27,7 @@ public class Door extends StaticEntity {
     public JSONObject toJSONObject() {
         JSONObject tmp = super.toJSONObject();
         // Overwrite type
-        tmp.put("type", "door");
+        tmp.put("type", super.getType());
         tmp.put("key", keyId);
         return tmp;
     }
