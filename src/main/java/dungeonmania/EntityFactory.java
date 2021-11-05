@@ -71,6 +71,8 @@ public class EntityFactory {
                 return new Shield(id, type, collectPos);
             case "player": 
                 return new Player(id, type, movingPos);
+            case "swamp_tile": 
+                return new Player(id, type, movingPos);
             default: 
                 return null;
         }
