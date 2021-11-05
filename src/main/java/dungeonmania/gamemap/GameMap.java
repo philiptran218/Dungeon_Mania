@@ -49,8 +49,9 @@ public class GameMap {
     public GameMap(String difficulty, String name, JsonObject jsonMap) {
         this.dungeonName = name;
         this.mapId = "" + System.currentTimeMillis();
-        this.battle = new Battle(difficulty);
         this.dungeonMap = jsonToMap(jsonMap);
+        this.battle = new Battle(difficulty);
+        this.player.setBattle(battle);
         this.setPlayerInventory(jsonMap);
         this.setObservers();
         this.gameState = MapHelper.createGameState(difficulty);
@@ -190,7 +191,7 @@ public class GameMap {
             JsonObject obj = entity.getAsJsonObject();
             // Create the entity object, by factory method
             Position pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
-            Entity temp = EntityFactory.getEntityObject(i.toString(), pos, obj, battle);
+            Entity temp = EntityFactory.getEntityObject(i.toString(), pos, obj);
             // Set player on the map
             if (temp.getType().equals("player")) {
                 this.player = (Player) temp;
@@ -301,8 +302,7 @@ public class GameMap {
         Integer i = 0;
         for (JsonElement entity : jsonMap.getAsJsonArray("inventory")) {
             JsonObject obj = entity.getAsJsonObject();
-            Entity collectable = EntityFactory.getEntityObject("inventItem" + i, 
-                new Position(0, 0), obj, battle);
+            Entity collectable = EntityFactory.getEntityObject("inventItem" + i, new Position(0, 0), obj);
             player.getInventory().put(collectable, player);
             i++;
         }

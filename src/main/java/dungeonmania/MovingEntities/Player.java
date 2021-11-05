@@ -38,9 +38,8 @@ public class Player extends MovingEntity implements MovingEntitySubject {
      * @param pos
      * @param battle
      */
-    public Player(String id, String type, Position pos, Battle battle){
+    public Player(String id, String type, Position pos){
         super(id, type, pos, 20, 2);
-        this.setBattle(battle);
     }
 
     // ********************************************************************************************\\
