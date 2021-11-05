@@ -2,6 +2,9 @@ package dungeonmania.MovingEntities;
 
 import dungeonmania.Entity;
 import java.util.Map;
+
+import org.json.JSONObject;
+
 import java.util.List;
 
 import dungeonmania.util.Position;
@@ -95,6 +98,11 @@ public abstract class MovingEntity extends Entity implements MovingEntityObserve
     @Override
     public void update(MovingEntitySubject obj) {
         this.setPlayerPos(((Player) obj).getPos());
+    }
+
+    @Override
+    public JSONObject toJSONObject() {
+        return super.toJSONObject();
     }
 
     // ********************************************************************************************\\
