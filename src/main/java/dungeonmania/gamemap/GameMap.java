@@ -169,7 +169,7 @@ public class GameMap {
         main.put("game-mode", gameState.getMode());
         main.put("map-name", dungeonName);
         main.put("goal-condition", GoalHelper.goalPatternToJson(getRootGoal()));
-        main.put("inventory", MapHelper.inventoryToJson(player.getInventoryList()));
+        main.put("inventory", player.getInventory().toJSON());
         main.put("entities", MapHelper.mapToJSON(dungeonMap));
         return main;
     }
@@ -301,7 +301,7 @@ public class GameMap {
         Integer i = 0;
         for (JsonElement entity : jsonMap.getAsJsonArray("inventory")) {
             JsonObject obj = entity.getAsJsonObject();
-            Entity collectable = EntityFactory.getEntityObject("invent" + i, 
+            Entity collectable = EntityFactory.getEntityObject("inventItem" + i, 
                 new Position(0, 0), obj, battle);
             player.getInventory().put(collectable, player);
             i++;

@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
 
@@ -384,7 +387,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     public void setBattle(Battle battle) {
         this.battle = battle;
     }
-
+    
     public Battle getBattle() {
         return battle;
     }

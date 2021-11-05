@@ -1,5 +1,7 @@
 package dungeonmania.CollectableEntities;
 
+import org.json.JSONObject;
+
 import dungeonmania.util.Position;
 
 public class Key extends Utility {
@@ -34,5 +36,22 @@ public class Key extends Utility {
 
     public int getKeyId() {
         return keyId;
+    }
+
+    // Convert it to a JSONObject
+    @Override
+    public JSONObject toJSONObject() {
+        JSONObject tmp = super.toJSONObject();
+        // Overwrite type
+        tmp.put("type", "key");
+        tmp.put("key", keyId);
+        return tmp;
+    }
+
+    @Override
+    public JSONObject toJSONObjectInventory() {
+        JSONObject tmp = super.toJSONObjectInventory();
+        tmp.put("key", keyId);
+        return tmp;
     }
 }

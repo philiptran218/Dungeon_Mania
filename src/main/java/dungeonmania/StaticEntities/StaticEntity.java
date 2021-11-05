@@ -1,5 +1,7 @@
 package dungeonmania.StaticEntities;
 
+import org.json.JSONObject;
+
 import dungeonmania.Entity;
 import dungeonmania.util.Position;
 
@@ -14,4 +16,8 @@ public abstract class StaticEntity extends Entity {
         super(id, type, pos);
     }
 
+    @Override
+    public JSONObject toJSONObject() {
+        return super.toJSONObject();
+    }
 }
