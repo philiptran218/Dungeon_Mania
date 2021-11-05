@@ -9,13 +9,9 @@ import java.util.Map;
 import com.google.gson.*;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import dungeonmania.Entity;
-import dungeonmania.CollectableEntities.*;
-import dungeonmania.CollectableEntities.Key;
 import dungeonmania.util.Position;
-import dungeonmania.StaticEntities.*;
 
 public class MapHelper {
 
@@ -77,46 +73,10 @@ public class MapHelper {
         // Add all entities on the map
         for (Map.Entry<Position, List<Entity>> entry : eMap.entrySet()) {
             for (Entity e : entry.getValue()) {
-                JSONObject temp = new JSONObject();
-                // Place positions
-                temp.put("x", e.getPos().getX());
-                temp.put("y", e.getPos().getY());
-                // Checks if the entity is a portal
-                if (e instanceof Portal) {
-                    temp.put("colour", ((Portal) e).getPortalColour());
-                    temp.put("type", "portal");
-                } else {
-                    temp.put("type", e.getType());
-                }
-                // Checks if it is key or door
-                if (e instanceof Key) {
-                    temp.put("key", ((Key) e).getKeyId());
-                } else if (e instanceof Door) {
-                    temp.put("key", ((Door) e).getKeyId());
-                }
-                jsonArray.put(temp);
+                jsonArray.put(e.toJSONObject());
             }
         }
         return jsonArray;
     }
 
-    /**
-     * Takes a list of collectables, and convert it to a json 
-     * array.
-     * @param eList
-     * @return JSONArray of player inventory items.
-     */
-    public static JSONArray inventoryToJson(List<CollectableEntity> eList) {
-        JSONArray jsonArray = new JSONArray();
-        // Add all inventory items
-        for (CollectableEntity e : eList) {
-            JSONObject c = new JSONObject();
-            c.put("type", e.getType());
-            if (e.getType().equals("key")) {
-                c.put("key", ((Key) e).getKeyId());
-            }
-            jsonArray.put(c);
-        }
-        return jsonArray;
-    }
 }
