@@ -168,7 +168,6 @@ public class Player extends MovingEntity implements MovingEntitySubject {
             // Player does not have the item
             throw new InvalidActionException("Player does not have the item.");
         }
-        
         if (!useableItems.contains(item.getType())) {
             // Cannot use the item
             throw new IllegalArgumentException("Cannot use item.");
@@ -237,7 +236,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
             // player is not cardinally adjacent to spawner
             throw new InvalidActionException("player not cardinally adjacent to spawner");
         }
-
+        
         if (inventory.getItem("sword") != null) {
             spawner.destroy(map);
             inventory.getItem("sword").use();

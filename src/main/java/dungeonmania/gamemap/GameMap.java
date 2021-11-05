@@ -188,13 +188,11 @@ public class GameMap {
         for (JsonElement entity : jsonMap.getAsJsonArray("entities")) {
             // Get all attributes:
             JsonObject obj = entity.getAsJsonObject();
-            Position pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
-            String type = obj.get("type").getAsString();
             // Create the entity object, by factory method
-            Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, 
-                obj.get("key"), obj.get("colour"), this.battle);
+            Position pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
+            Entity temp = EntityFactory.getEntityObject(i.toString(), pos, obj, battle);
             // Set player on the map
-            if (type.equals("player")) {
+            if (temp.getType().equals("player")) {
                 this.player = (Player) temp;
             }
             newMap.get(temp.getPos()).add(temp);
@@ -300,12 +298,13 @@ public class GameMap {
             return;
         }
         // Look at the inventory field in json file.
+        Integer i = 0;
         for (JsonElement entity : jsonMap.getAsJsonArray("inventory")) {
             JsonObject obj = entity.getAsJsonObject();
-            String type = obj.get("type").getAsString();
-            Position pos = new Position(0, 0, -1);
-            Entity collectable = EntityFactory.getEntityObject("" + System.currentTimeMillis(), type, pos, obj.get("key"), null, this.battle);
+            Entity collectable = EntityFactory.getEntityObject("invent" + i, 
+                new Position(0, 0), obj, battle);
             player.getInventory().put(collectable, player);
+            i++;
         }
     }
 

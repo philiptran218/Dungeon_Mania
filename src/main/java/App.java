@@ -49,7 +49,7 @@ public class App {
             return GenericResponseWrapper.Err(e);
         }
     }
-
+    
     private static<T> GenericResponseWrapper<T> callUsingSessionAndArgument(Request request, Function<DungeonManiaController, T> runnable) {
         try {
             DungeonManiaController dmc = getDungeonManiaController(request);

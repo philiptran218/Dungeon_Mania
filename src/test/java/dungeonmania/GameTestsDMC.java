@@ -111,7 +111,7 @@ public class GameTestsDMC {
         // Attemp to load a game that does not exist:
         assertThrows(IllegalArgumentException.class, () -> newDungeon.loadGame("non existent game"));
     }
-
+    /*
     // Coverage unused functions.
     @Test
     public void testAllGameFunctionValid() {
@@ -124,6 +124,7 @@ public class GameTestsDMC {
             assertTrue(newDungeon.allGames().size() == 0);
         });
     }
+    */
 
     // Test uninteractable:
     @Test
