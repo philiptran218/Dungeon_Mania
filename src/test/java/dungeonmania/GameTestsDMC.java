@@ -23,7 +23,7 @@ public class GameTestsDMC {
     }
 
     public void deleteSavedGames(String fileName) {
-        File file = new File("src/main/resources/saved_games/" + fileName + ".json");
+        File file = new File("saved_games/" + fileName + ".json");
         file.delete();
     }
 
@@ -85,7 +85,6 @@ public class GameTestsDMC {
         // Create multiple games:
         newDungeon.newGame("file1", "Peaceful");
         newDungeon.saveGame("test");
-        Thread.sleep(3000);
         deleteSavedGames("test");
     }
 
@@ -111,20 +110,16 @@ public class GameTestsDMC {
         // Attemp to load a game that does not exist:
         assertThrows(IllegalArgumentException.class, () -> newDungeon.loadGame("non existent game"));
     }
-    /*
+    
     // Coverage unused functions.
     @Test
     public void testAllGameFunctionValid() {
-        assertDoesNotThrow(() -> {
-            // Create dungeon controller
-            DungeonManiaController newDungeon = new DungeonManiaController();
-            newDungeon.getSkin();
-            newDungeon.getLocalisation();
-            Thread.sleep(3000);
-            assertTrue(newDungeon.allGames().size() == 0);
-        });
+        // Create dungeon controller
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.getSkin();
+        newDungeon.getLocalisation();
     }
-    */
+    
 
     // Test uninteractable:
     @Test
@@ -137,4 +132,14 @@ public class GameTestsDMC {
         assertThrows(IllegalArgumentException.class, () -> newDungeon.interact(zombieId));
     }
 
+
+    // Test uninteractable:
+    @Test
+    public void testAllGameFunction() {
+            // Create dungeon controller
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("player_invalid_interactions", "Peaceful");
+        newDungeon.saveGame("allGameFunctionTest");
+        assertTrue(newDungeon.allGames().contains("allGameFunctionTest"));
+    }
 }
