@@ -2,7 +2,6 @@ package dungeonmania;
 
 import com.google.gson.JsonObject;
 
-import dungeonmania.Battles.Battle;
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;

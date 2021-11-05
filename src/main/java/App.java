@@ -74,7 +74,7 @@ public class App {
             response.header("Access-Control-Allow-Methods", "*");
             response.header("Access-Control-Allow-Headers", "*");
         });
-
+        
         Spark.get("/api/dungeons/", "application/json", (request, response) -> {
             // we don't *need* to globally lock this but we might as well just to keep a nice standard.
             synchronized (globalLock) {
