@@ -42,7 +42,7 @@ public class MapHelper {
      */
     public static JsonObject getSavedMap(String name) {
         try {
-            return JsonParser.parseReader(new FileReader("src\\main\\resources\\saved_games\\" + name + ".json")).getAsJsonObject();
+            return JsonParser.parseReader(new FileReader("saved_games\\" + name + ".json")).getAsJsonObject();
         } catch (Exception e) {
             throw new IllegalArgumentException("File not found.");
         }
