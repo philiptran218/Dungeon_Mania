@@ -72,7 +72,7 @@ public class EntityFactory {
             case "player": 
                 return new Player(id, type, movingPos);
             case "swamp_tile": 
-                return new Player(id, type, movingPos);
+                return new SwampTile(id, type, staticPos, jsonObj.get("movement_factor").getAsInt());
             default: 
                 return null;
         }
