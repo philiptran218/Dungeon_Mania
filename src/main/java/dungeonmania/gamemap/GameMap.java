@@ -147,7 +147,7 @@ public class GameMap {
     public void saveMapAsJson(String name) {
         try {  
             // Writes the json file into the folder
-            FileWriter file = new FileWriter("src/main/resources/saved_games/" + name + ".json");
+            FileWriter file = new FileWriter("saved_games/" + name + ".json");
             file.write(mapToJson().toString(4));
             file.flush();
             file.close();
