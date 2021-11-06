@@ -1,5 +1,8 @@
 package dungeonmania;
 
+import java.util.List;
+import java.util.Map;
+
 import org.json.JSONObject;
 
 import dungeonmania.util.Position;

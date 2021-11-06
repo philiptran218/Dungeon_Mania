@@ -17,6 +17,7 @@ import dungeonmania.EntityFactory;
 import dungeonmania.Battles.Battle;
 import dungeonmania.Goals.*;
 import dungeonmania.MovingEntities.*;
+import dungeonmania.StaticEntities.SwampTile;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
@@ -228,6 +229,31 @@ public class GameMap {
         return entityList;
     }
     
+    public List<Entity> getEntityTypeList(String eType) {
+        List<Entity> eList = new ArrayList<>();
+        // Loop through to the entity
+        for (Map.Entry<Position, List<Entity>> entry : dungeonMap.entrySet()) {
+            for (Entity e : entry.getValue()) {
+                if (e.isType(eType)) { eList.add(e); }
+            }
+        }
+        return eList;
+    }
+
+    /**
+     * Given a position, return a list of all entities at that position.
+     * @param pos
+     * @return List<Entity> list of all entities at a position.
+     */
+    public List<Entity> getEntityPositionList(Position pos) {
+        List<Entity> eList = new ArrayList<>();
+        // Loop to add all positions at a position
+        for (Map.Entry<Position, List<Entity>> entry : dungeonMap.entrySet()) {
+            if (entry.getKey().equals(pos)) { eList.addAll(entry.getValue()); }
+        }
+        return eList;
+    }
+
     /**
      * Given the id of an entity, search the map and return the
      * entity with the respective id.
@@ -237,9 +263,7 @@ public class GameMap {
     public Entity getEntityOnMap(String id) {
         for (Map.Entry<Position, List<Entity>> entry : dungeonMap.entrySet()) {
             for (Entity e : entry.getValue()) {
-                if (e.getId().equals(id)) {
-                    return e;
-                }
+                if (e.hasId(id)) { return e; }
             }
         }
         return null;
@@ -302,6 +326,32 @@ public class GameMap {
     // ********************************************************************************************\\
     //                                     Other Functions                                         \\
     // ********************************************************************************************\\
+
+    public void swampTileCheck() {
+        // Loop through all swamp_tile entites
+        for (Entity e : getEntityTypeList("swamp_tile")) {
+            ((SwampTile) e).checkTile(getEntityPositionList(e.getPos()));
+        }
+    }
+
+    /**
+     * Checks if the entity is on top of a swamp tile.
+     * @param gameMap
+     * @return True is the entity is on a swamp tile, false otherwise.
+     */
+    public boolean isOnSwampTile(Entity entity) {
+        for (Entity e : getEntityTypeList("swamp_tile")) {
+            if (((SwampTile) e).entityOnTile(entity)) { return true; }
+        }
+        return false;
+    }
+
+    // Swamp tile tick:
+    public void swampTick() {
+        for (Entity e : getEntityTypeList("swamp_tile")) {
+            ((SwampTile) e).tickCount();
+        }
+    }
 
     // This function should be in player.
     /**

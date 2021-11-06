@@ -18,7 +18,6 @@ public class EntityFactory {
         Position collectPos = new Position(pos.getX(), pos.getY(), 2);
         Position staticPos = new Position(pos.getX(), pos.getY(), 1);
         Position absolPos = new Position(pos.getX(), pos.getY(), 0);
-        Position negativePos = new Position(pos.getX(), pos.getY(), -1);
 
         switch (type) {
             case "wall": 
@@ -32,7 +31,7 @@ public class EntityFactory {
             case "door": 
                 return new Door(id, type, staticPos, jsonObj.get("key").getAsInt());
             case "door_unlocked":
-                return new Door(id, "door_unlocked", negativePos, jsonObj.get("key").getAsInt());
+                return new Door(id, "door_unlocked", absolPos, jsonObj.get("key").getAsInt());
             case "portal": 
                 return new Portal(id, type, otherPos, jsonObj.get("colour").getAsString());
             case "zombie_toast_spawner":
@@ -72,7 +71,7 @@ public class EntityFactory {
             case "player": 
                 return new Player(id, type, movingPos);
             case "swamp_tile": 
-                return new SwampTile(id, type, staticPos, jsonObj.get("movement_factor").getAsInt());
+                return new SwampTile(id, type, absolPos, jsonObj.get("movement_factor").getAsInt());
             default: 
                 return null;
         }

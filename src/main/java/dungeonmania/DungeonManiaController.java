@@ -154,9 +154,9 @@ public class DungeonManiaController {
      */
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
         // If itemUsed is NULL move the player:
-        if (itemUsed == null) {
+        if (itemUsed == null && !gameMap.isOnSwampTile(gameMap.getPlayer())) {
             gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
-        } else {
+        } else if (itemUsed != null) {
             // Get the entity on map:
             gameMap.getPlayer().useItem(gameMap.getMap(), itemUsed);
         }
@@ -166,7 +166,8 @@ public class DungeonManiaController {
         
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
-            if (!(e.getPos().equals(e.getPlayerPos()) && !e.getType().equals("mercenary"))) {
+            if (!(e.getPos().equals(e.getPlayerPos()) && !e.isType("mercenary")) && !gameMap.isOnSwampTile(e)) {
+                System.out.println(gameMap.getMap());
                 e.move(gameMap.getMap());
             }
         }
@@ -205,8 +206,15 @@ public class DungeonManiaController {
             }
         }
 
-        // Spawn relevant mobs
+        // Spawn mobs on the map
         gameMap.spawnMob();
+
+        // Tick the swamp:
+        gameMap.swampTick();
+
+        // Check for swamp tile after all movements has occured,
+        // and removes accordinly
+        gameMap.swampTileCheck();
 
         // Return DungeonResponse
         return gameMap.returnDungeonResponse();
