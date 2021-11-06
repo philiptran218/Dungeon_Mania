@@ -205,7 +205,8 @@ public class DungeonManiaController {
             }
         }
 
-        gameMap.spawnSpider();
+        // Spawn relevant mobs
+        gameMap.spawnMob();
 
         // Return DungeonResponse
         return gameMap.returnDungeonResponse();

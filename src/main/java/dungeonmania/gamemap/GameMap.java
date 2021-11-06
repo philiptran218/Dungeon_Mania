@@ -24,6 +24,7 @@ import dungeonmania.util.Position;
 public class GameMap {
     // Map Variables: **************
     private Map<Position, List<Entity>> dungeonMap;
+    private Position entryLocation;
     private String dungeonName;
     private String mapId;
     private Player player;
@@ -39,7 +40,8 @@ public class GameMap {
 
     // Seed counter used for spider
     int seed;
-
+    int period;
+    
     /**
      * This constructor used for establishing new games
      * @param difficulty (String)
@@ -193,8 +195,9 @@ public class GameMap {
             Position pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
             Entity temp = EntityFactory.getEntityObject(i.toString(), pos, obj);
             // Set player on the map
-            if (temp.getType().equals("player")) {
+            if (temp.isType("player")) {
                 this.player = (Player) temp;
+                this.entryLocation = temp.getPos();
             }
             newMap.get(temp.getPos()).add(temp);
             i++;
@@ -243,9 +246,18 @@ public class GameMap {
     }
 
     // ********************************************************************************************\\
-    //                                     OTHER FUNCTIONS                                         \\
+    //                                  Mob Spawning Functions                                     \\
     // ********************************************************************************************\\
     
+    /**
+     * Spawn all respective mobs.
+     */
+    public void spawnMob() {
+        spawnSpider();
+        spawnMercenary();
+        period++;
+    }
+
     /**
      * Spawns a spider on the map with a one in ten chance (with
      * restrictions).
@@ -253,39 +265,43 @@ public class GameMap {
     public void spawnSpider() {
         int spiders = 0;
         for (MovingEntity e : getMovingEntityList()) {
-            if (e.getType().equals("spider")) {
-                spiders++;
-            }
+            if (e.isType("spider")) { spiders++; }
         }
         // Square too small:
-        if(width < 2 || height < 2) {
-            return;
-        }
+        if(width < 2 || height < 2) { return; }
         // Check conditions
         Random random = new Random(seed);
         if (random.nextInt(10) == 5 && spiders < 5) {
             // Random x and y positions
             int xPos = new Random(seed + 37).nextInt(width - 2) + 1;
             int yPos = new Random(seed + 68).nextInt(height - 2) + 1;
-            // Loop through to check restrictions
-            for (Map.Entry<Position, List<Entity>> entry : dungeonMap.entrySet()) {
-                for (Entity e : entry.getValue()) {
-                    boolean currSquare = e.getPos().equals(new Position(xPos, yPos));
-                    boolean checkAbove = e.getPos().equals(new Position(xPos, yPos - 1));
-                    if (e.getType().equals("player") && currSquare ||
-                        (e.getType().equals("boulder") && (currSquare || checkAbove))) {
-                        return;
-                    }
-                }
-            }
             // Create the spider:
             Position newSpider = new Position(xPos, yPos, 3);
+            Position checkAbove = new Position(xPos, yPos - 1, 3);
             Spider spider = new Spider("" + System.currentTimeMillis(), "spider", newSpider);
-            dungeonMap.get(newSpider).add(spider);
-            player.registerObserver(spider);
+            // Check if current and above positions of the spiders are boulders:
+            if (spider.canPass(dungeonMap, newSpider) && spider.canPass(dungeonMap, checkAbove)) {
+                dungeonMap.get(newSpider).add(spider);
+                player.registerObserver(spider);
+            }
         }
-        seed = seed + 124;
+        seed += 124;
     }
+
+    /**
+     * Periodically spawns a mecenary at the entry location.
+     */
+    public void spawnMercenary() {
+        if (period != 0 && period % 15 == 0) {
+            Mercenary newMerc = new Mercenary("" + System.currentTimeMillis(), "mercenary", entryLocation);
+            dungeonMap.get(entryLocation).add(newMerc);
+            player.registerObserver(newMerc);
+        }
+    }
+
+    // ********************************************************************************************\\
+    //                                     Other Functions                                         \\
+    // ********************************************************************************************\\
 
     // This function should be in player.
     /**
