@@ -41,6 +41,16 @@ public abstract class Entity {
         return (type.equals(eType));
     }
 
+    /**
+     * Given entity id, checks if "this" has the same id.
+     * @param id
+     * @return
+     */
+    public boolean hasId(String eId) {
+        return (id.equals(eId));
+    }
+
+
     // Getters and Setters
     public String getId() {
         return this.id;
