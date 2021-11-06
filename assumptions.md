@@ -26,6 +26,7 @@ boulder that is already on top of a switch.
 - Zombies, Mercenaries and Spiders will not be able to push boulders
 - Spiders will not spawn on a tile with a player, boulder, or is below a tile with a boulder.
 - Player will only teleport through a portal if they can exit the opposite portal in the same direction that they entered from
+- The spawn position for mercenary changes when a game is saved and loaded; and the new spwan position will be the start position for player in the newly loaded game.
 
 # Assumptions for Buildable Entities:
 
