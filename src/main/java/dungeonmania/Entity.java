@@ -31,6 +31,16 @@ public abstract class Entity {
         return self;
     }
 
+    /**
+     * Given a string type, checks if the entity is of the 
+     * same type as the one given.
+     * @param eType
+     * @return True is same type, false otherwise.
+     */
+    public boolean isType(String eType) {
+        return (type.equals(eType));
+    }
+
     // Getters and Setters
     public String getId() {
         return this.id;
