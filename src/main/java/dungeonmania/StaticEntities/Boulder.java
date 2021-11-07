@@ -29,7 +29,7 @@ public class Boulder extends StaticEntity {
         Position pos = super.getPos();
         Position newPos = pos.translateBy(direction);
         for (int i = 1; i < 5; i++) {
-            if (!map.get(new Position(newPos.getX(), newPos.getY(), i)).isEmpty()) {
+            if (!map.get(newPos.asLayer(i)).isEmpty()) {
                 // New tile is not empty, cannot be pushed onto
                 return false;
             }
@@ -53,13 +53,13 @@ public class Boulder extends StaticEntity {
         pos = super.getPos();
 
         List<Entity> entities = map.get(getPos().asLayer(0));
-        if ( entities.size() > 0 && entities.get(0).getType().equals("switch")) {
+        if ( entities.size() > 0 && entities.get(0).isType("switch")) {
             // Boulder is on a switch
             List<Position> adjacentPos = pos.getCardinallyAdjacentPositions();
             for (Position tempPos: adjacentPos) {
 
                 List<Entity> collectablEntities = map.get(tempPos.asLayer(2));
-                if (collectablEntities.size() > 0 && collectablEntities.get(0).getType().equals("bomb")) {
+                if (collectablEntities.size() > 0 && collectablEntities.get(0).isType("bomb")) {
                     // contains bomb
                     Bomb bomb = (Bomb) collectablEntities.get(0);
                     bomb.detonate(map);

@@ -93,6 +93,10 @@ public class Player extends MovingEntity implements MovingEntitySubject {
      * @return True is the player can go onto the new position, false otherwise.
      */
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
+        if (!map.containsKey(pos)) {
+            return false;
+        }
+
         List<Entity> entities = map.get(pos.asLayer(4));
         if (entities.size() == 1) {
             System.out.println(entities.get(0).getType().equals("door_unlocked"));
