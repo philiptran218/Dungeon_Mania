@@ -16,16 +16,8 @@ import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
 import dungeonmania.Battles.Battle;
 import dungeonmania.Goals.*;
-<<<<<<< HEAD
-import dungeonmania.MovingEntities.Mercenary;
-import dungeonmania.MovingEntities.MovingEntity;
-import dungeonmania.MovingEntities.Player;
-import dungeonmania.MovingEntities.Spider;
-import dungeonmania.StaticEntities.*;
-import dungeonmania.response.models.AnimationQueue;
-=======
 import dungeonmania.MovingEntities.*;
->>>>>>> 00530dd8c7d0ffbe4a697309bc7815932b6f1951
+import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
@@ -210,11 +202,8 @@ public class GameMap {
             // Set player on the map
             if (temp.isType("player")) {
                 this.player = (Player) temp;
-<<<<<<< HEAD
                 player.setId("player");
-=======
                 this.entryLocation = temp.getPos();
->>>>>>> 00530dd8c7d0ffbe4a697309bc7815932b6f1951
             }
             newMap.get(temp.getPos()).add(temp);
             i++;
