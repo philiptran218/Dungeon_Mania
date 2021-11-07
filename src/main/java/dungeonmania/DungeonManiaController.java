@@ -167,7 +167,6 @@ public class DungeonManiaController {
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
             if (!(e.getPos().equals(e.getPlayerPos()) && !e.isType("mercenary")) && !gameMap.isOnSwampTile(e)) {
-                System.out.println(gameMap.getMap());
                 e.move(gameMap.getMap());
             }
         }

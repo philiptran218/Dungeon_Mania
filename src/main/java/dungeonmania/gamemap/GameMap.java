@@ -302,7 +302,7 @@ public class GameMap {
             // Create the spider:
             Position newSpider = new Position(xPos, yPos, 3);
             Position checkAbove = new Position(xPos, yPos - 1, 3);
-            Spider spider = new Spider("" + System.currentTimeMillis(), "spider", newSpider);
+            Spider spider = new Spider("spider" + System.currentTimeMillis(), "spider", newSpider);
             // Check if current and above positions of the spiders are boulders:
             if (spider.canPass(dungeonMap, newSpider) && spider.canPass(dungeonMap, checkAbove)) {
                 dungeonMap.get(newSpider).add(spider);
@@ -317,7 +317,7 @@ public class GameMap {
      */
     public void spawnMercenary() {
         if (period != 0 && period % 15 == 0) {
-            Mercenary newMerc = new Mercenary("" + System.currentTimeMillis(), "mercenary", entryLocation);
+            Mercenary newMerc = new Mercenary("merc" + System.currentTimeMillis(), "mercenary", entryLocation);
             dungeonMap.get(entryLocation).add(newMerc);
             player.registerObserver(newMerc);
         }
@@ -411,6 +411,7 @@ public class GameMap {
         for (MovingEntity e : getMovingEntityList()) {
             player.registerObserver(e);
         }
+        player.registerObserver(player);
     }
 
     public GoalInterface getRootGoal() {
