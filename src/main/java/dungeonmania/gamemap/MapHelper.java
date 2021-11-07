@@ -11,6 +11,7 @@ import com.google.gson.*;
 import org.json.JSONArray;
 
 import dungeonmania.Entity;
+import dungeonmania.EntityFactory;
 import dungeonmania.StaticEntities.SwampTile;
 import dungeonmania.util.Position;
 
@@ -112,6 +113,29 @@ public class MapHelper {
             if (((SwampTile) e).entityOnTile(id)) { return true; }
         }
         return false;
+    }
+
+    /**
+     * 
+     */
+    public static void addEntityToSwampTile(SwampTile swapTile, Map<Position, List<Entity>> map, JsonObject obj) {
+        Integer i = 1;
+        for (JsonElement entity : obj.getAsJsonArray("entites_on_tile")) {
+            JsonObject jObject = entity.getAsJsonObject();
+            Position pos = new Position(jObject.get("x").getAsInt(), jObject.get("y").getAsInt());
+            String id = swapTile.getId() + "onswamptile" + i;
+            // Create the object:
+            Entity e = EntityFactory.getEntityObject(id, pos, jObject);
+            // Add to map
+            map.get(e.getPos()).add(e);
+            // Add to swamp map
+            swapTile.addToMap(e, jObject.get("ticks_remaining").getAsInt());
+
+            for (Map.Entry<Entity, Integer> entry : swapTile.getMap().entrySet()) {
+                System.out.println("Entity: " + entry.getKey().getType() + " ticks remining: " + entry.getValue());
+            }
+            i++;
+        }
     }
 
 }

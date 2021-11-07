@@ -198,20 +198,16 @@ public class GameMap {
             // Set player on the map
             if (temp.isType("player")) {
                 this.player = (Player) temp;
-                this.entryLocation = temp.getPos();
-            } 
-            /*else if (temp.isType("swamp_tile") &&  obj.getAsJsonArray("entites_on_tile") != null) {
-                // Loop through the entities on tile:
-                for (JsonElement e : obj.getAsJsonArray("entites_on_tile")) {
-                    JsonObject object = e.getAsJsonObject();
-                    Position p = new Position(object.get("x").getAsInt(), object.get("y").getAsInt());
-                    Entity t = EntityFactory.getEntityObject(i.toString(), p, object);
-                    ((SwampTile) temp).addToMap(t, object.get("ticks_remaining").getAsInt());
-                    newMap.get(p).add(t);
-                    i++;
-                }
-            }*/
-            newMap.get(pos).add(temp);
+                this.entryLocation = temp.getPos(); 
+            }
+
+            // Check if temp is a swamp tile, and if it is 
+            // add all its respective entities to the map along
+            // its factor:
+            if (temp.isType("swamp_tile") && obj.get("entites_on_tile") != null) {
+                MapHelper.addEntityToSwampTile(((SwampTile) temp), newMap, obj);
+            }
+            newMap.get(temp.getPos()).add(temp);
             i++;
         }
         return newMap;

@@ -82,7 +82,6 @@ public class SwampTile extends StaticEntity {
         JSONArray entities = new JSONArray();
         // Add all entities currently on the tile:
         for (Map.Entry<Entity, Integer> entry : eMap.entrySet()) {
-            System.out.println("Entry: " + entry.getKey().getType());
             JSONObject obj = entry.getKey().toJSONObject();
             obj.put("ticks_remaining", entry.getValue());
             entities.put(obj);
