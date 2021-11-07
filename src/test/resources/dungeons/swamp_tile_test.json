@@ -187,6 +187,16 @@
         "x": 7,
         "y": 9,
         "type": "wall"
+      },
+      {
+        "x": 3,
+        "y": 6,
+        "type": "mercenary"
+      },
+      {
+        "x": 3,
+        "y": 6,
+        "type": "mercenary"
       }
     ],
     "goal-condition": {

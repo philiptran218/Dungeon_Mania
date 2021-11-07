@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import dungeonmania.Entity;
@@ -63,12 +64,30 @@ public class SwampTile extends StaticEntity {
         return false;
     }
 
+    /**
+     * Given an entity and value, add it to the map.
+     * @param e
+     * @param value
+     */
+    public void addToMap(Entity e, int value) {
+        eMap.put(e, value);
+    }
     
     @Override
     public JSONObject toJSONObject() {
         JSONObject tmp = super.toJSONObject();
         // Overwrite type
         tmp.put("movement_factor", factor);
+        // Add all entities in the list:
+        JSONArray entities = new JSONArray();
+        // Add all entities currently on the tile:
+        for (Map.Entry<Entity, Integer> entry : eMap.entrySet()) {
+            System.out.println("Entry: " + entry.getKey().getType());
+            JSONObject obj = entry.getKey().toJSONObject();
+            obj.put("ticks_remaining", entry.getValue());
+            entities.put(obj);
+        }
+        tmp.put("entites_on_tile", entities);
         return tmp;
     }
 

@@ -174,7 +174,7 @@ public class GameMap {
         main.put("map-name", dungeonName);
         main.put("goal-condition", GoalHelper.goalPatternToJson(getRootGoal()));
         main.put("inventory", player.getInventory().toJSON());
-        main.put("entities", MapHelper.mapToJSON(dungeonMap));
+        main.put("entities", MapHelper.entitiesToJson(dungeonMap));
         return main;
     }
 
@@ -199,8 +199,19 @@ public class GameMap {
             if (temp.isType("player")) {
                 this.player = (Player) temp;
                 this.entryLocation = temp.getPos();
-            }
-            newMap.get(temp.getPos()).add(temp);
+            } 
+            /*else if (temp.isType("swamp_tile") &&  obj.getAsJsonArray("entites_on_tile") != null) {
+                // Loop through the entities on tile:
+                for (JsonElement e : obj.getAsJsonArray("entites_on_tile")) {
+                    JsonObject object = e.getAsJsonObject();
+                    Position p = new Position(object.get("x").getAsInt(), object.get("y").getAsInt());
+                    Entity t = EntityFactory.getEntityObject(i.toString(), p, object);
+                    ((SwampTile) temp).addToMap(t, object.get("ticks_remaining").getAsInt());
+                    newMap.get(p).add(t);
+                    i++;
+                }
+            }*/
+            newMap.get(pos).add(temp);
             i++;
         }
         return newMap;
@@ -227,17 +238,6 @@ public class GameMap {
             }
         }
         return entityList;
-    }
-    
-    public List<Entity> getEntityTypeList(String eType) {
-        List<Entity> eList = new ArrayList<>();
-        // Loop through to the entity
-        for (Map.Entry<Position, List<Entity>> entry : dungeonMap.entrySet()) {
-            for (Entity e : entry.getValue()) {
-                if (e.isType(eType)) { eList.add(e); }
-            }
-        }
-        return eList;
     }
 
     /**
@@ -329,7 +329,7 @@ public class GameMap {
 
     public void swampTileCheck() {
         // Loop through all swamp_tile entites
-        for (Entity e : getEntityTypeList("swamp_tile")) {
+        for (Entity e : MapHelper.getEntityTypeList(dungeonMap, "swamp_tile")) {
             ((SwampTile) e).checkTile(getEntityPositionList(e.getPos()));
         }
     }
@@ -341,7 +341,7 @@ public class GameMap {
      */
     public boolean isOnSwampTile(String id) {
         if (id == null) { id = player.getId(); } 
-        for (Entity e : getEntityTypeList("swamp_tile")) {
+        for (Entity e : MapHelper.getEntityTypeList(dungeonMap, "swamp_tile")) {
             if (((SwampTile) e).entityOnTile(id)) { return true; }
         }
         return false;
@@ -349,7 +349,7 @@ public class GameMap {
 
     // Swamp tile tick:
     public void swampTick() {
-        for (Entity e : getEntityTypeList("swamp_tile")) {
+        for (Entity e : MapHelper.getEntityTypeList(dungeonMap, "swamp_tile")) {
             ((SwampTile) e).tickCount();
         }
     }
