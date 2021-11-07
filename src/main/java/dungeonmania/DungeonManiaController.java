@@ -5,6 +5,7 @@ import dungeonmania.StaticEntities.*;
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.gamemap.GameMap;
+import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
@@ -100,8 +101,10 @@ public class DungeonManiaController {
         }
         // Set map:
         this.gameMap = new GameMap(gameMode, dungeonName, getJsonFile(dungeonName));
+        List<AnimationQueue> animations = new ArrayList<>();
+        animations.add(new AnimationQueue("PostTick", "player", Arrays.asList("healthbar set 1", "healthbar tint 0x00ff00"), false, -1));
         // Return DungeonResponse
-        return gameMap.returnDungeonResponse();
+        return gameMap.returnDungeonResponse(animations);
     }
     
     /**
@@ -153,6 +156,7 @@ public class DungeonManiaController {
      * @throws InvalidActionException
      */
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
+        List<AnimationQueue> animations = new ArrayList<>();
         // If itemUsed is NULL move the player:
         if (itemUsed == null) {
             gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
@@ -186,6 +190,11 @@ public class DungeonManiaController {
                 }
             }
         }
+        double health = gameMap.getPlayer().getHealth() / 20;
+        animations.add(new AnimationQueue("PostTick", "player", Arrays.asList("healthbar set " + health, "healthbar tint 0x00ff00"), false, -1));
+        if (!removeEntity.isEmpty()) {
+            animations.add(new AnimationQueue("PostTick", "player", Arrays.asList("healthbar shake, over 0.5s, ease Sin"), false, 0.5));
+        }
         if (!removeEntity.contains(null)) {
             // Remove dead entities from list after battle is finished
             // Remove the entity from the map:
@@ -194,8 +203,6 @@ public class DungeonManiaController {
             }
 
         }
-
-
         // Ticks the zombie toast spawner
         for (Map.Entry<Position, List<Entity>> entry : gameMap.getMap().entrySet()) {
             for(Entity e : entry.getValue()) {
@@ -208,7 +215,7 @@ public class DungeonManiaController {
         gameMap.spawnSpider();
 
         // Return DungeonResponse
-        return gameMap.returnDungeonResponse();
+        return gameMap.returnDungeonResponse(animations);
     }
 
     /**

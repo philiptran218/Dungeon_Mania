@@ -23,6 +23,7 @@ import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.MovingEntities.Spider;
 import dungeonmania.StaticEntities.*;
+import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
@@ -81,6 +82,10 @@ public class GameMap {
     public DungeonResponse returnDungeonResponse() {
         return new DungeonResponse(getMapId(), getDungeonName(), mapToListEntityResponse(), 
             player.getInventoryResponse(), getBuildables(), getGoals());
+    }
+    public DungeonResponse returnDungeonResponse(List<AnimationQueue> animations) {
+        return new DungeonResponse(getMapId(), getDungeonName(), mapToListEntityResponse(), 
+            player.getInventoryResponse(), getBuildables(), getGoals(), animations);
     }
 
     /**
@@ -238,6 +243,7 @@ public class GameMap {
             // Set player on the map
             if (type.equals("player")) {
                 this.player = (Player) temp;
+                player.setId("player");
             }
             newMap.get(temp.getPos()).add(temp);
             i++;
