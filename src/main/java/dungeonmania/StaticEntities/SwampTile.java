@@ -12,6 +12,7 @@ import dungeonmania.util.Position;
 
 public class SwampTile extends StaticEntity {
     private int factor;
+    // This map tracks the number of ticks until entity can move
     private Map<Entity, Integer> eMap = new HashMap<>();
 
     public SwampTile(String id, String type, Position pos, int factor) {
@@ -27,15 +28,15 @@ public class SwampTile extends StaticEntity {
     public void checkTile(List<Entity> eList) {
         // Go through the entities on tiles and add them
         for (Entity e : eList) {
-            if (!e.isType("swamp_tile") && !eMap.containsKey(e)) { eMap.put(e, factor); }
+            if (!e.hasId(super.getId()) && !eMap.containsKey(e)) { eMap.put(e, factor); }
         }
-
-        // Remove the ones that have exhausted all factors
+        // Loop through to see if any have been on the tile for enough time
+        List<Entity> removeEntity = new ArrayList<>();
         for (Map.Entry<Entity, Integer> entry : eMap.entrySet()) {
-            if (entry.getValue() == 0) {
-                eMap.remove(entry.getKey());
-            }
+            if (entry.getValue() == 0) { removeEntity.add(entry.getKey()); }
         }
+        // Remove all entities in the remove list:
+        removeEntity.forEach(e -> eMap.remove(e));
     }
 
     /**
@@ -49,13 +50,20 @@ public class SwampTile extends StaticEntity {
         }
     }
 
-    public boolean entityOnTile(Entity entity) {
+    /**
+     * Given an entity id, checks if the entity is in 
+     * the map, if not the entity can move around.
+     * @param id
+     * @return True if the entity is not in map, false otherwise.
+     */
+    public boolean entityOnTile(String id) {
         for (Map.Entry<Entity, Integer> entry : eMap.entrySet()) {
-            if (entry.getKey().hasId(entity.getId())) { return true; }
+            if (entry.getKey().hasId(id)) { return true; }
         }
         return false;
     }
 
+    
     @Override
     public JSONObject toJSONObject() {
         JSONObject tmp = super.toJSONObject();
