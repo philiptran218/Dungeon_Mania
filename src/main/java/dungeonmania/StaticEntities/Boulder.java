@@ -34,7 +34,12 @@ public class Boulder extends StaticEntity {
                 return false;
             }
         }
-        // Can be pushed, push boulder
+        // Checks if it is in the swamp tile list:
+        for (Entity e : map.get(super.getPos().asLayer(0))) {
+            if (e.isType("swamp_tile") && ((SwampTile) e).entityOnTile(super.getId())) {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -57,7 +62,7 @@ public class Boulder extends StaticEntity {
             // Boulder is on a switch
             List<Position> adjacentPos = pos.getCardinallyAdjacentPositions();
             for (Position tempPos: adjacentPos) {
-
+                // Checks if a bomb needs to be exploded
                 List<Entity> collectablEntities = map.get(tempPos.asLayer(2));
                 if (collectablEntities.size() > 0 && collectablEntities.get(0).getType().equals("bomb")) {
                     // contains bomb
@@ -66,6 +71,6 @@ public class Boulder extends StaticEntity {
                 }
             }
         }
-
     }
+
 }
