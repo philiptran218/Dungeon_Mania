@@ -41,9 +41,9 @@
         "one_ring": "images/tileset/items/ring_0_special.png",
         "shield": "images/tileset/items/shield.png",
         "armour": "images/tileset/items/armour.png",
-        "BLUE": "images/tileset/entities/portal_00.png",
-        "RED": "images/tileset/entities/portal_04.png",
-        "YELLOW": "images/tileset/entities/portal_08.png",
-        "GREY": "images/tileset/entities/portal_12.png"
+        "BLUEportal": "images/tileset/entities/portal_00.png",
+        "REDportal": "images/tileset/entities/portal_04.png",
+        "YELLOWportal": "images/tileset/entities/portal_08.png",
+        "GREYportal": "images/tileset/entities/portal_12.png"
     }
 }

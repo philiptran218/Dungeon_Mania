@@ -66,7 +66,7 @@ public class ZombieToast extends MovingEntity {
      */
     public void move(Map<Position, List<Entity>> map) {
         List<Entity> entities = map.get(super.getPlayerPos()).stream()
-                                                             .filter(e -> e.getType().equals("player"))
+                                                             .filter(e -> e.isType("player"))
                                                              .collect(Collectors.toList());
         Player player = (Player) entities.get(0);
 
@@ -114,14 +114,17 @@ public class ZombieToast extends MovingEntity {
             }
         }
 
-        this.moveToPos(map, new Position(newPos.getX(), newPos.getY(), 3));
+        this.moveToPos(map, newPos.asLayer(3));
     }
     
     /**
      * Checks if the zombie can move onto a new position.
      */
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
-        return map.get(new Position(pos.getX(), pos.getY(), 1)).isEmpty();  
+        if (!map.containsKey(pos)) {
+            return false;
+        }
+        return map.get(pos.asLayer(1)).isEmpty();
     }
 
     /**

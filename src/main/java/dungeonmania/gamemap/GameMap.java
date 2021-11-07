@@ -10,20 +10,22 @@ import java.util.Random;
 
 import com.google.gson.*;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
 import dungeonmania.Battles.Battle;
-import dungeonmania.CollectableEntities.*;
 import dungeonmania.Goals.*;
+<<<<<<< HEAD
 import dungeonmania.MovingEntities.Mercenary;
 import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.MovingEntities.Spider;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.response.models.AnimationQueue;
+=======
+import dungeonmania.MovingEntities.*;
+>>>>>>> 00530dd8c7d0ffbe4a697309bc7815932b6f1951
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
@@ -31,6 +33,7 @@ import dungeonmania.util.Position;
 public class GameMap {
     // Map Variables: **************
     private Map<Position, List<Entity>> dungeonMap;
+    private Position entryLocation;
     private String dungeonName;
     private String mapId;
     private Player player;
@@ -44,6 +47,10 @@ public class GameMap {
     // Game State: **************
     private GameState gameState;
 
+    // Seed counter used for spider
+    int seed;
+    int period;
+    
     /**
      * This constructor used for establishing new games
      * @param difficulty (String)
@@ -53,8 +60,9 @@ public class GameMap {
     public GameMap(String difficulty, String name, JsonObject jsonMap) {
         this.dungeonName = name;
         this.mapId = "" + System.currentTimeMillis();
-        this.battle = new Battle(difficulty);
         this.dungeonMap = jsonToMap(jsonMap);
+        this.battle = new Battle(difficulty);
+        this.player.setBattle(battle);
         this.setPlayerInventory(jsonMap);
         this.setObservers();
         this.gameState = MapHelper.createGameState(difficulty);
@@ -154,7 +162,7 @@ public class GameMap {
     public void saveMapAsJson(String name) {
         try {  
             // Writes the json file into the folder
-            FileWriter file = new FileWriter("src/main/resources/saved_games/" + name + ".json");
+            FileWriter file = new FileWriter("saved_games/" + name + ".json");
             file.write(mapToJson().toString(4));
             file.flush();
             file.close();
@@ -171,50 +179,14 @@ public class GameMap {
     public JSONObject mapToJson() {
         // Main object for file
         JSONObject main = new JSONObject();
-        JSONArray entities = new JSONArray();
-
         // Add all fields:
         main.put("width", getMapWidth());
         main.put("height", getMapHeight());
-        main.put("game-mode", this.gameState.getMode());
-        main.put("map-name", this.dungeonName);
-        main.put("goal-condition", GoalHelper.goalPatternToJson(this.getRootGoal()));
-
-        JSONArray inventory = new JSONArray();
-        // Add all inventory items
-        for (CollectableEntity e : player.getInventoryList()) {
-            JSONObject c = new JSONObject();
-            c.put("type", e.getType());
-            if (e.getType().equals("key")) {
-                c.put("key", ((Key) e).getKeyId());
-            }
-            inventory.put(c);
-        }   
-        main.put("inventory", inventory);
-
-        // Add all entities on the map
-        for (Map.Entry<Position, List<Entity>> entry : this.dungeonMap.entrySet()) {
-            for (Entity e : entry.getValue()) {
-                JSONObject temp = new JSONObject();
-                temp.put("x", entry.getKey().getX());
-                temp.put("y", entry.getKey().getY());
-
-                if (e instanceof Portal) {
-                    temp.put("colour", ((Portal) e).getType());
-                    temp.put("type", "portal");
-                } else {
-                    temp.put("type", e.getType());
-                }
-
-                if (e.getType().equals("key")) {
-                    temp.put("key", ((Key) e).getKeyId());
-                } else if (e.getType().equals("door")) {
-                    temp.put("key", ((Door) e).getKeyId());
-                }
-                entities.put(temp);
-            }
-        }
-        main.put("entities", entities);
+        main.put("game-mode", gameState.getMode());
+        main.put("map-name", dungeonName);
+        main.put("goal-condition", GoalHelper.goalPatternToJson(getRootGoal()));
+        main.put("inventory", player.getInventory().toJSON());
+        main.put("entities", MapHelper.mapToJSON(dungeonMap));
         return main;
     }
 
@@ -232,18 +204,17 @@ public class GameMap {
         for (JsonElement entity : jsonMap.getAsJsonArray("entities")) {
             // Get all attributes:
             JsonObject obj = entity.getAsJsonObject();
-            String type = obj.get("type").getAsString();
-            Position pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
-            int colour = 0;
-            if (obj.get("colour") != null) {
-                colour = Portal.colourToId(obj.get("colour").getAsString());
-            }
             // Create the entity object, by factory method
-            Entity temp = EntityFactory.getEntityObject(i.toString(), type, pos, obj.get("key"), colour, this.battle);
+            Position pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
+            Entity temp = EntityFactory.getEntityObject(i.toString(), pos, obj);
             // Set player on the map
-            if (type.equals("player")) {
+            if (temp.isType("player")) {
                 this.player = (Player) temp;
+<<<<<<< HEAD
                 player.setId("player");
+=======
+                this.entryLocation = temp.getPos();
+>>>>>>> 00530dd8c7d0ffbe4a697309bc7815932b6f1951
             }
             newMap.get(temp.getPos()).add(temp);
             i++;
@@ -292,8 +263,17 @@ public class GameMap {
     }
 
     // ********************************************************************************************\\
-    //                                     OTHER FUNCTIONS                                         \\
+    //                                  Mob Spawning Functions                                     \\
     // ********************************************************************************************\\
+    
+    /**
+     * Spawn all respective mobs.
+     */
+    public void spawnMob() {
+        spawnSpider();
+        spawnMercenary();
+        period++;
+    }
 
     /**
      * Spawns a spider on the map with a one in ten chance (with
@@ -302,40 +282,43 @@ public class GameMap {
     public void spawnSpider() {
         int spiders = 0;
         for (MovingEntity e : getMovingEntityList()) {
-            if (e.getType().equals("spider")) {
-                spiders++;
-            }
+            if (e.isType("spider")) { spiders++; }
         }
         // Square too small:
-        if(width < 2 || height < 2) {
-            return;
-        }
+        if(width < 2 || height < 2) { return; }
         // Check conditions
-        Random random = new Random();
-        if (random.nextInt(20) == 4 && spiders < 5) {
-            Random x = new Random();
-            Random y = new Random();
-            // New x and y positions
-            int xPos = x.nextInt(width - 2) + 1;
-            int yPos = y.nextInt(height - 2) + 1;
-            // Loop through to check restrictions
-            for (Map.Entry<Position, List<Entity>> entry : dungeonMap.entrySet()) {
-                for (Entity e : entry.getValue()) {
-                    boolean currSquare = ((e.getPos().getX() == xPos) && (e.getPos().getY() == yPos));
-                    boolean checkAbove = ((e.getPos().getX() == xPos) && (e.getPos().getY() == yPos - 1));
-                    if (e.getType().equals("player") && currSquare || 
-                        (e.getType().equals("boulder") && (currSquare || checkAbove))) {
-                        return;
-                    }
-                }
-            }
+        Random random = new Random(seed);
+        if (random.nextInt(10) == 5 && spiders < 5) {
+            // Random x and y positions
+            int xPos = new Random(seed + 37).nextInt(width - 2) + 1;
+            int yPos = new Random(seed + 68).nextInt(height - 2) + 1;
             // Create the spider:
             Position newSpider = new Position(xPos, yPos, 3);
+            Position checkAbove = new Position(xPos, yPos - 1, 3);
             Spider spider = new Spider("" + System.currentTimeMillis(), "spider", newSpider);
-            dungeonMap.get(newSpider).add(spider);
-            player.registerObserver(spider);
+            // Check if current and above positions of the spiders are boulders:
+            if (spider.canPass(dungeonMap, newSpider) && spider.canPass(dungeonMap, checkAbove)) {
+                dungeonMap.get(newSpider).add(spider);
+                player.registerObserver(spider);
+            }
+        }
+        seed += 124;
+    }
+
+    /**
+     * Periodically spawns a mecenary at the entry location.
+     */
+    public void spawnMercenary() {
+        if (period != 0 && period % 15 == 0) {
+            Mercenary newMerc = new Mercenary("" + System.currentTimeMillis(), "mercenary", entryLocation);
+            dungeonMap.get(entryLocation).add(newMerc);
+            player.registerObserver(newMerc);
         }
     }
+
+    // ********************************************************************************************\\
+    //                                     Other Functions                                         \\
+    // ********************************************************************************************\\
 
     // This function should be in player.
     /**
@@ -349,12 +332,12 @@ public class GameMap {
             return;
         }
         // Look at the inventory field in json file.
+        Integer i = 0;
         for (JsonElement entity : jsonMap.getAsJsonArray("inventory")) {
             JsonObject obj = entity.getAsJsonObject();
-            String type = obj.get("type").getAsString();
-            Position pos = new Position(0, 0, -1);
-            Entity collectable = EntityFactory.getEntityObject("" + System.currentTimeMillis(), type, pos, obj.get("key"), 0, this.battle);
+            Entity collectable = EntityFactory.getEntityObject("inventItem" + i, new Position(0, 0), obj);
             player.getInventory().put(collectable, player);
+            i++;
         }
     }
 

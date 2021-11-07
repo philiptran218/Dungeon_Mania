@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
 
@@ -35,9 +38,8 @@ public class Player extends MovingEntity implements MovingEntitySubject {
      * @param pos
      * @param battle
      */
-    public Player(String id, String type, Position pos, Battle battle){
+    public Player(String id, String type, Position pos){
         super(id, type, pos, 20, 2);
-        this.setBattle(battle);
     }
 
     // ********************************************************************************************\\
@@ -70,8 +72,9 @@ public class Player extends MovingEntity implements MovingEntitySubject {
             int keyId = ((Door) e).getKeyId();
             if (inventory.getKey(keyId) != null) {
                 e.setType("door_unlocked");
+                e.setPos(doorLayer.asLayer(-1));
                 inventory.getKey(keyId).use();
-                map.get(new Position(newPos.getX(), newPos.getY(), 4)).add(e);
+                map.get(newPos.asLayer(-1)).add(e);
                 // Remove the door on current layer and
                 map.get(doorLayer).remove(e);
                 moveInDir(map, direction);
@@ -90,8 +93,13 @@ public class Player extends MovingEntity implements MovingEntitySubject {
      * @return True is the player can go onto the new position, false otherwise.
      */
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
+        if (!map.containsKey(pos)) {
+            return false;
+        }
+
         List<Entity> entities = map.get(pos.asLayer(4));
         if (entities.size() == 1) {
+            System.out.println(entities.get(0).getType().equals("door_unlocked"));
             return entities.get(0).getType().equals("door_unlocked");
         } else {
             return map.get(pos.asLayer(1)).isEmpty();
@@ -166,7 +174,6 @@ public class Player extends MovingEntity implements MovingEntitySubject {
             // Player does not have the item
             throw new InvalidActionException("Player does not have the item.");
         }
-        
         if (!useableItems.contains(item.getType())) {
             // Cannot use the item
             throw new IllegalArgumentException("Cannot use item.");
@@ -235,7 +242,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
             // player is not cardinally adjacent to spawner
             throw new InvalidActionException("player not cardinally adjacent to spawner");
         }
-
+        
         if (inventory.getItem("sword") != null) {
             spawner.destroy(map);
             inventory.getItem("sword").use();
@@ -383,7 +390,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     public void setBattle(Battle battle) {
         this.battle = battle;
     }
-
+    
     public Battle getBattle() {
         return battle;
     }

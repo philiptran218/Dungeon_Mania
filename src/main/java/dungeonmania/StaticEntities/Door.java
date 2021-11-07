@@ -1,5 +1,7 @@
 package dungeonmania.StaticEntities;
 
+import org.json.JSONObject;
+
 import dungeonmania.util.Position;
 
 public class Door extends StaticEntity {
@@ -20,4 +22,13 @@ public class Door extends StaticEntity {
         return keyId;
     }
     
+    // Convert it to a JSONObject
+    @Override
+    public JSONObject toJSONObject() {
+        JSONObject tmp = super.toJSONObject();
+        // Overwrite type
+        tmp.put("type", super.getType());
+        tmp.put("key", keyId);
+        return tmp;
+    }
 }

@@ -1,5 +1,7 @@
 package dungeonmania;
 
+import org.json.JSONObject;
+
 import dungeonmania.util.Position;
 
 public abstract class Entity {
@@ -11,6 +13,32 @@ public abstract class Entity {
         this.id = id;
         this.pos = pos;
         this.type = type;
+    }
+
+    // Converts itself to a json object:
+    public JSONObject toJSONObject() {
+        JSONObject self = new JSONObject();
+        self.put("x", pos.getX());
+        self.put("y", pos.getY());
+        self.put("type", getType());
+        return self;
+    }
+
+    // Convert to an inventory object:
+    public JSONObject toJSONObjectInventory() {
+        JSONObject self = new JSONObject();
+        self.put("type", type);
+        return self;
+    }
+
+    /**
+     * Given a string type, checks if the entity is of the 
+     * same type as the one given.
+     * @param eType
+     * @return True is same type, false otherwise.
+     */
+    public boolean isType(String eType) {
+        return (type.equals(eType));
     }
 
     // Getters and Setters

@@ -139,7 +139,7 @@ public class DungeonManiaController {
      */
     public List<String> allGames() {
         try {
-            return FileLoader.listFileNamesInResourceDirectory("/saved_games");
+            return FileLoader.listFileNamesInDirectoryOutsideOfResources("saved_games");
         } catch (IOException e) {
             return new ArrayList<>();
         }
@@ -212,7 +212,8 @@ public class DungeonManiaController {
             }
         }
 
-        gameMap.spawnSpider();
+        // Spawn relevant mobs
+        gameMap.spawnMob();
 
         // Return DungeonResponse
         return gameMap.returnDungeonResponse(animations);
@@ -289,4 +290,5 @@ public class DungeonManiaController {
         }
         return gameMap.returnDungeonResponse();
     }
+
 }

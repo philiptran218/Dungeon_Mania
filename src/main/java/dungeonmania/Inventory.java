@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import dungeonmania.CollectableEntities.CollectableEntity;
 import dungeonmania.CollectableEntities.InvincibilityPotion;
 import dungeonmania.CollectableEntities.InvisibilityPotion;
@@ -103,5 +106,21 @@ public class Inventory {
      */
     public void useItem(String type) {
         getItem(type).use();
+    }
+
+    /**
+     * Converts the inventory to a JSONObject
+     * @return
+     */
+    public JSONArray toJSON() {
+        JSONArray jsonArray = new JSONArray();
+        // Add all inventory items
+        for (CollectableEntity e : entities) {
+            JSONObject tmp = new JSONObject();
+            tmp.put("type", e.getType());
+            
+            jsonArray.put(e.toJSONObjectInventory());
+        }
+        return jsonArray;
     }
 }

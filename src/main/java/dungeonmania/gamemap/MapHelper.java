@@ -8,6 +8,8 @@ import java.util.Map;
 
 import com.google.gson.*;
 
+import org.json.JSONArray;
+
 import dungeonmania.Entity;
 import dungeonmania.util.Position;
 
@@ -22,7 +24,7 @@ public class MapHelper {
     public static Map<Position, List<Entity>> createInitialisedMap(int width, int height) {
         Map<Position, List<Entity>> map = new HashMap<>();
         // Initialise everything on the map to empty list
-        for (int k = 0; k < 5; k++) {
+        for (int k = -1; k < 5; k++) {
             for (int i = 0; i < width; i++) { // width
                 for (int j = 0; j < height; j++) { // height
                     map.put(new Position(i, j, k), new ArrayList<Entity>());
@@ -40,7 +42,7 @@ public class MapHelper {
      */
     public static JsonObject getSavedMap(String name) {
         try {
-            return JsonParser.parseReader(new FileReader("src\\main\\resources\\saved_games\\" + name + ".json")).getAsJsonObject();
+            return JsonParser.parseReader(new FileReader("saved_games\\" + name + ".json")).getAsJsonObject();
         } catch (Exception e) {
             throw new IllegalArgumentException("File not found.");
         }
@@ -60,4 +62,21 @@ public class MapHelper {
             return new HardState();
         }
     }
+
+    /**
+     * Takes a map of entities and conver it to a json array object.
+     * @param eList
+     * @return
+     */
+    public static JSONArray mapToJSON(Map<Position, List<Entity>> eMap) {
+        JSONArray jsonArray = new JSONArray();
+        // Add all entities on the map
+        for (Map.Entry<Position, List<Entity>> entry : eMap.entrySet()) {
+            for (Entity e : entry.getValue()) {
+                jsonArray.put(e.toJSONObject());
+            }
+        }
+        return jsonArray;
+    }
+
 }
