@@ -352,6 +352,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     public void registerObserver(MovingEntityObserver o) {
         if(! listObservers.contains(o)) {
             listObservers.add(o);
+            ((MovingEntity) o).setPlayerPos(getPos());
         }
     }
 
