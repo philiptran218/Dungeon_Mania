@@ -339,9 +339,10 @@ public class GameMap {
      * @param gameMap
      * @return True is the entity is on a swamp tile, false otherwise.
      */
-    public boolean isOnSwampTile(Entity entity) {
+    public boolean isOnSwampTile(String id) {
+        if (id == null) { id = player.getId(); } 
         for (Entity e : getEntityTypeList("swamp_tile")) {
-            if (((SwampTile) e).entityOnTile(entity)) { return true; }
+            if (((SwampTile) e).entityOnTile(id)) { return true; }
         }
         return false;
     }

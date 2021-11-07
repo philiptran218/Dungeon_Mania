@@ -154,7 +154,7 @@ public class DungeonManiaController {
      */
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
         // If itemUsed is NULL move the player:
-        if (itemUsed == null && !gameMap.isOnSwampTile(gameMap.getPlayer())) {
+        if (itemUsed == null && !gameMap.isOnSwampTile(null)) {
             gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
         } else if (itemUsed != null) {
             // Get the entity on map:
@@ -166,7 +166,7 @@ public class DungeonManiaController {
         
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
-            if (!(e.getPos().equals(e.getPlayerPos()) && !e.isType("mercenary")) && !gameMap.isOnSwampTile(e)) {
+            if (!(e.getPos().equals(e.getPlayerPos()) && !e.isType("mercenary")) && !gameMap.isOnSwampTile(e.getId())) {
                 e.move(gameMap.getMap());
             }
         }
