@@ -1,17 +1,20 @@
 package dungeonmania;
 
+import java.util.List;
+
 import com.google.gson.JsonObject;
 
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
+import dungeonmania.gamemap.GameMap;
+import dungeonmania.gamemap.MapHelper;
 import dungeonmania.util.Position;
 
 public class EntityFactory {
-    public static Entity getEntityObject(String id, Position pos, JsonObject jsonObj) {
+    public static Entity getEntityObject(String id, Position pos, JsonObject jsonObj, GameMap gameMap) {
         // Fields
         String type = jsonObj.get("type").getAsString();
-        
         // Positions:
         Position otherPos = new Position(pos.getX(), pos.getY(), 4);
         Position movingPos = new Position(pos.getX(), pos.getY(), 3);
@@ -37,7 +40,12 @@ public class EntityFactory {
             case "zombie_toast_spawner":
                 return new ZombieToastSpawner(id, type, staticPos);
             case "spider":
-                return new Spider(id, type, movingPos);
+                Spider tmp = new Spider(id, type, movingPos);
+                if (jsonObj.get("centre") != null) {
+                    JsonObject centre = jsonObj.get("centre").getAsJsonObject();
+                    tmp.setStartPosition(new Position(centre.get("x").getAsInt(), centre.get("y").getAsInt(), 3));
+                }
+                return tmp;
             case "zombie_toast": 
                 return new ZombieToast(id, type, movingPos);
             case "mercenary": 
@@ -69,9 +77,18 @@ public class EntityFactory {
             case "shield": 
                 return new Shield(id, type, collectPos);
             case "player": 
-                return new Player(id, type, movingPos);
+                Player player = new Player(id, type, movingPos);
+                gameMap.setPlayer(player);
+                return player;
             case "swamp_tile": 
-                return new SwampTile(id, type, absolPos, jsonObj.get("movement_factor").getAsInt());
+                SwampTile swamp = new SwampTile(id, type, absolPos, jsonObj.get("movement_factor").getAsInt());
+                if (jsonObj.get("entites_on_tile") != null) {
+                    MapHelper.addEntityToSwampTile(swamp, gameMap.getMap(), jsonObj, gameMap);
+                    // Checks if the player is on the swamp tile:
+                    List<Entity> playerCheck = MapHelper.getEntityTypeList(gameMap.getMap(), "player");
+                    if (!playerCheck.isEmpty()) { gameMap.setPlayer((Player) playerCheck.get(0)); }
+                }
+                return swamp;
             default: 
                 return null;
         }
