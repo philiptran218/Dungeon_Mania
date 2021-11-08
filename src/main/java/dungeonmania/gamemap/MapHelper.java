@@ -118,14 +118,14 @@ public class MapHelper {
     /**
      * 
      */
-    public static void addEntityToSwampTile(SwampTile swapTile, Map<Position, List<Entity>> map, JsonObject obj) {
+    public static void addEntityToSwampTile(SwampTile swapTile, Map<Position, List<Entity>> map, JsonObject obj, GameMap gameMap) {
         Integer i = 1;
         for (JsonElement entity : obj.getAsJsonArray("entites_on_tile")) {
             JsonObject jObject = entity.getAsJsonObject();
             Position pos = new Position(jObject.get("x").getAsInt(), jObject.get("y").getAsInt());
             String id = swapTile.getId() + "onswamptile" + i;
             // Create the object:
-            Entity e = EntityFactory.getEntityObject(id, pos, jObject, null);
+            Entity e = EntityFactory.getEntityObject(id, pos, jObject, gameMap);
             // Add to map
             map.get(e.getPos()).add(e);
             // Add to swamp map
