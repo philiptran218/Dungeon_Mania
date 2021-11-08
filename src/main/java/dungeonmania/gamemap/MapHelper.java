@@ -11,6 +11,8 @@ import com.google.gson.*;
 import org.json.JSONArray;
 
 import dungeonmania.Entity;
+import dungeonmania.EntityFactory;
+import dungeonmania.StaticEntities.SwampTile;
 import dungeonmania.util.Position;
 
 public class MapHelper {
@@ -24,7 +26,7 @@ public class MapHelper {
     public static Map<Position, List<Entity>> createInitialisedMap(int width, int height) {
         Map<Position, List<Entity>> map = new HashMap<>();
         // Initialise everything on the map to empty list
-        for (int k = -1; k < 5; k++) {
+        for (int k = 0; k < 5; k++) {
             for (int i = 0; i < width; i++) { // width
                 for (int j = 0; j < height; j++) { // height
                     map.put(new Position(i, j, k), new ArrayList<Entity>());
@@ -68,15 +70,70 @@ public class MapHelper {
      * @param eList
      * @return
      */
-    public static JSONArray mapToJSON(Map<Position, List<Entity>> eMap) {
+    public static JSONArray entitiesToJson(Map<Position, List<Entity>> map) {
+        // Remove all entites that are currently on a swamp tile:
         JSONArray jsonArray = new JSONArray();
         // Add all entities on the map
-        for (Map.Entry<Position, List<Entity>> entry : eMap.entrySet()) {
+        for (Map.Entry<Position, List<Entity>> entry : map.entrySet()) {
             for (Entity e : entry.getValue()) {
-                jsonArray.put(e.toJSONObject());
+                // Check if it is on a swamp tile and dont put if it is:
+                if (!entityOnSwamp(map, e.getId())) { jsonArray.put(e.toJSONObject()); } 
             }
         }
         return jsonArray;
+    }
+
+    /**
+     * Given the map and the type of entity you want, returns a list of 
+     * entities of that type on the map.
+     * @param map
+     * @param eType
+     * @return
+     */
+    public static List<Entity> getEntityTypeList(Map<Position, List<Entity>> map, String eType) {
+        List<Entity> eList = new ArrayList<>();
+        // Loop through to the entity
+        for (Map.Entry<Position, List<Entity>> entry : map.entrySet()) {
+            for (Entity e : entry.getValue()) {
+                if (e.isType(eType)) { eList.add(e); }
+            }
+        }
+        return eList;
+    }
+    
+    /**
+     * Given the map and the id of an entity, checks if the entity currently
+     * sits on a swamp tile or not.
+     * @param map
+     * @param id
+     * @return True if the entity is on a swamp tile, false otherwise.
+     */ // function should be in entity::::
+    public static boolean entityOnSwamp(Map<Position, List<Entity>> map, String id) {
+        for (Entity e : MapHelper.getEntityTypeList(map, "swamp_tile")) {
+            if (((SwampTile) e).entityOnTile(id)) { return true; }
+        }
+        return false;
+    }
+
+    /**
+     * 
+     */
+    public static void addEntityToSwampTile(SwampTile swapTile, Map<Position, List<Entity>> map, JsonObject obj, GameMap gameMap) {
+        Integer i = 1;
+        for (JsonElement entity : obj.getAsJsonArray("entites_on_tile")) {
+            JsonObject jObject = entity.getAsJsonObject();
+            Position pos = new Position(jObject.get("x").getAsInt(), jObject.get("y").getAsInt());
+            String id = swapTile.getId() + "onswamptile" + i;
+            // Create the object:
+            Entity e = EntityFactory.getEntityObject(id, pos, jObject, gameMap);
+            // Add to map
+            map.get(e.getPos()).add(e);
+            // Add to swamp map
+            swapTile.addToMap(e, jObject.get("ticks_remaining").getAsInt());
+            // Set player if the entity is player:
+            if (e.isType("player")) {  }
+            i++;
+        }
     }
 
 }

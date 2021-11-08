@@ -1,5 +1,8 @@
 package dungeonmania;
 
+import java.util.List;
+import java.util.Map;
+
 import org.json.JSONObject;
 
 import dungeonmania.util.Position;
@@ -40,6 +43,16 @@ public abstract class Entity {
     public boolean isType(String eType) {
         return (type.equals(eType));
     }
+
+    /**
+     * Given entity id, checks if "this" has the same id.
+     * @param id
+     * @return
+     */
+    public boolean hasId(String eId) {
+        return (id.equals(eId));
+    }
+
 
     // Getters and Setters
     public String getId() {

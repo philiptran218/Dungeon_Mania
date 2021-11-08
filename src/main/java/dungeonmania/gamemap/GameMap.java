@@ -17,6 +17,7 @@ import dungeonmania.EntityFactory;
 import dungeonmania.Battles.Battle;
 import dungeonmania.Goals.*;
 import dungeonmania.MovingEntities.*;
+import dungeonmania.StaticEntities.SwampTile;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
@@ -51,7 +52,7 @@ public class GameMap {
     public GameMap(String difficulty, String name, JsonObject jsonMap) {
         this.dungeonName = name;
         this.mapId = "" + System.currentTimeMillis();
-        this.dungeonMap = jsonToMap(jsonMap);
+        this.setGameMapFromJSON(jsonMap);
         this.battle = new Battle(difficulty);
         this.player.setBattle(battle);
         this.setPlayerInventory(jsonMap);
@@ -173,7 +174,7 @@ public class GameMap {
         main.put("map-name", dungeonName);
         main.put("goal-condition", GoalHelper.goalPatternToJson(getRootGoal()));
         main.put("inventory", player.getInventory().toJSON());
-        main.put("entities", MapHelper.mapToJSON(dungeonMap));
+        main.put("entities", MapHelper.entitiesToJson(dungeonMap));
         return main;
     }
 
@@ -182,36 +183,23 @@ public class GameMap {
      * and returns it.
      * @return Map<Position, List<Entity>> form of a map corresponding to jsonMap
      */
-    public Map<Position, List<Entity>> jsonToMap(JsonObject jsonMap) {
+    public void setGameMapFromJSON(JsonObject jsonMap) {
         // Initialise the map:
         this.width = jsonMap.get("width").getAsInt();
         this.height = jsonMap.get("height").getAsInt();
-        Map<Position, List<Entity>> newMap = MapHelper.createInitialisedMap(width, height);
+        dungeonMap = MapHelper.createInitialisedMap(width, height);
         Integer i = 0;
         for (JsonElement entity : jsonMap.getAsJsonArray("entities")) {
             // Get all attributes:
             JsonObject obj = entity.getAsJsonObject();
             // Create the entity object, by factory method
             Position pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
-            Entity temp = EntityFactory.getEntityObject(i.toString(), pos, obj);
-            // Set player on the map
-            if (temp.isType("player")) {
-                Player player = (Player) temp;
-                this.player = player;
-                this.entryLocation = temp.getPos();
-                if (obj.getAsJsonArray("active_potions") != null) {
-                    for (JsonElement potionElem : obj.getAsJsonArray("active_potions")) {
-                        JsonObject potionJSON = potionElem.getAsJsonObject();
-                        String type = potionJSON.get("type").getAsString();
-                        Integer duration = potionJSON.get("duration").getAsInt();
-                        player.getPotions().put(type, duration);
-                    }
-                }
-            }
-            newMap.get(temp.getPos()).add(temp);
+            Entity temp = EntityFactory.getEntityObject(i.toString(), pos, obj, this);
+            dungeonMap.get(temp.getPos()).add(temp);
             i++;
         }
-        return newMap;
+        // Swamp check if any entity is on the swamp at the start
+        swampTileCheck();
     }
 
 
@@ -236,7 +224,21 @@ public class GameMap {
         }
         return entityList;
     }
-    
+
+    /**
+     * Given a position, return a list of all entities at that position.
+     * @param pos
+     * @return List<Entity> list of all entities at a position.
+     */
+    public List<Entity> getEntityPositionList(Position pos) {
+        List<Entity> eList = new ArrayList<>();
+        // Loop to add all positions at a position
+        for (Map.Entry<Position, List<Entity>> entry : dungeonMap.entrySet()) {
+            if (entry.getKey().equals(pos)) { eList.addAll(entry.getValue()); }
+        }
+        return eList;
+    }
+
     /**
      * Given the id of an entity, search the map and return the
      * entity with the respective id.
@@ -246,9 +248,7 @@ public class GameMap {
     public Entity getEntityOnMap(String id) {
         for (Map.Entry<Position, List<Entity>> entry : dungeonMap.entrySet()) {
             for (Entity e : entry.getValue()) {
-                if (e.getId().equals(id)) {
-                    return e;
-                }
+                if (e.hasId(id)) { return e; }
             }
         }
         return null;
@@ -287,7 +287,7 @@ public class GameMap {
             // Create the spider:
             Position newSpider = new Position(xPos, yPos, 3);
             Position checkAbove = new Position(xPos, yPos - 1, 3);
-            Spider spider = new Spider("" + System.currentTimeMillis(), "spider", newSpider);
+            Spider spider = new Spider("spider" + System.currentTimeMillis(), "spider", newSpider);
             // Check if current and above positions of the spiders are boulders:
             if (spider.canPass(dungeonMap, newSpider) && spider.canPass(dungeonMap, checkAbove)) {
                 dungeonMap.get(newSpider).add(spider);
@@ -301,16 +301,48 @@ public class GameMap {
      * Periodically spawns a mecenary at the entry location.
      */
     public void spawnMercenary() {
+        Mercenary newMerc = new Mercenary("merc" + System.currentTimeMillis(), "mercenary", entryLocation);
+        // Check conditions to spawn mercenary
         if (period != 0 && period % 15 == 0) {
-            Mercenary newMerc = new Mercenary("" + System.currentTimeMillis(), "mercenary", entryLocation);
-            dungeonMap.get(entryLocation).add(newMerc);
-            player.registerObserver(newMerc);
+            if (newMerc.canPass(dungeonMap, entryLocation)) {
+                dungeonMap.get(entryLocation).add(newMerc);
+                player.registerObserver(newMerc);
+            } else {
+                period--;
+            }
         }
     }
 
     // ********************************************************************************************\\
     //                                     Other Functions                                         \\
     // ********************************************************************************************\\
+
+    public void swampTileCheck() {
+        // Loop through all swamp_tile entites
+        for (Entity e : MapHelper.getEntityTypeList(dungeonMap, "swamp_tile")) {
+            ((SwampTile) e).checkTile(getEntityPositionList(e.getPos()));
+        }
+    }
+
+    /**
+     * Checks if the entity is on top of a swamp tile.
+     * @param gameMap
+     * @return True is the entity is on a swamp tile, false otherwise.
+     */
+    public boolean isOnSwampTile(String id) {
+        if (id == null) { id = player.getId(); } 
+        for (Entity e : MapHelper.getEntityTypeList(dungeonMap, "swamp_tile")) {
+            if (((SwampTile) e).entityOnTile(id)) { return true; }
+        }
+        return false;
+    }
+
+    // Swamp tile tick:
+    public void swampTick() {
+        for (Entity e : MapHelper.getEntityTypeList(dungeonMap, "swamp_tile")) {
+            ((SwampTile) e).tickCount();
+        }
+    }
 
     // This function should be in player.
     /**
@@ -327,7 +359,7 @@ public class GameMap {
         Integer i = 0;
         for (JsonElement entity : jsonMap.getAsJsonArray("inventory")) {
             JsonObject obj = entity.getAsJsonObject();
-            Entity collectable = EntityFactory.getEntityObject("inventItem" + i, new Position(0, 0), obj);
+            Entity collectable = EntityFactory.getEntityObject("inventItem" + i, new Position(0, 0), obj, this);
             player.getInventory().put(collectable, player);
             i++;
         }
@@ -340,6 +372,11 @@ public class GameMap {
 
     public Player getPlayer() {
         return this.player; 
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+        this.entryLocation = player.getPos(); 
     }
 
     public Map<Position, List<Entity>> getMap() {
@@ -370,6 +407,7 @@ public class GameMap {
         for (MovingEntity e : getMovingEntityList()) {
             player.registerObserver(e);
         }
+        player.registerObserver(player);
     }
 
     public GoalInterface getRootGoal() {
