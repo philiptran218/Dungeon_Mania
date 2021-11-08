@@ -86,8 +86,7 @@ public class GoalTest {
     }
 
     /**
-     * Test bribing a mercenary. Sometimes a spider may spawn which will cause
-     * the test to fail.
+     * Test bribing a mercenary.
      */
     @Test
     public void testBribeMercenaryGoal() {

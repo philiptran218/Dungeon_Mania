@@ -29,7 +29,6 @@ public class TreasureGoal implements GoalInterface {
     }
     @Override
     public List<GoalInterface> getChildren() {
-        // TODO Auto-generated method stub
         return null;
     }
 }

@@ -2,6 +2,7 @@ package dungeonmania.MovingEntities;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,8 +28,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     private List<Mercenary> bribedMercenaries = new ArrayList<Mercenary>();
     private Inventory inventory = new Inventory(this);
     private Battle battle;
-    private int invisDuration = 0;
-    private int invincDuration = 0;
+    private Map<String, Integer> potions = new HashMap<String, Integer>();
     private List<String> useableItems = Arrays.asList("bomb", "health_potion", "invincibility_potion", "invisibility_potion", null);
 
     /**
@@ -322,17 +322,16 @@ public class Player extends MovingEntity implements MovingEntitySubject {
      * Ticks the time that a potion has been in use for.
      */
     public void tickPotions() {
-        if (invincDuration > 0) {
-            invincDuration--;
-        }
-        if (invisDuration > 0) {
-            invisDuration--;
+        for (Map.Entry<String, Integer> potion : potions.entrySet()) {
+            if (potion.getValue() > 0) {
+                potion.setValue(potion.getValue() - 1);
+            }
         }
         // Set battle state depending on active potions
-        if (invisDuration > 0) {
+        if (getInvisDuration() > 0) {
             battle.setBattleState(battle.getInvisibleState());
         }
-        else if (invincDuration > 0 && !battle.getDifficulty().equals("Hard")) {
+        else if (getInvincDuration() > 0 && !battle.getDifficulty().equals("Hard")) {
             battle.setBattleState(battle.getInvincibleState());
         }
         else {
@@ -375,16 +374,26 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     // ********************************************************************************************\\
 
     public void setInvisDuration(int time) {
-        invisDuration = time;
+            potions.put("invisibility", time);
     }
+
     public int getInvisDuration() {
-        return invisDuration;
+        if (potions.containsKey("invisibility")) {
+            return potions.get("invisibility");
+        } else {
+            return 0;
+        }
     }
+
     public void setInvincDuration(int time) {
-        invincDuration = time;
+        potions.put("invincibility", time);
     }
     public int getInvincDuration() {
-        return invincDuration;
+        if (potions.containsKey("invisibility")) {
+            return potions.get("invisibility");
+        } else {
+            return 0;
+        }
     }
 
     public void setBattle(Battle battle) {

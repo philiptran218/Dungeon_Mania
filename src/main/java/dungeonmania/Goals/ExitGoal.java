@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import dungeonmania.Entity;
-import dungeonmania.MovingEntities.Player;
 import dungeonmania.StaticEntities.Exit;
 import dungeonmania.util.Position;
 
