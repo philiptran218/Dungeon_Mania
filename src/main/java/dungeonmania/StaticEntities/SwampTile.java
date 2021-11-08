@@ -73,6 +73,7 @@ public class SwampTile extends StaticEntity {
         eMap.put(e, value);
     }
     
+    // Override the function toJSONObject in entity
     @Override
     public JSONObject toJSONObject() {
         JSONObject tmp = super.toJSONObject();

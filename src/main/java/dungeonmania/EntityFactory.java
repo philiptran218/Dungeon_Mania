@@ -37,7 +37,12 @@ public class EntityFactory {
             case "zombie_toast_spawner":
                 return new ZombieToastSpawner(id, type, staticPos);
             case "spider":
-                return new Spider(id, type, movingPos);
+                Spider tmp = new Spider(id, type, movingPos);
+                if (jsonObj.get("centre") != null) {
+                    JsonObject centre = jsonObj.get("centre").getAsJsonObject();
+                    tmp.setStartPosition(new Position(centre.get("x").getAsInt(), centre.get("y").getAsInt(), 3));
+                }
+                return tmp;
             case "zombie_toast": 
                 return new ZombieToast(id, type, movingPos);
             case "mercenary": 
