@@ -2,6 +2,7 @@ package dungeonmania;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,6 +38,18 @@ public class StaticEntityTest {
         }
         return null;
     }
+
+    // Get the player:
+    public String getPlayer(List<EntityResponse> eList) {
+        for (EntityResponse e : eList) {
+            if (e.getType().equals("player")) {
+                return e.getId();
+            }
+        }
+        return null;
+    }
+    
+    // ***************************************************************************
     // Check if wall works properly by moving character into wall
     @Test
     public void testWall() {
@@ -308,5 +321,39 @@ public class StaticEntityTest {
         assertFalse(isEntityOnTile(tmp, new Position(4, 6, 3), merceId));
         assertTrue(isEntityOnTile(tmp, new Position(4, 3, 1), wallId));
         assertTrue(isEntityOnTile(tmp, new Position(3, 2, 3), playerId));
+    }
+
+    // Test for saving portals of different colours
+    @Test
+    public void testColourPortals() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse tmp;
+        // Create new game
+        DungeonResponse r = controller.newGame("portal_test_big", "Peaceful");
+        String id = getPlayer(r.getEntities());
+
+        // Movements around the portal:
+        controller.tick(null, Direction.DOWN);
+        tmp = controller.tick(null, Direction.RIGHT);
+        assertTrue(isEntityOnTile(tmp, new Position(6, 2), id));
+
+        controller.tick(null, Direction.DOWN);
+        controller.tick(null, Direction.DOWN);
+
+        tmp = controller.tick(null, Direction.LEFT);
+        assertTrue(isEntityOnTile(tmp, new Position(1, 4), id));
+
+        controller.tick(null, Direction.DOWN);
+        controller.tick(null, Direction.DOWN);
+
+        tmp = controller.tick(null, Direction.RIGHT);
+        assertTrue(isEntityOnTile(tmp, new Position(6, 6), id));
+
+        controller.tick(null, Direction.DOWN);
+        controller.tick(null, Direction.DOWN);
+
+        tmp = controller.tick(null, Direction.LEFT);
+        assertTrue(isEntityOnTile(tmp, new Position(1, 8), id));
     }
 }

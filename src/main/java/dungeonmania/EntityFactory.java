@@ -1,17 +1,20 @@
 package dungeonmania;
 
+import java.util.List;
+
 import com.google.gson.JsonObject;
 
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
+import dungeonmania.gamemap.GameMap;
+import dungeonmania.gamemap.MapHelper;
 import dungeonmania.util.Position;
 
 public class EntityFactory {
-    public static Entity getEntityObject(String id, Position pos, JsonObject jsonObj) {
+    public static Entity getEntityObject(String id, Position pos, JsonObject jsonObj, GameMap gameMap) {
         // Fields
         String type = jsonObj.get("type").getAsString();
-        
         // Positions:
         Position otherPos = new Position(pos.getX(), pos.getY(), 4);
         Position movingPos = new Position(pos.getX(), pos.getY(), 3);
@@ -74,9 +77,18 @@ public class EntityFactory {
             case "shield": 
                 return new Shield(id, type, collectPos);
             case "player": 
-                return new Player(id, type, movingPos);
+                Player player = new Player(id, type, movingPos);
+                gameMap.setPlayer(player);
+                return player;
             case "swamp_tile": 
-                return new SwampTile(id, type, absolPos, jsonObj.get("movement_factor").getAsInt());
+                SwampTile swamp = new SwampTile(id, type, absolPos, jsonObj.get("movement_factor").getAsInt());
+                if (jsonObj.get("entites_on_tile") != null) {
+                    MapHelper.addEntityToSwampTile(swamp, gameMap.getMap(), jsonObj);
+                    // Checks if the player is on the swamp tile:
+                    List<Entity> playerCheck = MapHelper.getEntityTypeList(gameMap.getMap(), "player");
+                    if (!playerCheck.isEmpty()) { gameMap.setPlayer((Player) playerCheck.get(0)); }
+                }
+                return swamp;
             default: 
                 return null;
         }
