@@ -122,6 +122,11 @@ public class App {
             return callUsingSessionAndArgument(request, (dmc) -> dmc.interact(request.queryParams("entityId")));
         }, gson::toJson);
 
+        /*
+        Spark.post("/api/game/rewind", "application/json", (request, response) -> {
+            //return callUsingSessionAndArgument(request, (dmc) -> dmc.rewind(request.queryParamOrDefault("ticks")));
+        }); */
+
         Scintilla.start();
     }
 }

@@ -291,4 +291,18 @@ public class DungeonManiaController {
         return gameMap.returnDungeonResponse();
     }
 
+
+    public DungeonResponse rewind(int ticks) throws IllegalArgumentException {
+        if (ticks <= 0) { throw new IllegalArgumentException("Invalid rewind tick."); }
+
+        
+
+        return gameMap.returnDungeonResponse();
+    }
+
+    public Object rewind(String queryParams) {
+        return null;
+    }
+
+
 }
