@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import dungeonmania.StaticEntities.SwampTile;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
@@ -382,6 +383,7 @@ public class StaticEntityTest {
         assertTrue(isEntityOnTile(tmp, new Position(3, 5), id));
     }
 
+    // Test mobs that cross the swamp
     @Test
     public void testMobMovementOnSwampTile() {
         // Create controller
@@ -390,15 +392,101 @@ public class StaticEntityTest {
         // Create new game
         DungeonResponse r = controller.newGame("swamp_tile_test", "Peaceful");
         String id = getPlayer(r.getEntities());
+        String merc = getEntityId(new Position(4, 4, 3) ,r);
+        String spider = getEntityId(new Position(3, 5, 3) ,r);
         
-        // Move above tile
-        controller.tick(null, Direction.RIGHT);
-        controller.tick(null, Direction.RIGHT);
-
-        for (int i = 0; i < 7; i++) {
-            tmp = controller.tick(null, Direction.DOWN);
+        // Move the entity:
+        for (int i = 0; i < 5; i++) {
+            tmp = controller.tick(null, Direction.LEFT);
         }
         // Check if the player is at the correct position
-        assertTrue(isEntityOnTile(tmp, new Position(3, 5), id));
+        assertTrue(isEntityOnTile(tmp, new Position(1, 1), id));
+        assertTrue(isEntityOnTile(tmp, new Position(2, 2), merc));
+        assertTrue(isEntityOnTile(tmp, new Position(4, 5), spider));
     }
+
+    // Test saving and loading entities on the swamp tile
+    @Test
+    public void testSwampTileLoading() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse tmp = null;
+        // Create new game
+        DungeonResponse r = controller.newGame("swamp_tile_test", "Peaceful");
+        String merc = getEntityId(new Position(4, 4, 3) ,r);
+        String spider = getEntityId(new Position(3, 5, 3) ,r);
+        
+        // Move the mobs:
+        controller.tick(null, Direction.LEFT);
+        controller.tick(null, Direction.LEFT);
+
+        controller.saveGame("swamp_tile_test");
+        tmp = controller.loadGame("swamp_tile_test");
+
+        // New id
+        merc = getEntityId(new Position(3, 3, 3) ,tmp);
+        spider = getEntityId(new Position(3, 4, 3) ,tmp);
+
+        // Move again, the entity should not move:
+        tmp = controller.tick(null, Direction.LEFT);
+        assertTrue(isEntityOnTile(tmp, new Position(3, 3), merc));
+        assertTrue(isEntityOnTile(tmp, new Position(3, 4), spider));
+    }
+
+    // Test boulder pushing on swampTile
+    @Test
+    public void testSwampTilePushingBoulder() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse tmp = null;
+        // Create new game
+        DungeonResponse r = controller.newGame("swamp_tile_boulder", "Peaceful");
+        String id = getEntityId(new Position(1, 1, 3) ,r);
+        String boulder = getEntityId(new Position(2, 1, 1) ,r);
+        
+        // Move the mobs:
+        controller.tick(null, Direction.RIGHT);
+        tmp = controller.tick(null, Direction.RIGHT);
+
+        // Boulder should remain at the same tile
+        assertTrue(isEntityOnTile(tmp, new Position(2, 1), id));
+        assertTrue(isEntityOnTile(tmp, new Position(3, 1), boulder));
+
+        // The boulder now should move upon being moved once more
+        tmp = controller.tick(null, Direction.RIGHT);
+        assertTrue(isEntityOnTile(tmp, new Position(3, 1), id));
+        assertTrue(isEntityOnTile(tmp, new Position(4, 1), boulder));
+    }
+
+    // Test boulder pushing on swampTile saving and loading
+    @Test
+    public void testSwampTileBoulderSaveAndLoad() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse tmp = null;
+        // Create new game
+        DungeonResponse r = controller.newGame("swamp_tile_boulder", "Peaceful");
+        String boulder = getEntityId(new Position(2, 1, 1) ,r);
+        
+        // Move the mobs:
+        controller.tick(null, Direction.RIGHT);
+
+        // Save and load
+        controller.saveGame("swamp_tile_boulder_test");
+        tmp = controller.loadGame("swamp_tile_boulder_test");
+
+        // Get new id:
+        boulder = getEntityId(new Position(3, 1, 1) ,tmp);
+
+        // Push the boulder
+        controller.tick(null, Direction.RIGHT);
+        tmp = controller.tick(null, Direction.RIGHT);
+        assertTrue(isEntityOnTile(tmp, new Position(4, 1), boulder));
+        //////
+        SwampTile s = new SwampTile("asdasd", "swamp_tile", new Position(1, 2), 2);
+        s.getFactor();
+        s.setFactor(2);
+        s.getMap();
+    }
+
 }
