@@ -130,10 +130,8 @@ public class MapHelper {
             map.get(e.getPos()).add(e);
             // Add to swamp map
             swapTile.addToMap(e, jObject.get("ticks_remaining").getAsInt());
-
-            for (Map.Entry<Entity, Integer> entry : swapTile.getMap().entrySet()) {
-                System.out.println("Entity: " + entry.getKey().getType() + " ticks remining: " + entry.getValue());
-            }
+            // Set player if the entity is player:
+            if (e.isType("player")) {  }
             i++;
         }
     }

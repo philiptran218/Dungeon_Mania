@@ -167,6 +167,9 @@ public class DungeonManiaController {
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
             if (!(e.getPos().equals(e.getPlayerPos()) && !e.isType("mercenary")) && !gameMap.isOnSwampTile(e.getId())) {
+                if (gameMap.getMap() != null) {
+                    System.out.println("THE MAP IS NOT NULL");
+                }
                 e.move(gameMap.getMap());
             }
         }
@@ -194,7 +197,7 @@ public class DungeonManiaController {
             }
 
         }
-
+        
 
         // Ticks the zombie toast spawner
         for (Map.Entry<Position, List<Entity>> entry : gameMap.getMap().entrySet()) {

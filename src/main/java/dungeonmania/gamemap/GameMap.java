@@ -196,16 +196,13 @@ public class GameMap {
             Position pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
             Entity temp = EntityFactory.getEntityObject(i.toString(), pos, obj);
             // Set player on the map
-            if (temp.isType("player")) {
-                this.player = (Player) temp;
-                this.entryLocation = temp.getPos(); 
-            }
-
-            // Check if temp is a swamp tile, and if it is 
-            // add all its respective entities to the map along
-            // its factor:
+            if (temp.isType("player")) { setPlayer((Player) temp); }
+            // Swamp tile check:
             if (temp.isType("swamp_tile") && obj.get("entites_on_tile") != null) {
                 MapHelper.addEntityToSwampTile(((SwampTile) temp), newMap, obj);
+                // Checks if the player is on the swamp tile:
+                List<Entity> playerCheck = MapHelper.getEntityTypeList(newMap, "player");
+                if (!playerCheck.isEmpty()) { setPlayer((Player) playerCheck.get(0)); }
             }
             newMap.get(temp.getPos()).add(temp);
             i++;
@@ -378,6 +375,11 @@ public class GameMap {
 
     public Player getPlayer() {
         return this.player; 
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+        this.entryLocation = player.getPos(); 
     }
 
     public Map<Position, List<Entity>> getMap() {

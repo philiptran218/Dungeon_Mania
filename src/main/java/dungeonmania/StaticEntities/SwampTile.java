@@ -34,7 +34,7 @@ public class SwampTile extends StaticEntity {
         // Loop through to see if any have been on the tile for enough time
         List<Entity> removeEntity = new ArrayList<>();
         for (Map.Entry<Entity, Integer> entry : eMap.entrySet()) {
-            if (entry.getValue() == 0) { removeEntity.add(entry.getKey()); }
+            if (entry.getValue() == 1) { removeEntity.add(entry.getKey()); }
         }
         // Remove all entities in the remove list:
         removeEntity.forEach(e -> eMap.remove(e));
