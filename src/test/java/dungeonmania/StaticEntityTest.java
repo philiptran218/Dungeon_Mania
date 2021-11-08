@@ -356,4 +356,49 @@ public class StaticEntityTest {
         tmp = controller.tick(null, Direction.LEFT);
         assertTrue(isEntityOnTile(tmp, new Position(1, 8), id));
     }
+
+    // ********************************************************************* \\
+    //                            Test SwampTile                             \\
+    // ********************************************************************* \\
+
+    // Test normal movement of the player
+    @Test
+    public void testBasicPlayerMovementThroughTile() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse tmp = null;
+        // Create new game
+        DungeonResponse r = controller.newGame("swamp_tile_test", "Peaceful");
+        String id = getPlayer(r.getEntities());
+        
+        // Move above tile
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
+
+        for (int i = 0; i < 7; i++) {
+            tmp = controller.tick(null, Direction.DOWN);
+        }
+        // Check if the player is at the correct position
+        assertTrue(isEntityOnTile(tmp, new Position(3, 5), id));
+    }
+
+    @Test
+    public void testMobMovementOnSwampTile() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse tmp = null;
+        // Create new game
+        DungeonResponse r = controller.newGame("swamp_tile_test", "Peaceful");
+        String id = getPlayer(r.getEntities());
+        
+        // Move above tile
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
+
+        for (int i = 0; i < 7; i++) {
+            tmp = controller.tick(null, Direction.DOWN);
+        }
+        // Check if the player is at the correct position
+        assertTrue(isEntityOnTile(tmp, new Position(3, 5), id));
+    }
 }

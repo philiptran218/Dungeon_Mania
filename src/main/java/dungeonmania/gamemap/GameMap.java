@@ -198,6 +198,8 @@ public class GameMap {
             dungeonMap.get(temp.getPos()).add(temp);
             i++;
         }
+        // Swamp check if any entity is on the swamp at the start
+        swampTileCheck();
     }
 
 
