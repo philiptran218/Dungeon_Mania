@@ -339,6 +339,24 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         }
     }
 
+    @Override
+    // Converts itself to a json object:
+    public JSONObject toJSONObject() {
+        JSONObject self = new JSONObject();
+        self.put("x", this.getPos().getX());
+        self.put("y", this.getPos().getY());
+        self.put("type", getType());
+        JSONArray potionsArray = new JSONArray();
+        for (Map.Entry<String, Integer> potion : potions.entrySet()) {
+            JSONObject potionObj = new JSONObject();
+            potionObj.put("type", potion.getKey());
+            potionObj.put("duration", potion.getValue());
+            potionsArray.put(potionObj);
+        }
+        self.put("active_potions", potionsArray);
+        return self;
+    }
+
     /**
      * Returns a list of bribed meercenaries.
      * @return List<Mercenary> List of bribed mecernaries.
@@ -389,8 +407,8 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         potions.put("invincibility", time);
     }
     public int getInvincDuration() {
-        if (potions.containsKey("invisibility")) {
-            return potions.get("invisibility");
+        if (potions.containsKey("invincibility")) {
+            return potions.get("invincibility");
         } else {
             return 0;
         }
@@ -408,4 +426,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         return inventory;
     }
 
+    public Map<String, Integer> getPotions() {
+        return potions;
+    }
 }

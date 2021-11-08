@@ -239,7 +239,7 @@ public class GoalTest {
         Thread.sleep(3000);
         tmp = controller.loadGame("simpleTreasureAND(BouldersORExit)");
         assertTrue("((:boulders OR :exit))".equals(tmp.getGoals()));
-        File file = new File("src/main/resources/saved_games/simpleTreasureAND(BouldersORExit).json");
+        File file = new File("saved_games/simpleTreasureAND(BouldersORExit).json");
         file.delete();
     }
 }

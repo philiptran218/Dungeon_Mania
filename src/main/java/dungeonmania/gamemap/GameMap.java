@@ -196,8 +196,17 @@ public class GameMap {
             Entity temp = EntityFactory.getEntityObject(i.toString(), pos, obj);
             // Set player on the map
             if (temp.isType("player")) {
-                this.player = (Player) temp;
+                Player player = (Player) temp;
+                this.player = player;
                 this.entryLocation = temp.getPos();
+                if (obj.getAsJsonArray("active_potions") != null) {
+                    for (JsonElement potionElem : obj.getAsJsonArray("active_potions")) {
+                        JsonObject potionJSON = potionElem.getAsJsonObject();
+                        String type = potionJSON.get("type").getAsString();
+                        Integer duration = potionJSON.get("duration").getAsInt();
+                        player.getPotions().put(type, duration);
+                    }
+                }
             }
             newMap.get(temp.getPos()).add(temp);
             i++;
