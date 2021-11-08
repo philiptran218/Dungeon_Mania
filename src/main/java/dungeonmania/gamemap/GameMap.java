@@ -52,7 +52,7 @@ public class GameMap {
     public GameMap(String difficulty, String name, JsonObject jsonMap) {
         this.dungeonName = name;
         this.mapId = "" + System.currentTimeMillis();
-        this.dungeonMap = jsonToMap(jsonMap);
+        this.setGameMapFromJSON(jsonMap);
         this.battle = new Battle(difficulty);
         this.player.setBattle(battle);
         this.setPlayerInventory(jsonMap);
@@ -183,11 +183,11 @@ public class GameMap {
      * and returns it.
      * @return Map<Position, List<Entity>> form of a map corresponding to jsonMap
      */
-    public Map<Position, List<Entity>> jsonToMap(JsonObject jsonMap) {
+    public void setGameMapFromJSON(JsonObject jsonMap) {
         // Initialise the map:
         this.width = jsonMap.get("width").getAsInt();
         this.height = jsonMap.get("height").getAsInt();
-        Map<Position, List<Entity>> newMap = MapHelper.createInitialisedMap(width, height);
+        dungeonMap = MapHelper.createInitialisedMap(width, height);
         Integer i = 0;
         for (JsonElement entity : jsonMap.getAsJsonArray("entities")) {
             // Get all attributes:
@@ -195,17 +195,9 @@ public class GameMap {
             // Create the entity object, by factory method
             Position pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
             Entity temp = EntityFactory.getEntityObject(i.toString(), pos, obj, this);
-            // Swamp tile check:
-            if (temp.isType("swamp_tile") && obj.get("entites_on_tile") != null) {
-                MapHelper.addEntityToSwampTile(((SwampTile) temp), newMap, obj);
-                // Checks if the player is on the swamp tile:
-                List<Entity> playerCheck = MapHelper.getEntityTypeList(newMap, "player");
-                if (!playerCheck.isEmpty()) { setPlayer((Player) playerCheck.get(0)); }
-            }
-            newMap.get(temp.getPos()).add(temp);
+            dungeonMap.get(temp.getPos()).add(temp);
             i++;
         }
-        return newMap;
     }
 
 
