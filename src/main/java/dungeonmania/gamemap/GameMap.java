@@ -96,7 +96,7 @@ public class GameMap {
         for (Map.Entry<Position, List<Entity>> entry : this.dungeonMap.entrySet()) {
             for (Entity e : entry.getValue()) {
                 // Checks if the the entity is a mecenary or toast_spawner to 
-                boolean isInteractable = (e.getType().equals("mercenary") || e.getType().equals("zombie_toast_spawner"));
+                boolean isInteractable = (e.isType("mercenary") || e.isType("zombie_toast_spawner"));
                 if (e.getType().equals("mercenary") && ((Mercenary) e).isAlly()){
                     isInteractable = false;
                 }
