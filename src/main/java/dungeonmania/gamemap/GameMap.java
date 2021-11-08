@@ -108,7 +108,7 @@ public class GameMap {
 
     /**
      * Looks through the player's inventory and checks if the
-     * player has enough materials to build a bow or a shield.
+     * player has enough materials to build a bow, shield, sceptre or midnight armour.
      * @return List<String> List of buildable items.
      */
     public List<String> getBuildables() {
@@ -117,6 +117,9 @@ public class GameMap {
         int numArrow = player.getInventory().getNoItemType("arrow");
         boolean hasKey = player.hasItem("key");
         boolean hasTreasure = player.hasItem("treasure");
+        boolean hasSunStone = player.hasItem("sun_stone");
+        boolean hasArmour = player.hasItem("armour");
+        boolean hasZombie = getMovingEntityList().stream().anyMatch(e -> e.getType().equals("zombie_toast"));
 
         // Checks if sufficient materials
         if (numWood > 0 && numArrow > 2) {
@@ -124,6 +127,12 @@ public class GameMap {
         }
         if (numWood > 1 && (hasKey || hasTreasure)) {
             buildable.add("shield");
+        }
+        if ((numWood > 0 || numArrow > 1) && (hasKey || hasTreasure) && hasSunStone) {
+            buildable.add("sceptre");
+        }
+        if (hasArmour && hasSunStone && !hasZombie) {
+            buildable.add("midnight_armour");
         }
         return buildable;
     }
