@@ -5,10 +5,11 @@ import com.google.gson.JsonObject;
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
+import dungeonmania.gamemap.GameMap;
 import dungeonmania.util.Position;
 
 public class EntityFactory {
-    public static Entity getEntityObject(String id, Position pos, JsonObject jsonObj) {
+    public static Entity getEntityObject(String id, Position pos, JsonObject jsonObj, GameMap gameMap) {
         // Fields
         String type = jsonObj.get("type").getAsString();
         
@@ -74,7 +75,9 @@ public class EntityFactory {
             case "shield": 
                 return new Shield(id, type, collectPos);
             case "player": 
-                return new Player(id, type, movingPos);
+                Player player = new Player(id, type, movingPos);
+                gameMap.setPlayer(player);
+                return player;
             case "swamp_tile": 
                 return new SwampTile(id, type, absolPos, jsonObj.get("movement_factor").getAsInt());
             default: 

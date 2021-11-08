@@ -194,9 +194,7 @@ public class GameMap {
             JsonObject obj = entity.getAsJsonObject();
             // Create the entity object, by factory method
             Position pos = new Position(obj.get("x").getAsInt(), obj.get("y").getAsInt());
-            Entity temp = EntityFactory.getEntityObject(i.toString(), pos, obj);
-            // Set player on the map
-            if (temp.isType("player")) { setPlayer((Player) temp); }
+            Entity temp = EntityFactory.getEntityObject(i.toString(), pos, obj, this);
             // Swamp tile check:
             if (temp.isType("swamp_tile") && obj.get("entites_on_tile") != null) {
                 MapHelper.addEntityToSwampTile(((SwampTile) temp), newMap, obj);
@@ -309,10 +307,15 @@ public class GameMap {
      * Periodically spawns a mecenary at the entry location.
      */
     public void spawnMercenary() {
+        Mercenary newMerc = new Mercenary("merc" + System.currentTimeMillis(), "mercenary", entryLocation);
+        // Check conditions to spawn mercenary
         if (period != 0 && period % 15 == 0) {
-            Mercenary newMerc = new Mercenary("merc" + System.currentTimeMillis(), "mercenary", entryLocation);
-            dungeonMap.get(entryLocation).add(newMerc);
-            player.registerObserver(newMerc);
+            if (newMerc.canPass(dungeonMap, entryLocation)) {
+                dungeonMap.get(entryLocation).add(newMerc);
+                player.registerObserver(newMerc);
+            } else {
+                period--;
+            }
         }
     }
 
@@ -362,7 +365,7 @@ public class GameMap {
         Integer i = 0;
         for (JsonElement entity : jsonMap.getAsJsonArray("inventory")) {
             JsonObject obj = entity.getAsJsonObject();
-            Entity collectable = EntityFactory.getEntityObject("inventItem" + i, new Position(0, 0), obj);
+            Entity collectable = EntityFactory.getEntityObject("inventItem" + i, new Position(0, 0), obj, this);
             player.getInventory().put(collectable, player);
             i++;
         }

@@ -125,7 +125,7 @@ public class MapHelper {
             Position pos = new Position(jObject.get("x").getAsInt(), jObject.get("y").getAsInt());
             String id = swapTile.getId() + "onswamptile" + i;
             // Create the object:
-            Entity e = EntityFactory.getEntityObject(id, pos, jObject);
+            Entity e = EntityFactory.getEntityObject(id, pos, jObject, null);
             // Add to map
             map.get(e.getPos()).add(e);
             // Add to swamp map
