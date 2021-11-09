@@ -7,7 +7,7 @@ import dungeonmania.Entity;
 import dungeonmania.StaticEntities.FloorSwitch;
 import dungeonmania.util.Position;
 
-public class BouldersGoal implements GoalInterface {
+public class BouldersGoal implements Goal {
     private String goalName = "boulders";
     
     /**
@@ -30,16 +30,7 @@ public class BouldersGoal implements GoalInterface {
     }
 
     @Override
-    public void add(GoalInterface goal) {
-    }
-
-    @Override
     public String getGoalName() {
         return this.goalName;
-    }
-
-    @Override
-    public List<GoalInterface> getChildren() {
-        return null;
     }
 }

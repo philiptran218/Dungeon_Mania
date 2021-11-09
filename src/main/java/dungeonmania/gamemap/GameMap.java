@@ -36,7 +36,7 @@ public class GameMap {
     private int gameIndex = 0;;
 
     // Map Goals: *****************
-    private GoalInterface rootGoal;
+    private Goal rootGoal;
 
     // Game State: **************
     private GameState gameState;
@@ -61,7 +61,7 @@ public class GameMap {
         this.setPlayerInventory(jsonMap);
         this.setObservers();
         this.gameState = MapHelper.createGameState(difficulty);
-        this.rootGoal = GoalHelper.getGoalPattern(jsonMap);
+        this.rootGoal = GoalUtility.getGoalPattern(jsonMap);
     }
 
     /**
@@ -139,7 +139,7 @@ public class GameMap {
      * @return String of goals that needs to be completed.
      */
     public String getGoals() {
-        return GoalHelper.goalPatternToString(this.getRootGoal(), this.getMap());
+        return GoalUtility.goalPatternToString(this.getRootGoal(), this.getMap());
     }
 
 
@@ -196,9 +196,9 @@ public class GameMap {
         main.put("height", getMapHeight());
         main.put("game-mode", gameState.getMode());
         main.put("map-name", dungeonName);
+        main.put("goal-condition", GoalUtility.goalPatternToJson(getRootGoal()));
         main.put("map-id", mapId);
         main.put("game-index", gameIndex);
-        main.put("goal-condition", GoalHelper.goalPatternToJson(getRootGoal()));
         main.put("inventory", player.getInventory().toJSON());
         main.put("entities", MapHelper.entitiesToJson(dungeonMap));
         return main;
@@ -439,7 +439,7 @@ public class GameMap {
         player.registerObserver(player);
     }
 
-    public GoalInterface getRootGoal() {
+    public Goal getRootGoal() {
         return rootGoal;
     }
 
