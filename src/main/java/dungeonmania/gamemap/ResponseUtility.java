@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dungeonmania.Entity;
+import dungeonmania.CollectableEntities.CollectableEntity;
 import dungeonmania.Goals.GoalUtility;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.MovingEntities.*;
 
 public class ResponseUtility {
@@ -26,7 +28,7 @@ public class ResponseUtility {
      */
     public DungeonResponse returnDungeonResponse() {
         return new DungeonResponse(map.getMapId(), map.getDungeonName(), mapToListEntityResponse(), 
-            map.getPlayer().getInventoryResponse(), getBuildablesResponse(), getGoalResponse());
+            getInventoryResponse(), getBuildablesResponse(), getGoalResponse());
     }
 
     /**
@@ -71,6 +73,19 @@ public class ResponseUtility {
             buildable.add("shield");
         }
         return buildable;
+    }
+
+    /**
+     * Converts the player's inventory into a list of item response.
+     * @return List<ItemResponse> List of ItemResponse.
+     */
+    public List<ItemResponse> getInventoryResponse() {
+        List<ItemResponse> itemResponse = new ArrayList<>();
+        // Loop through the player and adds his items to the lists
+        for (CollectableEntity c : map.getPlayer().getInventoryList()) {
+            itemResponse.add(new ItemResponse(c.getId(), c.getType()));
+        }
+        return itemResponse;
     }
 
     /**

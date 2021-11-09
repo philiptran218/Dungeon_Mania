@@ -56,7 +56,6 @@ public class MapUtility {
         main.put("map-id", map.getMapId());
         main.put("game-index", map.getGameIndex());
         main.put("goal-condition", GoalUtility.goalPatternToJson(GoalUtility.getGoalPattern(map.getJsonMap())));
-        main.put("inventory", map.getPlayer().getInventory().toJSON());
         main.put("entities", entitiesToJson(map));
         return main;
     }

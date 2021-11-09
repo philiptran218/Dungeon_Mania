@@ -11,7 +11,6 @@ import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
 import dungeonmania.Battles.Battle;
 import dungeonmania.MovingEntities.*;
-import dungeonmania.StaticEntities.SwampTile;
 import dungeonmania.util.Position;
 
 public class GameMap {
@@ -45,7 +44,6 @@ public class GameMap {
         this.initialiseGameMapFromJSON(jsonMap);
         this.battle = new Battle(difficulty);
         this.player.setBattle(battle);
-        this.setPlayerInventory(jsonMap);
         this.setObservers();
         this.gameState = MapUtility.createGameState(difficulty);
     }
@@ -160,32 +158,6 @@ public class GameMap {
             if (e.isType(eType)) { eList.add(e); }
         }
         return eList;
-    }
-
-
-    // ********************************************************************************************\\
-    //                                     Other Functions                                         \\
-    // ********************************************************************************************\\
-
-    // This function should be in player.
-    /**
-     * Given the jsonMap object, get all player inventory items
-     * and set it to the player.
-     * @param jsonMap (JsonObject)
-     */
-    public void setPlayerInventory(JsonObject jsonMap) {
-        // Case when the player does not exist.
-        if (jsonMap.getAsJsonArray("inventory") == null) {
-            return;
-        }
-        // Look at the inventory field in json file.
-        Integer i = 0;
-        for (JsonElement entity : jsonMap.getAsJsonArray("inventory")) {
-            JsonObject obj = entity.getAsJsonObject();
-            Entity collectable = EntityFactory.getEntityObject("inventItem" + i, new Position(0, 0), obj, this);
-            player.getInventory().put(collectable, player);
-            i++;
-        }
     }
 
     // ********************************************************************************************\\

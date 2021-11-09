@@ -87,6 +87,16 @@ public class EntityFactory {
                         player.getPotions().put(potionJSON.get("type").getAsString(), potionJSON.get("duration").getAsInt());
                     }
                 }
+                Integer i = 0;
+                // Set Player inventory:
+                if (jsonObj.getAsJsonArray("active_potions") != null) {
+                    for (JsonElement entity : jsonObj.getAsJsonArray("inventory")) {
+                        JsonObject obj = entity.getAsJsonObject();
+                        Entity collectable = EntityFactory.getEntityObject("inventItem" + i, new Position(0, 0), obj, gameMap);
+                        player.getInventory().put(collectable, player);
+                        i++;
+                    }
+                }
                 gameMap.setPlayer(player);
                 return player;
             case "swamp_tile": 
