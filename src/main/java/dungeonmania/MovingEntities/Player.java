@@ -20,8 +20,6 @@ import dungeonmania.CollectableEntities.*;
 import dungeonmania.StaticEntities.*;
 
 import dungeonmania.exceptions.InvalidActionException;
-import dungeonmania.response.models.ItemResponse;
-
 
 public class Player extends MovingEntity implements MovingEntitySubject {
     private List<MovingEntityObserver> listObservers = new ArrayList<MovingEntityObserver>();
