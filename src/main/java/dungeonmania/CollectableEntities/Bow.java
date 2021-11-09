@@ -6,7 +6,6 @@ public class Bow extends CombatItems {
 
     private static final double DAMAGE = 1;
     private static final int INITIAL_DURABILITY = 10;
-    private int durability;
     
     /**
      * Constructor for Bow
@@ -27,7 +26,7 @@ public class Bow extends CombatItems {
      * Reduces the durability if it has been used
      */
     public void reduceDurability() {
-        durability = durability - 1;
+        setDurability(getDurability() - 1);
     }
 
     /**
@@ -55,17 +54,8 @@ public class Bow extends CombatItems {
      * remove it from the inventory.
      */
     public void checkNoDurability() {
-        if (durability == 0) {
+        if (getDurability() == 0) {
             getPlayer().getInventoryList().remove((CollectableEntity)this);
         }
-    }
-
-    // ********************************************************************************************\\
-    //                                    Getters and Setters                                      \\
-    // ********************************************************************************************\\
-    
-    public void setDurability(int num) {
-        durability = num;
-    }
-    
+    }    
 }

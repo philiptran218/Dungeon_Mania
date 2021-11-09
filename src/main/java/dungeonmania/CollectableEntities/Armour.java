@@ -6,7 +6,6 @@ public class Armour extends CombatItems {
 
     private static final double REDUCE_DAMAGE = 0.5;
     private static final int INITIAL_DURABILITY = 10;
-    private int durability;
     
     /**
      * Constructor for armour.
@@ -26,7 +25,7 @@ public class Armour extends CombatItems {
      * Reduces the durability if it has been used.
      */
     public void reduceDurability() {
-        durability = durability - 1;
+        setDurability(getDurability() - 1);
     }
 
     /**
@@ -52,7 +51,7 @@ public class Armour extends CombatItems {
      * remove it from the inventory.
      */
     public void checkNoDurability() {
-        if (durability == 0) {
+        if (getDurability() == 0) {
             getPlayer().getInventoryList().remove((CollectableEntity)this);
         }
     }
@@ -60,16 +59,8 @@ public class Armour extends CombatItems {
     // ********************************************************************************************\\
     //                                     Getters and Setters                                     \\
     // ********************************************************************************************\\
-    public void setDurability(int num) {
-        durability = num;
-    }
     
-    public int getDurability() {
-        return durability;
-    }
-
     public double getReduceDamage() {
         return REDUCE_DAMAGE;
     }
-
 }
