@@ -67,16 +67,32 @@ public class EntityFactory {
                 return new Arrow(id, type, collectPos);
             case "bomb": 
                 return new Bomb(id, type, collectPos);
-            case "sword": 
-                return new Sword(id, type, collectPos);
+            case "sword":
+                Sword sword = new Sword(id, type, collectPos);
+                if (jsonObj.get("durability") != null) {
+                    sword.setDurability(jsonObj.get("durability").getAsInt());
+                }
+                return sword;
             case "armour": 
-                return new Armour(id, type, collectPos);
+                Armour armour = new Armour(id, type, collectPos);
+                if (jsonObj.get("durability") != null) {
+                    armour.setDurability(jsonObj.get("durability").getAsInt());
+                }
+                return armour;
             case "one_ring": 
                 return new TheOneRing(id, type, collectPos);
             case "bow": 
-                return new Bow(id, type, collectPos);
+                Bow bow = new Bow(id, type, collectPos);
+                if (jsonObj.get("durability") != null) {
+                    bow.setDurability(jsonObj.get("durability").getAsInt());
+                }
+                return bow;
             case "shield": 
-                return new Shield(id, type, collectPos);
+                Shield shield = new Shield(id, type, collectPos);
+                if (jsonObj.get("durability") != null) {
+                    shield.setDurability(jsonObj.get("durability").getAsInt());
+                }
+                return shield;
             case "time_turner":
                 return new TimeTuner(id, type, collectPos);
             case "player": 
