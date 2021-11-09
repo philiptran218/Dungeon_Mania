@@ -2,6 +2,7 @@ package dungeonmania.MovingEntities;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,16 +20,13 @@ import dungeonmania.CollectableEntities.*;
 import dungeonmania.StaticEntities.*;
 
 import dungeonmania.exceptions.InvalidActionException;
-import dungeonmania.response.models.ItemResponse;
-
 
 public class Player extends MovingEntity implements MovingEntitySubject {
     private List<MovingEntityObserver> listObservers = new ArrayList<MovingEntityObserver>();
     private List<Mercenary> bribedMercenaries = new ArrayList<Mercenary>();
     private Inventory inventory = new Inventory(this);
     private Battle battle;
-    private int invisDuration = 0;
-    private int invincDuration = 0;
+    private Map<String, Integer> potions = new HashMap<String, Integer>();
     private List<String> useableItems = Arrays.asList("bomb", "health_potion", "invincibility_potion", "invisibility_potion", null);
 
     /**
@@ -262,19 +260,6 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     public List<CollectableEntity> getInventoryList() {
         return inventory.getInventory();
     }
-    
-    /**
-     * Converts the player's inventory into a list of item response.
-     * @return List<ItemResponse> List of ItemResponse.
-     */
-    public List<ItemResponse> getInventoryResponse() {
-        List<ItemResponse> itemResponse = new ArrayList<>();
-        // Loop through the player and adds his items to the lists
-        for (CollectableEntity c : inventory.getInventory()) {
-            itemResponse.add(new ItemResponse(c.getId(), c.getType()));
-        }
-        return itemResponse;
-    }
 
     /**
      * Given an item name, check if the player has the 
@@ -323,22 +308,41 @@ public class Player extends MovingEntity implements MovingEntitySubject {
      * Ticks the time that a potion has been in use for.
      */
     public void tickPotions() {
-        if (invincDuration > 0) {
-            invincDuration--;
-        }
-        if (invisDuration > 0) {
-            invisDuration--;
+        for (Map.Entry<String, Integer> potion : potions.entrySet()) {
+            if (potion.getValue() > 0) {
+                potion.setValue(potion.getValue() - 1);
+            }
         }
         // Set battle state depending on active potions
-        if (invisDuration > 0) {
+        if (getInvisDuration() > 0) {
             battle.setBattleState(battle.getInvisibleState());
         }
-        else if (invincDuration > 0 && !battle.getDifficulty().equals("Hard")) {
+        else if (getInvincDuration() > 0 && !battle.getDifficulty().equals("Hard")) {
             battle.setBattleState(battle.getInvincibleState());
         }
         else {
             battle.setInitialState();
         }
+    }
+
+    @Override
+    // Converts itself to a json object:
+    public JSONObject toJSONObject() {
+        JSONObject self = new JSONObject();
+        self.put("x", this.getPos().getX());
+        self.put("y", this.getPos().getY());
+        self.put("type", getType());
+        JSONArray potionsArray = new JSONArray();
+        for (Map.Entry<String, Integer> potion : potions.entrySet()) {
+            JSONObject potionObj = new JSONObject();
+            potionObj.put("type", potion.getKey());
+            potionObj.put("duration", potion.getValue());
+            potionsArray.put(potionObj);
+        }
+        // Inventory included
+        self.put("inventory", inventory.toJSON());
+        self.put("active_potions", potionsArray);
+        return self;
     }
 
     /**
@@ -377,16 +381,26 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     // ********************************************************************************************\\
 
     public void setInvisDuration(int time) {
-        invisDuration = time;
+            potions.put("invisibility", time);
     }
+
     public int getInvisDuration() {
-        return invisDuration;
+        if (potions.containsKey("invisibility")) {
+            return potions.get("invisibility");
+        } else {
+            return 0;
+        }
     }
+
     public void setInvincDuration(int time) {
-        invincDuration = time;
+        potions.put("invincibility", time);
     }
     public int getInvincDuration() {
-        return invincDuration;
+        if (potions.containsKey("invincibility")) {
+            return potions.get("invincibility");
+        } else {
+            return 0;
+        }
     }
 
     public void setBattle(Battle battle) {
@@ -401,4 +415,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         return inventory;
     }
 
+    public Map<String, Integer> getPotions() {
+        return potions;
+    }
 }

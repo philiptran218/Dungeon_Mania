@@ -2,13 +2,14 @@ package dungeonmania;
 
 import java.util.List;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.gamemap.GameMap;
-import dungeonmania.gamemap.MapHelper;
+import dungeonmania.gamemap.MapUtility;
 import dungeonmania.util.Position;
 
 public class EntityFactory {
@@ -66,26 +67,60 @@ public class EntityFactory {
                 return new Arrow(id, type, collectPos);
             case "bomb": 
                 return new Bomb(id, type, collectPos);
-            case "sword": 
-                return new Sword(id, type, collectPos);
+            case "sword":
+                Sword sword = new Sword(id, type, collectPos);
+                if (jsonObj.get("durability") != null) {
+                    sword.setDurability(jsonObj.get("durability").getAsInt());
+                }
+                return sword;
             case "armour": 
-                return new Armour(id, type, collectPos);
+                Armour armour = new Armour(id, type, collectPos);
+                if (jsonObj.get("durability") != null) {
+                    armour.setDurability(jsonObj.get("durability").getAsInt());
+                }
+                return armour;
             case "one_ring": 
                 return new TheOneRing(id, type, collectPos);
             case "bow": 
-                return new Bow(id, type, collectPos);
+                Bow bow = new Bow(id, type, collectPos);
+                if (jsonObj.get("durability") != null) {
+                    bow.setDurability(jsonObj.get("durability").getAsInt());
+                }
+                return bow;
             case "shield": 
-                return new Shield(id, type, collectPos);
+                Shield shield = new Shield(id, type, collectPos);
+                if (jsonObj.get("durability") != null) {
+                    shield.setDurability(jsonObj.get("durability").getAsInt());
+                }
+                return shield;
+            case "time_turner":
+                return new TimeTuner(id, type, collectPos);
             case "player": 
                 Player player = new Player(id, type, movingPos);
+                if (jsonObj.getAsJsonArray("active_potions") != null) {
+                    for (JsonElement potionElem : jsonObj.getAsJsonArray("active_potions")) {
+                        JsonObject potionJSON = potionElem.getAsJsonObject();
+                        player.getPotions().put(potionJSON.get("type").getAsString(), potionJSON.get("duration").getAsInt());
+                    }
+                }
+                Integer i = 0;
+                // Set Player inventory:
+                if (jsonObj.getAsJsonArray("active_potions") != null) {
+                    for (JsonElement entity : jsonObj.getAsJsonArray("inventory")) {
+                        JsonObject obj = entity.getAsJsonObject();
+                        Entity collectable = EntityFactory.getEntityObject("inventItem" + i, new Position(0, 0), obj, gameMap);
+                        player.getInventory().put(collectable, player);
+                        i++;
+                    }
+                }
                 gameMap.setPlayer(player);
                 return player;
             case "swamp_tile": 
                 SwampTile swamp = new SwampTile(id, type, absolPos, jsonObj.get("movement_factor").getAsInt());
                 if (jsonObj.get("entites_on_tile") != null) {
-                    MapHelper.addEntityToSwampTile(swamp, gameMap.getMap(), jsonObj, gameMap);
+                    MapUtility.addEntityToSwampTile(swamp, jsonObj, gameMap);
                     // Checks if the player is on the swamp tile:
-                    List<Entity> playerCheck = MapHelper.getEntityTypeList(gameMap.getMap(), "player");
+                    List<Entity> playerCheck = gameMap.getEntityTypeList("player");
                     if (!playerCheck.isEmpty()) { gameMap.setPlayer((Player) playerCheck.get(0)); }
                 }
                 return swamp;
