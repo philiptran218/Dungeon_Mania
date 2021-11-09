@@ -101,13 +101,8 @@ public class GameMap {
     public List<MovingEntity> getMovingEntityList() {
         List<String> movingType = Arrays.asList("mercenary", "spider", "zombie_toast");
         List<MovingEntity> entityList = new ArrayList<>();
-        // Loop through the map entities to check for moving entity
-        for (Map.Entry<Position, List<Entity>> entry : dungeonMap.entrySet()) {
-            for (Entity e : entry.getValue()) {
-                if (movingType.contains(e.getType())) {
-                    entityList.add((MovingEntity) e);
-                }
-            }
+        for (Entity e : getAllEntity()) {
+            if (movingType.contains(e.getType())) { entityList.add((MovingEntity) e); }
         }
         return entityList;
     }
@@ -146,10 +141,8 @@ public class GameMap {
      * @return Entity with given id (String).
      */
     public Entity getEntityOnMap(String id) {
-        for (Map.Entry<Position, List<Entity>> entry : dungeonMap.entrySet()) {
-            for (Entity e : entry.getValue()) {
-                if (e.hasId(id)) { return e; }
-            }
+        for (Entity e : getAllEntity()) {
+            if (e.hasId(id)) { return e; }
         }
         return null;
     }
@@ -163,11 +156,8 @@ public class GameMap {
      */
     public List<Entity> getEntityTypeList(String eType) {
         List<Entity> eList = new ArrayList<>();
-        // Loop through to the entity
-        for (Map.Entry<Position, List<Entity>> entry : dungeonMap.entrySet()) {
-            for (Entity e : entry.getValue()) {
-                if (e.isType(eType)) { eList.add(e); }
-            }
+        for (Entity e : getAllEntity()) {
+            if (e.isType(eType)) { eList.add(e); }
         }
         return eList;
     }
