@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dungeonmania.Entity;
-import dungeonmania.Goals.GoalHelper;
+import dungeonmania.Goals.GoalUtility;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.MovingEntities.*;
@@ -78,7 +78,7 @@ public class ResponseUtility {
      * @return String of goals that needs to be completed.
      */
     public String getGoalResponse() {
-        return GoalHelper.goalPatternToString(GoalHelper.getGoalPattern(map.getJsonMap()), this.map.getMap());
+        return GoalUtility.goalPatternToString(GoalUtility.getGoalPattern(map.getJsonMap()), this.map.getMap());
     }
 
 }

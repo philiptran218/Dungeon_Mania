@@ -48,7 +48,6 @@ public class GoalTest {
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
         DungeonResponse tmp = controller.newGame("zombiesCoverExit", "Peaceful");
-        System.out.println(tmp.getGoals());
         assertTrue(":exit".equals(tmp.getGoals()));
         for (int i = 0; i < 3; i++) {
             tmp = controller.tick(null, Direction.RIGHT);
@@ -86,8 +85,7 @@ public class GoalTest {
     }
 
     /**
-     * Test bribing a mercenary. Sometimes a spider may spawn which will cause
-     * the test to fail.
+     * Test bribing a mercenary.
      */
     @Test
     public void testBribeMercenaryGoal() {
@@ -213,7 +211,7 @@ public class GoalTest {
      * (Pass - Exit and one of Enemies or Treasure is )
      */
     @Test
-    public void ComplexGoalPass() {
+    public void TreasureANDBouldersORExit() {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
@@ -240,7 +238,7 @@ public class GoalTest {
         Thread.sleep(3000);
         tmp = controller.loadGame("simpleTreasureAND(BouldersORExit)");
         assertTrue("((:boulders OR :exit))".equals(tmp.getGoals()));
-        File file = new File("src/main/resources/saved_games/simpleTreasureAND(BouldersORExit).json");
+        File file = new File("saved_games/simpleTreasureAND(BouldersORExit).json");
         file.delete();
     }
 }

@@ -2,6 +2,7 @@ package dungeonmania;
 
 import java.util.List;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import dungeonmania.CollectableEntities.*;
@@ -80,6 +81,12 @@ public class EntityFactory {
                 return new TimeTuner(id, type, collectPos);
             case "player": 
                 Player player = new Player(id, type, movingPos);
+                if (jsonObj.getAsJsonArray("active_potions") != null) {
+                    for (JsonElement potionElem : jsonObj.getAsJsonArray("active_potions")) {
+                        JsonObject potionJSON = potionElem.getAsJsonObject();
+                        player.getPotions().put(potionJSON.get("type").getAsString(), potionJSON.get("duration").getAsInt());
+                    }
+                }
                 gameMap.setPlayer(player);
                 return player;
             case "swamp_tile": 

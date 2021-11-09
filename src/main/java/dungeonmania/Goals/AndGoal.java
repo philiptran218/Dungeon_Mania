@@ -18,7 +18,7 @@ public class AndGoal extends CompositeGoal {
      */
     public boolean isGoalComplete(Map<Position, List<Entity>> map) {
         boolean complete = true;
-        for (GoalInterface goal : this.getChildren()) {
+        for (Goal goal : this.getChildren()) {
             complete = complete && goal.isGoalComplete(map);
         }
         return complete;

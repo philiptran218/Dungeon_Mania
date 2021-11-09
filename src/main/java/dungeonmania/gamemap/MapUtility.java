@@ -15,7 +15,7 @@ import org.json.JSONObject;
 
 import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
-import dungeonmania.Goals.GoalHelper;
+import dungeonmania.Goals.GoalUtility;
 import dungeonmania.StaticEntities.SwampTile;
 import dungeonmania.util.Position;
 
@@ -55,7 +55,7 @@ public class MapUtility {
         main.put("map-name", map.getDungeonName());
         main.put("map-id", map.getMapId());
         main.put("game-index", map.getGameIndex());
-        main.put("goal-condition", GoalHelper.goalPatternToJson(GoalHelper.getGoalPattern(map.getJsonMap())));
+        main.put("goal-condition", GoalUtility.goalPatternToJson(GoalUtility.getGoalPattern(map.getJsonMap())));
         main.put("inventory", map.getPlayer().getInventory().toJSON());
         main.put("entities", entitiesToJson(map));
         return main;

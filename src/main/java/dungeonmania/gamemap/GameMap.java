@@ -28,6 +28,7 @@ public class GameMap {
     private int height;
     private int gameIndex = 0;
 
+
     // Game State: **************
     private GameState gameState;
 
@@ -66,7 +67,7 @@ public class GameMap {
     }
 
     // ********************************************************************************************\\
-    //                                    Map and Json Functions                                   \\
+    //                                       Initialise Game                                       \\
     // ********************************************************************************************\\
 
     /**
