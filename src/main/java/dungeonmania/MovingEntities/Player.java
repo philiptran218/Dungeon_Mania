@@ -20,8 +20,6 @@ import dungeonmania.CollectableEntities.*;
 import dungeonmania.StaticEntities.*;
 
 import dungeonmania.exceptions.InvalidActionException;
-import dungeonmania.response.models.ItemResponse;
-
 
 public class Player extends MovingEntity implements MovingEntitySubject {
     private List<MovingEntityObserver> listObservers = new ArrayList<MovingEntityObserver>();
@@ -262,19 +260,6 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     public List<CollectableEntity> getInventoryList() {
         return inventory.getInventory();
     }
-    
-    /**
-     * Converts the player's inventory into a list of item response.
-     * @return List<ItemResponse> List of ItemResponse.
-     */
-    public List<ItemResponse> getInventoryResponse() {
-        List<ItemResponse> itemResponse = new ArrayList<>();
-        // Loop through the player and adds his items to the lists
-        for (CollectableEntity c : inventory.getInventory()) {
-            itemResponse.add(new ItemResponse(c.getId(), c.getType()));
-        }
-        return itemResponse;
-    }
 
     /**
      * Given an item name, check if the player has the 
@@ -354,6 +339,8 @@ public class Player extends MovingEntity implements MovingEntitySubject {
             potionObj.put("duration", potion.getValue());
             potionsArray.put(potionObj);
         }
+        // Inventory included
+        self.put("inventory", inventory.toJSON());
         self.put("active_potions", potionsArray);
         return self;
     }

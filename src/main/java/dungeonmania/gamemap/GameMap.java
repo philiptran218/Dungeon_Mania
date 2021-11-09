@@ -1,26 +1,16 @@
 package dungeonmania.gamemap;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import com.google.gson.*;
-
-import org.json.JSONObject;
 
 import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
 import dungeonmania.Battles.Battle;
-import dungeonmania.Goals.*;
 import dungeonmania.MovingEntities.*;
-import dungeonmania.StaticEntities.SwampTile;
-import dungeonmania.response.models.DungeonResponse;
-import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
 public class GameMap {
@@ -28,22 +18,17 @@ public class GameMap {
     private Map<Position, List<Entity>> dungeonMap;
     private Position entryLocation;
     private String dungeonName;
-    private String mapId = null;
+    private String mapId;
     private Player player;
     private Battle battle;
+    private JsonObject jsonMap;
     private int width;
     private int height;
-    private int gameIndex = 0;;
+    private int gameIndex = 0;
 
-    // Map Goals: *****************
-    private Goal rootGoal;
 
     // Game State: **************
     private GameState gameState;
-
-    // Seed counter used for spider
-    int seed;
-    int period;
     
     /**
      * This constructor used for establishing new games
@@ -52,16 +37,15 @@ public class GameMap {
      * @param jsonMap (Map as JsonObject)
      */
     public GameMap(String difficulty, String name, JsonObject jsonMap) {
+        this.jsonMap = jsonMap;
         this.dungeonName = name;
         this.setMapId();
         this.setGameIndex(jsonMap);
-        this.setGameMapFromJSON(jsonMap);
+        this.initialiseGameMapFromJSON(jsonMap);
         this.battle = new Battle(difficulty);
         this.player.setBattle(battle);
-        this.setPlayerInventory(jsonMap);
         this.setObservers();
-        this.gameState = MapHelper.createGameState(difficulty);
-        this.rootGoal = GoalUtility.getGoalPattern(jsonMap);
+        this.gameState = MapUtility.createGameState(difficulty);
     }
 
     /**
@@ -69,151 +53,27 @@ public class GameMap {
      * @param name (String)
      */
     public GameMap(String name, String mapId) {
-        this(MapHelper.getSavedMap(name, mapId).get("game-mode").getAsString(), 
-            MapHelper.getSavedMap(name, mapId).get("map-name").getAsString(), MapHelper.getSavedMap(name, mapId));
+        this(MapUtility.getSavedMap(name, mapId).get("game-mode").getAsString(), 
+            MapUtility.getSavedMap(name, mapId).get("map-name").getAsString(), MapUtility.getSavedMap(name, mapId));
         // Set the mapID
         this.mapId = mapId;
     }
 
-
     // ********************************************************************************************\\
-    //                          Dungeon Response Arguments Helper Function                         \\
+    //                                       Initialise Game                                       \\
     // ********************************************************************************************\\
-
-    /**
-     * Returns a dungeon response based on the current state of the game.
-     * @return DungeonResponse on the current state of map.
-     */
-    public DungeonResponse returnDungeonResponse() {
-        return new DungeonResponse(getMapId(), getDungeonName(), mapToListEntityResponse(), 
-            player.getInventoryResponse(), getBuildables(), getGoals());
-    }
-
-    /**
-     * Takes an the json map object then looks at entity field and 
-     * returns all entities on the map as a list of entity response.
-     * @return List<EntityResponse> List of entity response.
-     */
-    public List<EntityResponse> mapToListEntityResponse() {
-        // EntityResponse list to help append entities on the map
-        List<EntityResponse> entityList = new ArrayList<EntityResponse>();
-        // Loops through entities on the map entities on the map
-        for (Map.Entry<Position, List<Entity>> entry : this.dungeonMap.entrySet()) {
-            for (Entity e : entry.getValue()) {
-                // Checks if the the entity is a mecenary or toast_spawner to 
-                boolean isInteractable = (e.isType("mercenary") || e.isType("zombie_toast_spawner"));
-                if (e.getType().equals("mercenary") && ((Mercenary) e).isAlly()){
-                    isInteractable = false;
-                }
-                // Add the entity to the map
-                entityList.add(new EntityResponse(e.getId(), e.getType(), e.getPos(), isInteractable));
-            }
-        }
-        return entityList;
-    }
-
-    /**
-     * Looks through the player's inventory and checks if the
-     * player has enough materials to build a bow or a shield.
-     * @return List<String> List of buildable items.
-     */
-    public List<String> getBuildables() {
-        List<String> buildable = new ArrayList<>();
-        int numWood = player.getInventory().getNoItemType("wood");
-        int numArrow = player.getInventory().getNoItemType("arrow");
-        boolean hasKey = player.hasItem("key");
-        boolean hasTreasure = player.hasItem("treasure");
-
-        // Checks if sufficient materials
-        if (numWood > 0 && numArrow > 2) {
-            buildable.add("bow");
-        }
-        if (numWood > 1 && (hasKey || hasTreasure)) {
-            buildable.add("shield");
-        }
-        return buildable;
-    }
-
-    /**
-     * Get the goals that needs to be completed for the map.
-     * @return String of goals that needs to be completed.
-     */
-    public String getGoals() {
-        return GoalUtility.goalPatternToString(this.getRootGoal(), this.getMap());
-    }
-
-
-    // ********************************************************************************************\\
-    //                                    Map and Json Functions                                   \\
-    // ********************************************************************************************\\
-
-    /**
-     * Given the name of the map converts the current game map 
-     * into a json file and saves it in the designated folder.
-     * @param name (String)
-     */
-    public void saveMapAsJson(String name) {
-        try {  
-            // Writes the json file into the folder
-            FileWriter file = new FileWriter("saved_games/" + name + ".json");
-            file.write(mapToJson().toString(4));
-            file.flush();
-            file.close();
-        } catch (IOException e) {  
-            e.printStackTrace();  
-        }
-    }
-    
-    /**
-     * Given the name of the map converts the current game map 
-     * into a json file and saves it in the designated folder.
-     * @param name (String)
-     */
-    public void saveTickInstance(String name) {
-        try {  
-            // Writes the json file into the folder
-            FileWriter file = new FileWriter("time_travel_record/" + mapId + "/" + name + ".json");
-            file.write(mapToJson().toString(4));
-            file.flush();
-            file.close();
-        } catch (IOException e) {  
-            e.printStackTrace();  
-        }
-    }
-
-    
-
-    /**
-     * Takes the current map of the game and converts it to 
-     * a json object.
-     * @return JsonObject of the current state of the map.
-     */
-    public JSONObject mapToJson() {
-        // Main object for file
-        JSONObject main = new JSONObject();
-        // Add all fields:
-        main.put("width", getMapWidth());
-        main.put("height", getMapHeight());
-        main.put("game-mode", gameState.getMode());
-        main.put("map-name", dungeonName);
-        main.put("goal-condition", GoalUtility.goalPatternToJson(getRootGoal()));
-        main.put("map-id", mapId);
-        main.put("game-index", gameIndex);
-        main.put("inventory", player.getInventory().toJSON());
-        main.put("entities", MapHelper.entitiesToJson(dungeonMap));
-        return main;
-    }
 
     /**
      * Takes in a json object, and turns it into a Map<Position, Entity>
      * and returns it.
      * @return Map<Position, List<Entity>> form of a map corresponding to jsonMap
      */
-    public void setGameMapFromJSON(JsonObject jsonMap) {
+    public void initialiseGameMapFromJSON(JsonObject jsonMap) {
         // Initialise the map:
         this.width = jsonMap.get("width").getAsInt();
         this.height = jsonMap.get("height").getAsInt();
-        dungeonMap = MapHelper.createInitialisedMap(width, height);
+        this.dungeonMap = MapUtility.createInitialisedMap(width, height);
+
         Integer i = 0;
         for (JsonElement entity : jsonMap.getAsJsonArray("entities")) {
             // Get all attributes:
@@ -224,8 +84,7 @@ public class GameMap {
             dungeonMap.get(temp.getPos()).add(temp);
             i++;
         }
-        // Swamp check if any entity is on the swamp at the start
-        swampTileCheck();
+
     }
 
 
@@ -240,13 +99,21 @@ public class GameMap {
     public List<MovingEntity> getMovingEntityList() {
         List<String> movingType = Arrays.asList("mercenary", "spider", "zombie_toast");
         List<MovingEntity> entityList = new ArrayList<>();
+        for (Entity e : getAllEntity()) {
+            if (movingType.contains(e.getType())) { entityList.add((MovingEntity) e); }
+        }
+        return entityList;
+    }
+
+    /**
+     * Returns a list of all entities on the map.
+     * @return List<Entity> List of entity on the map.
+     */
+    public List<Entity> getAllEntity() {
+        List<Entity> entityList = new ArrayList<>();
         // Loop through the map entities to check for moving entity
         for (Map.Entry<Position, List<Entity>> entry : dungeonMap.entrySet()) {
-            for (Entity e : entry.getValue()) {
-                if (movingType.contains(e.getType())) {
-                    entityList.add((MovingEntity) e);
-                }
-            }
+            for (Entity e : entry.getValue()) { entityList.add(e); }
         }
         return entityList;
     }
@@ -272,123 +139,25 @@ public class GameMap {
      * @return Entity with given id (String).
      */
     public Entity getEntityOnMap(String id) {
-        for (Map.Entry<Position, List<Entity>> entry : dungeonMap.entrySet()) {
-            for (Entity e : entry.getValue()) {
-                if (e.hasId(id)) { return e; }
-            }
+        for (Entity e : getAllEntity()) {
+            if (e.hasId(id)) { return e; }
         }
         return null;
     }
 
-    // ********************************************************************************************\\
-    //                                  Mob Spawning Functions                                     \\
-    // ********************************************************************************************\\
-    
     /**
-     * Spawn all respective mobs.
+     * Given the map and the type of entity you want, returns a list of 
+     * entities of that type on the map.
+     * @param map
+     * @param eType
+     * @return
      */
-    public void spawnMob() {
-        spawnSpider();
-        spawnMercenary();
-        period++;
-    }
-
-    /**
-     * Spawns a spider on the map with a one in ten chance (with
-     * restrictions).
-     */
-    public void spawnSpider() {
-        int spiders = 0;
-        for (MovingEntity e : getMovingEntityList()) {
-            if (e.isType("spider")) { spiders++; }
+    public List<Entity> getEntityTypeList(String eType) {
+        List<Entity> eList = new ArrayList<>();
+        for (Entity e : getAllEntity()) {
+            if (e.isType(eType)) { eList.add(e); }
         }
-        // Square too small:
-        if(width < 2 || height < 2) { return; }
-        // Check conditions
-        Random random = new Random(seed);
-        if (random.nextInt(10) == 5 && spiders < 5) {
-            // Random x and y positions
-            int xPos = new Random(seed + 37).nextInt(width - 2) + 1;
-            int yPos = new Random(seed + 68).nextInt(height - 2) + 1;
-            // Create the spider:
-            Position newSpider = new Position(xPos, yPos, 3);
-            Position checkAbove = new Position(xPos, yPos - 1, 3);
-            Spider spider = new Spider("spider" + System.currentTimeMillis(), "spider", newSpider);
-            // Check if current and above positions of the spiders are boulders:
-            if (spider.canPass(dungeonMap, newSpider) && spider.canPass(dungeonMap, checkAbove)) {
-                dungeonMap.get(newSpider).add(spider);
-                player.registerObserver(spider);
-            }
-        }
-        seed += 124;
-    }
-
-    /**
-     * Periodically spawns a mecenary at the entry location.
-     */
-    public void spawnMercenary() {
-        Mercenary newMerc = new Mercenary("merc" + System.currentTimeMillis(), "mercenary", entryLocation);
-        // Check conditions to spawn mercenary
-        if (period != 0 && period % 15 == 0) {
-            if (newMerc.canPass(dungeonMap, entryLocation)) {
-                dungeonMap.get(entryLocation).add(newMerc);
-                player.registerObserver(newMerc);
-            } else {
-                period--;
-            }
-        }
-    }
-
-    // ********************************************************************************************\\
-    //                                     Other Functions                                         \\
-    // ********************************************************************************************\\
-
-    public void swampTileCheck() {
-        // Loop through all swamp_tile entites
-        for (Entity e : MapHelper.getEntityTypeList(dungeonMap, "swamp_tile")) {
-            ((SwampTile) e).checkTile(getEntityPositionList(e.getPos()));
-        }
-    }
-
-    /**
-     * Checks if the entity is on top of a swamp tile.
-     * @param gameMap
-     * @return True is the entity is on a swamp tile, false otherwise.
-     */
-    public boolean isOnSwampTile(String id) {
-        if (id == null) { id = player.getId(); } 
-        for (Entity e : MapHelper.getEntityTypeList(dungeonMap, "swamp_tile")) {
-            if (((SwampTile) e).entityOnTile(id)) { return true; }
-        }
-        return false;
-    }
-
-    // Swamp tile tick:
-    public void swampTick() {
-        for (Entity e : MapHelper.getEntityTypeList(dungeonMap, "swamp_tile")) {
-            ((SwampTile) e).tickCount();
-        }
-    }
-
-    // This function should be in player.
-    /**
-     * Given the jsonMap object, get all player inventory items
-     * and set it to the player.
-     * @param jsonMap (JsonObject)
-     */
-    public void setPlayerInventory(JsonObject jsonMap) {
-        // Case when the player does not exist.
-        if (jsonMap.getAsJsonArray("inventory") == null) {
-            return;
-        }
-        // Look at the inventory field in json file.
-        Integer i = 0;
-        for (JsonElement entity : jsonMap.getAsJsonArray("inventory")) {
-            JsonObject obj = entity.getAsJsonObject();
-            Entity collectable = EntityFactory.getEntityObject("inventItem" + i, new Position(0, 0), obj, this);
-            player.getInventory().put(collectable, player);
-            i++;
-        }
+        return eList;
     }
 
     // ********************************************************************************************\\
@@ -408,6 +177,10 @@ public class GameMap {
         this.entryLocation = player.getPos(); 
     }
 
+    public Position getEntryPos() {
+        return entryLocation;
+    }
+
     public Map<Position, List<Entity>> getMap() {
         return this.dungeonMap;
     }
@@ -420,11 +193,11 @@ public class GameMap {
         return this.gameState;
     }
 
-    public int getMapHeight() {
+    public int getHeight() {
         return this.height;
     }
 
-    public int getMapWidth() {
+    public int getWidth() {
         return this.width;
     }
 
@@ -439,10 +212,6 @@ public class GameMap {
         player.registerObserver(player);
     }
 
-    public Goal getRootGoal() {
-        return rootGoal;
-    }
-
     public Battle getBattle() {
         return battle;
     }
@@ -451,6 +220,7 @@ public class GameMap {
         return gameIndex;
     }
 
+    // SHould be in response:
     public void setGameIndex(JsonObject obj) {
         this.gameIndex = (obj.get("game-index") == null) ? 
             0 : obj.get("game-index").getAsInt();
@@ -458,5 +228,9 @@ public class GameMap {
 
     public void incrementGameIndex() {
         this.gameIndex = gameIndex + 1;
+    }
+
+    public JsonObject getJsonMap() {
+        return jsonMap;
     }
 }
