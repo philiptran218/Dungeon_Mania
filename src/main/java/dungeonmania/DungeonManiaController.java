@@ -4,8 +4,10 @@ import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.gamemap.EnermySpawner;
 import dungeonmania.gamemap.GameMap;
-import dungeonmania.gamemap.MapHelper;
+import dungeonmania.gamemap.MapUtility;
+import dungeonmania.gamemap.ResponseUtility;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
@@ -25,6 +27,7 @@ import com.google.gson.JsonParser;
 public class DungeonManiaController {
     // Game Map
     private GameMap gameMap;
+    private EnermySpawner enermySpawner;
 
     /**
      * Empty Constructor
@@ -106,9 +109,11 @@ public class DungeonManiaController {
         File theDir = new File("time_travel_record/" + gameMap.getMapId());
         if (!theDir.exists()){ theDir.mkdirs(); }
         // Tick save
-        gameMap.saveTickInstance(gameMap.getGameIndex().toString());
+        MapUtility.saveTickInstance(gameMap, gameMap.getGameIndex().toString());
+        // Create enermy spawner
+        this.enermySpawner = new EnermySpawner(gameMap);
         // Return DungeonResponse
-        return gameMap.returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse();
     }
     
     /**
@@ -119,9 +124,9 @@ public class DungeonManiaController {
      */
     public DungeonResponse saveGame(String name) throws IllegalArgumentException {
         // Advanced 
-        this.gameMap.saveMapAsJson(name);
+        MapUtility.saveMapAsJson(gameMap, name);
         // Return DungeonResponse
-        return gameMap.returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse();
     }
 
     /**
@@ -132,10 +137,12 @@ public class DungeonManiaController {
      * @throws IllegalArgumentException
      */
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
-        JsonObject obj = MapHelper.getSavedMap(name, null);
+        JsonObject obj = MapUtility.getSavedMap(name, null);
         this.gameMap = new GameMap(name, obj.get("map-id").getAsString());
+        // Create enermy spawner
+        this.enermySpawner = new EnermySpawner(gameMap);
         // Return DungeonResponse
-        return gameMap.returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse();
     }
 
     /**
@@ -172,7 +179,7 @@ public class DungeonManiaController {
      */
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
         // If itemUsed is NULL move the player:
-        if (itemUsed == null && !gameMap.isOnSwampTile(null)) {
+        if (itemUsed == null && !MapUtility.isOnSwampTile(gameMap, null)) {
             gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
         } else if (itemUsed != null) {
             // Get the entity on map:
@@ -184,7 +191,7 @@ public class DungeonManiaController {
         
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
-            if (!(e.getPos().equals(e.getPlayerPos()) && !e.isType("mercenary")) && !gameMap.isOnSwampTile(e.getId())) {
+            if (!(e.getPos().equals(e.getPlayerPos()) && !e.isType("mercenary")) && !MapUtility.isOnSwampTile(gameMap, e.getId())) {
                 e.move(gameMap.getMap());
             }
         }
@@ -223,21 +230,18 @@ public class DungeonManiaController {
         }
 
         // Spawn mobs on the map
-        gameMap.spawnMob();
-
-        // Tick the swamp:
-        gameMap.swampTick();
+        enermySpawner.spawnMob();
 
         // Check for swamp tile after all movements has occured,
-        // and removes accordinly
-        gameMap.swampTileCheck();
+        // and removes accordinly as well as tick each one.
+        MapUtility.swampTileTick(gameMap);
 
         // Save the file:
         gameMap.incrementGameIndex();
-        gameMap.saveTickInstance(gameMap.getGameIndex().toString());
+        MapUtility.saveTickInstance(gameMap, gameMap.getGameIndex().toString());
 
         // Return DungeonResponse
-        return gameMap.returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse();
     }
 
     /**
@@ -264,7 +268,7 @@ public class DungeonManiaController {
             throw new IllegalArgumentException("Entity not interactable");
         }
 
-        return gameMap.returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse();
     }
 
     /**
@@ -309,7 +313,7 @@ public class DungeonManiaController {
             Shield newShield = new Shield("" + System.currentTimeMillis(), "shield", null);
             player.getInventory().put(newShield, player);
         }
-        return gameMap.returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse();
     }
 
 
@@ -325,7 +329,9 @@ public class DungeonManiaController {
         if (ticks <= 0) { throw new IllegalArgumentException("Invalid rewind tick."); }
         // If not enough rewind, do not do anything
         Integer gameIndex = gameMap.getGameIndex();
-        if (gameIndex + 1 < ticks || gameIndex == 0) { return gameMap.returnDungeonResponse(); }
+        if (gameIndex < ticks || gameIndex == 0) { 
+            return new ResponseUtility(gameMap).returnDungeonResponse(); 
+        }
         // Rewind
         for (int i = 0; i < ticks; i++) {
             gameIndex -= 1;
@@ -333,7 +339,7 @@ public class DungeonManiaController {
         // Load new game
         gameMap = new GameMap(gameIndex.toString(), gameMap.getMapId());
         // Return response
-        return gameMap.returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse();
     }
 
 }

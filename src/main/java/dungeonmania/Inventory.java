@@ -3,16 +3,12 @@ package dungeonmania;
 import dungeonmania.MovingEntities.Player;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import dungeonmania.CollectableEntities.CollectableEntity;
-import dungeonmania.CollectableEntities.InvincibilityPotion;
-import dungeonmania.CollectableEntities.InvisibilityPotion;
 import dungeonmania.CollectableEntities.Key;
 
 public class Inventory {
