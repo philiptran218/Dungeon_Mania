@@ -42,11 +42,15 @@ public class MapHelper {
      * @param name (String)
      * @return JsonObject file of the saved game.
      */
-    public static JsonObject getSavedMap(String name) {
+    public static JsonObject getSavedMap(String name, String mapId) {
         try {
             return JsonParser.parseReader(new FileReader("saved_games\\" + name + ".json")).getAsJsonObject();
         } catch (Exception e) {
-            throw new IllegalArgumentException("File not found.");
+            try {
+                return JsonParser.parseReader(new FileReader("time_travel_record\\" + mapId + "\\" + name + ".json")).getAsJsonObject();
+            } catch (Exception c) {
+                throw new IllegalArgumentException("File not found.");
+            }
         }
     }
 
