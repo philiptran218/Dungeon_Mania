@@ -4,6 +4,7 @@ import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.gamemap.EnermySpawner;
 import dungeonmania.gamemap.GameMap;
 import dungeonmania.gamemap.MapUtility;
 import dungeonmania.gamemap.ResponseUtility;
@@ -26,6 +27,7 @@ import com.google.gson.JsonParser;
 public class DungeonManiaController {
     // Game Map
     private GameMap gameMap;
+    private EnermySpawner enermySpawner;
 
     /**
      * Empty Constructor
@@ -108,6 +110,8 @@ public class DungeonManiaController {
         if (!theDir.exists()){ theDir.mkdirs(); }
         // Tick save
         MapUtility.saveTickInstance(gameMap, gameMap.getGameIndex().toString());
+        // Create enermy spawner
+        this.enermySpawner = new EnermySpawner(gameMap);
         // Return DungeonResponse
         return new ResponseUtility(gameMap).returnDungeonResponse();
     }
@@ -135,6 +139,8 @@ public class DungeonManiaController {
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
         JsonObject obj = MapUtility.getSavedMap(name, null);
         this.gameMap = new GameMap(name, obj.get("map-id").getAsString());
+        // Create enermy spawner
+        this.enermySpawner = new EnermySpawner(gameMap);
         // Return DungeonResponse
         return new ResponseUtility(gameMap).returnDungeonResponse();
     }
@@ -224,7 +230,7 @@ public class DungeonManiaController {
         }
 
         // Spawn mobs on the map
-        gameMap.spawnMob();
+        enermySpawner.spawnMob();
 
         // Check for swamp tile after all movements has occured,
         // and removes accordinly as well as tick each one.

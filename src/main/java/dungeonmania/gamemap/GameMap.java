@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import com.google.gson.*;
 
@@ -31,10 +30,6 @@ public class GameMap {
 
     // Game State: **************
     private GameState gameState;
-
-    // Seed counter used for spider
-    int seed;
-    int period;
     
     /**
      * This constructor used for establishing new games
@@ -180,65 +175,6 @@ public class GameMap {
         return eList;
     }
 
-    // ********************************************************************************************\\
-    //                                  Mob Spawning Functions                                     \\
-    // ********************************************************************************************\\
-    
-    /**
-     * Spawn all respective mobs.
-     */
-    public void spawnMob() {
-        spawnSpider();
-        spawnMercenary();
-        period++;
-    }
-
-    /**
-     * Spawns a spider on the map with a one in ten chance (with
-     * restrictions).
-     */
-    public void spawnSpider() {
-        int spiders = 0;
-        for (MovingEntity e : getMovingEntityList()) {
-            if (e.isType("spider")) { spiders++; }
-        }
-        // Square too small:
-        if(width < 2 || height < 2) { return; }
-        // Check conditions
-        Random random = new Random(seed);
-        if (random.nextInt(10) == 5 && spiders < 5) {
-            // Random x and y positions
-            int xPos = new Random(seed + 37).nextInt(width - 2) + 1;
-            int yPos = new Random(seed + 68).nextInt(height - 2) + 1;
-            // Create the spider:
-            Position newSpider = new Position(xPos, yPos, 3);
-            Position checkAbove = new Position(xPos, yPos - 1, 3);
-            Spider spider = new Spider("spider" + System.currentTimeMillis(), "spider", newSpider);
-            // Check if current and above positions of the spiders are boulders:
-            if (spider.canPass(dungeonMap, newSpider) && spider.canPass(dungeonMap, checkAbove)) {
-                dungeonMap.get(newSpider).add(spider);
-                player.registerObserver(spider);
-            }
-        }
-        seed += 124;
-    }
-
-    /**
-     * Periodically spawns a mecenary at the entry location.
-     */
-    public void spawnMercenary() {
-        Mercenary newMerc = new Mercenary("merc" + System.currentTimeMillis(), "mercenary", entryLocation);
-        // Check conditions to spawn mercenary
-        if (period != 0 && period % 15 == 0) {
-            if (newMerc.canPass(dungeonMap, entryLocation)) {
-                dungeonMap.get(entryLocation).add(newMerc);
-                player.registerObserver(newMerc);
-            } else {
-                period--;
-            }
-        }
-    }
-
 
     // ********************************************************************************************\\
     //                                     Other Functions                                         \\
@@ -280,6 +216,10 @@ public class GameMap {
     public void setPlayer(Player player) {
         this.player = player;
         this.entryLocation = player.getPos(); 
+    }
+
+    public Position getEntryPos() {
+        return entryLocation;
     }
 
     public Map<Position, List<Entity>> getMap() {
