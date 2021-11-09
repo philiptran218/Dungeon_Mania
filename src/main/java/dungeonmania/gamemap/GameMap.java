@@ -19,7 +19,7 @@ public class GameMap {
     private Map<Position, List<Entity>> dungeonMap;
     private Position entryLocation;
     private String dungeonName;
-    private String mapId = null;
+    private String mapId;
     private Player player;
     private Battle battle;
     private JsonObject jsonMap;
@@ -86,10 +86,7 @@ public class GameMap {
             dungeonMap.get(temp.getPos()).add(temp);
             i++;
         }
-        // Swamp check if any entity is on the swamp at the start
-        for (Entity e : getEntityTypeList("swamp_tile")) {
-            ((SwampTile) e).checkTile(getEntityPositionList(e.getPos()));
-        }
+
     }
 
 
