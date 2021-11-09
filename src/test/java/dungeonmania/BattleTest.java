@@ -219,4 +219,42 @@ public class BattleTest {
         tmp = controller.tick(null, Direction.RIGHT);
         assertTrue("".equals(tmp.getGoals()));
     }
+
+    // Tests battle against a hydra using anduril. Should die within several ticks since it
+    // cannot heal against anduril attacks.
+    @Test
+    public void testAndurilAgainstHydra() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("hydra_anduril", "Hard");
+        // TODO: Add more directions since hydra movement is random
+        DungeonResponse info = newDungeon.tick(null, Direction.RIGHT);
+        info = newDungeon.tick(null, Direction.RIGHT);
+        // Should now fight against the hydra and win after x rounds since there is also
+        // triple damage to bosses
+        assertFalse(info.getEntities().stream().anyMatch(e -> e.getType().equals("hydra")));
+        // Player should still be alive
+        assertTrue(info.getEntities().stream().anyMatch(e -> e.getType().equals("player")));
+    }
+
+    // Tests battle against an assassin using anduril. Should die within several ticks since it deals
+    // triple damage to bosses.
+    @Test
+    public void testAndurilAgainstAssassin() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("assassin_anduril", "Hard");
+    
+        DungeonResponse info = newDungeon.tick(null, Direction.RIGHT);
+        info = newDungeon.tick(null, Direction.RIGHT);
+        // Should now fight against the assassin and win after x rounds, taking triple damage
+        // into account
+        assertFalse(info.getEntities().stream().anyMatch(e -> e.getType().equals("assassin")));
+        assertTrue(info.getEntities().stream().anyMatch(e -> e.getType().equals("player")));
+    }
+
+    // Tests anduril against a non-boss enemy. Should just deal normal damage.
+    @Test
+    public void testAndurilAgainstMercenary() {
+        // Leave as stub for now, will complete once finished...
+    }
+
 }
