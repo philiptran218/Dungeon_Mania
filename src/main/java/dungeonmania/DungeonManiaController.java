@@ -281,41 +281,25 @@ public class DungeonManiaController {
      * @throws InvalidActionException
      */
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
-        if (!(buildable.equals("bow") || buildable.equals("shield"))) {
+        // Checks if item being built is a bow, shield, sceptre or midnight_armour
+        if (isNotValidBuildable(buildable)) {
             throw new IllegalArgumentException();
         }
-        Player player = gameMap.getPlayer();
-
-        Inventory playerInv = player.getInventory();
-        if (buildable.equals("bow")) {
-            if (playerInv.getNoItemType("wood") < 1 || playerInv.getNoItemType("arrow") < 3) {
-                throw new InvalidActionException("Not enough materials!");
-            }
-            playerInv.useItem("wood");
-            playerInv.useItem("arrow");
-            playerInv.useItem("arrow");
-            playerInv.useItem("arrow");
-            Bow newBow = new Bow("" + System.currentTimeMillis(), "bow", null);
-            player.getInventory().put(newBow, player);
+        
+        Inventory playerInv = gameMap.getPlayer().getInventory();
+        // Checks if player has enough materials to build the item
+        if (!playerInv.hasEnoughMaterials(buildable)) {
+            throw new InvalidActionException("Not enough materials!");
         }
-        // Otherwise we are crafting a shield
-        else {
-            if (playerInv.getNoItemType("wood") < 2 || (playerInv.getNoItemType("treasure") < 1 && playerInv.getNoItemType("key") < 1)) {
-                throw new InvalidActionException("Not enough materials!");
-            }
-            playerInv.useItem("wood");
-            playerInv.useItem("wood");
-            if (playerInv.getNoItemType("treasure") >= 1 ) {
-                playerInv.useItem("treasure");
-            } else {
-                playerInv.useItem("key");
-            }
-            Shield newShield = new Shield("" + System.currentTimeMillis(), "shield", null);
-            player.getInventory().put(newShield, player);
-        }
+        // Player can then build the item
+        playerInv.buildItem(buildable);
         return new ResponseUtility(gameMap).returnDungeonResponse();
     }
 
+    private boolean isNotValidBuildable(String buildable) {
+        return !(buildable.equals("bow") || buildable.equals("shield") || buildable.equals("sceptre")
+                 || buildable.equals("midnight_armour"));
+    }
 
     /**
      * Given a number of ticks, rewind the game the number of time 
@@ -341,5 +325,4 @@ public class DungeonManiaController {
         // Return response
         return new ResponseUtility(gameMap).returnDungeonResponse();
     }
-
 }

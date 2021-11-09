@@ -5,11 +5,11 @@ import dungeonmania.MovingEntities.Player;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jetty.security.UserAuthentication;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import dungeonmania.CollectableEntities.CollectableEntity;
-import dungeonmania.CollectableEntities.Key;
+import dungeonmania.CollectableEntities.*;
 
 public class Inventory {
     
@@ -119,4 +119,86 @@ public class Inventory {
         }
         return jsonArray;
     }
+
+    /**
+     * Checks if the player has enough materials to build the given buildable
+     * @param buildable
+     * @return
+     */
+    public boolean hasEnoughMaterials(String buildable) {
+        switch (buildable) {
+            case "bow":
+                if (getNoItemType("wood") < 1 || getNoItemType("arrow") < 3) {
+                    return false;
+                }
+                return true;    
+            case "shield":
+                if (getNoItemType("wood") < 2 || (getNoItemType("treasure") < 1 && getNoItemType("key") < 1)) {
+                return false;
+                }
+                return true;
+            case "sceptre":
+                if ((getNoItemType("wood") < 1 && getNoItemType("arrow") < 2) || (getNoItemType("treasure") < 1 && 
+                     getNoItemType("key") < 1) || getNoItemType("sun_stone") < 1) {
+                    return false;
+                }
+                return true;
+            case "midnight_armour":
+                if (getNoItemType("armour") < 1 || getNoItemType("sun_stone") < 1) {
+                    return false;
+                }
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public void buildItem(String buildable) {
+        switch (buildable) {
+            case "bow":
+                useItem("wood");
+                for (int i = 0; i < 3; i++) {
+                    useItem("arrow");
+                }
+                Bow newBow = new Bow("" + System.currentTimeMillis(), "bow", null);
+                put(newBow, player);
+            case "shield":
+                useItem("wood");
+                useItem("wood");
+                if (getNoItemType("treasure") >= 1) {
+                    useItem("treasure");
+                } else {
+                    useItem("key");
+                }
+                Shield newShield = new Shield("" + System.currentTimeMillis(), "shield", null);
+                put(newShield, player);
+            case "sceptre":
+                if (getNoItemType("wood") >= 1) {
+                    useItem("wood");
+                } else {
+                    useItem("arrow");
+                    useItem("arrow");
+                }
+                if (getNoItemType("treasure") >= 1) {
+                    useItem("treasure");
+                } else {
+                    useItem("key");
+                }
+                useItem("sun_stone");
+                // Create the sun_stone first
+                /*
+                SunStone newSunStone = new SunStone(......);
+                put(newSunStone, player);
+                */
+            case "midnight_armour":
+                useItem("armour");
+                useItem("sun_stone");
+                // Create the midnight_armour first
+                /*
+                MidnightArmour newMidnightArmour = new MidnightArmour(....);
+                put(newMidnightArmour, player);
+                */
+        }
+    }
+
 }
