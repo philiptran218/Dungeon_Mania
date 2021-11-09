@@ -213,7 +213,6 @@ public class DungeonManiaController {
 
         }
         
-
         // Ticks the zombie toast spawner
         for (Map.Entry<Position, List<Entity>> entry : gameMap.getMap().entrySet()) {
             for(Entity e : entry.getValue()) {
