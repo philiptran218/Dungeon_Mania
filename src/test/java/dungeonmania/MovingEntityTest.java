@@ -242,7 +242,7 @@ public class MovingEntityTest {
     //               Test for Mercenary Basic Movements
     // ************************************************************ \\ 
     /**
-     * Test bribing a mercenary
+     * Test bribing a mercenary with treasure
      */
     @Test
     public void testBribeMercenaryMovement() {
@@ -250,6 +250,22 @@ public class MovingEntityTest {
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
         DungeonResponse tmp = controller.newGame("simpleMercWithTreasure", "Standard");
+        String MercId = getEntityId(new Position(4, 1, 3), tmp);
+        assertTrue(":enemies".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.RIGHT);
+        tmp = controller.interact(MercId);
+        assertTrue("".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.RIGHT);
+    }
+    /**
+     * Test bribing a mercenary with a sun stone
+     */
+    @Test
+    public void testBribeMercenaryMovementSunStone() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("simpleMercWithSunStone", "Standard");
         String MercId = getEntityId(new Position(4, 1, 3), tmp);
         assertTrue(":enemies".equals(tmp.getGoals()));
         tmp = controller.tick(null, Direction.RIGHT);

@@ -90,6 +90,20 @@ public class StaticEntityTest {
         temp = newDungeon.tick(null, Direction.RIGHT);
         assertTrue(isEntityOnTile(temp, new Position(3, 1, 3), playerId));
     }
+    // Checks if the door is working by unlocking a locked door with a sun stone
+    @Test
+    public void testUnlockedDoorSunStone() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse temp;
+        DungeonResponse createNew = newDungeon.newGame("door_sun_stone", "Peaceful");
+        String playerId = getEntityId(new Position(1, 1, 3), createNew);
+        temp = newDungeon.tick(null, Direction.RIGHT);
+        temp = newDungeon.tick(null, Direction.RIGHT);
+        temp = newDungeon.tick(null, Direction.RIGHT);
+        assertTrue(isEntityOnTile(temp, new Position(4, 1, 3), playerId));
+        // Check that sun stone is still in inventory
+        assertTrue(temp.getInventory().stream().anyMatch(itm -> itm.getType().equals("sun_stone")));
+    }
     // Checks if the door is actually locked by moving towards the door without a key
     @Test
     public void testLockedDoor() {
@@ -175,6 +189,15 @@ public class StaticEntityTest {
         temp = newDungeon.tick(null, Direction.DOWN);
         temp = newDungeon.tick(null, Direction.RIGHT);
         newDungeon.build("bow");
+        temp = newDungeon.interact(spawner);
+        assertFalse(isEntityOnTile(temp, new Position(3, 1, 1), spawner));
+    }
+    @Test
+    public void testZombieSpawnerAnduril() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawner_anduril", "Standard");
+        String spawner = getEntityId(new Position(3, 1, 1), temp);
+        temp = newDungeon.tick(null, Direction.RIGHT);
         temp = newDungeon.interact(spawner);
         assertFalse(isEntityOnTile(temp, new Position(3, 1, 1), spawner));
     }

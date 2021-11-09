@@ -46,6 +46,7 @@ public class CollectableEntityTest {
     // Tests for CollectableEntities:
 
     // Test that the entity can be picked up by the player.
+    // TODO: change this test to add new collectables
     @Test
     public void testCollectablePickup() {
         DungeonManiaController newDungeon = new DungeonManiaController();
@@ -78,6 +79,12 @@ public class CollectableEntityTest {
 
         inv = newDungeon.tick(null, Direction.RIGHT).getInventory();
         assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("bomb")));
+
+        inv = newDungeon.tick(null, Direction.RIGHT).getInventory();
+        assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("sun_stone")));
+
+        inv = newDungeon.tick(null, Direction.RIGHT).getInventory();
+        assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("anduril")));
     }
 
     // Test that the collected item can be used via tick() in DungeonManiaController
