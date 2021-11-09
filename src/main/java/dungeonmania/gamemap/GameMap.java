@@ -1,5 +1,6 @@
 package dungeonmania.gamemap;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,11 +28,12 @@ public class GameMap {
     private Map<Position, List<Entity>> dungeonMap;
     private Position entryLocation;
     private String dungeonName;
-    private String mapId;
+    private String mapId = null;
     private Player player;
     private Battle battle;
     private int width;
     private int height;
+    private int gameIndex = 0;;
 
     // Map Goals: *****************
     private GoalInterface rootGoal;
@@ -51,7 +53,8 @@ public class GameMap {
      */
     public GameMap(String difficulty, String name, JsonObject jsonMap) {
         this.dungeonName = name;
-        this.mapId = "" + System.currentTimeMillis();
+        this.setMapId();
+        this.setGameIndex(jsonMap);
         this.setGameMapFromJSON(jsonMap);
         this.battle = new Battle(difficulty);
         this.player.setBattle(battle);
@@ -65,9 +68,11 @@ public class GameMap {
      * This constructor used for loading saved games.
      * @param name (String)
      */
-    public GameMap(String name) {
-        this(MapHelper.getSavedMap(name).get("game-mode").getAsString(), 
-            MapHelper.getSavedMap(name).get("map-name").getAsString(), MapHelper.getSavedMap(name));
+    public GameMap(String name, String mapId) {
+        this(MapHelper.getSavedMap(name, mapId).get("game-mode").getAsString(), 
+            MapHelper.getSavedMap(name, mapId).get("map-name").getAsString(), MapHelper.getSavedMap(name, mapId));
+        // Set the mapID
+        this.mapId = mapId;
     }
 
 
@@ -96,7 +101,7 @@ public class GameMap {
         for (Map.Entry<Position, List<Entity>> entry : this.dungeonMap.entrySet()) {
             for (Entity e : entry.getValue()) {
                 // Checks if the the entity is a mecenary or toast_spawner to 
-                boolean isInteractable = (e.getType().equals("mercenary") || e.getType().equals("zombie_toast_spawner"));
+                boolean isInteractable = (e.isType("mercenary") || e.isType("zombie_toast_spawner"));
                 if (e.getType().equals("mercenary") && ((Mercenary) e).isAlly()){
                     isInteractable = false;
                 }
@@ -156,8 +161,27 @@ public class GameMap {
             file.close();
         } catch (IOException e) {  
             e.printStackTrace();  
-        }  
+        }
     }
+    
+    /**
+     * Given the name of the map converts the current game map 
+     * into a json file and saves it in the designated folder.
+     * @param name (String)
+     */
+    public void saveTickInstance(String name) {
+        try {  
+            // Writes the json file into the folder
+            FileWriter file = new FileWriter("time_travel_record/" + mapId + "/" + name + ".json");
+            file.write(mapToJson().toString(4));
+            file.flush();
+            file.close();
+        } catch (IOException e) {  
+            e.printStackTrace();  
+        }
+    }
+
+    
 
     /**
      * Takes the current map of the game and converts it to 
@@ -172,6 +196,8 @@ public class GameMap {
         main.put("height", getMapHeight());
         main.put("game-mode", gameState.getMode());
         main.put("map-name", dungeonName);
+        main.put("map-id", mapId);
+        main.put("game-index", gameIndex);
         main.put("goal-condition", GoalHelper.goalPatternToJson(getRootGoal()));
         main.put("inventory", player.getInventory().toJSON());
         main.put("entities", MapHelper.entitiesToJson(dungeonMap));
@@ -365,13 +391,16 @@ public class GameMap {
         }
     }
 
-
     // ********************************************************************************************\\
     //                                   Getter and setters:                                       \\
     // ********************************************************************************************\\
 
     public Player getPlayer() {
         return this.player; 
+    }
+
+    public void setMapId() {
+        if (mapId == null) { mapId = "" + System.currentTimeMillis(); }
     }
 
     public void setPlayer(Player player) {
@@ -418,4 +447,16 @@ public class GameMap {
         return battle;
     }
     
+    public Integer getGameIndex() {
+        return gameIndex;
+    }
+
+    public void setGameIndex(JsonObject obj) {
+        this.gameIndex = (obj.get("game-index") == null) ? 
+            0 : obj.get("game-index").getAsInt();
+    }
+
+    public void incrementGameIndex() {
+        this.gameIndex = gameIndex + 1;
+    }
 }

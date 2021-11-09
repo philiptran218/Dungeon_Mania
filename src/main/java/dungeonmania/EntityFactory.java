@@ -76,6 +76,8 @@ public class EntityFactory {
                 return new Bow(id, type, collectPos);
             case "shield": 
                 return new Shield(id, type, collectPos);
+            case "time_turner":
+                return new TimeTuner(id, type, collectPos);
             case "player": 
                 Player player = new Player(id, type, movingPos);
                 gameMap.setPlayer(player);

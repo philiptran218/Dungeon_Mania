@@ -376,7 +376,7 @@ public class StaticEntityTest {
         controller.tick(null, Direction.RIGHT);
         controller.tick(null, Direction.RIGHT);
 
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 4; i++) {
             tmp = controller.tick(null, Direction.DOWN);
         }
         // Check if the player is at the correct position

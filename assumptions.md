@@ -8,6 +8,7 @@
 - Zombies can spawn on an exit, portal or unlocked door.
 - If the player has both a sword and a bow, the player will use a sword to destroy the zombie toast spawner.
 - Spiders will not teleport through portals.
+- Allies of player will be slowed down when crossing the swamp tile.
 
 # Assumptions for Collectable Entities:
 - Player can collect an unlimited number of entities (with the exception of key).
