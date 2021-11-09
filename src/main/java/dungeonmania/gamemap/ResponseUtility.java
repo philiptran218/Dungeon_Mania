@@ -5,7 +5,6 @@ import java.util.List;
 
 import dungeonmania.Entity;
 import dungeonmania.Goals.GoalHelper;
-import dungeonmania.Goals.GoalInterface;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.MovingEntities.*;
@@ -13,16 +12,12 @@ import dungeonmania.MovingEntities.*;
 public class ResponseUtility {
     // Map: ***********************
     private GameMap map;
-
-    // Map Goals: *****************
-    private GoalInterface rootGoal;
     /**
      * Constructor for response.
      * @param map
      */
     public ResponseUtility(GameMap gameMap) {
         this.map = gameMap;
-        this.rootGoal = GoalHelper.getGoalPattern(gameMap.getJsonMap());
     }
     
     /**
@@ -83,12 +78,7 @@ public class ResponseUtility {
      * @return String of goals that needs to be completed.
      */
     public String getGoalResponse() {
-        return GoalHelper.goalPatternToString(this.getRootGoal(), this.map.getMap());
+        return GoalHelper.goalPatternToString(GoalHelper.getGoalPattern(map.getJsonMap()), this.map.getMap());
     }
 
-    // Getters and setters:
-
-    public GoalInterface getRootGoal() {
-        return rootGoal;
-    }
 }

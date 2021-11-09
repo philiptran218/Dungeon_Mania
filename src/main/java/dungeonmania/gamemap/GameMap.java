@@ -1,6 +1,5 @@
 package dungeonmania.gamemap;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,13 +31,10 @@ public class GameMap {
     private JsonObject jsonMap;
     private int width;
     private int height;
-    private int gameIndex = 0;;
+    private int gameIndex = 0;
 
     // Game State: **************
     private GameState gameState;
-
-    // Map Goals: *****************
-    private GoalInterface rootGoal;
 
     // Seed counter used for spider
     int seed;
@@ -60,7 +56,6 @@ public class GameMap {
         this.setPlayerInventory(jsonMap);
         this.setObservers();
         this.gameState = MapHelper.createGameState(difficulty);
-        this.rootGoal = GoalHelper.getGoalPattern(jsonMap);
         this.jsonMap = jsonMap;
     }
 
@@ -74,12 +69,6 @@ public class GameMap {
         // Set the mapID
         this.mapId = mapId;
     }
-
-
-    // ********************************************************************************************\\
-    //                          Dungeon Response Arguments Helper Function                         \\
-    // ********************************************************************************************\\
-
 
     // ********************************************************************************************\\
     //                                    Map and Json Functions                                   \\
@@ -119,8 +108,6 @@ public class GameMap {
         }
     }
 
-    
-
     /**
      * Takes the current map of the game and converts it to 
      * a json object.
@@ -136,7 +123,7 @@ public class GameMap {
         main.put("map-name", dungeonName);
         main.put("map-id", mapId);
         main.put("game-index", gameIndex);
-        main.put("goal-condition", GoalHelper.goalPatternToJson(getRootGoal()));
+        main.put("goal-condition", GoalHelper.goalPatternToJson(GoalHelper.getGoalPattern(jsonMap)));
         main.put("inventory", player.getInventory().toJSON());
         main.put("entities", MapHelper.entitiesToJson(dungeonMap));
         return main;
@@ -290,6 +277,7 @@ public class GameMap {
         }
     }
 
+
     // ********************************************************************************************\\
     //                                     Other Functions                                         \\
     // ********************************************************************************************\\
@@ -398,6 +386,7 @@ public class GameMap {
         return gameIndex;
     }
 
+    // SHould be in response:
     public void setGameIndex(JsonObject obj) {
         this.gameIndex = (obj.get("game-index") == null) ? 
             0 : obj.get("game-index").getAsInt();
@@ -405,10 +394,6 @@ public class GameMap {
 
     public void incrementGameIndex() {
         this.gameIndex = gameIndex + 1;
-    }
-
-    public GoalInterface getRootGoal() {
-        return rootGoal;
     }
 
     public JsonObject getJsonMap() {

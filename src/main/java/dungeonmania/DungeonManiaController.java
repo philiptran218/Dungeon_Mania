@@ -23,8 +23,6 @@ import java.util.Map;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.eclipse.jetty.client.api.Response;
-
 public class DungeonManiaController {
     // Game Map
     private GameMap gameMap;
