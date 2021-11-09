@@ -7,7 +7,7 @@ import dungeonmania.Entity;
 import dungeonmania.StaticEntities.Exit;
 import dungeonmania.util.Position;
 
-public class ExitGoal implements GoalInterface { 
+public class ExitGoal implements Goal { 
     private String goalName = "exit";
 
     /**
@@ -30,15 +30,7 @@ public class ExitGoal implements GoalInterface {
     }
 
     @Override
-    public void add(GoalInterface goal) {
-    }
-
-    @Override
     public String getGoalName() {
         return this.goalName;
-    }
-    @Override
-    public List<GoalInterface> getChildren() {
-        return null;
     }
 }

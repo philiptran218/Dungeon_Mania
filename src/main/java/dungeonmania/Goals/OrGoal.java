@@ -19,7 +19,7 @@ public class OrGoal extends CompositeGoal {
     @Override
     public boolean isGoalComplete(Map<Position, List<Entity>> map) {
         boolean complete = false;
-        for (GoalInterface goal : this.getChildren()) {
+        for (Goal goal : this.getChildren()) {
             complete = complete || goal.isGoalComplete(map);
         }
         return complete;

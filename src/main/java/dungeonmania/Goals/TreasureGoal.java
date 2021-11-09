@@ -6,7 +6,7 @@ import java.util.Map;
 import dungeonmania.Entity;
 import dungeonmania.util.Position;
 
-public class TreasureGoal implements GoalInterface {
+public class TreasureGoal implements Goal {
     
     private String goalName = "treasure";
 
@@ -20,15 +20,11 @@ public class TreasureGoal implements GoalInterface {
         }
         return true;
     }
-    public void add(GoalInterface goal) {
+    public void add(Goal goal) {
     }
 
     @Override
     public String getGoalName() {
         return this.goalName;
-    }
-    @Override
-    public List<GoalInterface> getChildren() {
-        return null;
     }
 }

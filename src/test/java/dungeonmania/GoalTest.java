@@ -48,7 +48,6 @@ public class GoalTest {
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
         DungeonResponse tmp = controller.newGame("zombiesCoverExit", "Peaceful");
-        System.out.println(tmp.getGoals());
         assertTrue(":exit".equals(tmp.getGoals()));
         for (int i = 0; i < 3; i++) {
             tmp = controller.tick(null, Direction.RIGHT);
@@ -212,7 +211,7 @@ public class GoalTest {
      * (Pass - Exit and one of Enemies or Treasure is )
      */
     @Test
-    public void ComplexGoalPass() {
+    public void TreasureANDBouldersORExit() {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
