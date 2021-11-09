@@ -107,7 +107,7 @@ public class DungeonManiaController {
         File theDir = new File("time_travel_record/" + gameMap.getMapId());
         if (!theDir.exists()){ theDir.mkdirs(); }
         // Tick save
-        gameMap.saveTickInstance(gameMap.getGameIndex().toString());
+        MapHelper.saveTickInstance(gameMap, gameMap.getGameIndex().toString());
         // Return DungeonResponse
         return new ResponseUtility(gameMap).returnDungeonResponse();
     }
@@ -120,7 +120,7 @@ public class DungeonManiaController {
      */
     public DungeonResponse saveGame(String name) throws IllegalArgumentException {
         // Advanced 
-        this.gameMap.saveMapAsJson(name);
+        MapHelper.saveMapAsJson(gameMap, name);
         // Return DungeonResponse
         return new ResponseUtility(gameMap).returnDungeonResponse();
     }
@@ -173,7 +173,8 @@ public class DungeonManiaController {
      */
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
         // If itemUsed is NULL move the player:
-        if (itemUsed == null && !gameMap.isOnSwampTile(null)) {
+        System.out.println(MapHelper.isOnSwampTile(gameMap, null));
+        if (itemUsed == null && !MapHelper.isOnSwampTile(gameMap, null)) {
             gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
         } else if (itemUsed != null) {
             // Get the entity on map:
@@ -185,7 +186,7 @@ public class DungeonManiaController {
         
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
-            if (!(e.getPos().equals(e.getPlayerPos()) && !e.isType("mercenary")) && !gameMap.isOnSwampTile(e.getId())) {
+            if (!(e.getPos().equals(e.getPlayerPos()) && !e.isType("mercenary")) && !MapHelper.isOnSwampTile(gameMap, e.getId())) {
                 e.move(gameMap.getMap());
             }
         }
@@ -226,16 +227,13 @@ public class DungeonManiaController {
         // Spawn mobs on the map
         gameMap.spawnMob();
 
-        // Tick the swamp:
-        gameMap.swampTick();
-
         // Check for swamp tile after all movements has occured,
-        // and removes accordinly
-        gameMap.swampTileCheck();
+        // and removes accordinly as well as tick each one.
+        MapHelper.swampTileTick(gameMap);
 
         // Save the file:
         gameMap.incrementGameIndex();
-        gameMap.saveTickInstance(gameMap.getGameIndex().toString());
+        MapHelper.saveTickInstance(gameMap, gameMap.getGameIndex().toString());
 
         // Return DungeonResponse
         return new ResponseUtility(gameMap).returnDungeonResponse();
@@ -326,7 +324,7 @@ public class DungeonManiaController {
         if (ticks <= 0) { throw new IllegalArgumentException("Invalid rewind tick."); }
         // If not enough rewind, do not do anything
         Integer gameIndex = gameMap.getGameIndex();
-        if (gameIndex + 1 < ticks || gameIndex == 0) { 
+        if (gameIndex < ticks || gameIndex == 0) { 
             return new ResponseUtility(gameMap).returnDungeonResponse(); 
         }
         // Rewind

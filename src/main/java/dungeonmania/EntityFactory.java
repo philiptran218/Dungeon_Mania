@@ -85,9 +85,9 @@ public class EntityFactory {
             case "swamp_tile": 
                 SwampTile swamp = new SwampTile(id, type, absolPos, jsonObj.get("movement_factor").getAsInt());
                 if (jsonObj.get("entites_on_tile") != null) {
-                    MapHelper.addEntityToSwampTile(swamp, gameMap.getMap(), jsonObj, gameMap);
+                    MapHelper.addEntityToSwampTile(swamp, jsonObj, gameMap);
                     // Checks if the player is on the swamp tile:
-                    List<Entity> playerCheck = MapHelper.getEntityTypeList(gameMap.getMap(), "player");
+                    List<Entity> playerCheck = gameMap.getEntityTypeList("player");
                     if (!playerCheck.isEmpty()) { gameMap.setPlayer((Player) playerCheck.get(0)); }
                 }
                 return swamp;

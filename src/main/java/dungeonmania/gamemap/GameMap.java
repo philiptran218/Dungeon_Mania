@@ -1,7 +1,5 @@
 package dungeonmania.gamemap;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,12 +8,9 @@ import java.util.Random;
 
 import com.google.gson.*;
 
-import org.json.JSONObject;
-
 import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
 import dungeonmania.Battles.Battle;
-import dungeonmania.Goals.*;
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.SwampTile;
 import dungeonmania.util.Position;
@@ -47,16 +42,16 @@ public class GameMap {
      * @param jsonMap (Map as JsonObject)
      */
     public GameMap(String difficulty, String name, JsonObject jsonMap) {
+        this.jsonMap = jsonMap;
         this.dungeonName = name;
         this.setMapId();
         this.setGameIndex(jsonMap);
-        this.setGameMapFromJSON(jsonMap);
+        this.initialiseGameMapFromJSON(jsonMap);
         this.battle = new Battle(difficulty);
         this.player.setBattle(battle);
         this.setPlayerInventory(jsonMap);
         this.setObservers();
         this.gameState = MapHelper.createGameState(difficulty);
-        this.jsonMap = jsonMap;
     }
 
     /**
@@ -75,70 +70,16 @@ public class GameMap {
     // ********************************************************************************************\\
 
     /**
-     * Given the name of the map converts the current game map 
-     * into a json file and saves it in the designated folder.
-     * @param name (String)
-     */
-    public void saveMapAsJson(String name) {
-        try {  
-            // Writes the json file into the folder
-            FileWriter file = new FileWriter("saved_games/" + name + ".json");
-            file.write(mapToJson().toString(4));
-            file.flush();
-            file.close();
-        } catch (IOException e) {  
-            e.printStackTrace();  
-        }
-    }
-    
-    /**
-     * Given the name of the map converts the current game map 
-     * into a json file and saves it in the designated folder.
-     * @param name (String)
-     */
-    public void saveTickInstance(String name) {
-        try {  
-            // Writes the json file into the folder
-            FileWriter file = new FileWriter("time_travel_record/" + mapId + "/" + name + ".json");
-            file.write(mapToJson().toString(4));
-            file.flush();
-            file.close();
-        } catch (IOException e) {  
-            e.printStackTrace();  
-        }
-    }
-
-    /**
-     * Takes the current map of the game and converts it to 
-     * a json object.
-     * @return JsonObject of the current state of the map.
-     */
-    public JSONObject mapToJson() {
-        // Main object for file
-        JSONObject main = new JSONObject();
-        // Add all fields:
-        main.put("width", getMapWidth());
-        main.put("height", getMapHeight());
-        main.put("game-mode", gameState.getMode());
-        main.put("map-name", dungeonName);
-        main.put("map-id", mapId);
-        main.put("game-index", gameIndex);
-        main.put("goal-condition", GoalHelper.goalPatternToJson(GoalHelper.getGoalPattern(jsonMap)));
-        main.put("inventory", player.getInventory().toJSON());
-        main.put("entities", MapHelper.entitiesToJson(dungeonMap));
-        return main;
-    }
-
-    /**
      * Takes in a json object, and turns it into a Map<Position, Entity>
      * and returns it.
      * @return Map<Position, List<Entity>> form of a map corresponding to jsonMap
      */
-    public void setGameMapFromJSON(JsonObject jsonMap) {
+    public void initialiseGameMapFromJSON(JsonObject jsonMap) {
         // Initialise the map:
         this.width = jsonMap.get("width").getAsInt();
         this.height = jsonMap.get("height").getAsInt();
-        dungeonMap = MapHelper.createInitialisedMap(width, height);
+        this.dungeonMap = MapHelper.createInitialisedMap(width, height);
+
         Integer i = 0;
         for (JsonElement entity : jsonMap.getAsJsonArray("entities")) {
             // Get all attributes:
@@ -150,7 +91,9 @@ public class GameMap {
             i++;
         }
         // Swamp check if any entity is on the swamp at the start
-        swampTileCheck();
+        for (Entity e : getEntityTypeList("swamp_tile")) {
+            ((SwampTile) e).checkTile(getEntityPositionList(e.getPos()));
+        }
     }
 
 
@@ -218,6 +161,24 @@ public class GameMap {
         return null;
     }
 
+    /**
+     * Given the map and the type of entity you want, returns a list of 
+     * entities of that type on the map.
+     * @param map
+     * @param eType
+     * @return
+     */
+    public List<Entity> getEntityTypeList(String eType) {
+        List<Entity> eList = new ArrayList<>();
+        // Loop through to the entity
+        for (Map.Entry<Position, List<Entity>> entry : dungeonMap.entrySet()) {
+            for (Entity e : entry.getValue()) {
+                if (e.isType(eType)) { eList.add(e); }
+            }
+        }
+        return eList;
+    }
+
     // ********************************************************************************************\\
     //                                  Mob Spawning Functions                                     \\
     // ********************************************************************************************\\
@@ -281,33 +242,6 @@ public class GameMap {
     // ********************************************************************************************\\
     //                                     Other Functions                                         \\
     // ********************************************************************************************\\
-
-    public void swampTileCheck() {
-        // Loop through all swamp_tile entites
-        for (Entity e : MapHelper.getEntityTypeList(dungeonMap, "swamp_tile")) {
-            ((SwampTile) e).checkTile(getEntityPositionList(e.getPos()));
-        }
-    }
-
-    /**
-     * Checks if the entity is on top of a swamp tile.
-     * @param gameMap
-     * @return True is the entity is on a swamp tile, false otherwise.
-     */
-    public boolean isOnSwampTile(String id) {
-        if (id == null) { id = player.getId(); } 
-        for (Entity e : MapHelper.getEntityTypeList(dungeonMap, "swamp_tile")) {
-            if (((SwampTile) e).entityOnTile(id)) { return true; }
-        }
-        return false;
-    }
-
-    // Swamp tile tick:
-    public void swampTick() {
-        for (Entity e : MapHelper.getEntityTypeList(dungeonMap, "swamp_tile")) {
-            ((SwampTile) e).tickCount();
-        }
-    }
 
     // This function should be in player.
     /**
