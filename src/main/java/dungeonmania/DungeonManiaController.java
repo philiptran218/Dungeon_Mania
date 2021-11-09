@@ -6,6 +6,7 @@ import dungeonmania.CollectableEntities.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.gamemap.GameMap;
 import dungeonmania.gamemap.MapHelper;
+import dungeonmania.gamemap.ResponseUtility;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
@@ -21,6 +22,8 @@ import java.util.Map;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import org.eclipse.jetty.client.api.Response;
 
 public class DungeonManiaController {
     // Game Map
@@ -108,7 +111,7 @@ public class DungeonManiaController {
         // Tick save
         gameMap.saveTickInstance(gameMap.getGameIndex().toString());
         // Return DungeonResponse
-        return gameMap.returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse();
     }
     
     /**
@@ -121,7 +124,7 @@ public class DungeonManiaController {
         // Advanced 
         this.gameMap.saveMapAsJson(name);
         // Return DungeonResponse
-        return gameMap.returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse();
     }
 
     /**
@@ -135,7 +138,7 @@ public class DungeonManiaController {
         JsonObject obj = MapHelper.getSavedMap(name, null);
         this.gameMap = new GameMap(name, obj.get("map-id").getAsString());
         // Return DungeonResponse
-        return gameMap.returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse();
     }
 
     /**
@@ -237,7 +240,7 @@ public class DungeonManiaController {
         gameMap.saveTickInstance(gameMap.getGameIndex().toString());
 
         // Return DungeonResponse
-        return gameMap.returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse();
     }
 
     /**
@@ -264,7 +267,7 @@ public class DungeonManiaController {
             throw new IllegalArgumentException("Entity not interactable");
         }
 
-        return gameMap.returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse();
     }
 
     /**
@@ -309,7 +312,7 @@ public class DungeonManiaController {
             Shield newShield = new Shield("" + System.currentTimeMillis(), "shield", null);
             player.getInventory().put(newShield, player);
         }
-        return gameMap.returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse();
     }
 
 
@@ -325,7 +328,9 @@ public class DungeonManiaController {
         if (ticks <= 0) { throw new IllegalArgumentException("Invalid rewind tick."); }
         // If not enough rewind, do not do anything
         Integer gameIndex = gameMap.getGameIndex();
-        if (gameIndex + 1 < ticks || gameIndex == 0) { return gameMap.returnDungeonResponse(); }
+        if (gameIndex + 1 < ticks || gameIndex == 0) { 
+            return new ResponseUtility(gameMap).returnDungeonResponse(); 
+        }
         // Rewind
         for (int i = 0; i < ticks; i++) {
             gameIndex -= 1;
@@ -333,7 +338,7 @@ public class DungeonManiaController {
         // Load new game
         gameMap = new GameMap(gameIndex.toString(), gameMap.getMapId());
         // Return response
-        return gameMap.returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse();
     }
 
 }

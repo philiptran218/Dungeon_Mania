@@ -19,8 +19,6 @@ import dungeonmania.Battles.Battle;
 import dungeonmania.Goals.*;
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.SwampTile;
-import dungeonmania.response.models.DungeonResponse;
-import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
 public class GameMap {
@@ -31,15 +29,16 @@ public class GameMap {
     private String mapId = null;
     private Player player;
     private Battle battle;
+    private JsonObject jsonMap;
     private int width;
     private int height;
     private int gameIndex = 0;;
 
-    // Map Goals: *****************
-    private GoalInterface rootGoal;
-
     // Game State: **************
     private GameState gameState;
+
+    // Map Goals: *****************
+    private GoalInterface rootGoal;
 
     // Seed counter used for spider
     int seed;
@@ -62,6 +61,7 @@ public class GameMap {
         this.setObservers();
         this.gameState = MapHelper.createGameState(difficulty);
         this.rootGoal = GoalHelper.getGoalPattern(jsonMap);
+        this.jsonMap = jsonMap;
     }
 
     /**
@@ -79,68 +79,6 @@ public class GameMap {
     // ********************************************************************************************\\
     //                          Dungeon Response Arguments Helper Function                         \\
     // ********************************************************************************************\\
-
-    /**
-     * Returns a dungeon response based on the current state of the game.
-     * @return DungeonResponse on the current state of map.
-     */
-    public DungeonResponse returnDungeonResponse() {
-        return new DungeonResponse(getMapId(), getDungeonName(), mapToListEntityResponse(), 
-            player.getInventoryResponse(), getBuildables(), getGoals());
-    }
-
-    /**
-     * Takes an the json map object then looks at entity field and 
-     * returns all entities on the map as a list of entity response.
-     * @return List<EntityResponse> List of entity response.
-     */
-    public List<EntityResponse> mapToListEntityResponse() {
-        // EntityResponse list to help append entities on the map
-        List<EntityResponse> entityList = new ArrayList<EntityResponse>();
-        // Loops through entities on the map entities on the map
-        for (Map.Entry<Position, List<Entity>> entry : this.dungeonMap.entrySet()) {
-            for (Entity e : entry.getValue()) {
-                // Checks if the the entity is a mecenary or toast_spawner to 
-                boolean isInteractable = (e.isType("mercenary") || e.isType("zombie_toast_spawner"));
-                if (e.getType().equals("mercenary") && ((Mercenary) e).isAlly()){
-                    isInteractable = false;
-                }
-                // Add the entity to the map
-                entityList.add(new EntityResponse(e.getId(), e.getType(), e.getPos(), isInteractable));
-            }
-        }
-        return entityList;
-    }
-
-    /**
-     * Looks through the player's inventory and checks if the
-     * player has enough materials to build a bow or a shield.
-     * @return List<String> List of buildable items.
-     */
-    public List<String> getBuildables() {
-        List<String> buildable = new ArrayList<>();
-        int numWood = player.getInventory().getNoItemType("wood");
-        int numArrow = player.getInventory().getNoItemType("arrow");
-        boolean hasKey = player.hasItem("key");
-        boolean hasTreasure = player.hasItem("treasure");
-
-        // Checks if sufficient materials
-        if (numWood > 0 && numArrow > 2) {
-            buildable.add("bow");
-        }
-        if (numWood > 1 && (hasKey || hasTreasure)) {
-            buildable.add("shield");
-        }
-        return buildable;
-    }
-
-    /**
-     * Get the goals that needs to be completed for the map.
-     * @return String of goals that needs to be completed.
-     */
-    public String getGoals() {
-        return GoalHelper.goalPatternToString(this.getRootGoal(), this.getMap());
-    }
 
 
     // ********************************************************************************************\\
@@ -247,6 +185,19 @@ public class GameMap {
                     entityList.add((MovingEntity) e);
                 }
             }
+        }
+        return entityList;
+    }
+
+    /**
+     * Returns a list of all entities on the map.
+     * @return List<Entity> List of entity on the map.
+     */
+    public List<Entity> getAllEntity() {
+        List<Entity> entityList = new ArrayList<>();
+        // Loop through the map entities to check for moving entity
+        for (Map.Entry<Position, List<Entity>> entry : dungeonMap.entrySet()) {
+            for (Entity e : entry.getValue()) { entityList.add(e); }
         }
         return entityList;
     }
@@ -439,10 +390,6 @@ public class GameMap {
         player.registerObserver(player);
     }
 
-    public GoalInterface getRootGoal() {
-        return rootGoal;
-    }
-
     public Battle getBattle() {
         return battle;
     }
@@ -458,5 +405,13 @@ public class GameMap {
 
     public void incrementGameIndex() {
         this.gameIndex = gameIndex + 1;
+    }
+
+    public GoalInterface getRootGoal() {
+        return rootGoal;
+    }
+
+    public JsonObject getJsonMap() {
+        return jsonMap;
     }
 }
