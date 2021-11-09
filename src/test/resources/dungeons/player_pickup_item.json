@@ -153,6 +153,16 @@
         "x": 2,
         "y": 3,
         "type": "bomb"
+      },
+      {
+        "x": 3,
+        "y": 3,
+        "type": "sun_stone"
+      },
+      {
+        "x": 4,
+        "y": 3,
+        "type": "anduril"
       }
     ],
     "goal-condition": {
