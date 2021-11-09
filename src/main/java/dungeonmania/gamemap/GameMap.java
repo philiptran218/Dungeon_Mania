@@ -51,7 +51,7 @@ public class GameMap {
         this.player.setBattle(battle);
         this.setPlayerInventory(jsonMap);
         this.setObservers();
-        this.gameState = MapHelper.createGameState(difficulty);
+        this.gameState = MapUtility.createGameState(difficulty);
     }
 
     /**
@@ -59,8 +59,8 @@ public class GameMap {
      * @param name (String)
      */
     public GameMap(String name, String mapId) {
-        this(MapHelper.getSavedMap(name, mapId).get("game-mode").getAsString(), 
-            MapHelper.getSavedMap(name, mapId).get("map-name").getAsString(), MapHelper.getSavedMap(name, mapId));
+        this(MapUtility.getSavedMap(name, mapId).get("game-mode").getAsString(), 
+            MapUtility.getSavedMap(name, mapId).get("map-name").getAsString(), MapUtility.getSavedMap(name, mapId));
         // Set the mapID
         this.mapId = mapId;
     }
@@ -78,7 +78,7 @@ public class GameMap {
         // Initialise the map:
         this.width = jsonMap.get("width").getAsInt();
         this.height = jsonMap.get("height").getAsInt();
-        this.dungeonMap = MapHelper.createInitialisedMap(width, height);
+        this.dungeonMap = MapUtility.createInitialisedMap(width, height);
 
         Integer i = 0;
         for (JsonElement entity : jsonMap.getAsJsonArray("entities")) {
@@ -293,11 +293,11 @@ public class GameMap {
         return this.gameState;
     }
 
-    public int getMapHeight() {
+    public int getHeight() {
         return this.height;
     }
 
-    public int getMapWidth() {
+    public int getWidth() {
         return this.width;
     }
 

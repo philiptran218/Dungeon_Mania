@@ -19,7 +19,7 @@ import dungeonmania.Goals.GoalHelper;
 import dungeonmania.StaticEntities.SwampTile;
 import dungeonmania.util.Position;
 
-public class MapHelper {
+public class MapUtility {
 
     // ****************************************************************************************************\\
     //                                           Map Conversion                                            \\
@@ -49,8 +49,8 @@ public class MapHelper {
         // Main object for file
         JSONObject main = new JSONObject();
         // Add all fields:
-        main.put("width", map.getMapWidth());
-        main.put("height", map.getMapHeight());
+        main.put("width", map.getWidth());
+        main.put("height", map.getHeight());
         main.put("game-mode", map.getGameState().getMode());
         main.put("map-name", map.getDungeonName());
         main.put("map-id", map.getMapId());
@@ -59,28 +59,6 @@ public class MapHelper {
         main.put("inventory", map.getPlayer().getInventory().toJSON());
         main.put("entities", entitiesToJson(map));
         return main;
-    }
-
-    // ****************************************************************************************************\\
-    //                                        Getting JSON File                                            \\
-    // ****************************************************************************************************\\
-
-    /**
-     * Given the name of a saved file, attempts to look for the game
-     * and return it as a JsonObject
-     * @param name (String)
-     * @return JsonObject file of the saved game.
-     */
-    public static JsonObject getSavedMap(String name, String mapId) {
-        try {
-            return JsonParser.parseReader(new FileReader("saved_games\\" + name + ".json")).getAsJsonObject();
-        } catch (Exception e) {
-            try {
-                return JsonParser.parseReader(new FileReader("time_travel_record\\" + mapId + "\\" + name + ".json")).getAsJsonObject();
-            } catch (Exception c) {
-                throw new IllegalArgumentException("File not found.");
-            }
-        }
     }
 
     // ****************************************************************************************************\\
@@ -121,7 +99,25 @@ public class MapHelper {
         }
     }
 
+    /**
+     * Given the name of a saved file, attempts to look for the game
+     * and return it as a JsonObject
+     * @param name (String)
+     * @return JsonObject file of the saved game.
+     */
+    public static JsonObject getSavedMap(String name, String mapId) {
+        try {
+            return JsonParser.parseReader(new FileReader("saved_games\\" + name + ".json")).getAsJsonObject();
+        } catch (Exception e) {
+            try {
+                return JsonParser.parseReader(new FileReader("time_travel_record\\" + mapId + "\\" + name + ".json")).getAsJsonObject();
+            } catch (Exception c) {
+                throw new IllegalArgumentException("File not found.");
+            }
+        }
+    }
 
+    
     // ****************************************************************************************************\\
     //                                     Game Initialisation Helper                                      \\
     // ****************************************************************************************************\\

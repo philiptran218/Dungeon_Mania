@@ -5,7 +5,7 @@ import dungeonmania.StaticEntities.*;
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.gamemap.GameMap;
-import dungeonmania.gamemap.MapHelper;
+import dungeonmania.gamemap.MapUtility;
 import dungeonmania.gamemap.ResponseUtility;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
@@ -107,7 +107,7 @@ public class DungeonManiaController {
         File theDir = new File("time_travel_record/" + gameMap.getMapId());
         if (!theDir.exists()){ theDir.mkdirs(); }
         // Tick save
-        MapHelper.saveTickInstance(gameMap, gameMap.getGameIndex().toString());
+        MapUtility.saveTickInstance(gameMap, gameMap.getGameIndex().toString());
         // Return DungeonResponse
         return new ResponseUtility(gameMap).returnDungeonResponse();
     }
@@ -120,7 +120,7 @@ public class DungeonManiaController {
      */
     public DungeonResponse saveGame(String name) throws IllegalArgumentException {
         // Advanced 
-        MapHelper.saveMapAsJson(gameMap, name);
+        MapUtility.saveMapAsJson(gameMap, name);
         // Return DungeonResponse
         return new ResponseUtility(gameMap).returnDungeonResponse();
     }
@@ -133,7 +133,7 @@ public class DungeonManiaController {
      * @throws IllegalArgumentException
      */
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
-        JsonObject obj = MapHelper.getSavedMap(name, null);
+        JsonObject obj = MapUtility.getSavedMap(name, null);
         this.gameMap = new GameMap(name, obj.get("map-id").getAsString());
         // Return DungeonResponse
         return new ResponseUtility(gameMap).returnDungeonResponse();
@@ -173,8 +173,7 @@ public class DungeonManiaController {
      */
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
         // If itemUsed is NULL move the player:
-        System.out.println(MapHelper.isOnSwampTile(gameMap, null));
-        if (itemUsed == null && !MapHelper.isOnSwampTile(gameMap, null)) {
+        if (itemUsed == null && !MapUtility.isOnSwampTile(gameMap, null)) {
             gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
         } else if (itemUsed != null) {
             // Get the entity on map:
@@ -186,7 +185,7 @@ public class DungeonManiaController {
         
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
-            if (!(e.getPos().equals(e.getPlayerPos()) && !e.isType("mercenary")) && !MapHelper.isOnSwampTile(gameMap, e.getId())) {
+            if (!(e.getPos().equals(e.getPlayerPos()) && !e.isType("mercenary")) && !MapUtility.isOnSwampTile(gameMap, e.getId())) {
                 e.move(gameMap.getMap());
             }
         }
@@ -229,11 +228,11 @@ public class DungeonManiaController {
 
         // Check for swamp tile after all movements has occured,
         // and removes accordinly as well as tick each one.
-        MapHelper.swampTileTick(gameMap);
+        MapUtility.swampTileTick(gameMap);
 
         // Save the file:
         gameMap.incrementGameIndex();
-        MapHelper.saveTickInstance(gameMap, gameMap.getGameIndex().toString());
+        MapUtility.saveTickInstance(gameMap, gameMap.getGameIndex().toString());
 
         // Return DungeonResponse
         return new ResponseUtility(gameMap).returnDungeonResponse();
