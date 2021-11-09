@@ -2,6 +2,7 @@ package dungeonmania;
 
 import java.util.List;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import dungeonmania.CollectableEntities.*;
@@ -76,22 +77,16 @@ public class EntityFactory {
                 return new Bow(id, type, collectPos);
             case "shield": 
                 return new Shield(id, type, collectPos);
-            case "player":
-
-            // if (temp.isType("player")) {
-            //     Player player = (Player) temp;
-            //     this.player = player;
-            //     this.entryLocation = temp.getPos();
-            //     if (obj.getAsJsonArray("active_potions") != null) {
-            //         for (JsonElement potionElem : obj.getAsJsonArray("active_potions")) {
-            //             JsonObject potionJSON = potionElem.getAsJsonObject();
-            //             String type = potionJSON.get("type").getAsString();
-            //             Integer duration = potionJSON.get("duration").getAsInt();
-            //             player.getPotions().put(type, duration);
-            //         }
-            //     }
-            // }
+            case "time_turner":
+                return new TimeTuner(id, type, collectPos);
+            case "player": 
                 Player player = new Player(id, type, movingPos);
+                if (jsonObj.getAsJsonArray("active_potions") != null) {
+                    for (JsonElement potionElem : jsonObj.getAsJsonArray("active_potions")) {
+                        JsonObject potionJSON = potionElem.getAsJsonObject();
+                        player.getPotions().put(potionJSON.get("type").getAsString(), potionJSON.get("duration").getAsInt());
+                    }
+                }
                 gameMap.setPlayer(player);
                 return player;
             case "swamp_tile": 
