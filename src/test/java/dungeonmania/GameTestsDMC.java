@@ -54,17 +54,17 @@ public class GameTestsDMC {
         DungeonManiaController newDungeon = new DungeonManiaController();
 
         // Try all valid combinations of dungeon name to game mode:
-        assertDoesNotThrow(() -> newDungeon.newGame("advanced", "Peaceful"));
-        assertDoesNotThrow(() -> newDungeon.newGame("boulders", "Peaceful"));
-        assertDoesNotThrow(() -> newDungeon.newGame("maze", "Peaceful"));
+        assertDoesNotThrow(() -> newDungeon.newGame("advanced", "peaceful"));
+        assertDoesNotThrow(() -> newDungeon.newGame("boulders", "peaceful"));
+        assertDoesNotThrow(() -> newDungeon.newGame("maze", "peaceful"));
 
-        assertDoesNotThrow(() -> newDungeon.newGame("advanced", "Standard"));
-        assertDoesNotThrow(() -> newDungeon.newGame("boulders", "Standard"));
-        assertDoesNotThrow(() -> newDungeon.newGame("maze", "Standard"));
+        assertDoesNotThrow(() -> newDungeon.newGame("advanced", "standard"));
+        assertDoesNotThrow(() -> newDungeon.newGame("boulders", "standard"));
+        assertDoesNotThrow(() -> newDungeon.newGame("maze", "standard"));
 
-        assertDoesNotThrow(() -> newDungeon.newGame("advanced", "Hard"));
-        assertDoesNotThrow(() -> newDungeon.newGame("boulders", "Hard"));
-        assertDoesNotThrow(() -> newDungeon.newGame("maze", "Hard"));
+        assertDoesNotThrow(() -> newDungeon.newGame("advanced", "hard"));
+        assertDoesNotThrow(() -> newDungeon.newGame("boulders", "hard"));
+        assertDoesNotThrow(() -> newDungeon.newGame("maze", "hard"));
     }
 
     @Test
@@ -73,7 +73,7 @@ public class GameTestsDMC {
         DungeonManiaController newDungeon = new DungeonManiaController();
         
         // Try invalid dungeon names and game modes
-        assertThrows(IllegalArgumentException.class, () -> newDungeon.newGame("IncorrectDungeonName", "Peaceful"));
+        assertThrows(IllegalArgumentException.class, () -> newDungeon.newGame("IncorrectDungeonName", "peaceful"));
         assertThrows(IllegalArgumentException.class, () -> newDungeon.newGame("advanced", "Incorrect game mode"));
         assertThrows(IllegalArgumentException.class, () -> newDungeon.newGame("Incorrect", "Incorrect"));
     }
@@ -83,7 +83,7 @@ public class GameTestsDMC {
         // Create dungeon controller
         DungeonManiaController newDungeon = new DungeonManiaController();
         // Create multiple games:
-        newDungeon.newGame("file1", "Peaceful");
+        newDungeon.newGame("file1", "peaceful");
         newDungeon.saveGame("test");
         Thread.sleep(3000);
         deleteSavedGames("test");
@@ -96,7 +96,7 @@ public class GameTestsDMC {
 
         assertDoesNotThrow(() -> {
             // Create multiple games:
-            newDungeon.newGame("file1", "Peaceful");
+            newDungeon.newGame("file1", "peaceful");
             newDungeon.saveGame("loadGame");
             newDungeon.loadGame("loadGame");
         });
@@ -130,7 +130,7 @@ public class GameTestsDMC {
     public void testInvalidInteractables() {
             // Create dungeon controller
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse game = newDungeon.newGame("player_invalid_interactions", "Peaceful");
+        DungeonResponse game = newDungeon.newGame("player_invalid_interactions", "peaceful");
 
         String zombieId = getEntityId(new Position(1, 2, 3), game);
         assertThrows(IllegalArgumentException.class, () -> newDungeon.interact(zombieId));

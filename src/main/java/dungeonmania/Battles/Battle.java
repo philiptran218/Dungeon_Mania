@@ -48,7 +48,7 @@ public class Battle {
     }
 
     public void setInitialState() {
-        if (this.getDifficulty().equals("Peaceful")) {
+        if (this.getDifficulty().equals("peaceful")) {
             this.setBattleState(PeacefulState);
         }
         else {

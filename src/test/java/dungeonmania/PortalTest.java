@@ -51,7 +51,7 @@ public class PortalTest {
         DungeonManiaController controller = new DungeonManiaController();
         DungeonResponse tmp;
         // Create new game
-        DungeonResponse r = controller.newGame("portal_test_big", "Peaceful");
+        DungeonResponse r = controller.newGame("portal_test_big", "peaceful");
         String id = getPlayer(r.getEntities());
 
         // Movements around the portal:

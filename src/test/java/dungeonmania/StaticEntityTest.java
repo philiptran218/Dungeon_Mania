@@ -43,7 +43,7 @@ public class StaticEntityTest {
         // Create dungeon controller
         DungeonManiaController newDungeon = new DungeonManiaController();
         DungeonResponse temp;
-        DungeonResponse createNew = newDungeon.newGame("advanced", "Peaceful");
+        DungeonResponse createNew = newDungeon.newGame("advanced", "peaceful");
         String playerId = getEntityId(new Position(1, 1, 3), createNew);
         // Move up and checks if wall stops the player 
         temp = newDungeon.tick(null, Direction.UP);
@@ -54,7 +54,7 @@ public class StaticEntityTest {
     public void testBoulder() {
         DungeonManiaController newDungeon = new DungeonManiaController();
         DungeonResponse temp;
-        DungeonResponse createNew = newDungeon.newGame("boulders", "Peaceful");
+        DungeonResponse createNew = newDungeon.newGame("boulders", "peaceful");
         String playerId = getEntityId(new Position(2, 2, 3), createNew);
         String boulder = getEntityId(new Position(3, 2, 1), createNew);
         temp = newDungeon.tick(null, Direction.RIGHT);
@@ -70,7 +70,7 @@ public class StaticEntityTest {
     public void testUnlockedDoor() {
         DungeonManiaController newDungeon = new DungeonManiaController();
         DungeonResponse temp;
-        DungeonResponse createNew = newDungeon.newGame("door", "Peaceful");
+        DungeonResponse createNew = newDungeon.newGame("door", "peaceful");
         String playerId = getEntityId(new Position(1, 1, 3), createNew);
         temp = newDungeon.tick(null, Direction.RIGHT);
         temp = newDungeon.tick(null, Direction.RIGHT);
@@ -81,7 +81,7 @@ public class StaticEntityTest {
     public void testLockedDoor() {
         DungeonManiaController newDungeon = new DungeonManiaController();
         DungeonResponse temp;
-        DungeonResponse createNew = newDungeon.newGame("door", "Peaceful");
+        DungeonResponse createNew = newDungeon.newGame("door", "peaceful");
         String playerId = getEntityId(new Position(1, 1, 3), createNew);
         temp = newDungeon.tick(null, Direction.DOWN);
         temp = newDungeon.tick(null, Direction.RIGHT);
@@ -94,7 +94,7 @@ public class StaticEntityTest {
     @Test
     public void testZombieSpawner() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawn", "Hard");
+        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawn", "hard");
         temp = newDungeon.tick(null, Direction.UP);
         temp = newDungeon.tick(null, Direction.UP);
         temp = newDungeon.tick(null, Direction.UP);
@@ -116,7 +116,7 @@ public class StaticEntityTest {
     @Test
     public void testZombieSpawnerStandard() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawn", "Standard");
+        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawn", "standard");
         temp = newDungeon.tick(null, Direction.UP);
         temp = newDungeon.tick(null, Direction.UP);
         temp = newDungeon.tick(null, Direction.UP);
@@ -144,7 +144,7 @@ public class StaticEntityTest {
     @Test
     public void testInteractionZombieSpawner() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawner", "Hard");
+        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawner", "hard");
         temp = newDungeon.tick(null, Direction.RIGHT);
         String spawner = getEntityId(new Position(3, 1, 1), temp);
         temp = newDungeon.interact(spawner);
@@ -153,7 +153,7 @@ public class StaticEntityTest {
     @Test
     public void testZombieSpawnerBow() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawner_bow", "Standard");
+        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawner_bow", "standard");
         String spawner = getEntityId(new Position(3, 1, 1), temp);
         temp = newDungeon.tick(null, Direction.DOWN);
         temp = newDungeon.tick(null, Direction.RIGHT);
@@ -168,7 +168,7 @@ public class StaticEntityTest {
     @Test
     public void testNotInRangeException() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse createNew = newDungeon.newGame("zombie_toast_spawner", "Hard");
+        DungeonResponse createNew = newDungeon.newGame("zombie_toast_spawner", "hard");
         String spawner = getEntityId(new Position(3, 1, 1), createNew);
         assertThrows(InvalidActionException.class, () -> newDungeon.interact(spawner));
     }
@@ -176,7 +176,7 @@ public class StaticEntityTest {
     @Test
     public void testNoWeaponException() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse createNew = newDungeon.newGame("zombie_toast_spawner", "Hard");
+        DungeonResponse createNew = newDungeon.newGame("zombie_toast_spawner", "hard");
         String spawner = getEntityId(new Position(3, 1, 1), createNew);
         newDungeon.tick(null, Direction.DOWN);
         newDungeon.tick(null, Direction.RIGHT);
@@ -189,7 +189,7 @@ public class StaticEntityTest {
     @Test
     public void testDetonateBomb() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "Peaceful");
+        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "peaceful");
         DungeonResponse tmp;
         String playerId = getEntityId(new Position(1, 1, 3), createNew);
         String boulderId = getEntityId(new Position(3, 2, 1), createNew);
@@ -212,7 +212,7 @@ public class StaticEntityTest {
     @Test
     public void testDetonateBombAfterPickUp() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "Peaceful");
+        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "peaceful");
         DungeonResponse tmp;
         String playerId = getEntityId(new Position(1, 1, 3), createNew);
         String boulderId = getEntityId(new Position(3, 2, 1), createNew);
@@ -249,7 +249,7 @@ public class StaticEntityTest {
     @Test
     public void testBombKillMobs() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "Peaceful");
+        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "peaceful");
         DungeonResponse tmp;
         String playerId = getEntityId(new Position(1, 1, 3), createNew);
         String boulderId = getEntityId(new Position(3, 2, 1), createNew);
@@ -275,7 +275,7 @@ public class StaticEntityTest {
     @Test
     public void testDetonationRadius() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "Peaceful");
+        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "peaceful");
         DungeonResponse tmp;
         String playerId = getEntityId(new Position(1, 1, 3), createNew);
         String boulderId = getEntityId(new Position(3, 2, 1), createNew);

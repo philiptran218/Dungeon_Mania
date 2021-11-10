@@ -92,7 +92,7 @@ public class DungeonManiaController {
      * @throws IllegalArgumentException
      */
     public DungeonResponse newGame(String dungeonName, String gameMode) throws IllegalArgumentException {
-        if (!getGameModes().contains(gameMode)) {
+        if (!getGameModes().contains(gameMode.toLowerCase())) {
             throw new IllegalArgumentException("Game mode does not exist.");
         }
         // Set map:
