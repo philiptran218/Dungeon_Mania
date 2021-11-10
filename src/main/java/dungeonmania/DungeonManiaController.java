@@ -79,9 +79,11 @@ public class DungeonManiaController {
             String jsonString = FileLoader.loadResourceFile("/dungeons/" + fileName + ".json");
             return new Gson().fromJson(jsonString, JsonObject.class);
         } catch (Exception e) {
-                throw new IllegalArgumentException("File not found.");
+            throw new IllegalArgumentException("File not found.");
         }
     }
+
+    
     
     /**
      * Creates a new game in the ManiaController, and throw IllegalArgumentException
@@ -96,6 +98,7 @@ public class DungeonManiaController {
             throw new IllegalArgumentException("Game mode does not exist.");
         }
         // Set map:
+        System.out.println(getJsonFile(dungeonName));
         this.gameMap = new GameMap(gameMode, dungeonName, getJsonFile(dungeonName));
         // Return DungeonResponse
         return gameMap.returnDungeonResponse();
