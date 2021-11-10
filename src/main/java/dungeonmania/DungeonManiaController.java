@@ -2,7 +2,6 @@ package dungeonmania;
 
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
-import dungeonmania.CollectableEntities.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.gamemap.EnermySpawner;
 import dungeonmania.gamemap.GameMap;
@@ -14,7 +13,6 @@ import dungeonmania.util.FileLoader;
 import dungeonmania.util.Position;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +21,6 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 public class DungeonManiaController {
     // Game Map
