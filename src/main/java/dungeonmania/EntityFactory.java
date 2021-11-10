@@ -105,7 +105,7 @@ public class EntityFactory {
                 }
                 Integer i = 0;
                 // Set Player inventory:
-                if (jsonObj.getAsJsonArray("active_potions") != null) {
+                if (jsonObj.getAsJsonArray("inventory") != null) {
                     for (JsonElement entity : jsonObj.getAsJsonArray("inventory")) {
                         JsonObject obj = entity.getAsJsonObject();
                         Entity collectable = EntityFactory.getEntityObject("inventItem" + i, new Position(0, 0), obj, gameMap);
@@ -118,10 +118,20 @@ public class EntityFactory {
             case "swamp_tile": 
                 SwampTile swamp = new SwampTile(id, type, absolPos, jsonObj.get("movement_factor").getAsInt());
                 if (jsonObj.get("entites_on_tile") != null) {
-                    MapUtility.addEntityToSwampTile(swamp, jsonObj, gameMap);
-                    // Checks if the player is on the swamp tile:
-                    List<Entity> playerCheck = gameMap.getEntityTypeList("player");
-                    if (!playerCheck.isEmpty()) { gameMap.setPlayer((Player) playerCheck.get(0)); }
+                    // Create and add all existing objects on the tile
+                    Integer j = 1;
+                    for (JsonElement entity : jsonObj.getAsJsonArray("entites_on_tile")) {
+                        JsonObject jObject = entity.getAsJsonObject();
+                        Position ePos = new Position(jObject.get("x").getAsInt(), jObject.get("y").getAsInt());
+                        String newId = swamp.getId() + "onswamptile" + j;
+                        // Create the object:
+                        Entity e = EntityFactory.getEntityObject(newId, ePos, jObject, gameMap);
+                        // Add to map
+                        gameMap.getMap().get(e.getPos()).add(e);
+                        // Add to swamp map
+                        swamp.addToMap(e, jObject.get("ticks_remaining").getAsInt());
+                        j++;
+                    }
                 }
                 return swamp;
             default: 

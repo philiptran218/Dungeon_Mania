@@ -14,7 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import dungeonmania.Entity;
-import dungeonmania.EntityFactory;
 import dungeonmania.Goals.GoalUtility;
 import dungeonmania.StaticEntities.SwampTile;
 import dungeonmania.util.Position;
@@ -36,7 +35,7 @@ public class MapUtility {
         // Add all entities on the map
         for (Entity e : gameMap.getAllEntity()) {
             // Check if it is on a swamp tile and dont put if it is:
-            if (!isOnSwampTile(gameMap, e.getId())) { jsonArray.put(e.toJSONObject()); } 
+            if (!entityOnASwampTile(gameMap, e.getId())) { jsonArray.put(e.toJSONObject()); } 
         }
         return jsonArray;
     }
@@ -157,15 +156,15 @@ public class MapUtility {
 
 
     // ****************************************************************************************************\\
-    //                                   SwampTile Helper Functions                                        \\
+    //                                 SwampTile Map Helper Functions                                      \\
     // ****************************************************************************************************\\
 
     /**
-     * Given the GameMap object, checks if anything entity is on the 
-     * tile currently.
+     * Given the game map, adds entities that have just made its way onto the tile
+     * and tick all exisitng entities on the tile by one tick.
      * @param map
      */
-    public static void swampTileTick(GameMap map) {
+    public static void tickAllSwampTiles(GameMap map) {
         // Loop through all swamp_tile entites
         for (Entity e : map.getEntityTypeList("swamp_tile")) {
             ((SwampTile) e).tickCount();
@@ -178,33 +177,13 @@ public class MapUtility {
      * @param gameMap
      * @return True is the entity is on a swamp tile, false otherwise.
      */
-    public static boolean isOnSwampTile(GameMap map, String id) {
+    public static boolean entityOnASwampTile(GameMap map, String id) {
         if (id == null) { id = map.getPlayer().getId(); }
 
         for (Entity e : map.getEntityTypeList("swamp_tile")) {
             if (((SwampTile) e).entityOnTile(id)) { return true; }
         }
         return false;
-    }
-
-    /**
-     * If there are entities on the tile when loading the game, add them to the 
-     * tile list.
-     */
-    public static void addEntityToSwampTile(SwampTile swapTile, JsonObject obj, GameMap gameMap) {
-        Integer i = 1;
-        for (JsonElement entity : obj.getAsJsonArray("entites_on_tile")) {
-            JsonObject jObject = entity.getAsJsonObject();
-            Position pos = new Position(jObject.get("x").getAsInt(), jObject.get("y").getAsInt());
-            String id = swapTile.getId() + "onswamptile" + i;
-            // Create the object:
-            Entity e = EntityFactory.getEntityObject(id, pos, jObject, gameMap);
-            // Add to map
-            gameMap.getMap().get(e.getPos()).add(e);
-            // Add to swamp map
-            swapTile.addToMap(e, jObject.get("ticks_remaining").getAsInt());
-            i++;
-        }
     }
 
 }
