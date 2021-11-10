@@ -105,7 +105,7 @@ public class EntityFactory {
                 }
                 Integer i = 0;
                 // Set Player inventory:
-                if (jsonObj.getAsJsonArray("active_potions") != null) {
+                if (jsonObj.getAsJsonArray("inventory") != null) {
                     for (JsonElement entity : jsonObj.getAsJsonArray("inventory")) {
                         JsonObject obj = entity.getAsJsonObject();
                         Entity collectable = EntityFactory.getEntityObject("inventItem" + i, new Position(0, 0), obj, gameMap);
