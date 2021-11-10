@@ -285,12 +285,17 @@ public class DungeonManiaController {
         if (isNotValidBuildable(buildable)) {
             throw new IllegalArgumentException();
         }
-        
         Inventory playerInv = gameMap.getPlayer().getInventory();
         // Checks if player has enough materials to build the item
         if (!playerInv.hasEnoughMaterials(buildable)) {
             throw new InvalidActionException("Not enough materials!");
         }
+        Boolean hasZombie = gameMap.getMovingEntityList().stream().anyMatch(e -> e.getType().equals("zombie_toast"));
+        // Checks if there are zombies in map while building midnight armour
+        if (buildable.equals("midnight_armour") && hasZombie) {
+            throw new InvalidActionException("Cannot build midnight armour. Zombies are present.");
+        }
+
         // Player can then build the item
         playerInv.buildItem(buildable);
         return new ResponseUtility(gameMap).returnDungeonResponse();
