@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -74,15 +75,11 @@ public class DungeonManiaController {
      * @return Dungeon Map as JsonObject
      */
     public JsonObject getJsonFile(String fileName) {
-        // "src\\main\\resources\\dungeons\\" + dungeonName + ".json"
         try {
-            return JsonParser.parseReader(new FileReader("src\\main\\resources\\dungeons\\" + fileName + ".json")).getAsJsonObject();
+            String jsonString = FileLoader.loadResourceFile("/dungeons/" + fileName + ".json");
+            return new Gson().fromJson(jsonString, JsonObject.class);
         } catch (Exception e) {
-            try {
-                return JsonParser.parseReader(new FileReader("src\\test\\resources\\dungeons\\" + fileName + ".json")).getAsJsonObject();
-            } catch (Exception r) {
                 throw new IllegalArgumentException("File not found.");
-            }
         }
     }
     
