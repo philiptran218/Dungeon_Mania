@@ -49,7 +49,7 @@ public class CollectableEntityTest {
     @Test
     public void testCollectablePickup() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("player_pickup_item", "Peaceful");
+        newDungeon.newGame("player_pickup_item", "peaceful");
         List<ItemResponse> inv;
         
         inv = newDungeon.tick(null, Direction.RIGHT).getInventory();
@@ -84,7 +84,7 @@ public class CollectableEntityTest {
     @Test
     public void testUsedCollectable() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("player_pickup_item", "Peaceful");
+        newDungeon.newGame("player_pickup_item", "peaceful");
 
         DungeonResponse temp = newDungeon.tick(null, Direction.RIGHT);
 
@@ -117,7 +117,7 @@ public class CollectableEntityTest {
     @Test
     public void testUnusableItem() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse tmp = newDungeon.newGame("simpleTreasure", "Peaceful");
+        DungeonResponse tmp = newDungeon.newGame("simpleTreasure", "peaceful");
         String treasure = getEntityId(new Position(4, 1, 2), tmp);
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
@@ -131,7 +131,7 @@ public class CollectableEntityTest {
     @Test
     public void testSuccessfulBuildBow() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("build_bow", "Peaceful");
+        newDungeon.newGame("build_bow", "peaceful");
         List<ItemResponse> inv;
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
@@ -145,7 +145,7 @@ public class CollectableEntityTest {
     @Test
     public void testSuccessfulBuildShieldTreasure() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("build_shield", "Peaceful");
+        newDungeon.newGame("build_shield", "peaceful");
         List<ItemResponse> inv;
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
@@ -158,7 +158,7 @@ public class CollectableEntityTest {
     @Test
     public void testSuccessfulBuildShieldKey() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("build_shield_key", "Peaceful");
+        newDungeon.newGame("build_shield_key", "peaceful");
         List<ItemResponse> inv;
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
@@ -172,7 +172,7 @@ public class CollectableEntityTest {
     @Test
     public void testUnsuccessfulBuildBow() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("build_bow", "Peaceful");
+        newDungeon.newGame("build_bow", "peaceful");
         newDungeon.tick(null, Direction.RIGHT);
         assertThrows(InvalidActionException.class, () -> newDungeon.build("bow"));
     }
@@ -181,7 +181,7 @@ public class CollectableEntityTest {
     @Test
     public void testUnsuccessfulBuildShield() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("build_shield", "Peaceful");
+        newDungeon.newGame("build_shield", "peaceful");
         newDungeon.tick(null, Direction.RIGHT);
         assertThrows(InvalidActionException.class, () -> newDungeon.build("shield"));
     }
@@ -190,7 +190,7 @@ public class CollectableEntityTest {
     @Test
     public void testInvalidBuild() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("build_bow", "Peaceful");
+        newDungeon.newGame("build_bow", "peaceful");
         newDungeon.tick(null, Direction.RIGHT);
         assertThrows(IllegalArgumentException.class, () -> newDungeon.build("invalid"));
     }
@@ -199,7 +199,7 @@ public class CollectableEntityTest {
     @Test
     public void testInviniciblePotionZombie() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse tmp = newDungeon.newGame("invincibleWithZombie", "Standard");
+        DungeonResponse tmp = newDungeon.newGame("invincibleWithZombie", "standard");
         String zombieId = getEntityId(new Position(3, 1, 3), tmp);
         String potionId = getEntityId(new Position(7, 1, 2), tmp);
         tmp = newDungeon.tick(null, Direction.LEFT);
@@ -212,7 +212,7 @@ public class CollectableEntityTest {
     @Test
     public void testInviniciblePotionMerc() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse tmp = newDungeon.newGame("invincibleWithMerc", "Standard");
+        DungeonResponse tmp = newDungeon.newGame("invincibleWithMerc", "standard");
         String mercId = getEntityId(new Position(3, 1, 3), tmp);
         String potionId = getEntityId(new Position(7, 1, 2), tmp);
         tmp = newDungeon.tick(null, Direction.LEFT);
@@ -225,7 +225,7 @@ public class CollectableEntityTest {
     @Test
     public void testInviniciblePotionSpider() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse tmp = newDungeon.newGame("invincibleWithSpider", "Standard");
+        DungeonResponse tmp = newDungeon.newGame("invincibleWithSpider", "standard");
         String spiderId = getEntityId(new Position(3, 1, 3), tmp);
         String potionId = getEntityId(new Position(7, 1, 2), tmp);
         tmp = newDungeon.tick(null, Direction.LEFT);
@@ -237,7 +237,7 @@ public class CollectableEntityTest {
     @Test
     public void testUseTreasure() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse tmp = newDungeon.newGame("mercenary", "Peaceful");
+        DungeonResponse tmp = newDungeon.newGame("mercenary", "peaceful");
         String treasure = getEntityId(new Position(2, 1, 2), tmp);
         newDungeon.tick(null, Direction.RIGHT);
         assertThrows(IllegalArgumentException.class, () -> newDungeon.tick(treasure, null));
@@ -245,21 +245,21 @@ public class CollectableEntityTest {
     @Test
     public void testItemNotInInventory() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse tmp = newDungeon.newGame("advanced", "Peaceful");
+        DungeonResponse tmp = newDungeon.newGame("advanced", "peaceful");
         String invinc = getEntityId(new Position(11, 10, 2), tmp);
         assertThrows(InvalidActionException.class, () -> newDungeon.tick(invinc, null));
     }
     @Test
     public void testEntityExists() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse tmp = newDungeon.newGame("advanced", "Peaceful");
+        DungeonResponse tmp = newDungeon.newGame("advanced", "peaceful");
         String entity = getEntityId(new Position(2, 2, 2), tmp);
         assertThrows(IllegalArgumentException.class, () -> newDungeon.interact(entity));
     }
     @Test
     public void testEntityNotInteractable() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse tmp = newDungeon.newGame("advanced", "Peaceful");
+        DungeonResponse tmp = newDungeon.newGame("advanced", "peaceful");
         String entity = getEntityId(new Position(0, 2, 1), tmp);
         assertThrows(IllegalArgumentException.class, () -> newDungeon.interact(entity));
     }

@@ -146,9 +146,9 @@ public class MapUtility {
      * @param difficulty (String)
      */
     public static GameState createGameState(String difficulty) {
-        if (difficulty.equals("Peaceful")) {
+        if (difficulty.equals("peaceful")) {
             return new PeacefulState();
-        } else if (difficulty.equals("Standard")) {
+        } else if (difficulty.equals("standard")) {
             return new StandardState();
         } else {
             return new HardState();
