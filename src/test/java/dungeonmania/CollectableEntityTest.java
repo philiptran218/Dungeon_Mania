@@ -195,6 +195,66 @@ public class CollectableEntityTest {
         assertThrows(IllegalArgumentException.class, () -> newDungeon.build("invalid"));
     }
 
+    // Tests building a sceptre with wood and treasure
+    @Test
+    public void testSuccessfulBuildSceptreWoodTreasure() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("build_sceptre_wood_treasure", "Peaceful");
+        // Test building with no materials first
+        assertThrows(InvalidActionException.class, () -> newDungeon.build("sceptre"));
+
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.DOWN);
+        newDungeon.tick(null, Direction.LEFT);
+        List<ItemResponse> inv = newDungeon.build("sceptre").getInventory();
+        assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("sceptre")));
+    }
+
+    // Tests building a sceptre with arrow and key
+    @Test
+    public void testSuccessfulBuildSceptreArrowKey() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("build_sceptre_arrow_key", "Peaceful");
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.DOWN);
+        newDungeon.tick(null, Direction.LEFT);
+        List<ItemResponse> inv = newDungeon.build("sceptre").getInventory();
+        assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("sceptre")));
+    }
+
+    // Tests successfully building a midnight armour (no zombies)
+    @Test
+    public void testSuccessfulBuildMidnightArmour() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("build_midnight_armour", "Peaceful");
+        // Test building with no materials first
+        assertThrows(InvalidActionException.class, () -> newDungeon.build("midnight_armour"));
+
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.DOWN);
+        newDungeon.tick(null, Direction.LEFT);
+        List<ItemResponse> inv = newDungeon.build("midnight_armour").getInventory();
+        assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("midnight_armour")));
+    }
+
+    // Tests building midnight armour while zombie is present
+    @Test
+    public void testBuildMidnightArmourZombie() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("build_midnight_armour_zombie", "Peaceful");
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.DOWN);
+        newDungeon.tick(null, Direction.LEFT);
+        assertThrows(InvalidActionException.class, () -> newDungeon.build("midnight_armour"));
+        List<ItemResponse> inv = newDungeon.tick(null, Direction.RIGHT).getInventory();
+        // Midnight armour shouldn't be in inventory
+        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("midnight_armour")));
+    }
+
     // Test for invincible potion
     @Test
     public void testInviniciblePotionZombie() {
