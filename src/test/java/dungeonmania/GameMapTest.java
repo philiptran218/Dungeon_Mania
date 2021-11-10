@@ -38,7 +38,7 @@ public class GameMapTest {
     void testLoadMapFunction() {
         assertDoesNotThrow(() -> {
             DungeonManiaController d = new DungeonManiaController();
-            d.newGame("key_door_saving", "Peaceful");
+            d.newGame("key_door_saving", "peaceful");
             d.saveGame("saved");
         });
         deleteSavedGames("saved");
