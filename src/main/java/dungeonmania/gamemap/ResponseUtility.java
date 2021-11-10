@@ -27,7 +27,7 @@ public class ResponseUtility {
      * @return DungeonResponse on the current state of map.
      */
     public DungeonResponse returnDungeonResponse() {
-        return new DungeonResponse(map.getMapId(), map.getDungeonName(), mapToListEntityResponse(), 
+        return new DungeonResponse(map.getMapId(), map.getDungeonName(), getEntityResponse(), 
             getInventoryResponse(), getBuildablesResponse(), getGoalResponse());
     }
 
@@ -36,7 +36,7 @@ public class ResponseUtility {
      * returns all entities on the map as a list of entity response.
      * @return List<EntityResponse> List of entity response.
      */
-    public List<EntityResponse> mapToListEntityResponse() {
+    public List<EntityResponse> getEntityResponse() {
         // EntityResponse list to help append entities on the map
         List<EntityResponse> entityList = new ArrayList<EntityResponse>();
         // Loops through entities on the map entities on the map
