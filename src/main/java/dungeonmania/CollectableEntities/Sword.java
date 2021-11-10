@@ -46,7 +46,7 @@ public class Sword extends CombatItems {
     }
 
     /**
-     * Check the durability of the armour and if durability is zero 
+     * Check the durability of the sword and if durability is zero 
      * remove it from the inventory.
      */
     public void checkNoDurability() {

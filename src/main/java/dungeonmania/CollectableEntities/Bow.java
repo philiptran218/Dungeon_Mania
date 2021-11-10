@@ -50,7 +50,7 @@ public class Bow extends CombatItems {
     }
 
     /**
-     * Check the durability of the armour and if durability is zero 
+     * Check the durability of the bow and if durability is zero 
      * remove it from the inventory.
      */
     public void checkNoDurability() {
