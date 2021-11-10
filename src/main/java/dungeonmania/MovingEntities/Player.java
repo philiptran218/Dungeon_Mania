@@ -66,9 +66,17 @@ public class Player extends MovingEntity implements MovingEntitySubject {
             moveInDir(map, direction);
         } else if (!map.get(doorLayer).isEmpty() && map.get(doorLayer).get(0).getType().equals("door")) {
             Entity e = map.get(doorLayer).get(0);
-            // Check if the door and key matches:
             int keyId = ((Door) e).getKeyId();
-            if (inventory.getKey(keyId) != null) {
+            // Check if player has a sun stone
+            if (hasItem("sun_stone")) {
+                e.setType("door_unlocked");
+                e.setPos(doorLayer.asLayer(0));
+                map.get(newPos.asLayer(0)).add(e);
+                map.get(doorLayer).remove(e);
+                moveInDir(map, direction);
+            }
+            // Check if the door and key matches:
+            else if (inventory.getKey(keyId) != null) {
                 e.setType("door_unlocked");
                 e.setPos(doorLayer.asLayer(0));
                 inventory.getKey(keyId).use();
