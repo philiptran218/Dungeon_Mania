@@ -6,9 +6,7 @@ import java.util.Map;
 import dungeonmania.Entity;
 import dungeonmania.util.Position;
 
-public interface GoalInterface {
+public interface Goal {
     public boolean isGoalComplete(Map<Position, List<Entity>> map);
-    public void add(GoalInterface goal);
     public String getGoalName();
-    public List<GoalInterface> getChildren();
 }

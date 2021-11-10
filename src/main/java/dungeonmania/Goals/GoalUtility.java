@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import dungeonmania.Entity;
 import dungeonmania.util.Position;
 
-public class GoalHelper {
+public class GoalUtility {
 
     /**
      * Calls for the conversion of a jsonObject to a composite pattern for goals
@@ -21,7 +21,7 @@ public class GoalHelper {
      * @param jsonMap - a jsonObject representing the dungeon.
      * @return GoalInterface - the root of the composite pattern containing the goals of the map.
      */
-    public static GoalInterface getGoalPattern(JsonObject dungeon) {
+    public static Goal getGoalPattern(JsonObject dungeon) {
         return goalJsonToPattern(getGoalsFromJson(dungeon));
     }
 
@@ -42,15 +42,15 @@ public class GoalHelper {
      * @param jsonGoal - a jsonObject containing the goals of the dungeon.
      * @return GoalInterface - the root of the composite pattern containing the goals of the map.
      */
-    public static GoalInterface goalJsonToPattern(JsonObject jsonGoal) {
+    public static Goal goalJsonToPattern(JsonObject jsonGoal) {
         if (getGoalType(jsonGoal).equals("AND")) {
-            GoalInterface goal = GoalFactory.getGoal(getGoalType(jsonGoal));
+            AndGoal goal = (AndGoal) GoalFactory.getGoal(getGoalType(jsonGoal));
             for (JsonElement entity : jsonGoal.getAsJsonArray("subgoals")) {
                 goal.add(goalJsonToPattern(entity.getAsJsonObject()));
             }
             return goal;
         } else if (getGoalType(jsonGoal).equals("OR")) {
-            GoalInterface goal = GoalFactory.getGoal(getGoalType(jsonGoal));
+            OrGoal goal = (OrGoal) GoalFactory.getGoal(getGoalType(jsonGoal));
             for (JsonElement entity : jsonGoal.getAsJsonArray("subgoals")) {
                 goal.add(goalJsonToPattern(entity.getAsJsonObject()));
             }
@@ -76,7 +76,7 @@ public class GoalHelper {
      * @param rootGoal - the root of the composite pattern containing the goals of the map.
      * @return JSONObject- a jsonObject containing the goals of the dungeon.
      */
-    public static JSONObject goalPatternToJson(GoalInterface rootGoal) {
+    public static JSONObject goalPatternToJson(Goal rootGoal) {
         JSONObject goal = new JSONObject();
         if (isSingleGoal(rootGoal)) {
             return goal.put("goal", rootGoal.getGoalName());
@@ -84,7 +84,7 @@ public class GoalHelper {
         } else {
             goal.put("goal", rootGoal.getGoalName());
             JSONArray goalChildren = new JSONArray();
-            for (GoalInterface goalChild : rootGoal.getChildren()) {
+            for (Goal goalChild : ((CompositeGoal) rootGoal).getChildren()) {
                 goalChildren.put(goalPatternToJson(goalChild));
             }
             return goal.put("subgoals", goalChildren);
@@ -97,7 +97,7 @@ public class GoalHelper {
      * @param rootGoal - a GoalInterface object.
      * @return boolean - true if the goal is a single goal, false otherwise.
      */
-    private static boolean isSingleGoal(GoalInterface rootGoal) {
+    private static boolean isSingleGoal(Goal rootGoal) {
         switch (rootGoal.getGoalName()) {
             case "enemies":
                 return true;
@@ -119,7 +119,7 @@ public class GoalHelper {
      * @param map - the current state of the dungeon.
      * @return String - a string representing all the goals of the dungeon.
      */
-    public static String goalPatternToString(GoalInterface goal, Map<Position, List<Entity>> map) {
+    public static String goalPatternToString(Goal goal, Map<Position, List<Entity>> map) {
         if (goal.getGoalName().equals("AND") && !goal.isGoalComplete(map)) {
             return "(" + String.join(" AND ", getIncompleteChildrenGoals(goal, map)) + ")";
         } else if (goal.getGoalName().equals("OR") && !goal.isGoalComplete(map)) {
@@ -139,9 +139,9 @@ public class GoalHelper {
      * @param map - the current state of the dungeon.
      * @return currentGoals - a list of strings where each string represents a child goal.
      */
-    private static List<String> getIncompleteChildrenGoals(GoalInterface goal, Map<Position, List<Entity>> map) {
+    private static List<String> getIncompleteChildrenGoals(Goal goal, Map<Position, List<Entity>> map) {
         List<String> currentGoals = new ArrayList<String>();
-        for (GoalInterface childGoal : goal.getChildren()) {
+        for (Goal childGoal : ((CompositeGoal)goal).getChildren()) {
             if (!childGoal.isGoalComplete(map)) {
                 currentGoals.add(goalPatternToString(childGoal, map));
             }

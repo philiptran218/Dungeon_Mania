@@ -4,6 +4,17 @@
     "height": 16,
     "entities": [
       {
+        "x": 2,
+        "y": 1,
+        "type": "time_turner"
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "movement_factor": 2,
+        "type": "swamp_tile"
+      },
+      {
         "x": 0,
         "y": 0,
         "type": "wall"

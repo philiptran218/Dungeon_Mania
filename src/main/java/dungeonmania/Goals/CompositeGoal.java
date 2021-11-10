@@ -3,18 +3,18 @@ package dungeonmania.Goals;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CompositeGoal implements GoalInterface{
-    List<GoalInterface> children = new ArrayList<GoalInterface>();
+public abstract class CompositeGoal implements Goal{
+    List<Goal> children = new ArrayList<Goal>();
     
-    public void add(GoalInterface goal) {
+    public void add(Goal goal) {
         this.children.add(goal);
     }
 
-    public List<GoalInterface> getChildren() {
+    public List<Goal> getChildren() {
         return children;
     }
 
-    public void setChildren(List<GoalInterface> children) {
+    public void setChildren(List<Goal> children) {
         this.children = children;
     }
 

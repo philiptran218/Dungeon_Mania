@@ -29,7 +29,9 @@ public class SwampTile extends StaticEntity {
     public void checkTile(List<Entity> eList) {
         // Go through the entities on tiles and add them
         for (Entity e : eList) {
-            if (!e.hasId(super.getId()) && !eMap.containsKey(e)) { eMap.put(e, factor); }
+            if (!e.hasId(super.getId()) && !eMap.containsKey(e) && !e.isType("player")) { 
+                eMap.put(e, factor); 
+            }
         }
         // Loop through to see if any have been on the tile for enough time
         List<Entity> removeEntity = new ArrayList<>();
@@ -72,7 +74,7 @@ public class SwampTile extends StaticEntity {
     public void addToMap(Entity e, int value) {
         eMap.put(e, value);
     }
-    
+
     // Override the function toJSONObject in entity
     @Override
     public JSONObject toJSONObject() {

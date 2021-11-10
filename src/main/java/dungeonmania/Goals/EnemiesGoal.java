@@ -8,7 +8,7 @@ import dungeonmania.util.Position;
 
 import java.util.Map;
 
-public class EnemiesGoal implements GoalInterface {
+public class EnemiesGoal implements Goal {
     private String goalName = "enemies";
 
     /**
@@ -30,16 +30,8 @@ public class EnemiesGoal implements GoalInterface {
     }
     
     @Override
-    public void add(GoalInterface goal) {
-    }
-
-    @Override
     public String getGoalName() {
         return this.goalName;
-    }
-    @Override
-    public List<GoalInterface> getChildren() {
-        return null;
     }
 
     private boolean isEnemy(Entity entity) {
