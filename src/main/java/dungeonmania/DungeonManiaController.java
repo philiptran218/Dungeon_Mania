@@ -282,7 +282,7 @@ public class DungeonManiaController {
      */
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
         // Checks if item being built is a bow, shield, sceptre or midnight_armour
-        if (isNotValidBuildable(buildable)) {
+        if (!validBuildables().contains(buildable)) {
             throw new IllegalArgumentException();
         }
         
@@ -296,9 +296,8 @@ public class DungeonManiaController {
         return new ResponseUtility(gameMap).returnDungeonResponse();
     }
 
-    private boolean isNotValidBuildable(String buildable) {
-        return !(buildable.equals("bow") || buildable.equals("shield") || buildable.equals("sceptre")
-                 || buildable.equals("midnight_armour"));
+    public List<String> validBuildables() {
+        return Arrays.asList("bow", "shield", "sceptre", "midnight_armour");
     }
 
     /**
