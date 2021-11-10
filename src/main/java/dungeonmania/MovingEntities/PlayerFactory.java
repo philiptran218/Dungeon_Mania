@@ -7,6 +7,7 @@ import dungeonmania.util.Position;
 
 public class PlayerFactory {
     private static final double PLAYER_DAMAGE = 2;
+    
     public static Player getPlayer (String id, String type, Position pos, JsonObject jsonObj, GameState state) {
 		if (jsonObj.get("health") != null) {
             double health = jsonObj.get("health").getAsDouble();

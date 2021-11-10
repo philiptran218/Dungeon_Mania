@@ -96,7 +96,7 @@ public class EntityFactory {
             case "time_turner":
                 return new TimeTuner(id, type, collectPos);
             case "player": 
-                Player player = new Player(id, type, movingPos);
+                Player player = PlayerFactory.getPlayer(id, type, pos, jsonObj, gameMap.getGameState());
                 if (jsonObj.getAsJsonArray("active_potions") != null) {
                     for (JsonElement potionElem : jsonObj.getAsJsonArray("active_potions")) {
                         JsonObject potionJSON = potionElem.getAsJsonObject();
