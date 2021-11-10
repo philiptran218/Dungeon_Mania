@@ -325,7 +325,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         if (getInvisDuration() > 0) {
             battle.setBattleState(battle.getInvisibleState());
         }
-        else if (getInvincDuration() > 0 && !battle.getDifficulty().equals("Hard")) {
+        else if (getInvincDuration() > 0 && !battle.getDifficulty().equals("hard")) {
             battle.setBattleState(battle.getInvincibleState());
         }
         else {

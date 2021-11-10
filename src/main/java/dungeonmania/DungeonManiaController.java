@@ -2,7 +2,6 @@ package dungeonmania;
 
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
-import dungeonmania.CollectableEntities.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.gamemap.EnermySpawner;
 import dungeonmania.gamemap.GameMap;
@@ -14,15 +13,14 @@ import dungeonmania.util.FileLoader;
 import dungeonmania.util.Position;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 public class DungeonManiaController {
     // Game Map
@@ -56,7 +54,7 @@ public class DungeonManiaController {
      * @return List<String> List of all game modes.
      */
     public List<String> getGameModes() {
-        return Arrays.asList("Standard", "Peaceful", "Hard");
+        return Arrays.asList("standard", "peaceful", "hard");
     }
 
     /**
@@ -80,13 +78,10 @@ public class DungeonManiaController {
      */
     public JsonObject getJsonFile(String fileName) {
         try {
-            return JsonParser.parseReader(new FileReader("src\\main\\resources\\dungeons\\" + fileName + ".json")).getAsJsonObject();
+            String jsonString = FileLoader.loadResourceFile("/dungeons/" + fileName + ".json");
+            return new Gson().fromJson(jsonString, JsonObject.class);
         } catch (Exception e) {
-            try {
-                return JsonParser.parseReader(new FileReader("src\\test\\resources\\dungeons\\" + fileName + ".json")).getAsJsonObject();
-            } catch (Exception r) {
                 throw new IllegalArgumentException("File not found.");
-            }
         }
     }
     
@@ -99,7 +94,7 @@ public class DungeonManiaController {
      * @throws IllegalArgumentException
      */
     public DungeonResponse newGame(String dungeonName, String gameMode) throws IllegalArgumentException {
-        if (!getGameModes().contains(gameMode)) {
+        if (!getGameModes().contains(gameMode.toLowerCase())) {
             throw new IllegalArgumentException("Game mode does not exist.");
         }
         // Set game index to zero
@@ -179,7 +174,7 @@ public class DungeonManiaController {
      */
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
         // If itemUsed is NULL move the player:
-        if (itemUsed == null && !MapUtility.isOnSwampTile(gameMap, null)) {
+        if (itemUsed == null && !MapUtility.entityOnASwampTile(gameMap, null)) {
             gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
         } else if (itemUsed != null) {
             // Get the entity on map:
@@ -191,7 +186,7 @@ public class DungeonManiaController {
         
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
-            if (!(e.getPos().equals(e.getPlayerPos()) && !e.isType("mercenary")) && !MapUtility.isOnSwampTile(gameMap, e.getId())) {
+            if (!(e.getPos().equals(e.getPlayerPos()) && !e.isType("mercenary")) && !MapUtility.entityOnASwampTile(gameMap, e.getId())) {
                 e.move(gameMap.getMap());
             }
         }
@@ -234,7 +229,7 @@ public class DungeonManiaController {
 
         // Check for swamp tile after all movements has occured,
         // and removes accordinly as well as tick each one.
-        MapUtility.swampTileTick(gameMap);
+        MapUtility.tickAllSwampTiles(gameMap);
 
         // Save the file:
         gameMap.incrementGameIndex();
