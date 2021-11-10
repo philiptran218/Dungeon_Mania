@@ -52,7 +52,7 @@ public class DungeonManiaController {
      * @return List<String> List of all game modes.
      */
     public List<String> getGameModes() {
-        return Arrays.asList("Standard", "Peaceful", "Hard");
+        return Arrays.asList("standard", "peaceful", "hard");
     }
 
     /**
