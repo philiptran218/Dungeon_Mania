@@ -46,7 +46,7 @@ public class BattleTest {
     @Test
     public void basicBattle() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("onlySpiderAndPlayer", "Hard");
+        newDungeon.newGame("onlySpiderAndPlayer", "hard");
         // Should kill the spider in combat
         DungeonResponse temp = newDungeon.tick(null, Direction.RIGHT);
         assertFalse(temp.getEntities().stream().anyMatch(e -> e.getType().equals("spider")));
@@ -56,7 +56,7 @@ public class BattleTest {
     @Test
     public void testBuildableWeaponsMercenary() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("buildable_battle", "Peaceful");
+        newDungeon.newGame("buildable_battle", "peaceful");
 
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
@@ -77,7 +77,7 @@ public class BattleTest {
     @Test
     public void testShieldFight() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("buildable_battle", "Hard");
+        newDungeon.newGame("buildable_battle", "hard");
 
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
@@ -97,7 +97,7 @@ public class BattleTest {
     @Test
     public void testZeroDurability() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("mercenary_onslaught", "Hard");
+        newDungeon.newGame("mercenary_onslaught", "hard");
         DungeonResponse temp = null;
 
         for (int i = 0; i < 20; i++) {
@@ -112,7 +112,7 @@ public class BattleTest {
     @Test 
     public void testFightZombies() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("zombie_battle", "Hard");
+        newDungeon.newGame("zombie_battle", "hard");
 
         for (int i = 0; i < 4; i++) {
             newDungeon.tick(null, Direction.RIGHT);
@@ -129,7 +129,7 @@ public class BattleTest {
     @Test 
     public void testInvisibilityFighting() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse temp = newDungeon.newGame("invisibility_battle", "Hard");
+        DungeonResponse temp = newDungeon.newGame("invisibility_battle", "hard");
 
         String invisId = getEntityId(new Position(2, 1, 2), temp);
         temp = newDungeon.tick(null, Direction.RIGHT);
@@ -153,7 +153,7 @@ public class BattleTest {
     @Test
     public void testInvincibleBattle() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse temp = newDungeon.newGame("invincibleBattle", "Standard");
+        DungeonResponse temp = newDungeon.newGame("invincibleBattle", "standard");
         String invincibleId = getEntityId(new Position(1, 0, 2), temp);
         String zombieId = getEntityId(new Position(2, 1, 3), temp);
         newDungeon.tick(null, Direction.RIGHT);
@@ -166,7 +166,7 @@ public class BattleTest {
     @Test
     public void testBowCombat() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("onslaught_bow", "Hard");
+        newDungeon.newGame("onslaught_bow", "hard");
         DungeonResponse temp = null;
 
         for (int i = 0; i < 20; i++) {
@@ -180,7 +180,7 @@ public class BattleTest {
     @Test 
     public void testArmourCombat() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("onslaught_armour", "Hard");
+        newDungeon.newGame("onslaught_armour", "hard");
         DungeonResponse temp = null;
 
         for (int i = 0; i < 20; i++) {
@@ -193,7 +193,7 @@ public class BattleTest {
     @Test 
     public void testArmourCombatInvincible() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse temp = newDungeon.newGame("onslaught_armour_invincible", "Hard");
+        DungeonResponse temp = newDungeon.newGame("onslaught_armour_invincible", "hard");
         String potionId = getEntityId(new Position(2,1,2), temp);
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(potionId, null);
@@ -210,7 +210,7 @@ public class BattleTest {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
-        DungeonResponse tmp = controller.newGame("battleWithAllyMerc", "Standard");
+        DungeonResponse tmp = controller.newGame("battleWithAllyMerc", "standard");
         String MercId = getEntityId(new Position(4, 1, 3), tmp, "mercenary");
         assertTrue(":enemies".equals(tmp.getGoals()));
         tmp = controller.tick(null, Direction.RIGHT);
@@ -219,4 +219,42 @@ public class BattleTest {
         tmp = controller.tick(null, Direction.RIGHT);
         assertTrue("".equals(tmp.getGoals()));
     }
+
+    // Tests battle against a hydra using anduril. Should die within several ticks since it
+    // cannot heal against anduril attacks.
+    @Test
+    public void testAndurilAgainstHydra() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("hydra_anduril", "Hard");
+        // TODO: Add more directions since hydra movement is random
+        DungeonResponse info = newDungeon.tick(null, Direction.RIGHT);
+        info = newDungeon.tick(null, Direction.RIGHT);
+        // Should now fight against the hydra and win after x rounds since there is also
+        // triple damage to bosses
+        assertFalse(info.getEntities().stream().anyMatch(e -> e.getType().equals("hydra")));
+        // Player should still be alive
+        assertTrue(info.getEntities().stream().anyMatch(e -> e.getType().equals("player")));
+    }
+
+    // Tests battle against an assassin using anduril. Should die within several ticks since it deals
+    // triple damage to bosses.
+    @Test
+    public void testAndurilAgainstAssassin() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("assassin_anduril", "Hard");
+    
+        DungeonResponse info = newDungeon.tick(null, Direction.RIGHT);
+        info = newDungeon.tick(null, Direction.RIGHT);
+        // Should now fight against the assassin and win after x rounds, taking triple damage
+        // into account
+        assertFalse(info.getEntities().stream().anyMatch(e -> e.getType().equals("assassin")));
+        assertTrue(info.getEntities().stream().anyMatch(e -> e.getType().equals("player")));
+    }
+
+    // Tests anduril against a non-boss enemy. Should just deal normal damage.
+    @Test
+    public void testAndurilAgainstMercenary() {
+        // Leave as stub for now, will complete once finished...
+    }
+
 }

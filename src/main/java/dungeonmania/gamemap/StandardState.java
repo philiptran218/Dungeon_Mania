@@ -9,7 +9,7 @@ import dungeonmania.MovingEntities.ZombieToast;
 import dungeonmania.util.Position;
 
 public class StandardState implements GameState{
-    private String mode = "Standard";
+    private String mode = "standard";
     // Spawns the zombie from the zombie toast spawner
     public int spawnZombie(int tickProgress, Map<Position, List<Entity>> gameMap, Position zombieSpawner) {
         if (tickProgress == 19) { 
