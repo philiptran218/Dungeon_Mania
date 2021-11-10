@@ -205,8 +205,7 @@ public class CollectableEntityTest {
 
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
-        newDungeon.tick(null, Direction.DOWN);
-        newDungeon.tick(null, Direction.LEFT);
+        newDungeon.tick(null, Direction.RIGHT);
         List<ItemResponse> inv = newDungeon.build("sceptre").getInventory();
         assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("sceptre")));
     }
@@ -218,8 +217,8 @@ public class CollectableEntityTest {
         newDungeon.newGame("build_sceptre_arrow_key", "Peaceful");
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
-        newDungeon.tick(null, Direction.DOWN);
-        newDungeon.tick(null, Direction.LEFT);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
         List<ItemResponse> inv = newDungeon.build("sceptre").getInventory();
         assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("sceptre")));
     }
@@ -234,8 +233,6 @@ public class CollectableEntityTest {
 
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
-        newDungeon.tick(null, Direction.DOWN);
-        newDungeon.tick(null, Direction.LEFT);
         List<ItemResponse> inv = newDungeon.build("midnight_armour").getInventory();
         assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("midnight_armour")));
     }
@@ -247,8 +244,6 @@ public class CollectableEntityTest {
         newDungeon.newGame("build_midnight_armour_zombie", "Peaceful");
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
-        newDungeon.tick(null, Direction.DOWN);
-        newDungeon.tick(null, Direction.LEFT);
         assertThrows(InvalidActionException.class, () -> newDungeon.build("midnight_armour"));
         List<ItemResponse> inv = newDungeon.tick(null, Direction.RIGHT).getInventory();
         // Midnight armour shouldn't be in inventory
