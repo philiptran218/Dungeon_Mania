@@ -2,13 +2,13 @@ package dungeonmania.Battles;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicMarkableReference;
 
 import dungeonmania.CollectableEntities.*;
 import dungeonmania.MovingEntities.Mercenary;
 import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.MovingEntities.ZombieToast;
+import dungeonmania.MovingEntities.Assassin;
 
 public class NormalState implements BattleState {
     
