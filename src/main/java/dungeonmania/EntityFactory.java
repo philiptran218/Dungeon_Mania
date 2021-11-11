@@ -9,10 +9,13 @@ import dungeonmania.CollectableEntities.*;
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.gamemap.GameMap;
+import dungeonmania.gamemap.GameState;
 import dungeonmania.gamemap.MapUtility;
 import dungeonmania.util.Position;
 
 public class EntityFactory {
+    private static final double PLAYER_DAMAGE = 2;
+
     public static Entity getEntityObject(String id, Position pos, JsonObject jsonObj, GameMap gameMap) {
         // Fields
         String type = jsonObj.get("type").getAsString();
@@ -96,7 +99,14 @@ public class EntityFactory {
             case "time_turner":
                 return new TimeTuner(id, type, collectPos);
             case "player": 
-                Player player = PlayerFactory.getPlayer(id, type, movingPos, jsonObj, gameMap.getGameState());
+                Player player = null;
+                if (jsonObj.get("health") != null) {
+                    double health = jsonObj.get("health").getAsDouble();
+                    player = new Player(id, type, movingPos, health, gameMap.getGameState().getPlayerMaxHealth(),PLAYER_DAMAGE);
+                } else {
+                    player = new Player(id, type, movingPos, gameMap.getGameState().getPlayerMaxHealth(), 
+                                        gameMap.getGameState().getPlayerMaxHealth(), PLAYER_DAMAGE);
+                }
                 if (jsonObj.getAsJsonArray("active_potions") != null) {
                     for (JsonElement potionElem : jsonObj.getAsJsonArray("active_potions")) {
                         JsonObject potionJSON = potionElem.getAsJsonObject();
