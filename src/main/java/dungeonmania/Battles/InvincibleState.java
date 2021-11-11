@@ -7,6 +7,7 @@ import dungeonmania.MovingEntities.Mercenary;
 import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.MovingEntities.ZombieToast;
+import dungeonmania.MovingEntities.Assassin;
 
 public class InvincibleState implements BattleState {
 
