@@ -18,6 +18,7 @@ public class Mercenary extends MovingEntity {
     private Armour armour;
     private int price = 1;
     private int battleRadius = 3;
+    private int bribedTicks = -1;
 
     /**
      * Constructor for mercenary.
@@ -90,6 +91,14 @@ public class Mercenary extends MovingEntity {
     }
 
     /**
+     * Changes the state of the mercenary back to enemy.
+     * Used when the sceptre effect wears off.
+     */
+    public void resetMindControl() {
+        this.state = enemyState;
+    }
+
+    /**
      * Checks the state of the ally.
      * @return true if the mercenary is an ally (has been bribed)
      */
@@ -132,6 +141,14 @@ public class Mercenary extends MovingEntity {
 
     public int getPrice() {
         return price;
+    }
+
+    public int getBribedTicks() {
+        return bribedTicks;
+    }
+
+    public void setBribedTicks(int tick) {
+        this.bribedTicks = tick;
     }
 }
 
