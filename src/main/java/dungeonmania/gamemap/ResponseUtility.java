@@ -6,6 +6,7 @@ import java.util.List;
 import dungeonmania.Entity;
 import dungeonmania.CollectableEntities.CollectableEntity;
 import dungeonmania.Goals.GoalUtility;
+import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
@@ -36,9 +37,9 @@ public class ResponseUtility {
      * Returns a dungeon response based on the current state of the game.
      * @return DungeonResponse on the current state of map.
      */
-    public DungeonResponse returnDungeonResponse() {
+    public DungeonResponse returnDungeonResponse(List<AnimationQueue> animations) {
         return new DungeonResponse(map.getMapId(), map.getDungeonName(), getEntityResponse(), 
-            getInventoryResponse(), getBuildablesResponse(), getGoalResponse());
+            getInventoryResponse(), getBuildablesResponse(), getGoalResponse(), animations);
     }
 
     /**
