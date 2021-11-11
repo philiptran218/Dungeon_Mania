@@ -20,7 +20,7 @@
 - Bomb will only detonate if a boulder is pushed onto a switch that is cardinally adjacent to the bomb. The bomb will not detonate if it is placed cardinally adjacent to a 
 boulder that is already on top of a switch.
 - Player will retain the sun stone after using it except for building new weapons.
-- If bribing a mercenary, a sun stone will be used first since it doesn't get disposed of. If the player doesn't have sun stone, then treasure will be used.
+- If bribing a mercenary/assassin, a sceptre will be used first. If there is no sceptre, the sun stone will be used first since it doesn't get disposed of. If the player doesn't have sun stone, then treasure will be used.
 
 # Assumptions for Moving Entities:
 - Zombies/Spiders will move normally when the Player is inivisble
@@ -37,7 +37,7 @@ boulder that is already on top of a switch.
 - When building a shield, the player's treasure will automatically be used as material (since it has less importance than a key). If the player does not have enough treasure, then a key will be used.
 - When building a sceptre, wood will be used first unless the player does not have enough wood, then arrows will be used. Same condition applies for key/treasure, where treasure will be used first and then key if the player does not have enough treasure.
 - Sun stone will not be substitutable for treasure when building weapons.
-- A Sceptre can only be used on a limited amount of enemies. This is restricted to 5 and is treated like durability, so it is discarded after it is used on 5 enemies.
+- A Sceptre can be used an unlimited amount of times (can control unlimited enemies and has no durability).
 - Sceptre will also be confined to the usual bribe radius. It cannot be used outside of this range.
 - Even though midnight armour provides extra damage, its durability will only be decreased if the player takes damage rather than attacking enemies (treated as an armour).
 
@@ -46,8 +46,8 @@ boulder that is already on top of a switch.
 - Player always attacks first, then the enemy attacks.
 - If difficulty is set to Peaceful, the player can still attack enemies but enemies cannot attack the player.
 - If the player is invincible and attacking an enemy equipped with armour, this will reduce the armour's durability. Similarly, if the player is invincible and attacks an enemy, this will reduce the weapons' durability.
-- Allied mercenaries will only fight an enemy if the player is already fighting that enemy.
-- Enemies will not fight against the player's allied mercenaries; they will only fight the player.
+- Allied mercenaries/assassins will only fight an enemy if the player is already fighting that enemy.
+- Enemies will not fight against the player's allied mercenaries/assassins; they will only fight the player.
 - If the player loots armour from an enemy, the armour will still retain its current durability.
 
 # Assumptions for Goals:
