@@ -213,6 +213,7 @@ public class DungeonManiaController {
 
         // Spawn relevant mobs
         gameMap.spawnMob();
+         
         if (movementDirection.getOffset().getX() == 1) {
             animations.add(new AnimationQueue("PostTick", gameMap.getPlayer().getId(), Arrays.asList("translate-x -1", "translate-x 1, over 0.5s"), false, -1));
         }
