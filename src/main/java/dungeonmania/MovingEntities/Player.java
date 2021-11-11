@@ -24,7 +24,7 @@ import dungeonmania.response.models.AnimationQueue;
 
 public class Player extends MovingEntity implements MovingEntitySubject {
     private List<MovingEntityObserver> listObservers = new ArrayList<MovingEntityObserver>();
-    private List<Mercenary> bribedMercenaries = new ArrayList<Mercenary>();
+    private List<Mercenary> bribedAllies = new ArrayList<Mercenary>();
     private Inventory inventory = new Inventory(this);
     private Battle battle;
     private Map<String, Integer> potions = new HashMap<String, Integer>();
@@ -247,7 +247,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         }
         // Successfully bribe mercenary
         mercenary.bribe();
-        bribedMercenaries.add(mercenary);
+        bribedAllies.add(mercenary);
     }
 
     /**
@@ -296,7 +296,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         }
         // Successfully bribe mercenary
         assassin.bribe();
-        bribedMercenaries.add(assassin);
+        bribedAllies.add(assassin);
     }
 
     /**
@@ -427,13 +427,13 @@ public class Player extends MovingEntity implements MovingEntitySubject {
      * Returns a list of bribed meercenaries.
      * @return List<Mercenary> List of bribed mecernaries.
      */
-    public List<Mercenary> getBribedMercenaries() {
-        return bribedMercenaries;
+    public List<Mercenary> getBribedAllies() {
+        return bribedAllies;
     }
 
     public void tickAllies() {
         List<Mercenary> removeAlly = new ArrayList<>();
-        for (Mercenary e : bribedMercenaries) {
+        for (Mercenary e : bribedAllies) {
             // Tick down enemy mind control
             if (e.getBribedTicks() > 0) {
                 e.setBribedTicks(e.getBribedTicks() - 1);
@@ -446,7 +446,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
             }
         }
         // Remove all non-allies from list
-        bribedMercenaries.removeAll(removeAlly);
+        bribedAllies.removeAll(removeAlly);
     }
 
     // ********************************************************************************************\\
