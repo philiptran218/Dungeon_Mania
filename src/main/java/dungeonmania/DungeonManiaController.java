@@ -137,6 +137,7 @@ public class DungeonManiaController {
         // Create enermy spawner
         this.enermySpawner = new EnermySpawner(gameMap);
         // Return DungeonResponse
+        System.out.println(new ResponseUtility(gameMap).returnDungeonResponse().getInventory().get(0).getType());
         return new ResponseUtility(gameMap).returnDungeonResponse();
     }
 
@@ -322,6 +323,7 @@ public class DungeonManiaController {
         }
         // Load new game
         gameMap = new GameMap(gameIndex.toString(), gameMap.getMapId());
+        MapUtility.addOldPlayer(gameMap);
         // Return response
         return new ResponseUtility(gameMap).returnDungeonResponse();
     }

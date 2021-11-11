@@ -14,7 +14,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import dungeonmania.Entity;
+import dungeonmania.EntityFactory;
+import dungeonmania.Battles.Battle;
 import dungeonmania.Goals.GoalUtility;
+import dungeonmania.MovingEntities.Player;
 import dungeonmania.StaticEntities.SwampTile;
 import dungeonmania.util.Position;
 
@@ -77,6 +80,18 @@ public class MapUtility {
             file.close();
         } catch (IOException e) {  
             e.printStackTrace();  
+        }
+    }
+
+    public static void addOldPlayer(GameMap map) {
+        for (JsonElement e : getSavedMap(map.getGameIndex().toString(), map.getMapId()).get("entities").getAsJsonArray()) {
+            JsonObject entityJson = e.getAsJsonObject();
+            if (entityJson.get("type").getAsString().equals("player")) {
+                Position pos = new Position(entityJson.get("x").getAsInt(), entityJson.get("y").getAsInt(), 3);
+                Player oldPlayer = (Player) EntityFactory.getEntityObject("player", pos, entityJson, map);
+                oldPlayer.setType("oldPlayer");
+                map.getMap().get(pos).add(oldPlayer);
+            }
         }
     }
 
