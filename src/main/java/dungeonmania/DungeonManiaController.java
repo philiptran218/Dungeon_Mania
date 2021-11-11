@@ -27,6 +27,8 @@ public class DungeonManiaController {
     // Game Map
     private GameMap gameMap;
     private EnermySpawner enermySpawner;
+    private List<AnimationQueue> animations = new ArrayList<>();
+
 
     /**
      * Empty Constructor
@@ -101,10 +103,7 @@ public class DungeonManiaController {
         // Set game index to zero
         // Set map:
         this.gameMap = new GameMap(gameMode, dungeonName, getJsonFile(dungeonName));
-        // List<AnimationQueue> animations = new ArrayList<>();
-        // animations.add(new AnimationQueue("PostTick", "player", Arrays.asList("healthbar set 1", "healthbar tint 0x00ff00"), false, -1));
-        // // Return DungeonResponse
-        // return gameMap.returnDungeonResponse(animations);
+        animations.add(new AnimationQueue("PostTick", gameMap.getPlayer().getId(), Arrays.asList("healthbar set 1", "healthbar tint 0x00ff00"), false, -1));
         // New directory
         File theDir = new File("time_travel_record/" + gameMap.getMapId());
         if (!theDir.exists()){ theDir.mkdirs(); }
@@ -113,7 +112,7 @@ public class DungeonManiaController {
         // Create enermy spawner
         this.enermySpawner = new EnermySpawner(gameMap);
         // Return DungeonResponse
-        return new ResponseUtility(gameMap).returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse(animations);
     }
     
     /**
@@ -126,7 +125,7 @@ public class DungeonManiaController {
         // Advanced 
         MapUtility.saveMapAsJson(gameMap, name);
         // Return DungeonResponse
-        return new ResponseUtility(gameMap).returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse(animations);
     }
 
     /**
@@ -142,7 +141,7 @@ public class DungeonManiaController {
         // Create enermy spawner
         this.enermySpawner = new EnermySpawner(gameMap);
         // Return DungeonResponse
-        return new ResponseUtility(gameMap).returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse(animations);
     }
 
     /**
@@ -169,10 +168,12 @@ public class DungeonManiaController {
      * @throws CloneNotSupportedException
      */
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
-        List<AnimationQueue> animations = new ArrayList<>();
+        animations.clear();
+        double health = gameMap.getPlayer().getHealth() / gameMap.getPlayer().getMaxHealth();
+        animations.add(new AnimationQueue("PostTick", gameMap.getPlayer().getId(), Arrays.asList("healthbar set " + health, "healthbar tint 0x00ff00"), false, -1));
         // If itemUsed is NULL move the player:
         if (itemUsed == null && !MapUtility.entityOnASwampTile(gameMap, null)) {
-            gameMap.getPlayer().move(gameMap.getMap(), movementDirection);
+            gameMap.getPlayer().move(gameMap.getMap(), movementDirection, animations);
         } else if (itemUsed != null) {
             // Get the entity on map:
             gameMap.getPlayer().useItem(gameMap.getMap(), itemUsed);
@@ -202,8 +203,8 @@ public class DungeonManiaController {
                 }
             }
         }
-        double health = gameMap.getPlayer().getHealth() / 20;
-        animations.add(new AnimationQueue("PostTick", gameMap.getPlayer().getId(), Arrays.asList("healthbar set " + health, "healthbar tint 0x00ff00"), true, -1));
+        health = gameMap.getPlayer().getHealth() / gameMap.getPlayer().getMaxHealth();
+        animations.add(new AnimationQueue("PostTick", gameMap.getPlayer().getId(), Arrays.asList("healthbar set " + health, "healthbar tint 0x00ff00"), false, -1));
         if (!removeEntity.isEmpty()) {
             animations.add(new AnimationQueue("PostTick", gameMap.getPlayer().getId(), Arrays.asList("healthbar shake, over 0.5s, ease Sin"), false, 0.5));
         }
@@ -225,24 +226,6 @@ public class DungeonManiaController {
             }
         }
 
-        // Spawn relevant mobs
-        gameMap.spawnMob();
-         
-        if (movementDirection.getOffset().getX() == 1) {
-            animations.add(new AnimationQueue("PostTick", gameMap.getPlayer().getId(), Arrays.asList("translate-x -1", "translate-x 1, over 0.5s"), false, -1));
-        }
-        else if (movementDirection.getOffset().getX() == -1) {
-            animations.add(new AnimationQueue("PostTick", gameMap.getPlayer().getId(), Arrays.asList("translate-x 1", "translate-x -1, over 0.5s"), false, -1));
-        }
-        else if (movementDirection.getOffset().getY() == 1) {
-            animations.add(new AnimationQueue("PostTick", gameMap.getPlayer().getId(), Arrays.asList("translate-y -1", "translate-y 1, over 0.5s"), false, -1));
-        }
-        else if (movementDirection.getOffset().getY() == -1) {
-            animations.add(new AnimationQueue("PostTick", gameMap.getPlayer().getId(), Arrays.asList("translate-y 1", "translate-y -1, over 0.5s"), false, -1));
-        }
-        
-        // Return DungeonResponse
-        return gameMap.returnDungeonResponse(animations);
         // Spawn mobs on the map
         enermySpawner.spawnMob();
 
@@ -255,7 +238,7 @@ public class DungeonManiaController {
         MapUtility.saveTickInstance(gameMap, gameMap.getGameIndex().toString());
 
         // Return DungeonResponse
-        return new ResponseUtility(gameMap).returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse(animations);
     }
 
     /**
@@ -282,7 +265,7 @@ public class DungeonManiaController {
             throw new IllegalArgumentException("Entity not interactable");
         }
 
-        return new ResponseUtility(gameMap).returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse(animations);
     }
 
     /**
@@ -312,7 +295,7 @@ public class DungeonManiaController {
 
         // Player can then build the item
         playerInv.buildItem(buildable);
-        return new ResponseUtility(gameMap).returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse(animations);
     }
 
     private boolean isNotValidBuildable(String buildable) {
@@ -333,7 +316,7 @@ public class DungeonManiaController {
         // If not enough rewind, do not do anything
         Integer gameIndex = gameMap.getGameIndex();
         if (gameIndex < ticks || gameIndex == 0) {
-            return new ResponseUtility(gameMap).returnDungeonResponse(); 
+            return new ResponseUtility(gameMap).returnDungeonResponse(animations); 
         }
         // Rewind
         for (int i = 0; i < ticks; i++) {
@@ -342,6 +325,6 @@ public class DungeonManiaController {
         // Load new game
         gameMap = new GameMap(gameIndex.toString(), gameMap.getMapId());
         // Return response
-        return new ResponseUtility(gameMap).returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponse(animations);
     }
 }
