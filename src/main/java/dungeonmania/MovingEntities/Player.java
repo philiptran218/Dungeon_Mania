@@ -256,6 +256,9 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         } else if (inventory.getItem("bow") != null) {
             spawner.destroy(map);
             inventory.getItem("bow").use();
+        } else if (inventory.getItem("anduril") != null) {
+            spawner.destroy(map);
+            inventory.getItem("anduril").use();
         } else {
             throw new InvalidActionException("player does not have a weapon");
         }
