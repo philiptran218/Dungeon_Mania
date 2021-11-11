@@ -6,6 +6,7 @@ import java.util.List;
 import dungeonmania.Entity;
 import dungeonmania.CollectableEntities.CollectableEntity;
 import dungeonmania.Goals.GoalUtility;
+import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
@@ -22,13 +23,23 @@ public class ResponseUtility {
         this.map = gameMap;
     }
     
+
+     /**
+     * Returns a dungeon response based on the current state of the game.
+     * @return DungeonResponse on the current state of map.
+     */
+    public DungeonResponse returnDungeonResponseNewGame() {
+        return new DungeonResponse(map.getMapId(), map.getDungeonName(), getEntityResponse(), 
+            getInventoryResponse(), getBuildablesResponse(), getNewGameGoalResponse());
+    }
+
     /**
      * Returns a dungeon response based on the current state of the game.
      * @return DungeonResponse on the current state of map.
      */
-    public DungeonResponse returnDungeonResponse() {
+    public DungeonResponse returnDungeonResponse(List<AnimationQueue> animations) {
         return new DungeonResponse(map.getMapId(), map.getDungeonName(), getEntityResponse(), 
-            getInventoryResponse(), getBuildablesResponse(), getGoalResponse());
+            getInventoryResponse(), getBuildablesResponse(), getGoalResponse(), animations);
     }
 
     /**
@@ -101,8 +112,15 @@ public class ResponseUtility {
      * Get the goals that needs to be completed for the map.
      * @return String of goals that needs to be completed.
      */
-    public String getGoalResponse() {
-        return GoalUtility.goalPatternToString(GoalUtility.getGoalPattern(map.getJsonMap()), this.map.getMap());
+    private String getGoalResponse() {
+        return GoalUtility.goalPatternToString(GoalUtility.getGoalPattern(map.getJsonMap()), map.getMap());
     }
 
+    /**
+     * Get the goals that needs to be completed for the map when a new game is opened.
+     * @return String of goals that needs to be completed.
+     */
+    private String getNewGameGoalResponse() {
+        return GoalUtility.goalJsontoString(GoalUtility.getGoalsFromJson(map.getJsonMap()));
+    }
 }

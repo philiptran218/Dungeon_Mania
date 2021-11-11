@@ -20,6 +20,7 @@ import dungeonmania.CollectableEntities.*;
 import dungeonmania.StaticEntities.*;
 
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.response.models.AnimationQueue;
 
 public class Player extends MovingEntity implements MovingEntitySubject {
     private List<MovingEntityObserver> listObservers = new ArrayList<MovingEntityObserver>();
@@ -55,16 +56,15 @@ public class Player extends MovingEntity implements MovingEntitySubject {
      * @param map
      * @param direction
      */
-    public void move(Map<Position, List<Entity>> map, Direction direction) {
+    public void move(Map<Position, List<Entity>> map, Direction direction, List<AnimationQueue> animations) {
         Position newPos = super.getPos().translateBy(direction);    
         Position doorLayer = newPos.asLayer(1);
-
         if (canPass(map, newPos)) {
-            moveInDir(map, direction);
+            moveInDir(map, direction);     
         } else if (canPush(map, newPos, direction)) {   
             // Player can move, but pushes a boulder
             Boulder boulder = (Boulder) map.get(newPos.asLayer(1)).get(0);
-            boulder.push(map, direction);
+            boulder.push(map, direction, animations);
             moveInDir(map, direction);
         } else if (!map.get(doorLayer).isEmpty() && map.get(doorLayer).get(0).getType().equals("door")) {
             Entity e = map.get(doorLayer).get(0);
@@ -93,6 +93,18 @@ public class Player extends MovingEntity implements MovingEntitySubject {
             portal.teleport(map, this, direction);
         }
 
+        if (direction.getOffset().getX() == 1) {
+            animations.add(new AnimationQueue("PostTick", getId(), Arrays.asList("translate-x -1", "translate-x 1, over 0.3s"), false, -1));
+        }
+        else if (direction.getOffset().getX() == -1) {
+            animations.add(new AnimationQueue("PostTick", getId(), Arrays.asList("translate-x 1", "translate-x -1, over 0.3s"), false, -1));
+        }
+        else if (direction.getOffset().getY() == 1) {
+            animations.add(new AnimationQueue("PostTick", getId(), Arrays.asList("translate-y -1", "translate-y 1, over 0.3s"), false, -1));
+        }
+        else if (direction.getOffset().getY() == -1) {
+            animations.add(new AnimationQueue("PostTick", getId(), Arrays.asList("translate-y 1", "translate-y -1, over 0.3s"), false, -1));
+        }
         pickUp(map);
         notifyObservers();
     }
