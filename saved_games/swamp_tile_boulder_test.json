@@ -1,0 +1,101 @@
+{
+    "game-index": 1,
+    "map-name": "swamp_tile_boulder",
+    "entities": [
+        {
+            "active_potions": [],
+            "x": 2,
+            "y": 1,
+            "health": 20,
+            "type": "player",
+            "inventory": []
+        },
+        {
+            "x": 2,
+            "y": 2,
+            "type": "wall"
+        },
+        {
+            "x": 1,
+            "y": 0,
+            "type": "wall"
+        },
+        {
+            "x": 5,
+            "y": 0,
+            "type": "wall"
+        },
+        {
+            "x": 5,
+            "y": 1,
+            "type": "wall"
+        },
+        {
+            "x": 1,
+            "y": 2,
+            "type": "wall"
+        },
+        {
+            "x": 0,
+            "y": 0,
+            "type": "wall"
+        },
+        {
+            "x": 5,
+            "y": 2,
+            "type": "wall"
+        },
+        {
+            "x": 4,
+            "y": 0,
+            "type": "wall"
+        },
+        {
+            "x": 0,
+            "y": 1,
+            "type": "wall"
+        },
+        {
+            "x": 0,
+            "y": 2,
+            "type": "wall"
+        },
+        {
+            "x": 4,
+            "y": 2,
+            "type": "wall"
+        },
+        {
+            "x": 3,
+            "y": 0,
+            "type": "wall"
+        },
+        {
+            "movement_factor": 2,
+            "x": 3,
+            "entites_on_tile": [{
+                "x": 3,
+                "ticks_remaining": 2,
+                "y": 1,
+                "type": "boulder"
+            }],
+            "y": 1,
+            "type": "swamp_tile"
+        },
+        {
+            "x": 3,
+            "y": 2,
+            "type": "wall"
+        },
+        {
+            "x": 2,
+            "y": 0,
+            "type": "wall"
+        }
+    ],
+    "game-mode": "peaceful",
+    "map-id": "1636587022087",
+    "width": 6,
+    "goal-condition": {"goal": "boulders"},
+    "height": 6
+}

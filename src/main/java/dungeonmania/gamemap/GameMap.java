@@ -39,13 +39,13 @@ public class GameMap {
     public GameMap(String difficulty, String name, JsonObject jsonMap) {
         this.jsonMap = jsonMap;
         this.dungeonName = name;
+        this.gameState = MapUtility.createGameState(difficulty);
         this.setMapId();
         this.setGameIndex(jsonMap);
         this.initialiseGameMapFromJSON(jsonMap);
         this.battle = new Battle(difficulty);
         this.player.setBattle(battle);
         this.setObservers();
-        this.gameState = MapUtility.createGameState(difficulty);
     }
 
     /**
