@@ -162,6 +162,7 @@ public class Inventory {
                 }
                 Bow newBow = new Bow("" + System.currentTimeMillis(), "bow", null);
                 put(newBow, player);
+                break;
             case "shield":
                 useItem("wood");
                 useItem("wood");
@@ -172,6 +173,7 @@ public class Inventory {
                 }
                 Shield newShield = new Shield("" + System.currentTimeMillis(), "shield", null);
                 put(newShield, player);
+                break;
             case "sceptre":
                 if (getNoItemType("wood") >= 1) {
                     useItem("wood");
@@ -189,7 +191,8 @@ public class Inventory {
                 /*
                 SunStone newSunStone = new SunStone(......);
                 put(newSunStone, player);
-                */
+                */               
+                break;
             case "midnight_armour":
                 useItem("armour");
                 useItem("sun_stone");
@@ -198,7 +201,7 @@ public class Inventory {
                 MidnightArmour newMidnightArmour = new MidnightArmour(....);
                 put(newMidnightArmour, player);
                 */
+                break;
         }
     }
-
 }

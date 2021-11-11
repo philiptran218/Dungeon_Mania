@@ -52,6 +52,7 @@ public class GoalTest {
         for (int i = 0; i < 3; i++) {
             tmp = controller.tick(null, Direction.RIGHT);
         }
+        System.out.println(tmp.getGoals());
         assertTrue("".equals(tmp.getGoals()));
     }
 
