@@ -20,6 +20,7 @@
 - Bomb will only detonate if a boulder is pushed onto a switch that is cardinally adjacent to the bomb. The bomb will not detonate if it is placed cardinally adjacent to a 
 boulder that is already on top of a switch.
 - Player will retain the sun stone after using it except for building new weapons.
+- If bribing a mercenary, a sun stone will be used first since it doesn't get disposed of. If the player doesn't have sun stone, then treasure will be used.
 
 # Assumptions for Moving Entities:
 - Zombies/Spiders will move normally when the Player is inivisble
