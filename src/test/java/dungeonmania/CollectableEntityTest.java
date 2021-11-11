@@ -93,12 +93,12 @@ public class CollectableEntityTest {
         DungeonManiaController newDungeon = new DungeonManiaController();
         newDungeon.newGame("player_pickup_item", "peaceful");
 
-        DungeonResponse temp = newDungeon.tick(null, Direction.RIGHT);
+        DungeonResponse response = newDungeon.tick(null, Direction.RIGHT);
 
-        String healthId = getEntityId(new Position(2, 2, 2), temp);
-        String invincibleId = getEntityId(new Position(1, 2, 2), temp);
-        String invisibleId = getEntityId(new Position(1, 3, 2), temp);
-        String bombId = getEntityId(new Position(2, 3, 2), temp);
+        String healthId = getEntityId(new Position(2, 2, 2), response);
+        String invincibleId = getEntityId(new Position(1, 2, 2), response);
+        String invisibleId = getEntityId(new Position(1, 3, 2), response);
+        String bombId = getEntityId(new Position(2, 3, 2), response);
 
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
@@ -107,16 +107,16 @@ public class CollectableEntityTest {
         newDungeon.tick(null, Direction.LEFT);
         newDungeon.tick(null, Direction.LEFT);
         newDungeon.tick(null, Direction.DOWN);
-        temp = newDungeon.tick(null, Direction.RIGHT);
+        response = newDungeon.tick(null, Direction.RIGHT);
 
-        temp = newDungeon.tick(healthId, null);
-        assertFalse(temp.getInventory().stream().anyMatch(itm -> itm.getType().equals("health_potion")));
-        temp = newDungeon.tick(invincibleId, null);
-        assertFalse(temp.getInventory().stream().anyMatch(itm -> itm.getType().equals("invincibility_potion")));
-        temp = newDungeon.tick(invisibleId, null);
-        assertFalse(temp.getInventory().stream().anyMatch(itm -> itm.getType().equals("invisibility_potion")));
-        temp = newDungeon.tick(bombId, null);
-        assertFalse(temp.getInventory().stream().anyMatch(itm -> itm.getType().equals("bomb")));
+        response = newDungeon.tick(healthId, null);
+        assertFalse(response.getInventory().stream().anyMatch(itm -> itm.getType().equals("health_potion")));
+        response = newDungeon.tick(invincibleId, null);
+        assertFalse(response.getInventory().stream().anyMatch(itm -> itm.getType().equals("invincibility_potion")));
+        response = newDungeon.tick(invisibleId, null);
+        assertFalse(response.getInventory().stream().anyMatch(itm -> itm.getType().equals("invisibility_potion")));
+        response = newDungeon.tick(bombId, null);
+        assertFalse(response.getInventory().stream().anyMatch(itm -> itm.getType().equals("bomb")));
     }
 
 
@@ -124,8 +124,8 @@ public class CollectableEntityTest {
     @Test
     public void testUnusableItem() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse tmp = newDungeon.newGame("simpleTreasure", "peaceful");
-        String treasure = getEntityId(new Position(4, 1, 2), tmp);
+        DungeonResponse response = newDungeon.newGame("simpleTreasure", "peaceful");
+        String treasure = getEntityId(new Position(4, 1, 2), response);
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
@@ -261,68 +261,68 @@ public class CollectableEntityTest {
     @Test
     public void testInviniciblePotionZombie() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse tmp = newDungeon.newGame("invincibleWithZombie", "standard");
-        String zombieId = getEntityId(new Position(3, 1, 3), tmp);
-        String potionId = getEntityId(new Position(7, 1, 2), tmp);
-        tmp = newDungeon.tick(null, Direction.LEFT);
-        tmp = newDungeon.tick(potionId,null);
-        tmp = newDungeon.tick(null, Direction.LEFT);
-        tmp = newDungeon.tick(null, Direction.LEFT);
-        assertTrue(isEntityOnTile(tmp, new Position(1, 1), zombieId));
+        DungeonResponse response = newDungeon.newGame("invincibleWithZombie", "standard");
+        String zombieId = getEntityId(new Position(3, 1, 3), response);
+        String potionId = getEntityId(new Position(7, 1, 2), response);
+        newDungeon.tick(null, Direction.LEFT);
+        newDungeon.tick(potionId,null);
+        newDungeon.tick(null, Direction.LEFT);
+        response = newDungeon.tick(null, Direction.LEFT);
+        assertTrue(isEntityOnTile(response, new Position(1, 1), zombieId));
     }
 
     @Test
     public void testInviniciblePotionMerc() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse tmp = newDungeon.newGame("invincibleWithMerc", "standard");
-        String mercId = getEntityId(new Position(3, 1, 3), tmp);
-        String potionId = getEntityId(new Position(7, 1, 2), tmp);
-        tmp = newDungeon.tick(null, Direction.LEFT);
-        tmp = newDungeon.tick(potionId,null);
-        tmp = newDungeon.tick(null, Direction.LEFT);
-        tmp = newDungeon.tick(null, Direction.LEFT);
-        assertTrue(isEntityOnTile(tmp, new Position(1, 1), mercId));
+        DungeonResponse response = newDungeon.newGame("invincibleWithMerc", "standard");
+        String mercId = getEntityId(new Position(3, 1, 3), response);
+        String potionId = getEntityId(new Position(7, 1, 2), response);
+        newDungeon.tick(null, Direction.LEFT);
+        newDungeon.tick(potionId,null);
+        newDungeon.tick(null, Direction.LEFT);
+        response = newDungeon.tick(null, Direction.LEFT);
+        assertTrue(isEntityOnTile(response, new Position(1, 1), mercId));
     }
 
     @Test
     public void testInviniciblePotionSpider() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse tmp = newDungeon.newGame("invincibleWithSpider", "standard");
-        String spiderId = getEntityId(new Position(3, 1, 3), tmp);
-        String potionId = getEntityId(new Position(7, 1, 2), tmp);
-        tmp = newDungeon.tick(null, Direction.LEFT);
-        tmp = newDungeon.tick(potionId, null);
-        tmp = newDungeon.tick(null, Direction.LEFT);
-        tmp = newDungeon.tick(null, Direction.LEFT);
-        assertTrue(isEntityOnTile(tmp, new Position(2, 0), spiderId));
+        DungeonResponse response = newDungeon.newGame("invincibleWithSpider", "standard");
+        String spiderId = getEntityId(new Position(3, 1, 3), response);
+        String potionId = getEntityId(new Position(7, 1, 2), response);
+        newDungeon.tick(null, Direction.LEFT);
+        newDungeon.tick(potionId, null);
+        newDungeon.tick(null, Direction.LEFT);
+        response = newDungeon.tick(null, Direction.LEFT);
+        assertTrue(isEntityOnTile(response, new Position(2, 0), spiderId));
     }
     @Test
     public void testUseTreasure() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse tmp = newDungeon.newGame("mercenary", "peaceful");
-        String treasure = getEntityId(new Position(2, 1, 2), tmp);
+        DungeonResponse response = newDungeon.newGame("mercenary", "peaceful");
+        String treasure = getEntityId(new Position(2, 1, 2), response);
         newDungeon.tick(null, Direction.RIGHT);
         assertThrows(IllegalArgumentException.class, () -> newDungeon.tick(treasure, null));
     }
     @Test
     public void testItemNotInInventory() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse tmp = newDungeon.newGame("advanced", "peaceful");
-        String invinc = getEntityId(new Position(11, 10, 2), tmp);
+        DungeonResponse response = newDungeon.newGame("advanced", "peaceful");
+        String invinc = getEntityId(new Position(11, 10, 2), response);
         assertThrows(InvalidActionException.class, () -> newDungeon.tick(invinc, null));
     }
     @Test
     public void testEntityExists() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse tmp = newDungeon.newGame("advanced", "peaceful");
-        String entity = getEntityId(new Position(2, 2, 2), tmp);
+        DungeonResponse response = newDungeon.newGame("advanced", "peaceful");
+        String entity = getEntityId(new Position(2, 2, 2), response);
         assertThrows(IllegalArgumentException.class, () -> newDungeon.interact(entity));
     }
     @Test
     public void testEntityNotInteractable() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse tmp = newDungeon.newGame("advanced", "peaceful");
-        String entity = getEntityId(new Position(0, 2, 1), tmp);
+        DungeonResponse response = newDungeon.newGame("advanced", "peaceful");
+        String entity = getEntityId(new Position(0, 2, 1), response);
         assertThrows(IllegalArgumentException.class, () -> newDungeon.interact(entity));
     }
 }

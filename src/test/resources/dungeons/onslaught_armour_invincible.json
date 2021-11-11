@@ -394,9 +394,19 @@
         "type": "mercenary"
       },
       {
+        "x": 12,
+        "y": 1,
+        "type": "one_ring"
+      },
+      {
         "x": 13,
         "y": 1,
         "type": "mercenary"
+      },
+      {
+        "x": 14,
+        "y": 1,
+        "type": "one_ring"
       },
       {
         "x": 15,
@@ -404,9 +414,19 @@
         "type": "mercenary"
       },
       {
+        "x": 16,
+        "y": 1,
+        "type": "one_ring"
+      },
+      {
         "x": 17,
         "y": 1,
         "type": "mercenary"
+      },
+      {
+        "x": 18,
+        "y": 1,
+        "type": "one_ring"
       },
       {
         "x": 19,
