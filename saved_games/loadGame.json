@@ -1,0 +1,17 @@
+{
+    "game-index": 0,
+    "map-name": "file1",
+    "entities": [{
+        "active_potions": [],
+        "x": 0,
+        "y": 1,
+        "health": 20,
+        "type": "player",
+        "inventory": []
+    }],
+    "game-mode": "peaceful",
+    "map-id": "1636587022344",
+    "width": 3,
+    "goal-condition": {"goal": "boulders"},
+    "height": 3
+}

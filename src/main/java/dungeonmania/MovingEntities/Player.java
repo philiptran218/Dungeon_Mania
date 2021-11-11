@@ -28,6 +28,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     private Battle battle;
     private Map<String, Integer> potions = new HashMap<String, Integer>();
     private List<String> useableItems = Arrays.asList("bomb", "health_potion", "invincibility_potion", "invisibility_potion", null);
+    private double maxHealth;
 
     /**
      * Constructor for the player.
@@ -36,8 +37,9 @@ public class Player extends MovingEntity implements MovingEntitySubject {
      * @param pos
      * @param battle
      */
-    public Player(String id, String type, Position pos){
-        super(id, type, pos, 20, 2);
+    public Player(String id, String type, Position pos, double currentHealth, double maxHealth, double damage){
+        super(id, type, pos, currentHealth, damage);
+        this.maxHealth = maxHealth;
     }
 
     // ********************************************************************************************\\
@@ -354,6 +356,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         // Inventory included
         self.put("inventory", inventory.toJSON());
         self.put("active_potions", potionsArray);
+        self.put("health", this.getHealth());
         return self;
     }
 
@@ -429,5 +432,9 @@ public class Player extends MovingEntity implements MovingEntitySubject {
 
     public Map<String, Integer> getPotions() {
         return potions;
+    }
+
+    public double getMaxHealth() {
+        return maxHealth;
     }
 }

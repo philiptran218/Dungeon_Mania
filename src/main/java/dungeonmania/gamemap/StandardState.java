@@ -10,6 +10,8 @@ import dungeonmania.util.Position;
 
 public class StandardState implements GameState{
     private String mode = "standard";
+    private static final double PLAYER_MAX_HEALTH = 20;
+
     // Spawns the zombie from the zombie toast spawner
     public int spawnZombie(int tickProgress, Map<Position, List<Entity>> gameMap, Position zombieSpawner) {
         if (tickProgress == 19) { 
@@ -50,4 +52,8 @@ public class StandardState implements GameState{
         return mode;
     }
 
+    @Override
+    public double getPlayerMaxHealth() {
+        return PLAYER_MAX_HEALTH;
+    }
 }
