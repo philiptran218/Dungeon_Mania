@@ -414,18 +414,24 @@ public class StaticEntityTest {
         DungeonResponse response = null;
         // Create new game
         DungeonResponse r = controller.newGame("swamp_tile_test", "peaceful");
-        String id = getPlayer(r.getEntities());
         String merc = getEntityId(new Position(4, 4, 3) ,r);
         String spider = getEntityId(new Position(3, 5, 3) ,r);
         
-        // Move the entity:
-        for (int i = 0; i < 5; i++) {
-            response = controller.tick(null, Direction.LEFT);
-        }
+        controller.tick(null, Direction.DOWN);
+        response = controller.tick(null, Direction.DOWN);
         // Check if the player is at the correct position
-        assertTrue(isEntityOnTile(response, new Position(1, 1), id));
-        assertTrue(isEntityOnTile(response, new Position(2, 2), merc));
-        assertTrue(isEntityOnTile(response, new Position(4, 5), spider));
+        assertTrue(isEntityOnTile(response, new Position(3, 3), merc));
+        assertTrue(isEntityOnTile(response, new Position(3, 4), spider));
+
+        // Move player once more, entities should remain on tile:
+        response = controller.tick(null, Direction.LEFT);
+        assertTrue(isEntityOnTile(response, new Position(3, 3), merc));
+        assertTrue(isEntityOnTile(response, new Position(3, 4), spider));
+        
+        // Move player once more, entities now should move off the tile
+        response = controller.tick(null, Direction.LEFT);
+        assertTrue(isEntityOnTile(response, new Position(2, 3), merc));
+        assertTrue(isEntityOnTile(response, new Position(4, 4), spider));
     }
 
     // Test saving and loading entities on the swamp tile
@@ -440,7 +446,8 @@ public class StaticEntityTest {
         String spider = getEntityId(new Position(3, 5, 3) ,r);
         
         // Move the mobs:
-        controller.tick(null, Direction.LEFT);
+        controller.tick(null, Direction.DOWN);
+        controller.tick(null, Direction.DOWN);
         controller.tick(null, Direction.LEFT);
 
         controller.saveGame("swamp_tile_test");
