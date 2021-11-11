@@ -108,7 +108,7 @@ public class DungeonManiaController {
         // Create enermy spawner
         this.enermySpawner = new EnermySpawner(gameMap);
         // Return DungeonResponse
-        return new ResponseUtility(gameMap).returnDungeonResponse();
+        return new ResponseUtility(gameMap).returnDungeonResponseNewGame();
     }
     
     /**

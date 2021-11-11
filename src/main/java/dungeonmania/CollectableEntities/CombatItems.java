@@ -21,6 +21,12 @@ public abstract class CombatItems extends CollectableEntity {
     @Override
     public JSONObject toJSONObject() {
          JSONObject obj = super.toJSONObject();
+         return obj;
+    }
+
+    @Override
+    public JSONObject toJSONObjectInventory() {
+         JSONObject obj = super.toJSONObjectInventory();
          obj.put("durability", getDurability());
          return obj;
     }

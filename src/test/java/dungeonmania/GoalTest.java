@@ -172,10 +172,9 @@ public class GoalTest {
 
     /**
      * Test kill zombie AND collect treasure AND getting to exit
-     * 
      */
     @Test
-    public void testTreasureAndBoulderAndExitGoal() {
+    public void testTreasureAndBouldersAndExitGoal() {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
@@ -192,10 +191,9 @@ public class GoalTest {
 
     /**
      * Test collecting all treasures OR reaching exit
-     * (Pass - Reaching exit achieved)
      */
     @Test
-    public void TreasureOrExitGoalPass() {
+    public void testTreasureOrExitGoal() {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
@@ -203,6 +201,22 @@ public class GoalTest {
         assertTrue("(:treasure OR :exit)".equals(tmp.getGoals()));
         tmp = controller.tick(null, Direction.RIGHT);
         assertTrue("(:treasure OR :exit)".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.DOWN);
+        assertTrue("".equals(tmp.getGoals()));
+    }
+
+    /**
+     * Test collecting all treasures OR reaching exit OR boulders
+     */
+    @Test
+    public void testTreasureOrExitorBouldersGoal() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("simpleTreasureOrExitOrBoulders", "peaceful");
+        assertTrue("(:treasure OR :exit OR :boulders)".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.RIGHT);
+        assertTrue("(:treasure OR :exit OR :boulders)".equals(tmp.getGoals()));
         tmp = controller.tick(null, Direction.DOWN);
         assertTrue("".equals(tmp.getGoals()));
     }
