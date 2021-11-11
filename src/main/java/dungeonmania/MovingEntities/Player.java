@@ -215,22 +215,23 @@ public class Player extends MovingEntity implements MovingEntitySubject {
             throw new InvalidActionException("Mercenary too far away");
         }
 
-        if (inventory.getNoItemType("treasure") < mercenary.getPrice()) {
-            // Player doesnt have enough gold
-            throw new InvalidActionException("Player doesn't have enough gold");
-        }
-
-
-        // Remove gold;
-        for (int i = 0; i < mercenary.getPrice(); i++) {
-            if (inventory.getItem("treasure").getType().equals("treasure")) {
-                ((Treasure) inventory.getItem("treasure")).use();
+        // If player does not have sun stone, have to use treasure to bribe
+        if (!hasItem("sun_stone")) {
+            if (inventory.getNoItemType("treasure") < mercenary.getPrice()) {
+                // Player doesnt have enough gold
+                throw new InvalidActionException("Player doesn't have enough gold");
+            }
+    
+            // Remove gold;
+            for (int i = 0; i < mercenary.getPrice(); i++) {
+                if (inventory.getItem("treasure").getType().equals("treasure")) {
+                    ((Treasure) inventory.getItem("treasure")).use();
+                }
             }
         }
         // Successfully bribe mercenary
         mercenary.bribe();
         bribedMercenaries.add(mercenary);
-    
     }
 
     /**
