@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.json.JSONObject;
+
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
 import dungeonmania.Entity;
@@ -24,7 +26,7 @@ public class Spider extends MovingEntity {
      */
     public Spider(String id, String type, Position pos){
         super(id, type, pos, 5, 1);
-        this.startPos = pos;
+        if (startPos == null) { this.startPos = pos; }
         this.setPath();
     }
 
@@ -38,7 +40,7 @@ public class Spider extends MovingEntity {
                                                              .collect(Collectors.toList());
         Player player = (Player) entities.get(0);
 
-        if (player.getInvincDuration() > 0 && !player.getBattle().getDifficulty().equals("Hard")) {
+        if (player.getInvincDuration() > 0 && !player.getBattle().getDifficulty().equals("hard")) {
             moveAway(map);
         }
         else {
@@ -129,6 +131,7 @@ public class Spider extends MovingEntity {
      * positions to a list.
      */
     public void setPath() {
+        path.clear();
         this.path.add(startPos.translateBy(Direction.UP));
         this.path.add(startPos.translateBy(Direction.UP).translateBy(Direction.RIGHT));
         this.path.add(startPos.translateBy(Direction.RIGHT));
@@ -146,4 +149,24 @@ public class Spider extends MovingEntity {
         return false;
     }
 
+    // Override the toJSONObject Function
+    @Override
+    public JSONObject toJSONObject() {
+        JSONObject tmp = super.toJSONObject();
+        JSONObject centre = new JSONObject();
+        centre.put("x", startPos.getX());
+        centre.put("y", startPos.getY());
+        tmp.put("centre", centre);
+        return tmp;
+    }
+
+    /**
+     * Set the starting position of the spider
+     */
+    public void setStartPosition(Position start) {
+        this.startPos = start;
+        this.setPath();
+        // Find its current position
+        pathPos = path.indexOf(super.getPos());
+    }
 }

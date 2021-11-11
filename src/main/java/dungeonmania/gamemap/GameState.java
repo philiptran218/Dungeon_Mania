@@ -15,5 +15,7 @@ public interface GameState {
     
     // Get gamemode as string:
     public String getMode();
+
+    public double getPlayerMaxHealth();
         
 }

@@ -7,7 +7,7 @@ public class GoalFactory {
 	 * @param goalType - a string representing the type of goal to be made
 	 * @return goal - a GoalInterface object
 	 */
-    public static GoalInterface getGoal(String goalType) {
+    public static Goal getGoal(String goalType) {
 		switch (goalType) {
 			case "exit":
 				return new ExitGoal();

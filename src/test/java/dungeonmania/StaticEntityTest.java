@@ -2,6 +2,7 @@ package dungeonmania;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -9,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import dungeonmania.StaticEntities.SwampTile;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
@@ -37,13 +39,25 @@ public class StaticEntityTest {
         }
         return null;
     }
+
+    // Get the player:
+    public String getPlayer(List<EntityResponse> eList) {
+        for (EntityResponse e : eList) {
+            if (e.getType().equals("player")) {
+                return e.getId();
+            }
+        }
+        return null;
+    }
+    
+    // ***************************************************************************
     // Check if wall works properly by moving character into wall
     @Test
     public void testWall() {
         // Create dungeon controller
         DungeonManiaController newDungeon = new DungeonManiaController();
         DungeonResponse temp;
-        DungeonResponse createNew = newDungeon.newGame("advanced", "Peaceful");
+        DungeonResponse createNew = newDungeon.newGame("advanced", "peaceful");
         String playerId = getEntityId(new Position(1, 1, 3), createNew);
         // Move up and checks if wall stops the player 
         temp = newDungeon.tick(null, Direction.UP);
@@ -54,7 +68,7 @@ public class StaticEntityTest {
     public void testBoulder() {
         DungeonManiaController newDungeon = new DungeonManiaController();
         DungeonResponse temp;
-        DungeonResponse createNew = newDungeon.newGame("boulders", "Peaceful");
+        DungeonResponse createNew = newDungeon.newGame("boulders", "peaceful");
         String playerId = getEntityId(new Position(2, 2, 3), createNew);
         String boulder = getEntityId(new Position(3, 2, 1), createNew);
         temp = newDungeon.tick(null, Direction.RIGHT);
@@ -70,18 +84,32 @@ public class StaticEntityTest {
     public void testUnlockedDoor() {
         DungeonManiaController newDungeon = new DungeonManiaController();
         DungeonResponse temp;
-        DungeonResponse createNew = newDungeon.newGame("door", "Peaceful");
+        DungeonResponse createNew = newDungeon.newGame("door", "peaceful");
         String playerId = getEntityId(new Position(1, 1, 3), createNew);
         temp = newDungeon.tick(null, Direction.RIGHT);
         temp = newDungeon.tick(null, Direction.RIGHT);
         assertTrue(isEntityOnTile(temp, new Position(3, 1, 3), playerId));
+    }
+    // Checks if the door is working by unlocking a locked door with a sun stone
+    @Test
+    public void testUnlockedDoorSunStone() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse temp;
+        DungeonResponse createNew = newDungeon.newGame("door_sun_stone", "Peaceful");
+        String playerId = getEntityId(new Position(1, 1, 3), createNew);
+        temp = newDungeon.tick(null, Direction.RIGHT);
+        temp = newDungeon.tick(null, Direction.RIGHT);
+        temp = newDungeon.tick(null, Direction.RIGHT);
+        assertTrue(isEntityOnTile(temp, new Position(4, 1, 3), playerId));
+        // Check that sun stone is still in inventory
+        assertTrue(temp.getInventory().stream().anyMatch(itm -> itm.getType().equals("sun_stone")));
     }
     // Checks if the door is actually locked by moving towards the door without a key
     @Test
     public void testLockedDoor() {
         DungeonManiaController newDungeon = new DungeonManiaController();
         DungeonResponse temp;
-        DungeonResponse createNew = newDungeon.newGame("door", "Peaceful");
+        DungeonResponse createNew = newDungeon.newGame("door", "peaceful");
         String playerId = getEntityId(new Position(1, 1, 3), createNew);
         temp = newDungeon.tick(null, Direction.DOWN);
         temp = newDungeon.tick(null, Direction.RIGHT);
@@ -94,7 +122,7 @@ public class StaticEntityTest {
     @Test
     public void testZombieSpawner() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawn", "Hard");
+        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawn", "hard");
         temp = newDungeon.tick(null, Direction.UP);
         temp = newDungeon.tick(null, Direction.UP);
         temp = newDungeon.tick(null, Direction.UP);
@@ -116,7 +144,7 @@ public class StaticEntityTest {
     @Test
     public void testZombieSpawnerStandard() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawn", "Standard");
+        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawn", "standard");
         temp = newDungeon.tick(null, Direction.UP);
         temp = newDungeon.tick(null, Direction.UP);
         temp = newDungeon.tick(null, Direction.UP);
@@ -144,7 +172,7 @@ public class StaticEntityTest {
     @Test
     public void testInteractionZombieSpawner() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawner", "Hard");
+        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawner", "hard");
         temp = newDungeon.tick(null, Direction.RIGHT);
         String spawner = getEntityId(new Position(3, 1, 1), temp);
         temp = newDungeon.interact(spawner);
@@ -153,7 +181,7 @@ public class StaticEntityTest {
     @Test
     public void testZombieSpawnerBow() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawner_bow", "Standard");
+        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawner_bow", "standard");
         String spawner = getEntityId(new Position(3, 1, 1), temp);
         temp = newDungeon.tick(null, Direction.DOWN);
         temp = newDungeon.tick(null, Direction.RIGHT);
@@ -164,11 +192,20 @@ public class StaticEntityTest {
         temp = newDungeon.interact(spawner);
         assertFalse(isEntityOnTile(temp, new Position(3, 1, 1), spawner));
     }
+    @Test
+    public void testZombieSpawnerAnduril() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        DungeonResponse temp = newDungeon.newGame("zombie_toast_spawner_anduril", "Standard");
+        String spawner = getEntityId(new Position(3, 1, 1), temp);
+        temp = newDungeon.tick(null, Direction.RIGHT);
+        temp = newDungeon.interact(spawner);
+        assertFalse(isEntityOnTile(temp, new Position(3, 1, 1), spawner));
+    }
     // Tests if an exception is thrown if player is not in range of spawner
     @Test
     public void testNotInRangeException() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse createNew = newDungeon.newGame("zombie_toast_spawner", "Hard");
+        DungeonResponse createNew = newDungeon.newGame("zombie_toast_spawner", "hard");
         String spawner = getEntityId(new Position(3, 1, 1), createNew);
         assertThrows(InvalidActionException.class, () -> newDungeon.interact(spawner));
     }
@@ -176,7 +213,7 @@ public class StaticEntityTest {
     @Test
     public void testNoWeaponException() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse createNew = newDungeon.newGame("zombie_toast_spawner", "Hard");
+        DungeonResponse createNew = newDungeon.newGame("zombie_toast_spawner", "hard");
         String spawner = getEntityId(new Position(3, 1, 1), createNew);
         newDungeon.tick(null, Direction.DOWN);
         newDungeon.tick(null, Direction.RIGHT);
@@ -189,7 +226,7 @@ public class StaticEntityTest {
     @Test
     public void testDetonateBomb() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "Peaceful");
+        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "peaceful");
         DungeonResponse tmp;
         String playerId = getEntityId(new Position(1, 1, 3), createNew);
         String boulderId = getEntityId(new Position(3, 2, 1), createNew);
@@ -212,7 +249,7 @@ public class StaticEntityTest {
     @Test
     public void testDetonateBombAfterPickUp() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "Peaceful");
+        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "peaceful");
         DungeonResponse tmp;
         String playerId = getEntityId(new Position(1, 1, 3), createNew);
         String boulderId = getEntityId(new Position(3, 2, 1), createNew);
@@ -249,7 +286,7 @@ public class StaticEntityTest {
     @Test
     public void testBombKillMobs() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "Peaceful");
+        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "peaceful");
         DungeonResponse tmp;
         String playerId = getEntityId(new Position(1, 1, 3), createNew);
         String boulderId = getEntityId(new Position(3, 2, 1), createNew);
@@ -275,7 +312,7 @@ public class StaticEntityTest {
     @Test
     public void testDetonationRadius() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "Peaceful");
+        DungeonResponse createNew = newDungeon.newGame("detonating_bomb", "peaceful");
         DungeonResponse tmp;
         String playerId = getEntityId(new Position(1, 1, 3), createNew);
         String boulderId = getEntityId(new Position(3, 2, 1), createNew);
@@ -309,4 +346,176 @@ public class StaticEntityTest {
         assertTrue(isEntityOnTile(tmp, new Position(4, 3, 1), wallId));
         assertTrue(isEntityOnTile(tmp, new Position(3, 2, 3), playerId));
     }
+
+    // Test for saving portals of different colours
+    @Test
+    public void testColourPortals() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse tmp;
+        // Create new game
+        DungeonResponse r = controller.newGame("portal_test_big", "peaceful");
+        String id = getPlayer(r.getEntities());
+
+        // Movements around the portal:
+        controller.tick(null, Direction.DOWN);
+        tmp = controller.tick(null, Direction.RIGHT);
+        assertTrue(isEntityOnTile(tmp, new Position(6, 2), id));
+
+        controller.tick(null, Direction.DOWN);
+        controller.tick(null, Direction.DOWN);
+
+        tmp = controller.tick(null, Direction.LEFT);
+        assertTrue(isEntityOnTile(tmp, new Position(1, 4), id));
+
+        controller.tick(null, Direction.DOWN);
+        controller.tick(null, Direction.DOWN);
+
+        tmp = controller.tick(null, Direction.RIGHT);
+        assertTrue(isEntityOnTile(tmp, new Position(6, 6), id));
+
+        controller.tick(null, Direction.DOWN);
+        controller.tick(null, Direction.DOWN);
+
+        tmp = controller.tick(null, Direction.LEFT);
+        assertTrue(isEntityOnTile(tmp, new Position(1, 8), id));
+    }
+
+    // ********************************************************************* \\
+    //                            Test SwampTile                             \\
+    // ********************************************************************* \\
+
+    // Test normal movement of the player
+    @Test
+    public void testBasicPlayerMovementThroughTile() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse tmp = null;
+        // Create new game
+        DungeonResponse r = controller.newGame("swamp_tile_test", "peaceful");
+        String id = getPlayer(r.getEntities());
+        
+        // Move above tile
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
+
+        for (int i = 0; i < 4; i++) {
+            tmp = controller.tick(null, Direction.DOWN);
+        }
+        // Check if the player is at the correct position
+        assertTrue(isEntityOnTile(tmp, new Position(3, 5), id));
+    }
+
+    // Test mobs that cross the swamp
+    @Test
+    public void testMobMovementOnSwampTile() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse response = null;
+        // Create new game
+        DungeonResponse r = controller.newGame("swamp_tile_test", "peaceful");
+        String merc = getEntityId(new Position(4, 4, 3) ,r);
+        String spider = getEntityId(new Position(3, 5, 3) ,r);
+        
+        controller.tick(null, Direction.DOWN);
+        response = controller.tick(null, Direction.DOWN);
+        // Check if the player is at the correct position
+        assertTrue(isEntityOnTile(response, new Position(3, 3), merc));
+        assertTrue(isEntityOnTile(response, new Position(3, 4), spider));
+
+        // Move player once more, entities should remain on tile:
+        response = controller.tick(null, Direction.LEFT);
+        assertTrue(isEntityOnTile(response, new Position(3, 3), merc));
+        assertTrue(isEntityOnTile(response, new Position(3, 4), spider));
+        
+        // Move player once more, entities now should move off the tile
+        response = controller.tick(null, Direction.LEFT);
+        assertTrue(isEntityOnTile(response, new Position(2, 3), merc));
+        assertTrue(isEntityOnTile(response, new Position(4, 4), spider));
+    }
+
+    // Test saving and loading entities on the swamp tile
+    @Test
+    public void testSwampTileLoading() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse tmp = null;
+        // Create new game
+        DungeonResponse r = controller.newGame("swamp_tile_test", "peaceful");
+        String merc = getEntityId(new Position(4, 4, 3) ,r);
+        String spider = getEntityId(new Position(3, 5, 3) ,r);
+        
+        // Move the mobs:
+        controller.tick(null, Direction.DOWN);
+        controller.tick(null, Direction.DOWN);
+        controller.tick(null, Direction.LEFT);
+
+        controller.saveGame("swamp_tile_test");
+        tmp = controller.loadGame("swamp_tile_test");
+
+        // New id
+        merc = getEntityId(new Position(3, 3, 3) ,tmp);
+        spider = getEntityId(new Position(3, 4, 3) ,tmp);
+
+        // Move again, the entity should not move as entity should be trapped
+        assertTrue(isEntityOnTile(tmp, new Position(3, 3), merc));
+        assertTrue(isEntityOnTile(tmp, new Position(3, 4), spider));
+    }
+
+    // Test boulder pushing on swampTile
+    @Test
+    public void testSwampTilePushingBoulder() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse tmp = null;
+        // Create new game
+        DungeonResponse r = controller.newGame("swamp_tile_boulder", "peaceful");
+        String id = getEntityId(new Position(1, 1, 3) ,r);
+        String boulder = getEntityId(new Position(2, 1, 1) ,r);
+        
+        // Move the mobs:
+        controller.tick(null, Direction.RIGHT);
+        tmp = controller.tick(null, Direction.RIGHT);
+
+        // Boulder should remain at the same tile
+        assertTrue(isEntityOnTile(tmp, new Position(2, 1), id));
+        assertTrue(isEntityOnTile(tmp, new Position(3, 1), boulder));
+
+        // The boulder now should move upon being moved once more
+        tmp = controller.tick(null, Direction.RIGHT);
+        assertTrue(isEntityOnTile(tmp, new Position(3, 1), id));
+        assertTrue(isEntityOnTile(tmp, new Position(4, 1), boulder));
+    }
+
+    // Test boulder pushing on swampTile saving and loading
+    @Test
+    public void testSwampTileBoulderSaveAndLoad() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse tmp = null;
+        // Create new game
+        DungeonResponse r = controller.newGame("swamp_tile_boulder", "peaceful");
+        String boulder = getEntityId(new Position(2, 1, 1) ,r);
+        
+        // Move the mobs:
+        controller.tick(null, Direction.RIGHT);
+
+        // Save and load
+        controller.saveGame("swamp_tile_boulder_test");
+        tmp = controller.loadGame("swamp_tile_boulder_test");
+
+        // Get new id:
+        boulder = getEntityId(new Position(3, 1, 1) ,tmp);
+
+        // Push the boulder
+        controller.tick(null, Direction.RIGHT);
+        tmp = controller.tick(null, Direction.RIGHT);
+        assertTrue(isEntityOnTile(tmp, new Position(4, 1), boulder));
+        //////
+        SwampTile s = new SwampTile("asdasd", "swamp_tile", new Position(1, 2), 2);
+        s.getFactor();
+        s.setFactor(2);
+        s.getMap();
+    }
+
 }

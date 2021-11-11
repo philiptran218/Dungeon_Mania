@@ -46,7 +46,7 @@ public class MovingEntityTest {
         DungeonManiaController controller = new DungeonManiaController();
         DungeonResponse temp;
         // Create new game
-        DungeonResponse createNew = controller.newGame("basic_player_move", "Peaceful");
+        DungeonResponse createNew = controller.newGame("basic_player_move", "peaceful");
         // Get id of player:
         String playerId = getEntityId(new Position(1, 1, 3), createNew);
 
@@ -84,7 +84,7 @@ public class MovingEntityTest {
         DungeonManiaController controller = new DungeonManiaController();
         DungeonResponse temp;
         // Create new game
-        DungeonResponse createNew = controller.newGame("basic_player_move", "Peaceful");
+        DungeonResponse createNew = controller.newGame("basic_player_move", "peaceful");
         // Get id of player:
         String playerId = getEntityId(new Position(1, 1, 3), createNew);
 
@@ -100,7 +100,7 @@ public class MovingEntityTest {
     public void testPlayerMovingIntoWall() {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
-        DungeonResponse temp = controller.newGame("player_wall_interaction", "Peaceful");
+        DungeonResponse temp = controller.newGame("player_wall_interaction", "peaceful");
         // Get id of player:
         String playerId = getEntityId(new Position(1, 1, 3), temp);
 
@@ -130,7 +130,7 @@ public class MovingEntityTest {
         DungeonManiaController controller = new DungeonManiaController();
         DungeonResponse temp;
         // Create new game
-        DungeonResponse createNew = controller.newGame("play_boulder_interaction", "Peaceful");
+        DungeonResponse createNew = controller.newGame("play_boulder_interaction", "peaceful");
         // Get id of player:
         String playerId = getEntityId(new Position(1, 1, 3), createNew);
 
@@ -156,7 +156,7 @@ public class MovingEntityTest {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
-        DungeonResponse temp = controller.newGame("spider", "Peaceful");
+        DungeonResponse temp = controller.newGame("spider", "peaceful");
         // Get id of player:
         String spiderId = getEntityId(new Position(3, 2, 3), temp);
         assertTrue(isEntityOnTile(temp, new Position(3, 2), spiderId));
@@ -185,7 +185,7 @@ public class MovingEntityTest {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
-        DungeonResponse temp = controller.newGame("spiderBoulder", "Peaceful");
+        DungeonResponse temp = controller.newGame("spiderBoulder", "peaceful");
         // Get id of player:
         String spiderId = getEntityId(new Position(3, 2, 3), temp);
         assertTrue(isEntityOnTile(temp, new Position(3, 2), spiderId));
@@ -216,7 +216,7 @@ public class MovingEntityTest {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
-        DungeonResponse temp = controller.newGame("zombieMovement", "Peaceful");
+        DungeonResponse temp = controller.newGame("zombieMovement", "peaceful");
         // Get id of player:
         String zombieId = getEntityId(new Position(2, 2, 3), temp);
         temp = controller.tick(null, Direction.UP);
@@ -230,7 +230,7 @@ public class MovingEntityTest {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
-        DungeonResponse temp = controller.newGame("zombieMovementBigger", "Standard");
+        DungeonResponse temp = controller.newGame("zombieMovementBigger", "standard");
         // Get id of player:
         String zombieId = getEntityId(new Position(2, 2, 3), temp);
         temp = controller.tick(null, Direction.UP);
@@ -242,14 +242,30 @@ public class MovingEntityTest {
     //               Test for Mercenary Basic Movements
     // ************************************************************ \\ 
     /**
-     * Test bribing a mercenary
+     * Test bribing a mercenary with treasure
      */
     @Test
     public void testBribeMercenaryMovement() {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
-        DungeonResponse tmp = controller.newGame("simpleMercWithTreasure", "Standard");
+        DungeonResponse tmp = controller.newGame("simpleMercWithTreasure", "standard");
+        String MercId = getEntityId(new Position(4, 1, 3), tmp);
+        assertTrue(":enemies".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.RIGHT);
+        tmp = controller.interact(MercId);
+        assertTrue("".equals(tmp.getGoals()));
+        tmp = controller.tick(null, Direction.RIGHT);
+    }
+    /**
+     * Test bribing a mercenary with a sun stone
+     */
+    @Test
+    public void testBribeMercenaryMovementSunStone() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse tmp = controller.newGame("simpleMercWithSunStone", "Standard");
         String MercId = getEntityId(new Position(4, 1, 3), tmp);
         assertTrue(":enemies".equals(tmp.getGoals()));
         tmp = controller.tick(null, Direction.RIGHT);
@@ -262,7 +278,7 @@ public class MovingEntityTest {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
-        DungeonResponse tmp = controller.newGame("mercenary", "Standard");
+        DungeonResponse tmp = controller.newGame("mercenary", "standard");
         String MercId = getEntityId(new Position(6, 1, 3), tmp);
         tmp = controller.tick(null, Direction.RIGHT);
         assertThrows(InvalidActionException.class, () -> controller.interact(MercId));
@@ -272,7 +288,7 @@ public class MovingEntityTest {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
-        DungeonResponse tmp = controller.newGame("mercenary", "Standard");
+        DungeonResponse tmp = controller.newGame("mercenary", "standard");
         String MercId = getEntityId(new Position(6, 1, 3), tmp);
         tmp = controller.tick(null, Direction.DOWN);
         tmp = controller.tick(null, Direction.RIGHT);
@@ -284,7 +300,7 @@ public class MovingEntityTest {
         // Create controller
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
-        DungeonResponse temp = controller.newGame("allyMercMovement", "Standard");
+        DungeonResponse temp = controller.newGame("allyMercMovement", "standard");
         // Get id of player:
         String mercId = getEntityId(new Position(4, 1, 3), temp);
         temp = controller.tick(null, Direction.RIGHT);
