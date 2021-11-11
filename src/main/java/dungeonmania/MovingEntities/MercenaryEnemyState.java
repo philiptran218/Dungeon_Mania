@@ -59,6 +59,10 @@ public class MercenaryEnemyState implements MercenaryState{
         Position pos = mercenary.getPos();
 
         Position newPos = dijkstra(map, pos);
+        if (newPos == null) {
+            // Player is unreachable, use a method other than dijkstra to calculate move
+            newPos = moveCloser(map);
+        }
 
         mercenary.moveToPos(map, newPos.asLayer(3));
         mercenary.setPreviousPlayerPos(playerPos);
@@ -69,7 +73,8 @@ public class MercenaryEnemyState implements MercenaryState{
      * to get to the player
      * @param map
      * @param pos the starting position of the entity
-     * @return The position that the entity should move to
+     * @return The position that the entity should move to. Is null if the path to
+     * the player is unreachable
      */
     public Position dijkstra(Map<Position, List<Entity>> map, Position pos) {
         pos = pos.asLayer(0);
@@ -106,12 +111,16 @@ public class MercenaryEnemyState implements MercenaryState{
             }
         }
 
-        Position temp = mercenary.getPlayerPos().asLayer(0);
-        Position previousPos = temp;
+        Position curr = mercenary.getPlayerPos().asLayer(0);
+        Position previousPos = curr;
 
-        while (!temp.equals(pos)) {
-            previousPos = temp;
-            temp = prev.get(temp);
+        if (dist.get(curr).isInfinite()) {
+            return null;
+        }
+
+        while (!curr.equals(pos)) {
+            previousPos = curr;
+            curr = prev.get(curr);
         }
         return previousPos;
     }
@@ -128,6 +137,27 @@ public class MercenaryEnemyState implements MercenaryState{
         } else {
             return (double) 1;
         }
+    }
+
+    public Position moveCloser(Map<Position, List<Entity>> map) {
+        Position playerPos = mercenary.getPlayerPos();
+        Position pos = mercenary.getPos();
+        
+        List<Position> adjacentPos = pos.getAdjacentPositions();
+
+        List<Position> cardinallyAdjacentPos = adjacentPos.stream().filter(e -> Position.isCardinallyAdjacent(pos, e)).collect(Collectors.toList());
+        cardinallyAdjacentPos.add(pos);
+
+        int distance = Integer.MAX_VALUE;
+        Position newPos = pos;
+
+        for (Position tempPos: cardinallyAdjacentPos) {
+            if (Position.distance(playerPos, tempPos) < distance && mercenary.canPass(map, tempPos)) {
+                newPos = tempPos;
+                distance = Position.distance(playerPos, tempPos);
+            }
+        }
+        return newPos.asLayer(3);
     }
 
     /**
