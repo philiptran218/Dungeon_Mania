@@ -152,15 +152,6 @@ public class DungeonManiaController {
         }
     }
 
-    public List<String> allSavedTicks() {
-        try {
-            return FileLoader.listFileNamesInDirectoryOutsideOfResources("time_travel_record");
-        } catch (IOException e) {
-            return new ArrayList<>();
-        }
-    }
-
-
     /**
      * For every entity on the map, update its status whether it is moving the 
      * entity or static entity exibiting its behaviour. Throws exception when 
@@ -313,7 +304,7 @@ public class DungeonManiaController {
         if (ticks <= 0) { throw new IllegalArgumentException("Invalid rewind tick."); }
         // If not enough rewind, do not do anything
         Integer gameIndex = gameMap.getGameIndex();
-        if (gameIndex < ticks || gameIndex == 0) { 
+        if (gameIndex < ticks || gameIndex == 0) {
             return new ResponseUtility(gameMap).returnDungeonResponse(); 
         }
         // Rewind
