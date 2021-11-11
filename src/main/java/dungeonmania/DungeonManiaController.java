@@ -167,7 +167,6 @@ public class DungeonManiaController {
 
         // Ticks the duration of any active potions
         gameMap.getPlayer().tickPotions();
-        
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
             if (!(e.getPos().equals(e.getPlayerPos()) && !e.getType().equals("mercenary"))) {
@@ -191,9 +190,9 @@ public class DungeonManiaController {
             }
         }
         double health = gameMap.getPlayer().getHealth() / 20;
-        animations.add(new AnimationQueue("PostTick", "player", Arrays.asList("healthbar set " + health, "healthbar tint 0x00ff00"), false, -1));
+        animations.add(new AnimationQueue("PostTick", gameMap.getPlayer().getId(), Arrays.asList("healthbar set " + health, "healthbar tint 0x00ff00"), true, -1));
         if (!removeEntity.isEmpty()) {
-            animations.add(new AnimationQueue("PostTick", "player", Arrays.asList("healthbar shake, over 0.5s, ease Sin"), false, 0.5));
+            animations.add(new AnimationQueue("PostTick", gameMap.getPlayer().getId(), Arrays.asList("healthbar shake, over 0.5s, ease Sin"), false, 0.5));
         }
         if (!removeEntity.contains(null)) {
             // Remove dead entities from list after battle is finished
@@ -214,7 +213,19 @@ public class DungeonManiaController {
 
         // Spawn relevant mobs
         gameMap.spawnMob();
-
+        if (movementDirection.getOffset().getX() == 1) {
+            animations.add(new AnimationQueue("PostTick", gameMap.getPlayer().getId(), Arrays.asList("translate-x -1", "translate-x 1, over 0.5s"), false, -1));
+        }
+        else if (movementDirection.getOffset().getX() == -1) {
+            animations.add(new AnimationQueue("PostTick", gameMap.getPlayer().getId(), Arrays.asList("translate-x 1", "translate-x -1, over 0.5s"), false, -1));
+        }
+        else if (movementDirection.getOffset().getY() == 1) {
+            animations.add(new AnimationQueue("PostTick", gameMap.getPlayer().getId(), Arrays.asList("translate-y -1", "translate-y 1, over 0.5s"), false, -1));
+        }
+        else if (movementDirection.getOffset().getY() == -1) {
+            animations.add(new AnimationQueue("PostTick", gameMap.getPlayer().getId(), Arrays.asList("translate-y 1", "translate-y -1, over 0.5s"), false, -1));
+        }
+        
         // Return DungeonResponse
         return gameMap.returnDungeonResponse(animations);
     }

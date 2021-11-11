@@ -202,7 +202,6 @@ public class GameMap {
             // Set player on the map
             if (temp.isType("player")) {
                 this.player = (Player) temp;
-                player.setId("player");
                 this.entryLocation = temp.getPos();
             }
             newMap.get(temp.getPos()).add(temp);
