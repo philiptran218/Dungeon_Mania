@@ -17,7 +17,7 @@ public class EntityFactory {
         // Fields
         String type = jsonObj.get("type").getAsString();
         // Check if it is old player
-        if (type.equals("old_player")) { 
+        if (type.equals("older_player")) { 
             type = "player";
             isOldPlayer = true; 
         }
@@ -127,7 +127,7 @@ public class EntityFactory {
                     }
                 }
                 if (isOldPlayer) { 
-                    player.setType("old_player");
+                    player.setType("older_player");
                 } else {
                     gameMap.setPlayer(player); 
                 }

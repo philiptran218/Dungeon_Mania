@@ -189,6 +189,14 @@ public class DungeonManiaController {
             if (!(e.getPos().equals(e.getPlayerPos()) && !e.isType("mercenary")) && !MapUtility.entityOnASwampTile(gameMap, e.getId())) {
                 e.move(gameMap.getMap());
             }
+            
+            Integer nextIndex = gameMap.getGameIndex() + 1;
+            if (e.isType("older_player") && MapUtility.getSavedMap(nextIndex.toString(), gameMap.getMapId()) == null) {
+                // Remove older player
+                gameMap.getMap().get(e.getPos()).remove(e);
+            } else if (e.isType("older_player")) {
+                ((Player) e).move(gameMap.getMap(), MapUtility.findOlderPlayerMoveDirection(gameMap));
+            }
         }
         
         // Player battles enemies on the same tile
