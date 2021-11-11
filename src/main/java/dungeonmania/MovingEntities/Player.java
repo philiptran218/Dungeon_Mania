@@ -217,13 +217,15 @@ public class Player extends MovingEntity implements MovingEntitySubject {
             throw new InvalidActionException("Mercenary too far away");
         }
 
+        if (hasItem("sceptre")) {
+            mercenary.setBribedTicks(10);
+        }
         // If player does not have sun stone, have to use treasure to bribe
-        if (!hasItem("sun_stone")) {
+        else if (!hasItem("sun_stone")) {
             if (inventory.getNoItemType("treasure") < mercenary.getPrice()) {
                 // Player doesnt have enough gold
                 throw new InvalidActionException("Player doesn't have enough gold");
             }
-    
             // Remove gold;
             for (int i = 0; i < mercenary.getPrice(); i++) {
                 if (inventory.getItem("treasure").getType().equals("treasure")) {
@@ -234,6 +236,55 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         // Successfully bribe mercenary
         mercenary.bribe();
         bribedMercenaries.add(mercenary);
+    }
+
+    /**
+     * The player bribes the assassin. The bribe will be successful if the player
+     * has enough gold, the one ring and is within 2 cardinal tiles from the assassin
+     * @param map 
+     * @param assassin assassin that the player will try to bribe
+     */
+    public void bribeAssassin(Map<Position, List<Entity>> map, Assassin assassin) throws InvalidActionException{
+        if (assassin.isAlly()) {
+            // assassin is an ally, dont bribe him;
+            return;
+        }
+        Position pos = super.getPos();
+        Position assassinPos = assassin.getPos();
+
+        Position difference = Position.calculatePositionBetween(pos, assassinPos);
+        if (Math.abs(difference.getX()) + Math.abs(difference.getY()) > 2) {
+            // player more than 2 cardinal tiles from assassin
+            throw new InvalidActionException("Assassin too far away");
+        }
+
+        // Check if player has sceptre first
+        if (hasItem("sceptre")) {
+            assassin.setBribedTicks(10);
+        }
+        // If player does not have sun stone, have to use treasure to bribe
+        else {
+            if (!hasItem("sun_stone")) {
+                if (inventory.getNoItemType("treasure") < assassin.getPrice()) {
+                    // Player doesnt have enough gold
+                    throw new InvalidActionException("Player doesn't have enough gold");
+                }
+                // Remove gold;
+                for (int i = 0; i < assassin.getPrice(); i++) {
+                    if (inventory.getItem("treasure").getType().equals("treasure")) {
+                        ((Treasure) inventory.getItem("treasure")).use();
+                    }
+                }
+            }
+            // Check if player has the one ring
+            if (!hasItem("one_ring")) {
+                throw new InvalidActionException("Player doesn't have The One Ring");
+            }
+            ((TheOneRing) inventory.getItem("one_ring")).remove();
+        }
+        // Successfully bribe mercenary
+        assassin.bribe();
+        bribedMercenaries.add(assassin);
     }
 
     /**
@@ -366,6 +417,24 @@ public class Player extends MovingEntity implements MovingEntitySubject {
      */
     public List<Mercenary> getBribedMercenaries() {
         return bribedMercenaries;
+    }
+
+    public void tickAllies() {
+        List<Mercenary> removeAlly = new ArrayList<>();
+        for (Mercenary e : bribedMercenaries) {
+            // Tick down enemy mind control
+            if (e.getBribedTicks() > 0) {
+                e.setBribedTicks(e.getBribedTicks() - 1);
+            }
+            // Check if mind control wears off, then set to normal bribeTick
+            if (e.getBribedTicks() == 0) {
+                e.setBribedTicks(-1);
+                e.resetMindControl();
+                removeAlly.add(e);
+            }
+        }
+        // Remove all non-allies from list
+        bribedMercenaries.removeAll(removeAlly);
     }
 
     // ********************************************************************************************\\
