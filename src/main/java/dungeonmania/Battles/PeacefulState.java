@@ -31,10 +31,10 @@ public class PeacefulState implements BattleState {
                 healthModifier(p2, damageCalculation(p1, p2), p1.getHealth());
             }
 
-            // Performs an attack if player has an allied mercenary
-            for (MovingEntity merc : p1.getBribedMercenaries()) {
+            // Performs an attack if player has allies
+            for (MovingEntity ally : p1.getBribedAllies()) {
                 if (p2.getHealth() > 0) {
-                    healthModifier(p2, damageCalculation(merc, p2), merc.getHealth());
+                    healthModifier(p2, damageCalculation(ally, p2), ally.getHealth());
                 }
             }
         }
