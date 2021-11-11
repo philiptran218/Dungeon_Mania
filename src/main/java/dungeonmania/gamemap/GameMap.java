@@ -97,7 +97,7 @@ public class GameMap {
      * @return List<MovingEntity> List of moving entities on map.
      */
     public List<MovingEntity> getMovingEntityList() {
-        List<String> movingType = Arrays.asList("mercenary", "spider", "zombie_toast");
+        List<String> movingType = Arrays.asList("mercenary", "spider", "zombie_toast", "old_player");
         List<MovingEntity> entityList = new ArrayList<>();
         for (Entity e : getAllEntity()) {
             if (movingType.contains(e.getType())) { entityList.add((MovingEntity) e); }

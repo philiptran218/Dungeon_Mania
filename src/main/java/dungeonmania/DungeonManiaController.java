@@ -137,7 +137,6 @@ public class DungeonManiaController {
         // Create enermy spawner
         this.enermySpawner = new EnermySpawner(gameMap);
         // Return DungeonResponse
-        System.out.println(new ResponseUtility(gameMap).returnDungeonResponse().getInventory().get(0).getType());
         return new ResponseUtility(gameMap).returnDungeonResponse();
     }
 
@@ -202,7 +201,7 @@ public class DungeonManiaController {
                 }
             }
             else {
-                if (e.getPos().equals(gameMap.getPlayer().getPos()) && !(e instanceof Player)) {
+                if (e.getPos().equals(gameMap.getPlayer().getPos())) {
                     removeEntity.add(gameMap.getBattle().fight(gameMap.getPlayer(), e));
                 }
             }

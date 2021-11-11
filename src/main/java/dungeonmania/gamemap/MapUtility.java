@@ -83,16 +83,24 @@ public class MapUtility {
         }
     }
 
+    /**
+     * Create an old version fo the player.
+     * @param map
+     */
     public static void addOldPlayer(GameMap map) {
+        Player player = map.getPlayer();
         for (JsonElement e : getSavedMap(map.getGameIndex().toString(), map.getMapId()).get("entities").getAsJsonArray()) {
             JsonObject entityJson = e.getAsJsonObject();
             if (entityJson.get("type").getAsString().equals("player")) {
                 Position pos = new Position(entityJson.get("x").getAsInt(), entityJson.get("y").getAsInt(), 3);
                 Player oldPlayer = (Player) EntityFactory.getEntityObject("player", pos, entityJson, map);
-                oldPlayer.setType("oldPlayer");
+                Battle battle = new Battle(map.getGameState().getMode());
+                oldPlayer.setBattle(battle);
+                oldPlayer.setType("old_player");
                 map.getMap().get(pos).add(oldPlayer);
             }
         }
+        map.setPlayer(player);
     }
 
     /**
