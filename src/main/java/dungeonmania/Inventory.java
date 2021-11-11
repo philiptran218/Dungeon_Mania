@@ -112,9 +112,6 @@ public class Inventory {
         JSONArray jsonArray = new JSONArray();
         // Add all inventory items
         for (CollectableEntity e : entities) {
-            JSONObject tmp = new JSONObject();
-            tmp.put("type", e.getType());
-            
             jsonArray.put(e.toJSONObjectInventory());
         }
         return jsonArray;
