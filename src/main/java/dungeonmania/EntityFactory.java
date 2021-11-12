@@ -96,6 +96,22 @@ public class EntityFactory {
                     shield.setDurability(jsonObj.get("durability").getAsInt());
                 }
                 return shield;
+            case "anduril":
+                Anduril anduril = new Anduril(id, type, collectPos);
+                if (jsonObj.get("durability") != null) {
+                    anduril.setDurability(jsonObj.get("durability").getAsInt());
+                }
+                return anduril;
+            case "sun_stone":
+                return new SunStone(id, type, collectPos);
+            case "sceptre":
+                return new Sceptre(id, type, collectPos);
+            case "midnight_armour":
+                MidnightArmour mArmour = new MidnightArmour(id, type, collectPos);
+                if (jsonObj.get("durability") != null) {
+                    mArmour.setDurability(jsonObj.get("durability").getAsInt());
+                }
+                return mArmour;
             case "time_turner":
                 return new TimeTuner(id, type, collectPos);
             case "player": 
