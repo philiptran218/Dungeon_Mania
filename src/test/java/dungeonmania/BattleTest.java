@@ -313,7 +313,7 @@ public class BattleTest {
         newDungeon.newGame("normal_enemies_anduril", "hard");
         // Moves right to pick up the anduril
         DungeonResponse info = newDungeon.tick(null, Direction.RIGHT);
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 11; i++) {
             newDungeon.tick(null, Direction.RIGHT);
         }
         info = newDungeon.tick(null, Direction.RIGHT);
