@@ -253,6 +253,8 @@ public class MovingEntityTest {
         controller.tick(null, Direction.RIGHT);
         response = controller.interact(MercId);
         assertTrue("".equals(response.getGoals()));
+        // Check that sun stone has been retained
+        assertTrue(response.getInventory().stream().anyMatch(e -> e.getType().equals("sun_stone")));
     }
 
     @Test
@@ -299,7 +301,7 @@ public class MovingEntityTest {
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
         DungeonResponse response = controller.newGame("bribeMercSceptre", "standard");
-        String mercId = getEntityId(new Position(8, 1, 3), response);
+        String mercId = getEntityId(new Position(10, 1, 3), response);
         // Move to collect the items
         for (int i = 0; i < 4; i++) {
             controller.tick(null, Direction.RIGHT);
@@ -398,12 +400,14 @@ public class MovingEntityTest {
         DungeonResponse response = controller.newGame("bribeAssassinSceptre", "standard");
         String assinId = getEntityId(new Position(6, 1, 3), response);
         controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
     
         // Once assassin is bribed with sceptre, player should not be able to kill him for 10 ticks
         controller.interact(assinId);
         for (int i = 0; i < 5; i++) {
             controller.tick(null, Direction.RIGHT);
             controller.tick(null, Direction.LEFT);
+            assertTrue(response.getEntities().stream().anyMatch(e -> e.getType().equals("assassin")));
         }
         // This tick should battle assassin, since effect has worn off
         response = controller.tick(null, Direction.RIGHT);
