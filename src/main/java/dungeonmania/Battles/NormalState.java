@@ -71,7 +71,8 @@ public class NormalState implements BattleState {
 
     /**
      * Checks for base dmg, swords, bows, anduril and midnight armour that can modify damage.
-     * @param p1
+     * @param p1 (the entity's damage)
+     * @param p2 (the entity receiving damage)
      */
     public double damageCalculation(MovingEntity p1, MovingEntity p2) {
         if (p1.getType().equals("player")) {
