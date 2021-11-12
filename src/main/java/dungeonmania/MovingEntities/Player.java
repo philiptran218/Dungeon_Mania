@@ -112,7 +112,6 @@ public class Player extends MovingEntity implements MovingEntitySubject {
 
         List<Entity> entities = map.get(pos.asLayer(4));
         if (entities.size() == 1) {
-            System.out.println(entities.get(0).getType().equals("door_unlocked"));
             return entities.get(0).getType().equals("door_unlocked");
         } else {
             return map.get(pos.asLayer(1)).isEmpty();

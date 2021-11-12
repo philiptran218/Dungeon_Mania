@@ -1,7 +1,5 @@
 package dungeonmania;
 
-import java.util.List;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -9,16 +7,21 @@ import dungeonmania.CollectableEntities.*;
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.gamemap.GameMap;
-import dungeonmania.gamemap.GameState;
-import dungeonmania.gamemap.MapUtility;
 import dungeonmania.util.Position;
 
 public class EntityFactory {
     private static final double PLAYER_DAMAGE = 2;
 
     public static Entity getEntityObject(String id, Position pos, JsonObject jsonObj, GameMap gameMap) {
+        boolean isOldPlayer = false;
         // Fields
         String type = jsonObj.get("type").getAsString();
+        // Check if it is old player
+        if (type.equals("older_player")) { 
+            type = "player";
+            isOldPlayer = true; 
+        }
+
         // Positions:
         Position otherPos = new Position(pos.getX(), pos.getY(), 4);
         Position movingPos = new Position(pos.getX(), pos.getY(), 3);
@@ -123,7 +126,11 @@ public class EntityFactory {
                         i++;
                     }
                 }
-                gameMap.setPlayer(player);
+                if (isOldPlayer) { 
+                    player.setType("older_player");
+                } else {
+                    gameMap.setPlayer(player); 
+                }
                 return player;
             case "swamp_tile": 
                 SwampTile swamp = new SwampTile(id, type, absolPos, jsonObj.get("movement_factor").getAsInt());
