@@ -9,6 +9,7 @@ import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.MovingEntities.ZombieToast;
 import dungeonmania.MovingEntities.Assassin;
+import dungeonmania.MovingEntities.Hydra;
 
 public class NormalState implements BattleState {
     
@@ -125,20 +126,7 @@ public class NormalState implements BattleState {
             newHealth = p2.getHealth() - ((health * (dmg * multiplier)) / 5);
         }
         else if (p2.getType().equals("hydra")) {
-            // Damage indicates that anduril is being used
-            if (dmg >= 8) {
-                newHealth = p2.getHealth() - ((health * dmg) / 5);
-            }
-            else {
-                // Simulate 50/50 chance for hydra to gain health
-                Random rand = new Random();
-                if (rand.nextBoolean()) {
-                    newHealth = p2.getHealth() + dmg;
-                }
-                else {
-                    newHealth = p2.getHealth() - ((health * dmg) / 5);
-                }
-            }
+            newHealth = hydraDamage((Hydra) p2, health, dmg);
         }
         else {
             newHealth = p2.getHealth() - ((health * dmg) / 5);
@@ -203,6 +191,25 @@ public class NormalState implements BattleState {
             }
         }
         return multiplier;
+    }
+
+    public double hydraDamage(Hydra hydra, double dmgHealth, double dmg) {
+        double newHealth;
+        // Damage indicates that anduril is being used
+        if (dmg >= 8) {
+            newHealth = hydra.getHealth() - ((dmgHealth * dmg) / 5);
+        }
+        else {
+            // Simulate 50/50 chance for hydra to gain health
+            Random rand = new Random();
+            if (rand.nextBoolean()) {
+                newHealth = hydra.getHealth() + dmg;
+            }
+            else {
+                newHealth = hydra.getHealth() - ((dmgHealth * dmg) / 5);
+            }
+        }
+        return newHealth;
     }
 
     public void spawnOneRing(Player p1) {
