@@ -1,5 +1,6 @@
 package dungeonmania;
 
+import dungeonmania.CollectableEntities.Bomb;
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.exceptions.InvalidActionException;
@@ -178,6 +179,11 @@ public class DungeonManiaController {
             // Get the entity on map:
             gameMap.getPlayer().useItem(gameMap.getMap(), itemUsed);
         }
+        // Blow Up Bombs
+        for (Bomb bomb : gameMap.getBombList()) {
+            bomb.detonate(gameMap.getMap());
+        }
+        // Activate lights, doors, etc
 
         // Ticks the duration of any active potions
         gameMap.getPlayer().tickPotions();

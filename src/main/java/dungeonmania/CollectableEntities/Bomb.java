@@ -7,7 +7,7 @@ import dungeonmania.Entity;
 import dungeonmania.util.Position;
 
 public class Bomb extends CombatItems {
-    private int explosionRadius = 2;
+    private static final int EXPLOSION_RADIUS = 2;
     public Bomb(String id, String type, Position pos) {
         super(id, type, pos);
     }
@@ -21,7 +21,7 @@ public class Bomb extends CombatItems {
 
     public void detonate(Map<Position, List<Entity>> map) {
         for(Position tempPos : map.keySet()) {
-            if (Math.sqrt(Position.distance(getPos(), tempPos)) < explosionRadius) {
+            if (Math.sqrt(Position.distance(getPos(), tempPos)) < EXPLOSION_RADIUS) {
                 // Within explosion radius
                 List<Entity> entities = map.get(tempPos);
                 Entity player = getPlayer(entities);

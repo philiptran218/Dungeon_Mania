@@ -144,6 +144,26 @@ public class EntityFactory {
                     }
                 }
                 return swamp;
+            case "light_bulb_on":
+                if (jsonObj.get("logic") != null) {
+                    return new LightBulb(id, type, absolPos, jsonObj.get("logic").getAsString());
+                } else {
+                    return new LightBulb(id, type, absolPos);
+                }
+            case "light_bulb_off":
+                if (jsonObj.get("logic") != null) {
+                    return new LightBulb(id, type, absolPos, jsonObj.get("logic").getAsString());
+                } else {
+                    return new LightBulb(id, type, absolPos);
+                }
+            case "switch_door":
+                if (jsonObj.get("logic") != null) {
+                    return new SwitchDoor(id, type, absolPos, jsonObj.get("logic").getAsString());
+                } else {
+                    return new SwitchDoor(id, type, absolPos);
+                }
+            case "wire":
+                return new Wire(id, type, pos);
             default: 
                 return null;
         }

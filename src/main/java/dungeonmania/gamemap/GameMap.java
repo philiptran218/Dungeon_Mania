@@ -10,6 +10,7 @@ import com.google.gson.*;
 import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
 import dungeonmania.Battles.Battle;
+import dungeonmania.CollectableEntities.Bomb;
 import dungeonmania.MovingEntities.*;
 import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.DungeonResponse;
@@ -94,6 +95,20 @@ public class GameMap {
     // ********************************************************************************************\\
     //                                Accessing Entities on Map                                    \\
     // ********************************************************************************************\\
+
+    /**
+     * Returns a list of all self moving entities from the game map.
+     * @return List<MovingEntity> List of moving entities on map.
+     */
+    public List<Bomb> getBombList() {
+        List<Bomb> bombList = new ArrayList<>();
+        for (Entity e : getAllEntity()) {
+            if (e instanceof Bomb) {
+                bombList.add((Bomb) e);
+            }
+        }
+        return bombList;
+    }
 
     /**
      * Returns a list of all self moving entities from the game map.
