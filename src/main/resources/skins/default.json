@@ -46,6 +46,7 @@
         "YELLOWportal": "images/tileset/entities/portal_08.png",
         "GREYportal": "images/tileset/entities/portal_12.png",
         "swamp_tile": "images/tileset/entities/swamp_tile.png",
-        "time_turner": "images/tileset/entities/time_turner.png"
+        "time_turner": "images/tileset/entities/time_turner.png",
+        "older_player": "images/tileset/entities/older_player.png"
     }
 }
