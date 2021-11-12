@@ -5,10 +5,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.concurrent.ThreadLocalRandom;
 
+import dungeonmania.AnimationUtility;
 import dungeonmania.Entity;
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
 import dungeonmania.CollectableEntities.Armour;
+import dungeonmania.response.models.AnimationQueue;
 
 
 public class ZombieToast extends MovingEntity {
@@ -64,17 +66,17 @@ public class ZombieToast extends MovingEntity {
     /**
      * Move the zombie on the map, in a random direction.
      */
-    public void move(Map<Position, List<Entity>> map) {
+    public void move(Map<Position, List<Entity>> map, List<AnimationQueue> animations) {
         List<Entity> entities = map.get(super.getPlayerPos()).stream()
                                                              .filter(e -> e.isType("player"))
                                                              .collect(Collectors.toList());
         Player player = (Player) entities.get(0);
 
         if (player.getInvincDuration() > 0 && !player.getBattle().getDifficulty().equals("hard")) {
-            moveAway(map);
+            moveAway(map, animations);
         }
         else {
-            moveNormal(map);
+            moveNormal(map, animations);
         }
     }
 
@@ -83,11 +85,12 @@ public class ZombieToast extends MovingEntity {
      * be passed by the zombie, the zombie does nothing
      * @param map
      */
-    public void moveNormal(Map<Position, List<Entity>> map) {
+    public void moveNormal(Map<Position, List<Entity>> map, List<AnimationQueue> animations) {
         Direction direction  = Randomdirection();
         Position newPos = super.getPos().translateBy(direction);
         if (canPass(map, newPos)) {
             super.moveInDir(map, direction);
+            AnimationUtility.translateMovingEntity(animations, false, this, direction);
         }
     }
 
@@ -95,7 +98,7 @@ public class ZombieToast extends MovingEntity {
      * The function to move the zombie away from the player.
      * @param map
      */
-    public void moveAway(Map<Position, List<Entity>> map) {
+    public void moveAway(Map<Position, List<Entity>> map, List<AnimationQueue> animations) {
         Position playerPos = this.getPlayerPos();
         Position pos = super.getPos();
         
@@ -113,6 +116,9 @@ public class ZombieToast extends MovingEntity {
                 distance = Position.distance(playerPos, tempPos);
             }
         }
+        
+        Direction direction = Position.getTranslationDirection(pos, newPos);
+        AnimationUtility.translateMovingEntity(animations, false, this, direction);
 
         this.moveToPos(map, newPos.asLayer(3));
     }

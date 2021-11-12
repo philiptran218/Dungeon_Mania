@@ -183,8 +183,8 @@ public class DungeonManiaController {
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
             if (!(e.getPos().equals(e.getPlayerPos()) && !e.isType("mercenary")) && !MapUtility.entityOnASwampTile(gameMap, e.getId())) {
-                animations.add(new AnimationQueue("PostTick", e.getId(), Arrays.asList("healthbar set 1", "healthbar tint 0x00ff00"), false, -1));
-                e.move(gameMap.getMap());
+                AnimationUtility.setMovingEntityHealthBar(animations, e);
+                e.move(gameMap.getMap(), animations);
             }
             
             Integer nextIndex = gameMap.getGameIndex() + 1;
@@ -234,7 +234,7 @@ public class DungeonManiaController {
         }
 
         // Spawn mobs on the map
-        enermySpawner.spawnMob();
+        enermySpawner.spawnMob(animations);
 
         // Check for swamp tile after all movements has occured,
         // and removes accordinly as well as tick each one.

@@ -8,6 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import dungeonmania.Entity;
 import dungeonmania.util.Position;
 import dungeonmania.CollectableEntities.Armour;
+import dungeonmania.response.models.AnimationQueue;
 
 
 public class Mercenary extends MovingEntity {
@@ -56,7 +57,7 @@ public class Mercenary extends MovingEntity {
      * Automatic movement of mecernary around the map tracking 
      * the player.
      */
-    public void move(Map<Position, List<Entity>> map){
+    public void move(Map<Position, List<Entity>> map, List<AnimationQueue> animations){
         // Entity list to add all entities with respect to player.
         List<Entity> entities = map.get(super.getPlayerPos()).stream()
                                                              .filter(e -> e.getType().equals("player"))
@@ -68,10 +69,10 @@ public class Mercenary extends MovingEntity {
             return;
         }
         else if (player.getInvincDuration() > 0 && !player.getBattle().getDifficulty().equals("hard")) {
-            state.moveAway(map);
+            state.moveAway(map, animations);
         }
         else {
-            state.move(map);
+            state.move(map, animations);
         }
     }
 
