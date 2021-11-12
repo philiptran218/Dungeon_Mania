@@ -20,7 +20,7 @@ public class SwitchDoor extends StaticEntity implements LogicGate{
     }
 
     @Override
-    public boolean isOn(Map<Position, List<Entity>> map) {
+    public boolean isOn(Map<Position, List<Entity>> map, List<String> visitedIDs) {
         return false;
     }
     

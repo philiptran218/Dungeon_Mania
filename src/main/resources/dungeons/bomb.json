@@ -1,5 +1,7 @@
 
 {
+    "width": 8,
+    "height": 9,
     "entities": [
       {
         "x": 1,
@@ -90,6 +92,14 @@
         "x": 1,
         "y": 2,
         "type": "bomb"
+      },
+      {
+        "x": 5,
+        "y": 5,
+        "type": "treasure"
       }
-    ]
+    ],
+    "goal-condition": {
+      "goal": "treasure"
+    }
 }

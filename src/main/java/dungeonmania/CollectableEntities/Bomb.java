@@ -1,10 +1,12 @@
 package dungeonmania.CollectableEntities;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import dungeonmania.Entity;
 import dungeonmania.StaticEntities.LogicGate;
+import dungeonmania.StaticEntities.LogicGateUtility;
 import dungeonmania.util.Position;
 
 public class Bomb extends CombatItems implements LogicGate {
@@ -56,23 +58,39 @@ public class Bomb extends CombatItems implements LogicGate {
     }
 
     @Override
-    public boolean isOn(Map<Position, List<Entity>> map) {
-        Position pos = super.getPos();
-        List<Entity> entities = map.get(getPos().asLayer(0));
-        if ( entities.size() > 0 && entities.get(0).isType("switch")) {
-            // Boulder is on a switch
-            List<Position> adjacentPos = pos.getCardinallyAdjacentPositions();
-            for (Position tempPos: adjacentPos) {
-                // Checks if a bomb needs to be exploded
-                List<Entity> collectablEntities = map.get(tempPos.asLayer(2));
-                if (collectablEntities.size() > 0 && collectablEntities.get(0).isType("bomb")) {
-                    // contains bomb
-                    Bomb bomb = (Bomb) collectablEntities.get(0);
-                    bomb.detonate(map);
+    public boolean isOn(Map<Position, List<Entity>> map, List<String> visitedIDs) {
+        List<Entity> inputs = new ArrayList<Entity>();
+        List<Position> adjacentPositions = super.getPos().getCardinallyAdjacentPositions();
+        for (Position position : adjacentPositions) {
+            List<Entity> entities = map.get(position.asLayer(0));
+            if (entities.size() > 0 && (entities.get(0) instanceof LogicGate)) {
+                String entityID = entities.get(0).getId();
+                if (!visitedIDs.contains(entityID)) {
+                    inputs.add(entities.get(0));
                 }
             }
         }
-        return false;
+        List<Boolean> inputValues = new ArrayList<Boolean>();
+        for (Entity entity : inputs) {
+            inputValues.add(((LogicGate) entity).isOn(map, visitedIDs));
+        }
+        return LogicGateUtility.applyLogic(logic, inputValues);
+        // Position pos = super.getPos();
+        // List<Entity> entities = map.get(getPos().asLayer(0));
+        // if ( entities.size() > 0 && entities.get(0).isType("switch")) {
+        //     // Boulder is on a switch
+        //     List<Position> adjacentPos = pos.getCardinallyAdjacentPositions();
+        //     for (Position tempPos: adjacentPos) {
+        //         // Checks if a bomb needs to be exploded
+        //         List<Entity> collectablEntities = map.get(tempPos.asLayer(2));
+        //         if (collectablEntities.size() > 0 && collectablEntities.get(0).isType("bomb")) {
+        //             // contains bomb
+        //             Bomb bomb = (Bomb) collectablEntities.get(0);
+        //             bomb.detonate(map);
+        //         }
+        //     }
+        // }
+        // return false;
     }
 
 }

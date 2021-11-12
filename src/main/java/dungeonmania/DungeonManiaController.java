@@ -181,8 +181,11 @@ public class DungeonManiaController {
         }
         // Blow Up Bombs
         for (Bomb bomb : gameMap.getBombList()) {
-            bomb.detonate(gameMap.getMap());
+            if (bomb.isOn(gameMap.getMap(), new ArrayList<String>())) {
+                bomb.detonate(gameMap.getMap());
+            }
         }
+
         // Activate lights, doors, etc
 
         // Ticks the duration of any active potions

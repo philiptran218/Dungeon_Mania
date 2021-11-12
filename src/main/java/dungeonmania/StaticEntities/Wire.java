@@ -13,7 +13,7 @@ public class Wire extends StaticEntity implements LogicGate{
     }
 
     @Override
-    public boolean isOn(Map<Position, List<Entity>> map) {
+    public boolean isOn(Map<Position, List<Entity>> map, List<String> visitedIDs) {
         //TODO: Recursively look to see if any adajacent wires are active.
         return false;
     }

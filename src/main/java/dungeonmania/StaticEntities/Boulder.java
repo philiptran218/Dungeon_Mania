@@ -69,5 +69,4 @@ public class Boulder extends StaticEntity {
         map.get(newPos).add(this);
         super.setPos(newPos);
     }
-
 }
