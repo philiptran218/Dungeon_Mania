@@ -7,15 +7,20 @@ public class LogicGateUtility {
     public static boolean applyLogic(String logic, List<Boolean> inputValues) {
         switch (logic) {
             case "and":
-                break;
+                return inputValues.stream().reduce(Boolean::logicalAnd).orElse(false);
             case "or":
-                break;
+                return inputValues.stream().reduce(Boolean::logicalOr).orElse(false);
             case "xor":
-                break;
+                return inputValues.stream().reduce(Boolean::logicalXor).orElse(false);
             case "not":
-                break;
+                for (Boolean value : inputValues) {
+                    if (value == true) {
+                        return false;
+                    }
+                }
+                return true;
             default:
-                break;
+                return false;
         }
     }
 }
