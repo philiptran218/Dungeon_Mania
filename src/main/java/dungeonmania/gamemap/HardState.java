@@ -32,7 +32,7 @@ public class HardState implements GameState {
                 List <Entity> mobsOnPosition = gameMap.get(dir.asLayer(3));
                 // If an open spot is found, a zombie is spawned
                 if (entitiesOnPosition.isEmpty() && mobsOnPosition.isEmpty()) {
-                    ZombieToast newZombie = new ZombieToast("" + System.currentTimeMillis(), "zombie_toast", dir.asLayer(3));
+                    ZombieToast newZombie = new ZombieToast("Zombie" + System.currentTimeMillis(), "zombie_toast", dir.asLayer(3));
                     gameMap.get(dir.asLayer(3)).add(newZombie);
                     player.registerObserver(newZombie);
                     break;
