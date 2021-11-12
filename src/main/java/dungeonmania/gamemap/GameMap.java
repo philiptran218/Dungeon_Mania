@@ -11,9 +11,6 @@ import dungeonmania.Entity;
 import dungeonmania.EntityFactory;
 import dungeonmania.Battles.Battle;
 import dungeonmania.MovingEntities.*;
-import dungeonmania.response.models.AnimationQueue;
-import dungeonmania.response.models.DungeonResponse;
-import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
 public class GameMap {
