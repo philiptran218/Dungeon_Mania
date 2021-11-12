@@ -37,7 +37,7 @@ public class Bomb extends CombatItems implements LogicGate {
                 if (player != null) {
                     entities.clear();
                     entities.add(player);
-                }   else {
+                } else {
                     entities.clear();
                 }
             }
@@ -48,10 +48,9 @@ public class Bomb extends CombatItems implements LogicGate {
         if (entities.size() == 0) {
             return null;
         }
-        Entity player = null;
         for (Entity entity: entities) {
             if (entity.getType().equals("player")) {
-                return player;
+                return entity;
             }
         }
         return null;

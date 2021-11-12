@@ -38,9 +38,7 @@ public class Spider extends MovingEntity {
         List<Entity> entities = map.get(super.getPlayerPos()).stream()
                                                              .filter(e -> e.getType().equals("player"))
                                                              .collect(Collectors.toList());
-        System.out.println(entities);
         Player player = (Player) entities.get(0);
-
         if (player.getInvincDuration() > 0 && !player.getBattle().getDifficulty().equals("hard")) {
             moveAway(map);
         }
