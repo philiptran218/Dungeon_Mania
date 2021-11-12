@@ -9,9 +9,12 @@ import java.util.Queue;
 import java.util.PriorityQueue;
 import java.util.stream.Collectors;
 
+import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import dungeonmania.AnimationUtility;
 import dungeonmania.Entity;
 import dungeonmania.StaticEntities.SwampTile;
+import dungeonmania.response.models.AnimationQueue;
 
 public class MercenaryEnemyState implements MercenaryState{
     private Mercenary mercenary;
@@ -34,7 +37,7 @@ public class MercenaryEnemyState implements MercenaryState{
      * @param map
      */
     @Override
-    public void move(Map<Position, List<Entity>> map) {
+    public void move(Map<Position, List<Entity>> map, List<AnimationQueue> animations) {
         Position playerPos = mercenary.getPlayerPos();
         Position pos = mercenary.getPos();
 
@@ -44,28 +47,33 @@ public class MercenaryEnemyState implements MercenaryState{
             // Check if player will fight
             if (map.get(playerPos).size() > 1) {
                 // Player will fight with an enemy, move twice
-                moveDefault(map);
+                moveDefault(map, animations);
             }
         }
-        moveDefault(map);
+        moveDefault(map, animations);
     }
     
     /**
      * Mercenary moves - follows the player
      * @param map
      */
-    public void moveDefault(Map<Position, List<Entity>> map) {
+    public void moveDefault(Map<Position, List<Entity>> map, List<AnimationQueue> animations) {
         Position playerPos = mercenary.getPlayerPos();
         Position pos = mercenary.getPos();
 
         Position newPos = dijkstra(map, pos);
         if (newPos == null) {
             // Player is unreachable, use a method other than dijkstra to calculate move
-            newPos = moveCloser(map);
+            newPos = moveCloser(map, animations);
         }
+
+        Direction direction = Position.getTranslationDirection(pos, newPos);
+        AnimationUtility.translateMovingEntity(animations, false, mercenary, direction);
 
         mercenary.moveToPos(map, newPos.asLayer(3));
         mercenary.setPreviousPlayerPos(playerPos);
+
+
     }
 
     /**
@@ -139,7 +147,7 @@ public class MercenaryEnemyState implements MercenaryState{
         }
     }
 
-    public Position moveCloser(Map<Position, List<Entity>> map) {
+    public Position moveCloser(Map<Position, List<Entity>> map, List<AnimationQueue> animations) {
         Position playerPos = mercenary.getPlayerPos();
         Position pos = mercenary.getPos();
         
@@ -164,7 +172,7 @@ public class MercenaryEnemyState implements MercenaryState{
      * Moves away from the player when they are invincible
      */
     @Override
-    public void moveAway(Map<Position, List<Entity>> map) {
+    public void moveAway(Map<Position, List<Entity>> map, List<AnimationQueue> animations) {
         Position playerPos = mercenary.getPlayerPos();
         Position pos = mercenary.getPos();
         
@@ -183,6 +191,9 @@ public class MercenaryEnemyState implements MercenaryState{
             }
         }
 
+        Direction direction = Position.getTranslationDirection(pos, newPos);
+        AnimationUtility.translateMovingEntity(animations, false, mercenary, direction);
+        
         mercenary.moveToPos(map, newPos.asLayer(3));
     }
     

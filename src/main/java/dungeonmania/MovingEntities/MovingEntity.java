@@ -1,6 +1,8 @@
 package dungeonmania.MovingEntities;
 
 import dungeonmania.Entity;
+import dungeonmania.response.models.AnimationQueue;
+
 import java.util.Map;
 
 import org.json.JSONObject;
@@ -42,7 +44,7 @@ public abstract class MovingEntity extends Entity implements MovingEntityObserve
      * The default move of the MovingEntity in a tic
      * @param map
      */
-    public abstract void move(Map<Position, List<Entity>> map);
+    public abstract void move(Map<Position, List<Entity>> map, List<AnimationQueue> animations);
 
     /**
      * Move the MovingEntity in a direction

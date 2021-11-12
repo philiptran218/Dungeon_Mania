@@ -1,8 +1,11 @@
 package dungeonmania.gamemap;
 
+import java.util.List;
 import java.util.Random;
 
+import dungeonmania.AnimationUtility;
 import dungeonmania.MovingEntities.*;
+import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.util.Position;
 
 public class EnermySpawner {
@@ -24,9 +27,9 @@ public class EnermySpawner {
     /**
      * Spawn all respective mobs.
      */
-    public void spawnMob() {
-        spawnSpider();
-        spawnMercenary();
+    public void spawnMob(List<AnimationQueue> animations) {
+        spawnSpider(animations);
+        spawnMercenary(animations);
         period++;
     }
 
@@ -34,7 +37,7 @@ public class EnermySpawner {
      * Spawns a spider on the map with a one in ten chance (with
      * restrictions).
      */
-    public void spawnSpider() {
+    public void spawnSpider(List<AnimationQueue> animations) {
         int spiders = 0;
         for (MovingEntity e : map.getMovingEntityList()) {
             if (e.isType("spider")) { spiders++; }
@@ -56,6 +59,7 @@ public class EnermySpawner {
                 map.getMap().get(newSpider).add(spider);
                 map.getPlayer().registerObserver(spider);
             }
+            AnimationUtility.setMovingEntityHealthBar(animations, spider);
         }
         seed += 124;
     }
@@ -63,12 +67,13 @@ public class EnermySpawner {
     /**
      * Periodically spawns a mecenary at the entry location.
      */
-    public void spawnMercenary() {
+    public void spawnMercenary(List<AnimationQueue> animations) {
         Mercenary newMerc = new Mercenary("merc" + System.currentTimeMillis(), "mercenary", map.getEntryPos());
         // Check conditions to spawn mercenary
         if (period != 0 && period % 15 == 0) {
             if (newMerc.canPass(map.getMap(), map.getEntryPos())) {
                 map.getMap().get(map.getEntryPos()).add(newMerc);
+                AnimationUtility.setMovingEntityHealthBar(animations, newMerc);
                 map.getPlayer().registerObserver(newMerc);
             } else {
                 period--;
