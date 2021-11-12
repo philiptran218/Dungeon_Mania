@@ -45,7 +45,8 @@ public class PeacefulState implements BattleState {
 
     /**
      * Checks for base dmg, swords, bows, anduril and midnight armour that can modify damage.
-     * @param p1
+     * @param p1 (entity dealing the damage)
+     * @param p2 (entity receiving the damage)
      */
     public double damageCalculation(MovingEntity p1, MovingEntity p2) {
         if (p1.getType().equals("player")) {
