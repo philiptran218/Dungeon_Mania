@@ -5,7 +5,6 @@ import dungeonmania.MovingEntities.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jetty.security.UserAuthentication;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -130,13 +129,13 @@ public class Inventory {
                 }
                 return true;    
             case "shield":
-                if (getNoItemType("wood") < 2 || (getNoItemType("treasure") < 1 && getNoItemType("key") < 1)) {
+                if (getNoItemType("wood") < 2 || (getNoItemType("treasure") < 1 && getNoItemType("key") < 1 && getNoItemType("sun_stone") < 1)) {
                 return false;
                 }
                 return true;
             case "sceptre":
                 if ((getNoItemType("wood") < 1 && getNoItemType("arrow") < 2) || (getNoItemType("treasure") < 1 && 
-                     getNoItemType("key") < 1) || getNoItemType("sun_stone") < 1) {
+                     getNoItemType("key") < 1 && getNoItemType("sun_stone") < 2) || getNoItemType("sun_stone") < 1) {
                     return false;
                 }
                 return true;
@@ -165,8 +164,10 @@ public class Inventory {
                 useItem("wood");
                 if (getNoItemType("treasure") >= 1) {
                     useItem("treasure");
-                } else {
+                } else if (getNoItemType("key") >= 1) {
                     useItem("key");
+                } else {
+                    useItem("sun_stone");
                 }
                 Shield newShield = new Shield("" + System.currentTimeMillis(), "shield", null);
                 put(newShield, player);
@@ -180,8 +181,10 @@ public class Inventory {
                 }
                 if (getNoItemType("treasure") >= 1) {
                     useItem("treasure");
-                } else {
+                } else if (getNoItemType("key") >= 1) {
                     useItem("key");
+                } else {
+                    useItem("sun_stone");
                 }
                 useItem("sun_stone");
                 Sceptre newSceptre = new Sceptre("" + System.currentTimeMillis(), "sceptre", null);
