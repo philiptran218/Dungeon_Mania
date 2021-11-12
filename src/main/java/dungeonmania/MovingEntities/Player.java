@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
-
+import dungeonmania.AnimationUtility;
 import dungeonmania.Entity;
 import dungeonmania.Inventory;
 import dungeonmania.Battles.Battle;
@@ -59,13 +59,16 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     public void move(Map<Position, List<Entity>> map, Direction direction, List<AnimationQueue> animations) {
         Position newPos = super.getPos().translateBy(direction);    
         Position doorLayer = newPos.asLayer(1);
+        boolean isMovingIntoStatic = true;
         if (canPass(map, newPos)) {
-            moveInDir(map, direction);     
+            moveInDir(map, direction);
+            isMovingIntoStatic = false;
         } else if (canPush(map, newPos, direction)) {   
             // Player can move, but pushes a boulder
             Boulder boulder = (Boulder) map.get(newPos.asLayer(1)).get(0);
             boulder.push(map, direction, animations);
             moveInDir(map, direction);
+            isMovingIntoStatic = false;
         } else if (!map.get(doorLayer).isEmpty() && map.get(doorLayer).get(0).getType().equals("door")) {
             Entity e = map.get(doorLayer).get(0);
             // Check if the door and key matches:
@@ -79,24 +82,16 @@ public class Player extends MovingEntity implements MovingEntitySubject {
                 // Remove the door on current layer and
                 map.get(doorLayer).remove(e);
                 moveInDir(map, direction);
+                isMovingIntoStatic = false;
             }
         } else if (canTeleport(map, newPos, direction)) {
             Portal portal = (Portal) map.get(newPos.asLayer(4)).get(0);
             portal.teleport(map, this, direction);
+            isMovingIntoStatic = false;
         }
+        
+        AnimationUtility.translatePlayer(animations, isMovingIntoStatic, this, direction);
 
-        if (direction.getOffset().getX() == 1) {
-            animations.add(new AnimationQueue("PostTick", getId(), Arrays.asList("translate-x -1", "translate-x 1, over 0.3s"), false, -1));
-        }
-        else if (direction.getOffset().getX() == -1) {
-            animations.add(new AnimationQueue("PostTick", getId(), Arrays.asList("translate-x 1", "translate-x -1, over 0.3s"), false, -1));
-        }
-        else if (direction.getOffset().getY() == 1) {
-            animations.add(new AnimationQueue("PostTick", getId(), Arrays.asList("translate-y -1", "translate-y 1, over 0.3s"), false, -1));
-        }
-        else if (direction.getOffset().getY() == -1) {
-            animations.add(new AnimationQueue("PostTick", getId(), Arrays.asList("translate-y 1", "translate-y -1, over 0.3s"), false, -1));
-        }
         pickUp(map);
         notifyObservers();
     }
@@ -112,7 +107,6 @@ public class Player extends MovingEntity implements MovingEntitySubject {
 
         List<Entity> entities = map.get(pos.asLayer(4));
         if (entities.size() == 1) {
-            System.out.println(entities.get(0).getType().equals("door_unlocked"));
             return entities.get(0).getType().equals("door_unlocked");
         } else {
             return map.get(pos.asLayer(1)).isEmpty();
