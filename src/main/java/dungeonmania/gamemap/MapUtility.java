@@ -39,7 +39,9 @@ public class MapUtility {
         // Add all entities on the map
         for (Entity e : gameMap.getAllEntity()) {
             // Check if it is on a swamp tile and dont put if it is:
-            if (!entityOnASwampTile(gameMap, e.getId())) { jsonArray.put(e.toJSONObject()); } 
+            if (!entityOnASwampTile(gameMap, e.getId())) { 
+                jsonArray.put(e.toJSONObject()); 
+            } 
         }
         return jsonArray;
     }

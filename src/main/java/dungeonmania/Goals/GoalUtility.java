@@ -60,6 +60,24 @@ public class GoalUtility {
         }
     }
 
+    public static String goalJsontoString(JsonObject jsonGoal) {
+        if (getGoalType(jsonGoal).equals("AND")) {
+            List<String> subgoals = new ArrayList<String>();
+            for (JsonElement entity : jsonGoal.getAsJsonArray("subgoals")) {
+                subgoals.add(goalJsontoString(entity.getAsJsonObject()));
+            }
+            return "(" + String.join(" AND ", subgoals) + ")";
+        } else if (getGoalType(jsonGoal).equals("OR")) {
+            List<String> subgoals = new ArrayList<String>();
+            for (JsonElement entity : jsonGoal.getAsJsonArray("subgoals")) {
+                subgoals.add(goalJsontoString(entity.getAsJsonObject()));
+            }
+            return "(" + String.join(" OR ", subgoals) + ")";
+        } else {
+            return ":" + getGoalType(jsonGoal);
+        }
+    }
+
     /**
      * Gets the goal type from the jsonObject
      * 
