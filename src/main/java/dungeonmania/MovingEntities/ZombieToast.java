@@ -22,8 +22,9 @@ public class ZombieToast extends MovingEntity {
      */
     public ZombieToast(String id, String type, Position pos) {
         super(id, type, pos, 10, 1);
-        this.armour = generateArmour();
-
+        if (getType().equals("zombie_toast")) {
+            this.armour = generateArmour();
+        }
     }
 
     /**
