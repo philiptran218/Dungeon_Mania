@@ -46,7 +46,6 @@ public class CollectableEntityTest {
     // Tests for CollectableEntities:
 
     // Test that the entity can be picked up by the player.
-    // TODO: change this test to add new collectables
     @Test
     public void testCollectablePickup() {
         DungeonManiaController newDungeon = new DungeonManiaController();
