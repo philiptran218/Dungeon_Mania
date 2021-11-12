@@ -14,6 +14,7 @@ import dungeonmania.MovingEntities.Hydra;
 public class NormalState implements BattleState {
     
     private Battle battle;
+    private Random rand = new Random(100032390);
     
     /**
      * This is treated as BattleState for Normal and Hard difficulty.
@@ -201,7 +202,6 @@ public class NormalState implements BattleState {
         }
         else {
             // Simulate 50/50 chance for hydra to gain health
-            Random rand = new Random();
             if (rand.nextBoolean()) {
                 newHealth = hydra.getHealth() + dmg;
             }
