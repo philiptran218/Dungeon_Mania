@@ -1,6 +1,6 @@
 
 {
-    "width": 35,
+    "width": 15,
     "height": 3,
     "entities": [
       {
@@ -84,103 +84,13 @@
         "type": "wall"
       },
       {
-        "x": 15,
-        "y": 0,
+        "x": 14,
+        "y": 1,
         "type": "wall"
       },
       {
-        "x": 16,
-        "y": 0,
-        "type": "wall"
-      },
-      {
-        "x": 17,
-        "y": 0,
-        "type": "wall"
-      },
-      {
-        "x": 18,
-        "y": 0,
-        "type": "wall"
-      },
-      {
-        "x": 19,
-        "y": 0,
-        "type": "wall"
-      },
-      {
-        "x": 20,
-        "y": 0,
-        "type": "wall"
-      },
-      {
-        "x": 21,
-        "y": 0,
-        "type": "wall"
-      },
-      {
-        "x": 22,
-        "y": 0,
-        "type": "wall"
-      },
-      {
-        "x": 23,
-        "y": 0,
-        "type": "wall"
-      },
-      {
-        "x": 24,
-        "y": 0,
-        "type": "wall"
-      },
-      {
-        "x": 25,
-        "y": 0,
-        "type": "wall"
-      },
-      {
-        "x": 26,
-        "y": 0,
-        "type": "wall"
-      },
-      {
-        "x": 27,
-        "y": 0,
-        "type": "wall"
-      },
-      {
-        "x": 28,
-        "y": 0,
-        "type": "wall"
-      },
-      {
-        "x": 29,
-        "y": 0,
-        "type": "wall"
-      },
-      {
-        "x": 30,
-        "y": 0,
-        "type": "wall"
-      },
-      {
-        "x": 31,
-        "y": 0,
-        "type": "wall"
-      },
-      {
-        "x": 32,
-        "y": 0,
-        "type": "wall"
-      },
-      {
-        "x": 33,
-        "y": 0,
-        "type": "wall"
-      },
-      {
-        "x": 34,
-        "y": 0,
+        "x": 14,
+        "y": 2,
         "type": "wall"
       },
       {
@@ -259,116 +169,6 @@
         "type": "wall"
       },
       {
-        "x": 14,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 15,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 16,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 17,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 18,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 19,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 20,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 21,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 22,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 23,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 24,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 25,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 26,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 27,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 28,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 29,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 30,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 31,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 32,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 33,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 34,
-        "y": 2,
-        "type": "wall"
-      },
-      {
-        "x": 34,
-        "y": 1,
-        "type": "wall"
-      },
-      {
         "x": 2,
         "y": 1,
         "type": "anduril"
@@ -394,12 +194,12 @@
         "type": "mercenary"
       },
       {
-        "x": 13,
+        "x": 12,
         "y": 1,
         "type": "zombie_toast"
       },
       {
-        "x": 15,
+        "x": 13,
         "y": 1,
         "type": "zombie_toast"
       }
