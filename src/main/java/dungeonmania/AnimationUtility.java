@@ -29,37 +29,40 @@ public class AnimationUtility {
             animations.add(new AnimationQueue("PostTick", player.getId(), Arrays.asList("healthbar set " + health, "healthbar tint 0x00ff00"), false, -1));
         }
     }
+    public static void setMovingEntityHealthBar(List<AnimationQueue> animations, MovingEntity e) {
+        animations.add(new AnimationQueue("PostTick", e.getId(), Arrays.asList("healthbar set 1", "healthbar tint 0x00ff00"), false, -1));
+    }
     public static void shakeHealthBar(List<AnimationQueue> animations, Player player) {
         animations.add(new AnimationQueue("PostTick", player.getId(), Arrays.asList("healthbar shake, over 0.5s, ease Sin"), false, 0.5));
     }
-    public static void translatePlayer(List<AnimationQueue> animations, boolean isMovingIntoStatic, Player player, Direction direction) {
+    public static void translateMovingEntity(List<AnimationQueue> animations, boolean isMovingIntoStatic, MovingEntity movingEntity, Direction direction) {
         if (isMovingIntoStatic == false) {
             if (direction.getOffset().getX() == 1) {
-                animations.add(new AnimationQueue("PostTick", player.getId(), Arrays.asList("translate-x -1", "translate-x 1, over 0.3s"), false, -1));
+                animations.add(new AnimationQueue("PostTick", movingEntity.getId(), Arrays.asList("translate-x -1", "translate-x 1, over 0.3s"), false, -1));
             }
             else if (direction.getOffset().getX() == -1) {
-                animations.add(new AnimationQueue("PostTick", player.getId(), Arrays.asList("translate-x 1", "translate-x -1, over 0.3s"), false, -1));
+                animations.add(new AnimationQueue("PostTick", movingEntity.getId(), Arrays.asList("translate-x 1", "translate-x -1, over 0.3s"), false, -1));
             }
             else if (direction.getOffset().getY() == 1) {
-                animations.add(new AnimationQueue("PostTick", player.getId(), Arrays.asList("translate-y -1", "translate-y 1, over 0.3s"), false, -1));
+                animations.add(new AnimationQueue("PostTick", movingEntity.getId(), Arrays.asList("translate-y -1", "translate-y 1, over 0.3s"), false, -1));
             }
             else if (direction.getOffset().getY() == -1) {
-                animations.add(new AnimationQueue("PostTick", player.getId(), Arrays.asList("translate-y 1", "translate-y -1, over 0.3s"), false, -1));
+                animations.add(new AnimationQueue("PostTick", movingEntity.getId(), Arrays.asList("translate-y 1", "translate-y -1, over 0.3s"), false, -1));
             }
         }
     }
     public static void translateBoulder(List<AnimationQueue> animations, Direction direction, String boulderId) {
         if (direction.getOffset().getX() == 1) {
-            animations.add(new AnimationQueue("PostTick", boulderId, Arrays.asList("translate-x -1", "translate-x 1, over 0.3s", "rotate 180, over 0.5s"), false, -1));
+            animations.add(new AnimationQueue("PostTick", boulderId, Arrays.asList("translate-x -1", "translate-x 1, over 0.3s", "rotate 180, over 0.3s"), false, -1));
         }
         else if (direction.getOffset().getX() == -1) {
-            animations.add(new AnimationQueue("PostTick", boulderId, Arrays.asList("translate-x 1", "translate-x -1, over 0.3s", "rotate 180, over 0.5s"), false, -1));
+            animations.add(new AnimationQueue("PostTick", boulderId, Arrays.asList("translate-x 1", "translate-x -1, over 0.3s", "rotate 180, over 0.3s"), false, -1));
         }
         else if (direction.getOffset().getY() == 1) {
-            animations.add(new AnimationQueue("PostTick", boulderId, Arrays.asList("translate-y -1", "translate-y 1, over 0.3s", "rotate 180, over 0.5s"), false, -1));
+            animations.add(new AnimationQueue("PostTick", boulderId, Arrays.asList("translate-y -1", "translate-y 1, over 0.3s", "rotate 180, over 0.3s"), false, -1));
         }
         else if (direction.getOffset().getY() == -1) {
-            animations.add(new AnimationQueue("PostTick", boulderId, Arrays.asList("translate-y 1", "translate-y -1, over 0.3s", "rotate 180, over 0.5s"), false, -1));
+            animations.add(new AnimationQueue("PostTick", boulderId, Arrays.asList("translate-y 1", "translate-y -1, over 0.3s", "rotate 180, over 0.3s"), false, -1));
         }
     }
 }
