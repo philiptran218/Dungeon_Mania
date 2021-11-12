@@ -192,7 +192,7 @@ public class DungeonManiaController {
                 // Remove older player
                 gameMap.getMap().get(e.getPos()).remove(e);
             } else if (e.isType("older_player")) {
-                ((Player) e).move(gameMap.getMap(), MapUtility.findOlderPlayerMoveDirection(gameMap));
+                ((Player) e).move(gameMap.getMap(), MapUtility.findOlderPlayerMoveDirection(gameMap), animations);
             }
         }
         
