@@ -54,6 +54,10 @@ public class EntityFactory {
                 return new ZombieToast(id, type, movingPos);
             case "mercenary": 
                 return new Mercenary(id, type, movingPos);
+            case "assassin":
+                return new Assassin(id, type, movingPos);
+            case "hydra":
+                return new Hydra(id, type, movingPos);
             case "treasure": 
                 return new Treasure(id, type, collectPos);
             case "health_potion": 
