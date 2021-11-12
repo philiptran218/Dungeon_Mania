@@ -184,20 +184,14 @@ public class Inventory {
                     useItem("key");
                 }
                 useItem("sun_stone");
-                // Create the sun_stone first
-                /*
-                SunStone newSunStone = new SunStone(......);
-                put(newSunStone, player);
-                */               
+                Sceptre newSceptre = new Sceptre("" + System.currentTimeMillis(), "sceptre", null);
+                put(newSceptre, player);
                 break;
             case "midnight_armour":
                 useItem("armour");
                 useItem("sun_stone");
-                // Create the midnight_armour first
-                /*
-                MidnightArmour newMidnightArmour = new MidnightArmour(....);
+                MidnightArmour newMidnightArmour = new MidnightArmour("" + System.currentTimeMillis(), "midnight_armour", null);
                 put(newMidnightArmour, player);
-                */
                 break;
         }
     }
