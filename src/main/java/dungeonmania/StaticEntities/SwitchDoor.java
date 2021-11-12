@@ -8,7 +8,7 @@ import dungeonmania.util.Position;
 
 public class SwitchDoor extends StaticEntity implements LogicGate{
 
-    private String logic;
+    private String logic = "none";
 
     public SwitchDoor(String id, String type, Position pos, String logic) {
         this(id, type, pos);
@@ -17,7 +17,6 @@ public class SwitchDoor extends StaticEntity implements LogicGate{
 
     public SwitchDoor(String id, String type, Position pos) {
         super(id, type, pos);
-        this.logic = "none";
     }
 
     @Override

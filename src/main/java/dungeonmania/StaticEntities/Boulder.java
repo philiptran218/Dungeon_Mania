@@ -68,23 +68,6 @@ public class Boulder extends StaticEntity {
         map.get(pos).clear();
         map.get(newPos).add(this);
         super.setPos(newPos);
-
-        pos = super.getPos();
-
-        List<Entity> entities = map.get(getPos().asLayer(0));
-        if ( entities.size() > 0 && entities.get(0).isType("switch")) {
-            // Boulder is on a switch
-            List<Position> adjacentPos = pos.getCardinallyAdjacentPositions();
-            for (Position tempPos: adjacentPos) {
-                // Checks if a bomb needs to be exploded
-                List<Entity> collectablEntities = map.get(tempPos.asLayer(2));
-                if (collectablEntities.size() > 0 && collectablEntities.get(0).isType("bomb")) {
-                    // contains bomb
-                    Bomb bomb = (Bomb) collectablEntities.get(0);
-                    bomb.detonate(map);
-                }
-            }
-        }
     }
 
 }

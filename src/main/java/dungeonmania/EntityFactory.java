@@ -68,8 +68,12 @@ public class EntityFactory {
                 return new Wood(id, type, collectPos);
             case "arrow": 
                 return new Arrow(id, type, collectPos);
-            case "bomb": 
-                return new Bomb(id, type, collectPos);
+            case "bomb":
+                if (jsonObj.get("logic") != null) {
+                    return new Bomb(id, type, collectPos, jsonObj.get("logic").getAsString());
+                } else {
+                    return new Bomb(id, type, collectPos);
+                }
             case "sword":
                 Sword sword = new Sword(id, type, collectPos);
                 if (jsonObj.get("durability") != null) {

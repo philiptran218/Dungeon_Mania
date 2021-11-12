@@ -4,10 +4,17 @@ import java.util.List;
 import java.util.Map;
 
 import dungeonmania.Entity;
+import dungeonmania.StaticEntities.LogicGate;
 import dungeonmania.util.Position;
 
-public class Bomb extends CombatItems {
+public class Bomb extends CombatItems implements LogicGate {
     private static final int EXPLOSION_RADIUS = 2;
+    private String logic = "none";
+
+    public Bomb(String id, String type, Position pos, String logic) {
+        this(id, type, pos);
+        this.logic = logic;
+    }
     public Bomb(String id, String type, Position pos) {
         super(id, type, pos);
     }
@@ -46,6 +53,26 @@ public class Bomb extends CombatItems {
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean isOn(Map<Position, List<Entity>> map) {
+        Position pos = super.getPos();
+        List<Entity> entities = map.get(getPos().asLayer(0));
+        if ( entities.size() > 0 && entities.get(0).isType("switch")) {
+            // Boulder is on a switch
+            List<Position> adjacentPos = pos.getCardinallyAdjacentPositions();
+            for (Position tempPos: adjacentPos) {
+                // Checks if a bomb needs to be exploded
+                List<Entity> collectablEntities = map.get(tempPos.asLayer(2));
+                if (collectablEntities.size() > 0 && collectablEntities.get(0).isType("bomb")) {
+                    // contains bomb
+                    Bomb bomb = (Bomb) collectablEntities.get(0);
+                    bomb.detonate(map);
+                }
+            }
+        }
+        return false;
     }
 
 }
