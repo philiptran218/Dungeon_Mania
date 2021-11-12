@@ -186,6 +186,14 @@ public class DungeonManiaController {
                 animations.add(new AnimationQueue("PostTick", e.getId(), Arrays.asList("healthbar set 1", "healthbar tint 0x00ff00"), false, -1));
                 e.move(gameMap.getMap());
             }
+            
+            Integer nextIndex = gameMap.getGameIndex() + 1;
+            if (e.isType("older_player") && MapUtility.getSavedMap(nextIndex.toString(), gameMap.getMapId()) == null) {
+                // Remove older player
+                gameMap.getMap().get(e.getPos()).remove(e);
+            } else if (e.isType("older_player")) {
+                ((Player) e).move(gameMap.getMap(), MapUtility.findOlderPlayerMoveDirection(gameMap), animations);
+            }
         }
         
         // Player battles enemies on the same tile
@@ -198,7 +206,7 @@ public class DungeonManiaController {
                 }
             }
             else {
-                if (e.getPos().equals(gameMap.getPlayer().getPos()) && !(e instanceof Player)) {
+                if (e.getPos().equals(gameMap.getPlayer().getPos())) {
                     removeEntity.add(gameMap.getBattle().fight(gameMap.getPlayer(), e));
                 }
             }
@@ -325,6 +333,7 @@ public class DungeonManiaController {
         // Load new game
         gameMap = new GameMap(gameIndex.toString(), gameMap.getMapId());
         AnimationUtility.initialiseHealthBarForAllEntities(animations, gameMap.getPlayer(), gameMap.getMovingEntityList(), true);
+        MapUtility.addOldPlayer(gameMap);
         // Return response
         return new ResponseUtility(gameMap).returnDungeonResponse(animations);
     }
