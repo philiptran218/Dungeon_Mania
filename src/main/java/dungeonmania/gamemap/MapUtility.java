@@ -91,6 +91,7 @@ public class MapUtility {
      * @param map
      */
     public static void addOldPlayer(GameMap map) {
+        removeOldPlayer(map);
         Player player = map.getPlayer();
         for (JsonElement e : getSavedMap(map.getGameIndex().toString(), map.getMapId()).get("entities").getAsJsonArray()) {
             JsonObject entityJson = e.getAsJsonObject();
@@ -105,6 +106,18 @@ public class MapUtility {
         }
         map.setPlayer(player);
     }
+
+    /**
+     * Given the gameMap, remove the old player on the map.
+     * @param map
+     */
+    public static void removeOldPlayer(GameMap map) {
+        List<Entity> oldPlayerList = map.getEntityTypeList("older_player");
+        for (Entity e : oldPlayerList) {
+            map.getMap().get(e.getPos()).remove(e);
+        }
+    }
+
     
     /**
      * Get the direction the old player needs to travel in.
