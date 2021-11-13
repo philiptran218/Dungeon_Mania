@@ -95,7 +95,7 @@ public class StaticEntityTest {
     public void testUnlockedDoorSunStone() {
         DungeonManiaController newDungeon = new DungeonManiaController();
         DungeonResponse response;
-        DungeonResponse createNew = newDungeon.newGame("door_sun_stone", "Peaceful");
+        DungeonResponse createNew = newDungeon.newGame("door_sun_stone", "peaceful");
         String playerId = getEntityId(new Position(1, 1, 3), createNew);
         response = newDungeon.tick(null, Direction.RIGHT);
         response = newDungeon.tick(null, Direction.RIGHT);
@@ -195,10 +195,12 @@ public class StaticEntityTest {
     @Test
     public void testZombieSpawnerAnduril() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse response = newDungeon.newGame("zombie_toast_spawner_anduril", "Standard");
+        DungeonResponse response = newDungeon.newGame("zombie_toast_spawner_anduril", "standard");
         String spawner = getEntityId(new Position(3, 1, 1), response);
         response = newDungeon.tick(null, Direction.RIGHT);
         response = newDungeon.interact(spawner);
+        // Should be able to walk on top of where spawner was
+        response = newDungeon.tick(null, Direction.RIGHT);
         assertFalse(isEntityOnTile(response, new Position(3, 1, 1), spawner));
     }
     // Tests if an exception is thrown if player is not in range of spawner
@@ -448,19 +450,23 @@ public class StaticEntityTest {
         // Move the mobs:
         controller.tick(null, Direction.DOWN);
         controller.tick(null, Direction.DOWN);
-        controller.tick(null, Direction.LEFT);
-
         controller.saveGame("swamp_tile_test");
-        response = controller.loadGame("swamp_tile_test");
 
-        // New id
+        // Load the game:
+        response = controller.loadGame("swamp_tile_test");
+        controller.tick(null, Direction.LEFT);
+        
+        // Find new id:
         merc = getEntityId(new Position(3, 3, 3) ,response);
         spider = getEntityId(new Position(3, 4, 3) ,response);
+        // Should remain int he same spot
+        assertTrue(isEntityOnTile(response, new Position(3, 3), merc));
+        assertTrue(isEntityOnTile(response, new Position(3, 4), spider));
 
         // Move again, the entity should not move:
         response = controller.tick(null, Direction.LEFT);
-        assertTrue(isEntityOnTile(response, new Position(3, 3), merc));
-        assertTrue(isEntityOnTile(response, new Position(3, 4), spider));
+        assertTrue(isEntityOnTile(response, new Position(2, 3), merc));
+        assertTrue(isEntityOnTile(response, new Position(4, 4), spider));
     }
 
     // Test boulder pushing on swampTile

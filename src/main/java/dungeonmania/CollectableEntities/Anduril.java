@@ -2,18 +2,18 @@ package dungeonmania.CollectableEntities;
 
 import dungeonmania.util.Position;
 
-public class Sword extends CombatItems {
+public class Anduril extends CombatItems {
 
-    private static final double DAMAGE = 1;
+    private static final double DAMAGE = 2;
     private static final int INITIAL_DURABILITY = 10;
     
     /**
-     * Constructor for Sword
+     * Constructor for Anduril
      * @param id
      * @param type
      * @param pos
      */
-    public Sword(String id, String type, Position pos) {
+    public Anduril(String id, String type, Position pos) {
         super(id, type, pos);
         this.setDurability(INITIAL_DURABILITY);
     }
@@ -46,7 +46,7 @@ public class Sword extends CombatItems {
     }
 
     /**
-     * Check the durability of the sword and if durability is zero 
+     * Check the durability of the anduril and if durability is zero 
      * remove it from the inventory.
      */
     public void checkNoDurability() {

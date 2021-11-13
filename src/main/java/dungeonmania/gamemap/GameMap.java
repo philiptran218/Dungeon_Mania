@@ -12,9 +12,6 @@ import dungeonmania.EntityFactory;
 import dungeonmania.Battles.Battle;
 import dungeonmania.CollectableEntities.Bomb;
 import dungeonmania.MovingEntities.*;
-import dungeonmania.response.models.AnimationQueue;
-import dungeonmania.response.models.DungeonResponse;
-import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
 public class GameMap {
@@ -115,7 +112,7 @@ public class GameMap {
      * @return List<MovingEntity> List of moving entities on map.
      */
     public List<MovingEntity> getMovingEntityList() {
-        List<String> movingType = Arrays.asList("mercenary", "spider", "zombie_toast");
+        List<String> movingType = Arrays.asList("mercenary", "spider", "zombie_toast", "older_player", "assassin", "hydra");
         List<MovingEntity> entityList = new ArrayList<>();
         for (Entity e : getAllEntity()) {
             if (movingType.contains(e.getType())) { entityList.add((MovingEntity) e); }
@@ -250,5 +247,9 @@ public class GameMap {
 
     public JsonObject getJsonMap() {
         return jsonMap;
+    }
+
+    public Position getOlderPlayerPosition() {
+        return getEntityTypeList("older_player").get(0).getPos();
     }
 }

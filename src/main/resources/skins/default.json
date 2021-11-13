@@ -46,6 +46,13 @@
         "YELLOWportal": "images/tileset/entities/portal_08.png",
         "GREYportal": "images/tileset/entities/portal_12.png",
         "swamp_tile": "images/tileset/entities/swamp_tile.png",
-        "time_turner": "images/tileset/entities/time_turner.png"
+        "time_turner": "images/tileset/entities/time_turner.png",
+        "older_player": "images/tileset/entities/older_player.png",
+        "assassin": "images/tileset/entities/assassin.png",
+        "hydra": "images/tileset/entities/hydra.png",
+        "sun_stone": "images/tileset/entities/sun_stone.png",
+        "anduril": "images/tileset/entities/anduril.png",
+        "sceptre": "images/tileset/entities/sceptre.png",
+        "midnight_armour": "images/tileset/entities/midnight_armour.png"
     }
 }

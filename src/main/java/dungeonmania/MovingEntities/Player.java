@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
-
+import dungeonmania.AnimationUtility;
 import dungeonmania.Entity;
 import dungeonmania.Inventory;
 import dungeonmania.Battles.Battle;
@@ -24,7 +24,7 @@ import dungeonmania.response.models.AnimationQueue;
 
 public class Player extends MovingEntity implements MovingEntitySubject {
     private List<MovingEntityObserver> listObservers = new ArrayList<MovingEntityObserver>();
-    private List<Mercenary> bribedMercenaries = new ArrayList<Mercenary>();
+    private List<Mercenary> bribedAllies = new ArrayList<Mercenary>();
     private Inventory inventory = new Inventory(this);
     private Battle battle;
     private Map<String, Integer> potions = new HashMap<String, Integer>();
@@ -48,7 +48,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     // ********************************************************************************************\\
 
     // Polymorphism
-    public void move(Map<Position, List<Entity>> map) {}
+    public void move(Map<Position, List<Entity>> map, List<AnimationQueue> animations) {}
 
     /**
      * Given a direction to move in, the player moves in that direction. Checks 
@@ -59,18 +59,29 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     public void move(Map<Position, List<Entity>> map, Direction direction, List<AnimationQueue> animations) {
         Position newPos = super.getPos().translateBy(direction);    
         Position doorLayer = newPos.asLayer(1);
+        boolean isMovingIntoStatic = true;
         if (canPass(map, newPos)) {
-            moveInDir(map, direction);     
+            moveInDir(map, direction);
+            isMovingIntoStatic = false;
         } else if (canPush(map, newPos, direction)) {   
             // Player can move, but pushes a boulder
             Boulder boulder = (Boulder) map.get(newPos.asLayer(1)).get(0);
             boulder.push(map, direction, animations);
             moveInDir(map, direction);
+            isMovingIntoStatic = false;
         } else if (!map.get(doorLayer).isEmpty() && map.get(doorLayer).get(0).getType().equals("door")) {
             Entity e = map.get(doorLayer).get(0);
-            // Check if the door and key matches:
             int keyId = ((Door) e).getKeyId();
-            if (inventory.getKey(keyId) != null) {
+            // Check if player has a sun stone
+            if (hasItem("sun_stone")) {
+                e.setType("door_unlocked");
+                e.setPos(doorLayer.asLayer(0));
+                map.get(newPos.asLayer(0)).add(e);
+                map.get(doorLayer).remove(e);
+                moveInDir(map, direction);
+            }
+            // Check if the door and key matches:
+            else if (inventory.getKey(keyId) != null) {
                 e.setType("door_unlocked");
                 e.setPos(doorLayer.asLayer(0));
                 inventory.getKey(keyId).use();
@@ -79,24 +90,16 @@ public class Player extends MovingEntity implements MovingEntitySubject {
                 // Remove the door on current layer and
                 map.get(doorLayer).remove(e);
                 moveInDir(map, direction);
+                isMovingIntoStatic = false;
             }
         } else if (canTeleport(map, newPos, direction)) {
             Portal portal = (Portal) map.get(newPos.asLayer(4)).get(0);
             portal.teleport(map, this, direction);
+            isMovingIntoStatic = false;
         }
+        
+        AnimationUtility.translateMovingEntity(animations, isMovingIntoStatic, this, direction);
 
-        if (direction.getOffset().getX() == 1) {
-            animations.add(new AnimationQueue("PostTick", getId(), Arrays.asList("translate-x -1", "translate-x 1, over 0.3s"), false, -1));
-        }
-        else if (direction.getOffset().getX() == -1) {
-            animations.add(new AnimationQueue("PostTick", getId(), Arrays.asList("translate-x 1", "translate-x -1, over 0.3s"), false, -1));
-        }
-        else if (direction.getOffset().getY() == 1) {
-            animations.add(new AnimationQueue("PostTick", getId(), Arrays.asList("translate-y -1", "translate-y 1, over 0.3s"), false, -1));
-        }
-        else if (direction.getOffset().getY() == -1) {
-            animations.add(new AnimationQueue("PostTick", getId(), Arrays.asList("translate-y 1", "translate-y -1, over 0.3s"), false, -1));
-        }
         pickUp(map);
         notifyObservers();
     }
@@ -220,22 +223,74 @@ public class Player extends MovingEntity implements MovingEntitySubject {
             throw new InvalidActionException("Mercenary too far away");
         }
 
-        if (inventory.getNoItemType("treasure") < mercenary.getPrice()) {
-            // Player doesnt have enough gold
-            throw new InvalidActionException("Player doesn't have enough gold");
+        if (hasItem("sceptre")) {
+            mercenary.setBribedTicks(10);
         }
-
-
-        // Remove gold;
-        for (int i = 0; i < mercenary.getPrice(); i++) {
-            if (inventory.getItem("treasure").getType().equals("treasure")) {
-                ((Treasure) inventory.getItem("treasure")).use();
+        // If player does not have sun stone, have to use treasure to bribe
+        else if (!hasItem("sun_stone")) {
+            if (inventory.getNoItemType("treasure") < mercenary.getPrice()) {
+                // Player doesnt have enough gold
+                throw new InvalidActionException("Player doesn't have enough gold");
+            }
+            // Remove gold;
+            for (int i = 0; i < mercenary.getPrice(); i++) {
+                if (inventory.getItem("treasure").getType().equals("treasure")) {
+                    ((Treasure) inventory.getItem("treasure")).use();
+                }
             }
         }
         // Successfully bribe mercenary
         mercenary.bribe();
-        bribedMercenaries.add(mercenary);
-    
+        bribedAllies.add(mercenary);
+    }
+
+    /**
+     * The player bribes the assassin. The bribe will be successful if the player
+     * has enough gold, the one ring and is within 2 cardinal tiles from the assassin
+     * @param map 
+     * @param assassin assassin that the player will try to bribe
+     */
+    public void bribeAssassin(Map<Position, List<Entity>> map, Assassin assassin) throws InvalidActionException{
+        if (assassin.isAlly()) {
+            // assassin is an ally, dont bribe him;
+            return;
+        }
+        Position pos = super.getPos();
+        Position assassinPos = assassin.getPos();
+
+        Position difference = Position.calculatePositionBetween(pos, assassinPos);
+        if (Math.abs(difference.getX()) + Math.abs(difference.getY()) > 2) {
+            // player more than 2 cardinal tiles from assassin
+            throw new InvalidActionException("Assassin too far away");
+        }
+
+        // Check if player has sceptre first
+        if (hasItem("sceptre")) {
+            assassin.setBribedTicks(10);
+        }
+        // If player does not have sun stone, have to use treasure to bribe
+        else {
+            if (!hasItem("sun_stone")) {
+                if (inventory.getNoItemType("treasure") < assassin.getPrice()) {
+                    // Player doesnt have enough gold
+                    throw new InvalidActionException("Player doesn't have enough gold");
+                }
+                // Remove gold;
+                for (int i = 0; i < assassin.getPrice(); i++) {
+                    if (inventory.getItem("treasure").getType().equals("treasure")) {
+                        ((Treasure) inventory.getItem("treasure")).use();
+                    }
+                }
+            }
+            // Check if player has the one ring
+            if (!hasItem("one_ring")) {
+                throw new InvalidActionException("Player doesn't have The One Ring");
+            }
+            ((TheOneRing) inventory.getItem("one_ring")).remove();
+        }
+        // Successfully bribe mercenary
+        assassin.bribe();
+        bribedAllies.add(assassin);
     }
 
     /**
@@ -261,6 +316,9 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         } else if (inventory.getItem("bow") != null) {
             spawner.destroy(map);
             inventory.getItem("bow").use();
+        } else if (inventory.getItem("anduril") != null) {
+            spawner.destroy(map);
+            inventory.getItem("anduril").use();
         } else {
             throw new InvalidActionException("player does not have a weapon");
         }
@@ -363,8 +421,26 @@ public class Player extends MovingEntity implements MovingEntitySubject {
      * Returns a list of bribed meercenaries.
      * @return List<Mercenary> List of bribed mecernaries.
      */
-    public List<Mercenary> getBribedMercenaries() {
-        return bribedMercenaries;
+    public List<Mercenary> getBribedAllies() {
+        return bribedAllies;
+    }
+
+    public void tickAllies() {
+        List<Mercenary> removeAlly = new ArrayList<>();
+        for (Mercenary e : bribedAllies) {
+            // Tick down enemy mind control
+            if (e.getBribedTicks() > 0) {
+                e.setBribedTicks(e.getBribedTicks() - 1);
+            }
+            // Check if mind control wears off, then set to normal bribeTick
+            if (e.getBribedTicks() == 0) {
+                e.setBribedTicks(-1);
+                e.resetMindControl();
+                removeAlly.add(e);
+            }
+        }
+        // Remove all non-allies from list
+        bribedAllies.removeAll(removeAlly);
     }
 
     // ********************************************************************************************\\

@@ -1,5 +1,6 @@
 package dungeonmania;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -252,6 +253,8 @@ public class MovingEntityTest {
         controller.tick(null, Direction.RIGHT);
         response = controller.interact(MercId);
         assertTrue("".equals(response.getGoals()));
+        // Check that sun stone has been retained
+        assertTrue(response.getInventory().stream().anyMatch(e -> e.getType().equals("sun_stone")));
     }
 
     @Test
@@ -290,5 +293,125 @@ public class MovingEntityTest {
         controller.interact(mercId);
         response = controller.tick(null, Direction.LEFT);
         assertTrue(isEntityOnTile(response, new Position(2, 1), mercId));  
+    }
+
+    @Test
+    public void testBribeMercenarySceptre() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse response = controller.newGame("bribeMercSceptre", "standard");
+        String mercId = getEntityId(new Position(10, 1, 3), response);
+        // Move to collect the items
+        for (int i = 0; i < 4; i++) {
+            controller.tick(null, Direction.RIGHT);
+        }
+        // Build the sceptre
+        controller.build("sceptre");
+        // Once mercenary is bribed with sceptre, player should not be able to kill him for 10 ticks
+        controller.interact(mercId);
+        for (int i = 0; i < 5; i++) {
+            controller.tick(null, Direction.RIGHT);
+            controller.tick(null, Direction.LEFT);
+            assertTrue(response.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
+        }
+        // This tick should battle mercenary, since effect has worn off
+        response = controller.tick(null, Direction.RIGHT);
+        // Mercenary should have died
+        assertFalse(response.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
+    }
+
+    @Test
+    public void testAssassinTooFarAwayToBribe() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse response = controller.newGame("bribeAssassin", "standard");
+        String assinId = getEntityId(new Position(8, 1, 3), response);
+        // Collect items to bribe
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
+        // Try to bribe assassin 3 tiles away
+        assertThrows(InvalidActionException.class, () -> controller.interact(assinId));
+    }
+
+    @Test
+    public void testBribeAssassinNoTreasure() {
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse response = controller.newGame("bribeAssassinNoTreasure", "standard");
+        String assinId = getEntityId(new Position(4, 1, 3), response);
+        controller.tick(null, Direction.RIGHT);
+        
+        // Try to bribe assassin with only one ring (no treasure)
+        assertThrows(InvalidActionException.class, () -> controller.interact(assinId));
+    }
+
+    @Test
+    public void testBribeAssassinNoRing() {
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse response = controller.newGame("bribeAssassinNoRing", "standard");
+        String assinId = getEntityId(new Position(4, 1, 3), response);
+        controller.tick(null, Direction.RIGHT);
+        
+        // Try to bribe assassin with only treasure (no ring)
+        assertThrows(InvalidActionException.class, () -> controller.interact(assinId));
+    }
+
+    @Test
+    public void testBribeAssassinWithRingTreasure() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        DungeonResponse response = controller.newGame("bribeAssassin", "standard");
+        String assinId = getEntityId(new Position(8, 1, 3), response);
+        // Collect items to bribe
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
+        assertTrue(":enemies".equals(response.getGoals()));
+        // Successfully bribe assassin
+        response = controller.interact(assinId);
+        // Check goals for enemies (should be empty)
+        assertTrue("".equals(response.getGoals()));
+        // Try to bribe again (should do nothing)
+        controller.interact(assinId);
+    }
+
+    @Test
+    public void testBribeAssassinWithRingSunStone() {
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse response = controller.newGame("bribeAssassinSunStone", "standard");
+        String assinId = getEntityId(new Position(6, 1, 3), response);
+        // Collect items to bribe
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
+        assertTrue(":enemies".equals(response.getGoals()));
+        // Successfully bribe assassin
+        response = controller.interact(assinId);
+        // Check goals for enemies (should be empty)
+        assertTrue("".equals(response.getGoals()));
+        // Sun stone should be retained
+        assertTrue(response.getInventory().stream().anyMatch(e -> e.getType().equals("sun_stone")));
+    }
+
+    @Test
+    public void testBribeAssassinSceptre() {
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse response = controller.newGame("bribeAssassinSceptre", "standard");
+        String assinId = getEntityId(new Position(6, 1, 3), response);
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
+    
+        // Once assassin is bribed with sceptre, player should not be able to kill him for 10 ticks
+        controller.interact(assinId);
+        for (int i = 0; i < 5; i++) {
+            controller.tick(null, Direction.RIGHT);
+            controller.tick(null, Direction.LEFT);
+            assertTrue(response.getEntities().stream().anyMatch(e -> e.getType().equals("assassin")));
+        }
+        // This tick should battle assassin, since effect has worn off
+        response = controller.tick(null, Direction.RIGHT);
+        // Assassin should have died
+        assertFalse(response.getEntities().stream().anyMatch(e -> e.getType().equals("assassin")));
     }
 }

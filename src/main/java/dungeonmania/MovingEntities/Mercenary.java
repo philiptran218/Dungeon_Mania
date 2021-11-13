@@ -8,6 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import dungeonmania.Entity;
 import dungeonmania.util.Position;
 import dungeonmania.CollectableEntities.Armour;
+import dungeonmania.response.models.AnimationQueue;
 
 
 public class Mercenary extends MovingEntity {
@@ -18,6 +19,7 @@ public class Mercenary extends MovingEntity {
     private Armour armour;
     private int price = 1;
     private int battleRadius = 3;
+    private int bribedTicks = -1;
 
     /**
      * Constructor for mercenary.
@@ -56,7 +58,7 @@ public class Mercenary extends MovingEntity {
      * Automatic movement of mecernary around the map tracking 
      * the player.
      */
-    public void move(Map<Position, List<Entity>> map){
+    public void move(Map<Position, List<Entity>> map, List<AnimationQueue> animations){
         // Entity list to add all entities with respect to player.
         List<Entity> entities = map.get(super.getPlayerPos()).stream()
                                                              .filter(e -> e.getType().equals("player"))
@@ -68,10 +70,10 @@ public class Mercenary extends MovingEntity {
             return;
         }
         else if (player.getInvincDuration() > 0 && !player.getBattle().getDifficulty().equals("hard")) {
-            state.moveAway(map);
+            state.moveAway(map, animations);
         }
         else {
-            state.move(map);
+            state.move(map, animations);
         }
     }
 
@@ -87,6 +89,14 @@ public class Mercenary extends MovingEntity {
      */
     public void bribe() {
         this.state = allyState;
+    }
+
+    /**
+     * Changes the state of the mercenary back to enemy.
+     * Used when the sceptre effect wears off.
+     */
+    public void resetMindControl() {
+        this.state = enemyState;
     }
 
     /**
@@ -132,6 +142,14 @@ public class Mercenary extends MovingEntity {
 
     public int getPrice() {
         return price;
+    }
+
+    public int getBribedTicks() {
+        return bribedTicks;
+    }
+
+    public void setBribedTicks(int tick) {
+        this.bribedTicks = tick;
     }
 }
 

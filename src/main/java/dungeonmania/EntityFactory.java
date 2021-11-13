@@ -1,7 +1,5 @@
 package dungeonmania;
 
-import java.util.List;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -9,16 +7,21 @@ import dungeonmania.CollectableEntities.*;
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.gamemap.GameMap;
-import dungeonmania.gamemap.GameState;
-import dungeonmania.gamemap.MapUtility;
 import dungeonmania.util.Position;
 
 public class EntityFactory {
     private static final double PLAYER_DAMAGE = 2;
 
     public static Entity getEntityObject(String id, Position pos, JsonObject jsonObj, GameMap gameMap) {
+        boolean isOldPlayer = false;
         // Fields
         String type = jsonObj.get("type").getAsString();
+        // Check if it is old player
+        if (type.equals("older_player")) { 
+            type = "player";
+            isOldPlayer = true; 
+        }
+
         // Positions:
         Position otherPos = new Position(pos.getX(), pos.getY(), 4);
         Position movingPos = new Position(pos.getX(), pos.getY(), 3);
@@ -54,6 +57,10 @@ public class EntityFactory {
                 return new ZombieToast(id, type, movingPos);
             case "mercenary": 
                 return new Mercenary(id, type, movingPos);
+            case "assassin":
+                return new Assassin(id, type, movingPos);
+            case "hydra":
+                return new Hydra(id, type, movingPos);
             case "treasure": 
                 return new Treasure(id, type, collectPos);
             case "health_potion": 
@@ -100,6 +107,22 @@ public class EntityFactory {
                     shield.setDurability(jsonObj.get("durability").getAsInt());
                 }
                 return shield;
+            case "anduril":
+                Anduril anduril = new Anduril(id, type, collectPos);
+                if (jsonObj.get("durability") != null) {
+                    anduril.setDurability(jsonObj.get("durability").getAsInt());
+                }
+                return anduril;
+            case "sun_stone":
+                return new SunStone(id, type, collectPos);
+            case "sceptre":
+                return new Sceptre(id, type, collectPos);
+            case "midnight_armour":
+                MidnightArmour mArmour = new MidnightArmour(id, type, collectPos);
+                if (jsonObj.get("durability") != null) {
+                    mArmour.setDurability(jsonObj.get("durability").getAsInt());
+                }
+                return mArmour;
             case "time_turner":
                 return new TimeTuner(id, type, collectPos);
             case "player": 
@@ -127,7 +150,11 @@ public class EntityFactory {
                         i++;
                     }
                 }
-                gameMap.setPlayer(player);
+                if (isOldPlayer) { 
+                    player.setType("older_player");
+                } else {
+                    gameMap.setPlayer(player); 
+                }
                 return player;
             case "swamp_tile": 
                 SwampTile swamp = new SwampTile(id, type, absolPos, jsonObj.get("movement_factor").getAsInt());

@@ -3,9 +3,11 @@ package dungeonmania.gamemap;
 import java.util.List;
 import java.util.Map;
 
+import dungeonmania.AnimationUtility;
 import dungeonmania.Entity;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.MovingEntities.ZombieToast;
+import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.util.Position;
 
 public class HardState implements GameState {
@@ -13,7 +15,7 @@ public class HardState implements GameState {
     private static final double PLAYER_MAX_HEALTH = 15;
     
     // Spawns the zombie from the zombie toast spawner
-    public int spawnZombie(int tickProgress, Map<Position, List<Entity>> gameMap, Position zombieSpawner) {
+    public int spawnZombie(int tickProgress, Map<Position, List<Entity>> gameMap, Position zombieSpawner, List<AnimationQueue> animations) {
         if (tickProgress == 14) {
             Player player = null;
             for (List<Entity> entities: gameMap.values()) {
@@ -32,8 +34,9 @@ public class HardState implements GameState {
                 List <Entity> mobsOnPosition = gameMap.get(dir.asLayer(3));
                 // If an open spot is found, a zombie is spawned
                 if (entitiesOnPosition.isEmpty() && mobsOnPosition.isEmpty()) {
-                    ZombieToast newZombie = new ZombieToast("" + System.currentTimeMillis(), "zombie_toast", dir.asLayer(3));
+                    ZombieToast newZombie = new ZombieToast("Zombie" + System.currentTimeMillis(), "zombie_toast", dir.asLayer(3));
                     gameMap.get(dir.asLayer(3)).add(newZombie);
+                    AnimationUtility.setMovingEntityHealthBar(animations, newZombie);
                     player.registerObserver(newZombie);
                     break;
                 }
