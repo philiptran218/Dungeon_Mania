@@ -322,6 +322,8 @@ public class DungeonManiaController {
      */
     public DungeonResponse rewind(int ticks) throws IllegalArgumentException {
         animations.clear();
+        // Track which tick we need to get to
+        gameMap.setDestinationTick(gameMap.getGameIndex());
         // Save game after each instance and load what you need.
         if (ticks <= 0) { throw new IllegalArgumentException("Invalid rewind tick."); }
         // If not enough rewind, do not do anything
