@@ -17,8 +17,7 @@
 - If a sword or bow is used to destroy a zombie toast spawner, this will also reduce the weapon's durability.
 - Bomb explodes immediately if placed next to a switch with a boulder on top.
 - Player can only have one potion active at a time for each type (if the player already has an active invincibility potion, they cannot use another one. However, they can use an invisibility potion since it is a different type).
-- Bomb will only detonate if a boulder is pushed onto a switch that is cardinally adjacent to the bomb. The bomb will not detonate if it is placed cardinally adjacent to a 
-boulder that is already on top of a switch.
+- Bomb will only detonate if a boulder is pushed onto a switch that is cardinally adjacent to the bomb. The bomb will not detonate if it is placed cardinally adjacent to a boulder that is already on top of a switch.
 - Player will retain the sun stone after using it except for building new weapons.
 - If bribing a mercenary/assassin, a sceptre will be used first. If there is no sceptre, the sun stone will be used first since it doesn't get disposed of. If the player doesn't have sun stone, then treasure will be used.
 
@@ -37,7 +36,7 @@ boulder that is already on top of a switch.
 - Shield/bow/midnight armour is used automatically in combat. Player is not given an option to use it or not.
 - When building a shield, the player's treasure will automatically be used as material (since it has less importance than a key). If the player does not have enough treasure, then a key will be used.
 - When building a sceptre, wood will be used first unless the player does not have enough wood, then arrows will be used. Same condition applies for key/treasure, where treasure will be used first and then key if the player does not have enough treasure.
-- Sun stone will not be substitutable for treasure when building weapons.
+- Sun stone is substitutable for treasure when building weapons. However, it will be used last if player already has treasure or a key, since the sun stone is the most valuable item.
 - A Sceptre can be used an unlimited amount of times (can control unlimited enemies and has no durability).
 - Sceptre will also be confined to the usual bribe radius. It cannot be used outside of this range.
 - Even though midnight armour provides extra damage, its durability will only be decreased if the player takes damage rather than attacking enemies (treated as an armour).
