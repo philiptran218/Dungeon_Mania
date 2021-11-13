@@ -5,6 +5,7 @@ import java.util.Map;
 
 import dungeonmania.Entity;
 import dungeonmania.gamemap.GameState;
+import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.util.Position;
 
 public class ZombieToastSpawner extends StaticEntity {
@@ -24,8 +25,8 @@ public class ZombieToastSpawner extends StaticEntity {
      * @param listOfEntities
      * @param state
      */
-    public void tick(Position zombieSpawner, Map<Position, List<Entity>> listOfEntities, GameState state) {
-        tickProgress = state.spawnZombie(tickProgress, listOfEntities, zombieSpawner);
+    public void tick(Position zombieSpawner, Map<Position, List<Entity>> listOfEntities, GameState state, List<AnimationQueue> animations) {
+        tickProgress = state.spawnZombie(tickProgress, listOfEntities, zombieSpawner, animations);
     }
     /**
      * Destroys the zombie toast spawner
