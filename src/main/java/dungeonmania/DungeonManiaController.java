@@ -3,6 +3,7 @@ package dungeonmania;
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.gamemap.DungeonGenerator;
 import dungeonmania.gamemap.EnermySpawner;
 import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.AnimationQueue;
@@ -342,5 +343,31 @@ public class DungeonManiaController {
         MapUtility.addOldPlayer(gameMap);
         // Return response
         return new ResponseUtility(gameMap).returnDungeonResponse(animations);
+    }
+
+    /**
+     * Generate a Dungeon maze with a start and exit Position, and create the game
+     * @param xStart x coordinate of player spawning position
+     * @param yStart y coordinate of player spawning position
+     * @param xEnd x coordinate of the exit
+     * @param yEnd y coordinate of the exit
+     * @param gameMode difficulty of the game
+     * @return DungeonResponse
+     * @throws IllegalArgumentException
+     */
+    public DungeonResponse generateDungeon(int xStart, int yStart, int xEnd, int yEnd, String gameMode) throws IllegalArgumentException {
+        if (!getGameModes().contains(gameMode.toLowerCase())) {
+            throw new IllegalArgumentException("Game mode does not exist.");
+        }
+        // Create the dungeon
+        DungeonGenerator.generate(xStart, yStart, xEnd, yEnd);
+
+        try {
+            Thread.sleep(1500);
+        } catch (Exception e) {
+        }
+
+        // Create the game
+        return newGame("random", gameMode);
     }
 }
