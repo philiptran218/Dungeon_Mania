@@ -15,6 +15,11 @@
         "type": "swamp_tile"
       },
       {
+        "x": 5,
+        "y": 2,
+        "type": "boulder"
+      },
+      {
         "x": 0,
         "y": 0,
         "type": "wall"

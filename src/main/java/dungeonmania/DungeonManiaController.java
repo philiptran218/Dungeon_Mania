@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.event.SwingPropertyChangeSupport;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -196,6 +198,7 @@ public class DungeonManiaController {
                 // Remove older player
                 gameMap.getMap().get(e.getPos()).remove(e);
             } else if (e.isType("older_player")) {
+                System.out.println(MapUtility.findOlderPlayerMoveDirection(gameMap));
                 ((Player) e).move(gameMap.getMap(), MapUtility.findOlderPlayerMoveDirection(gameMap), animations);
             }
         }
