@@ -14,7 +14,7 @@ import dungeonmania.util.Position;
 public class EnermySpawner {
     // Seed counter used for spider
     int seed;
-    int period;
+    int period = 1;
 
     // ******************************
     GameMap map;
