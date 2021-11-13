@@ -219,12 +219,8 @@ public class DungeonManiaController {
                     if (e.isType("older_player")) {
                         boolean hasMidNight = (((Player) e).getInventory().getItem("midnight_armour") != null);
                         boolean hasSunStone = (((Player) e).getInventory().getItem("sun_stone") != null);
-                        if (!(hasMidNight || hasSunStone)) {
-                            removeEntity.add(gameMap.getBattle().fight(gameMap.getPlayer(), e)); 
-                        }
-                    } else {
-                        removeEntity.add(gameMap.getBattle().fight(gameMap.getPlayer(), e)); 
-                    }
+                        if (!(hasMidNight || hasSunStone)) { removeEntity.add(gameMap.getBattle().fight(gameMap.getPlayer(), e)); }
+                    } else { removeEntity.add(gameMap.getBattle().fight(gameMap.getPlayer(), e)); }
                 }
             }
         }
