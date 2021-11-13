@@ -197,8 +197,7 @@ public class DungeonManiaController {
             if (e.isType("older_player") && MapUtility.getSavedMap(nextIndex.toString(), gameMap.getMapId()) == null) {
                 // Remove older player
                 gameMap.getMap().get(e.getPos()).remove(e);
-            } else if (e.isType("older_player")) {
-                System.out.println(MapUtility.findOlderPlayerMoveDirection(gameMap));
+            } else if (e.isType("older_player") && MapUtility.findOlderPlayerMoveDirection(gameMap) != null) {
                 ((Player) e).move(gameMap.getMap(), MapUtility.findOlderPlayerMoveDirection(gameMap), animations);
             }
         }

@@ -150,8 +150,10 @@ public class MapUtility {
             return Direction.RIGHT;
         } else if (posList.get(2).equals(newPos)) {
             return Direction.DOWN;
-        } else {
+        } else if (posList.get(3).equals(newPos)){
             return Direction.LEFT;
+        } else {
+            return null;
         }
     }
 
