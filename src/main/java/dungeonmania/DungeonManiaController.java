@@ -202,7 +202,7 @@ public class DungeonManiaController {
         // Player battles enemies on the same tile
         List<MovingEntity> removeEntity = new ArrayList<>();
         for (MovingEntity e : gameMap.getMovingEntityList()) { 
-            if (e instanceof Mercenary) {
+            if (e.isType("mercenary") || e.isType("assassin")) {
                 Mercenary merc = (Mercenary) e;
                 if (e.getPos().equals(e.getPlayerPos()) && !merc.isAlly()) {
                     removeEntity.add(gameMap.getBattle().fight(gameMap.getPlayer(), e));
@@ -226,6 +226,8 @@ public class DungeonManiaController {
             }
 
         }
+        // Ticks the sceptre effect on allies after battling has ended
+        gameMap.getPlayer().tickAllies();
         
         // Ticks the zombie toast spawner
         for (Map.Entry<Position, List<Entity>> entry : gameMap.getMap().entrySet()) {
@@ -269,6 +271,8 @@ public class DungeonManiaController {
 
         if (e.getType().equals("mercenary")) {
             gameMap.getPlayer().bribeMercenary(gameMap.getMap(), (Mercenary) e);
+        } else if (e.getType().equals("assassin")) {
+            gameMap.getPlayer().bribeAssassin(gameMap.getMap(), (Assassin) e);
         } else if (e.getType().equals("zombie_toast_spawner")) {
             gameMap.getPlayer().attackZombieSpawner(gameMap.getMap(), (ZombieToastSpawner) e);
         } else {
@@ -289,7 +293,7 @@ public class DungeonManiaController {
      */
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
         // Checks if item being built is a bow, shield, sceptre or midnight_armour
-        if (isNotValidBuildable(buildable)) {
+        if (!validBuildables().contains(buildable)) {
             throw new IllegalArgumentException();
         }
         Inventory playerInv = gameMap.getPlayer().getInventory();
@@ -308,9 +312,8 @@ public class DungeonManiaController {
         return new ResponseUtility(gameMap).returnDungeonResponse(animations);
     }
 
-    private boolean isNotValidBuildable(String buildable) {
-        return !(buildable.equals("bow") || buildable.equals("shield") || buildable.equals("sceptre")
-                 || buildable.equals("midnight_armour"));
+    public List<String> validBuildables() {
+        return Arrays.asList("bow", "shield", "sceptre", "midnight_armour");
     }
 
     /**

@@ -3,12 +3,12 @@ package dungeonmania.MovingEntities;
 import dungeonmania.util.Position;
 
 public class Hydra extends ZombieToast {
-    private final double AssassinHealth = 15;
-    private final double AssassinDamage = 5;
+    private final double HydraHealth = 40;
+    private final double HydraDamage = 4;
 
-    public Hydra(String id, String type, Position pos) {
+    public Hydra(String id, String type, Position pos) {        
         super(id, type, pos);
-        super.setHealth(AssassinHealth);
-        super.setAttackDamage(AssassinDamage);
+        super.setHealth(HydraHealth);
+        super.setAttackDamage(HydraDamage);
     }
 }

@@ -57,6 +57,10 @@ public class EntityFactory {
                 return new ZombieToast(id, type, movingPos);
             case "mercenary": 
                 return new Mercenary(id, type, movingPos);
+            case "assassin":
+                return new Assassin(id, type, movingPos);
+            case "hydra":
+                return new Hydra(id, type, movingPos);
             case "treasure": 
                 return new Treasure(id, type, collectPos);
             case "health_potion": 
@@ -99,6 +103,22 @@ public class EntityFactory {
                     shield.setDurability(jsonObj.get("durability").getAsInt());
                 }
                 return shield;
+            case "anduril":
+                Anduril anduril = new Anduril(id, type, collectPos);
+                if (jsonObj.get("durability") != null) {
+                    anduril.setDurability(jsonObj.get("durability").getAsInt());
+                }
+                return anduril;
+            case "sun_stone":
+                return new SunStone(id, type, collectPos);
+            case "sceptre":
+                return new Sceptre(id, type, collectPos);
+            case "midnight_armour":
+                MidnightArmour mArmour = new MidnightArmour(id, type, collectPos);
+                if (jsonObj.get("durability") != null) {
+                    mArmour.setDurability(jsonObj.get("durability").getAsInt());
+                }
+                return mArmour;
             case "time_turner":
                 return new TimeTuner(id, type, collectPos);
             case "player": 

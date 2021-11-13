@@ -24,17 +24,17 @@ public class PeacefulState implements BattleState {
     public MovingEntity fight(Player p1, MovingEntity p2) {
 
         while (p2.getHealth() > 0) {
-            healthModifier(p2, damageCalculation(p1), p1.getHealth());
+            healthModifier(p2, damageCalculation(p1, p2), p1.getHealth());
 
             // Performs a second attack
             if (p2.getHealth() > 0 && this.getBattle().hasBow(p1)) {
-                healthModifier(p2, damageCalculation(p1), p1.getHealth());
+                healthModifier(p2, damageCalculation(p1, p2), p1.getHealth());
             }
 
-            // Performs an attack if player has an allied mercenary
-            for (MovingEntity merc : p1.getBribedMercenaries()) {
+            // Performs an attack if player has allies
+            for (MovingEntity ally : p1.getBribedAllies()) {
                 if (p2.getHealth() > 0) {
-                    healthModifier(p2, damageCalculation(merc), merc.getHealth());
+                    healthModifier(p2, damageCalculation(ally, p2), ally.getHealth());
                 }
             }
         }
@@ -44,21 +44,34 @@ public class PeacefulState implements BattleState {
     }
 
     /**
-     * Checks for base dmg, swords and bows that can modify damage.
-     * @param p1
+     * Checks for base dmg, swords, bows, anduril and midnight armour that can modify damage.
+     * @param p1 (entity dealing the damage)
+     * @param p2 (entity receiving the damage)
      */
-    public double damageCalculation(MovingEntity p1) {
-        if (p1 instanceof Player) {
+    public double damageCalculation(MovingEntity p1, MovingEntity p2) {
+        if (p1.getType().equals("player")) {
             Player plyr = (Player) p1;
             double dmg = plyr.getAttackDamage();
             Sword sword = (Sword) plyr.getInventory().getItem("sword");
             Bow bow = (Bow) plyr.getInventory().getItem("bow");
-
+            Anduril anduril = (Anduril) plyr.getInventory().getItem("anduril");
+            MidnightArmour mArmour = (MidnightArmour) plyr.getInventory().getItem("midnight_armour");
             if (sword != null) {
                 dmg += sword.usedInCombat();
             }
             if (bow != null) {
                 dmg += bow.usedInCombat();
+            }
+            if (anduril != null) {
+                if (p2.getType().equals("assassin")) {
+                    dmg += (3 * anduril.usedInCombat());
+                }
+                else {
+                    dmg += anduril.usedInCombat();
+                }
+            }
+            if (mArmour != null) {
+                dmg += mArmour.getDamage();
             }
             return dmg;
         }
@@ -69,42 +82,64 @@ public class PeacefulState implements BattleState {
 
     public void healthModifier(MovingEntity p2, double dmg, double health) {
         double newHealth;
-        if (p2 instanceof Mercenary) {
-            Mercenary merc = (Mercenary) p2;
-            Armour armour = merc.getArmour();
-            double multiplier = 1;
-
-            if (armour != null) {
-                multiplier *= armour.getReduceDamage();
-                armour.reduceDurability();
-
-                // Remove armour if it is broken.
-                if (armour.getDurability() == 0) {
-                    merc.setArmour(null);
-                }
-            }
+        if (p2.getType().equals("mercenary")) {
+            double multiplier = mercenaryDamageMultiplier((Mercenary) p2);
             newHealth = p2.getHealth() - ((health * (dmg * multiplier)) / 5);
         }
-        else if (p2 instanceof ZombieToast) {
-            ZombieToast zombie = (ZombieToast) p2;
-            Armour armour = zombie.getArmour();
-            double multiplier = 1;
-
-            if (armour != null) {
-                multiplier *= armour.getReduceDamage();
-                armour.reduceDurability();
-
-                // Remove armour if it is broken.
-                if (armour.getDurability() == 0) {
-                    zombie.setArmour(null);
-                }
-            }
+        else if (p2.getType().equals("zombie_toast")) {
+            double multiplier = zombieDamageMultiplier((ZombieToast) p2);
+            newHealth = p2.getHealth() - ((health * (dmg * multiplier)) / 5);
+        }
+        else if (p2.getType().equals("assassin")) {
+            double multiplier = assassinDamageMultiplier((Assassin) p2);
             newHealth = p2.getHealth() - ((health * (dmg * multiplier)) / 5);
         }
         else {
             newHealth = p2.getHealth() - ((health * dmg) / 5);
         }
         p2.setHealth(newHealth);
+    }
+
+    public double zombieDamageMultiplier(ZombieToast zombieToast) {
+        Armour armour = zombieToast.getArmour();
+        double multiplier = 1;
+        if (armour != null) {
+            multiplier *= armour.getReduceDamage();
+            armour.reduceDurability();
+            // Remove armour if it is broken.
+            if (armour.getDurability() == 0) {
+                zombieToast.setArmour(null);
+            }
+        }
+        return multiplier;
+    }
+
+    public double mercenaryDamageMultiplier(Mercenary mercenary) {
+        Armour armour = mercenary.getArmour();
+        double multiplier = 1;
+        if (armour != null) {
+            multiplier *= armour.getReduceDamage();
+            armour.reduceDurability();
+            // Remove armour if it is broken.
+            if (armour.getDurability() == 0) {
+                mercenary.setArmour(null);
+            }
+        }
+        return multiplier;
+    }
+
+    public double assassinDamageMultiplier(Assassin assassin) {
+        Armour armour = assassin.getArmour();
+        double multiplier = 1;
+        if (armour != null) {
+            multiplier *= armour.getReduceDamage();
+            armour.reduceDurability();
+            // Remove armour if it is broken.
+            if (armour.getDurability() == 0) {
+                assassin.setArmour(null);
+            }
+        }
+        return multiplier;
     }
 
     public void spawnOneRing(Player p1) {

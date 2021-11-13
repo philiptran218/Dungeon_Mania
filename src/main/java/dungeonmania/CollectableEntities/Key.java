@@ -9,7 +9,7 @@ public class Key extends Utility {
     private int keyId;
 
     /**
-     * Constructor for Arrow
+     * Constructor for Key
      * @param id
      * @param type
      * @param pos

@@ -44,7 +44,7 @@ public class Shield extends CombatItems {
     }
 
     /**
-     * Check the durability of the armour and if durability is zero 
+     * Check the durability of the shield and if durability is zero 
      * remove it from the inventory.
      */
     public void checkNoDurability() {

@@ -4,6 +4,7 @@ import java.util.List;
 
 import dungeonmania.Entity;
 import dungeonmania.MovingEntities.Mercenary;
+import dungeonmania.MovingEntities.Assassin;
 import dungeonmania.util.Position;
 
 import java.util.Map;
@@ -48,6 +49,14 @@ public class EnemiesGoal implements Goal {
                 } else {
                     return true;
                 }
+            case "assassin":
+                if (((Assassin) entity).isAlly()) {
+                    return false;
+                } else {
+                    return true;
+                }
+            case "hydra":
+                return true;
             default:
                 return false;
         }

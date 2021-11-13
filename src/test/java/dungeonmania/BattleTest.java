@@ -255,12 +255,32 @@ public class BattleTest {
     @Test
     public void testAndurilAgainstHydra() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("hydra_anduril", "Hard");
-        // TODO: Add more directions since hydra movement is random
+        newDungeon.newGame("hydra_anduril", "hard");
+        // Moving randomly to fight hydra, since hydra movement is also random
+        for (int i = 0; i < 3; i++) {
+            newDungeon.tick(null, Direction.RIGHT);
+        }
+        for (int i = 0; i < 3; i++) {
+            newDungeon.tick(null, Direction.LEFT);
+        }
         DungeonResponse info = newDungeon.tick(null, Direction.RIGHT);
-        info = newDungeon.tick(null, Direction.RIGHT);
-        // Should now fight against the hydra and win after x rounds since there is also
-        // triple damage to bosses
+        // Should now fight against the hydra and win since anduril does 3x damage
+        assertFalse(info.getEntities().stream().anyMatch(e -> e.getType().equals("hydra")));
+        // Player should still be alive
+        assertTrue(info.getEntities().stream().anyMatch(e -> e.getType().equals("player")));
+    }
+
+    // Tests battle against a hydra without anduril. Player is given protection to ensure that
+    // it can defeat hydra (since it has a healing effect)
+    @Test
+    public void testNoAndurilAgainstHydra() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("battle_hydra", "hard");
+        // Moving randomly to fight hydra, since hydra movement is also random
+        for (int i = 0; i < 11; i++) {
+            newDungeon.tick(null, Direction.RIGHT);
+        }
+        DungeonResponse info = newDungeon.tick(null, Direction.RIGHT);
         assertFalse(info.getEntities().stream().anyMatch(e -> e.getType().equals("hydra")));
         // Player should still be alive
         assertTrue(info.getEntities().stream().anyMatch(e -> e.getType().equals("player")));
@@ -271,20 +291,36 @@ public class BattleTest {
     @Test
     public void testAndurilAgainstAssassin() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("assassin_anduril", "Hard");
-    
+        newDungeon.newGame("assassin_anduril", "peaceful");
+        // Moves right to pick up the anduril
         DungeonResponse info = newDungeon.tick(null, Direction.RIGHT);
+        for (int i = 0; i < 9; i++) {
+            newDungeon.tick(null, Direction.RIGHT);
+        }
         info = newDungeon.tick(null, Direction.RIGHT);
-        // Should now fight against the assassin and win after x rounds, taking triple damage
-        // into account
+        // Should fight against a swarm of 10 assassins. Player should not lose health
+        // because anduril defeats assassins in 1 hit (with full health).
         assertFalse(info.getEntities().stream().anyMatch(e -> e.getType().equals("assassin")));
         assertTrue(info.getEntities().stream().anyMatch(e -> e.getType().equals("player")));
+        // Anduril should run out of duration after being used 10 times
+        assertFalse(info.getInventory().stream().anyMatch(e -> e.getType().equals("anduril")));
     }
 
-    // Tests anduril against a non-boss enemy. Should just deal normal damage.
+    // Tests anduril against a non-boss enemies. Should just deal normal damage.
     @Test
-    public void testAndurilAgainstMercenary() {
-        // Leave as stub for now, will complete once finished...
+    public void testAndurilAgainstNormalEnemies() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("normal_enemies_anduril", "hard");
+        // Moves right to pick up the anduril
+        DungeonResponse info = newDungeon.tick(null, Direction.RIGHT);
+        for (int i = 0; i < 11; i++) {
+            newDungeon.tick(null, Direction.RIGHT);
+        }
+        info = newDungeon.tick(null, Direction.RIGHT);
+        // Should fight against a swarm of mercenaries and zombies.
+        assertFalse(info.getEntities().stream().anyMatch(e -> e.getType().equals("mercenary")));
+        assertFalse(info.getEntities().stream().anyMatch(e -> e.getType().equals("zombie_toast")));
+        assertTrue(info.getEntities().stream().anyMatch(e -> e.getType().equals("player")));
     }
 
     // ********************************************************************************************\\
