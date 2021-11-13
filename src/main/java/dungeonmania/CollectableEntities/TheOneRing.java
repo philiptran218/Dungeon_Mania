@@ -22,4 +22,7 @@ public class TheOneRing extends CombatItems {
         getPlayer().getInventoryList().remove((CollectableEntity)this);
     }
 
+    public void remove() {
+        getPlayer().getInventoryList().remove((CollectableEntity)this);
+    }
 }

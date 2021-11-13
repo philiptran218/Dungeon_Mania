@@ -46,7 +46,6 @@ public class CollectableEntityTest {
     // Tests for CollectableEntities:
 
     // Test that the entity can be picked up by the player.
-    // TODO: change this test to add new collectables
     @Test
     public void testCollectablePickup() {
         DungeonManiaController newDungeon = new DungeonManiaController();
@@ -146,6 +145,8 @@ public class CollectableEntityTest {
         newDungeon.tick(null, Direction.LEFT);
         inv = newDungeon.build("bow").getInventory();
         assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("bow")));
+        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("wood")));
+        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("arrow")));
     }
 
     // Tests if a shield can be built successfully 
@@ -160,6 +161,9 @@ public class CollectableEntityTest {
         newDungeon.tick(null, Direction.LEFT);
         inv = newDungeon.build("shield").getInventory();
         assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("shield")));
+        // Wood and treasure should be removed
+        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("wood")));
+        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("treasure")));
     }
 
     @Test
@@ -173,6 +177,23 @@ public class CollectableEntityTest {
         newDungeon.tick(null, Direction.LEFT);
         inv = newDungeon.build("shield").getInventory();
         assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("shield")));
+        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("wood")));
+        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("key")));
+    }
+
+    @Test
+    public void testSuccessfulBuildShieldSunStone() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("build_shield_sun_stone", "peaceful");
+        List<ItemResponse> inv;
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.DOWN);
+        inv = newDungeon.build("shield").getInventory();
+        assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("shield")));
+        // Wood and sun stone should be removed
+        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("wood")));
+        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("sun_stone")));
     }
 
     // Tests if InvalidActionException is raised for bow (insufficient materials)
@@ -206,7 +227,7 @@ public class CollectableEntityTest {
     @Test
     public void testSuccessfulBuildSceptreWoodTreasure() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("build_sceptre_wood_treasure", "Peaceful");
+        newDungeon.newGame("build_sceptre_wood_treasure", "peaceful");
         // Test building with no materials first
         assertThrows(InvalidActionException.class, () -> newDungeon.build("sceptre"));
 
@@ -215,26 +236,46 @@ public class CollectableEntityTest {
         newDungeon.tick(null, Direction.RIGHT);
         List<ItemResponse> inv = newDungeon.build("sceptre").getInventory();
         assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("sceptre")));
+        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("wood")));
+        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("treasure")));
+        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("sun_stone")));
     }
 
     // Tests building a sceptre with arrow and key
     @Test
     public void testSuccessfulBuildSceptreArrowKey() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("build_sceptre_arrow_key", "Peaceful");
+        newDungeon.newGame("build_sceptre_arrow_key", "peaceful");
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
         List<ItemResponse> inv = newDungeon.build("sceptre").getInventory();
         assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("sceptre")));
+        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("arrow")));
+        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("key")));
+        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("sun_stone")));
+    }
+
+    // Tests building a sceptre with two sun stones (one is substituted for treasure)
+    @Test
+    public void testSuccessfulBuildSceptreTwoSunStones() {
+        DungeonManiaController newDungeon = new DungeonManiaController();
+        newDungeon.newGame("build_sceptre_two_sun_stones", "peaceful");
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        newDungeon.tick(null, Direction.RIGHT);
+        List<ItemResponse> inv = newDungeon.build("sceptre").getInventory();
+        assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("sceptre")));
+        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("wood")));
+        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("sun_stone")));
     }
 
     // Tests successfully building a midnight armour (no zombies)
     @Test
     public void testSuccessfulBuildMidnightArmour() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("build_midnight_armour", "Peaceful");
+        newDungeon.newGame("build_midnight_armour", "peaceful");
         // Test building with no materials first
         assertThrows(InvalidActionException.class, () -> newDungeon.build("midnight_armour"));
 
@@ -242,13 +283,15 @@ public class CollectableEntityTest {
         newDungeon.tick(null, Direction.RIGHT);
         List<ItemResponse> inv = newDungeon.build("midnight_armour").getInventory();
         assertTrue(inv.stream().anyMatch(itm -> itm.getType().equals("midnight_armour")));
+        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("armour")));
+        assertFalse(inv.stream().anyMatch(itm -> itm.getType().equals("sun_stone")));
     }
 
     // Tests building midnight armour while zombie is present
     @Test
     public void testBuildMidnightArmourZombie() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        newDungeon.newGame("build_midnight_armour_zombie", "Peaceful");
+        newDungeon.newGame("build_midnight_armour_zombie", "peaceful");
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(null, Direction.RIGHT);
         assertThrows(InvalidActionException.class, () -> newDungeon.build("midnight_armour"));
