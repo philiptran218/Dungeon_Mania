@@ -9,7 +9,9 @@ import org.json.JSONObject;
 
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
+import dungeonmania.AnimationUtility;
 import dungeonmania.Entity;
+import dungeonmania.response.models.AnimationQueue;
 
 
 public class Spider extends MovingEntity {
@@ -34,17 +36,17 @@ public class Spider extends MovingEntity {
      * Automated move in a circular path, also checks if the 
      * move is valid or not.
      */
-    public void move(Map<Position, List<Entity>> map) {
+    public void move(Map<Position, List<Entity>> map, List<AnimationQueue> animations) {
         List<Entity> entities = map.get(super.getPlayerPos()).stream()
                                                              .filter(e -> e.getType().equals("player"))
                                                              .collect(Collectors.toList());
         Player player = (Player) entities.get(0);
 
         if (player.getInvincDuration() > 0 && !player.getBattle().getDifficulty().equals("hard")) {
-            moveAway(map);
+            moveAway(map, animations);
         }
         else {
-            moveNormal(map);
+            moveNormal(map, animations);
         }
     }
 
@@ -52,11 +54,14 @@ public class Spider extends MovingEntity {
      * Normal Spider movement in clockwise direction.
      * @param map
      */
-    public void moveNormal(Map<Position, List<Entity>> map) {
+    public void moveNormal(Map<Position, List<Entity>> map, List<AnimationQueue> animations) {
+        Position pos = super.getPos();
         if (super.getPos().equals(startPos)) {
             // Spider has just spawned, move up
             Position newPos = this.path.get(0);
             super.moveToPos(map, newPos);
+            Direction direction = Position.getTranslationDirection(pos, newPos);
+            AnimationUtility.translateMovingEntity(animations, false, this, direction);
             return;
         }
 
@@ -92,13 +97,17 @@ public class Spider extends MovingEntity {
                 super.moveToPos(map, this.path.get(backwardMove));
             }
         }
+        Position newPosition = super.getPos();
+        Direction direction = Position.getTranslationDirection(pos, newPosition);
+        AnimationUtility.translateMovingEntity(animations, false, this, direction);
+        
     }
 
     /**
      * Move away from player, spider will stay on its circular path
      * @param map
      */
-    public void moveAway(Map<Position, List<Entity>> map) {
+    public void moveAway(Map<Position, List<Entity>> map, List<AnimationQueue> animations) {
         Position playerPos = this.getPlayerPos();
         Position pos = super.getPos();
         
@@ -114,7 +123,9 @@ public class Spider extends MovingEntity {
                 distance = Position.distance(playerPos, tempPos);
             }
         }
-
+        
+        Direction direction = Position.getTranslationDirection(pos, newPos);
+        AnimationUtility.translateMovingEntity(animations, false, this, direction);
         this.moveToPos(map, new Position(newPos.getX(), newPos.getY(), 3));
     }
 

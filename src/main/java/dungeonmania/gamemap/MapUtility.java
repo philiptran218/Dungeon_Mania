@@ -14,8 +14,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import dungeonmania.Entity;
+import dungeonmania.EntityFactory;
+import dungeonmania.Battles.Battle;
 import dungeonmania.Goals.GoalUtility;
+import dungeonmania.MovingEntities.Player;
 import dungeonmania.StaticEntities.SwampTile;
+import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public class MapUtility {
@@ -83,6 +87,75 @@ public class MapUtility {
     }
 
     /**
+     * Create an old version fo the player.
+     * @param map
+     */
+    public static void addOldPlayer(GameMap map) {
+        removeOldPlayer(map);
+        Player player = map.getPlayer();
+        for (JsonElement e : getSavedMap(map.getGameIndex().toString(), map.getMapId()).get("entities").getAsJsonArray()) {
+            JsonObject entityJson = e.getAsJsonObject();
+            if (entityJson.get("type").getAsString().equals("player")) {
+                Position pos = new Position(entityJson.get("x").getAsInt(), entityJson.get("y").getAsInt(), 3);
+                Player oldPlayer = (Player) EntityFactory.getEntityObject("player", pos, entityJson, map);
+                Battle battle = new Battle(map.getGameState().getMode());
+                oldPlayer.setBattle(battle);
+                oldPlayer.setType("older_player");
+                map.getMap().get(pos).add(oldPlayer);
+            }
+        }
+        map.setPlayer(player);
+    }
+
+    /**
+     * Given the gameMap, remove the old player on the map.
+     * @param map
+     */
+    public static void removeOldPlayer(GameMap map) {
+        List<Entity> oldPlayerList = map.getEntityTypeList("older_player");
+        for (Entity e : oldPlayerList) {
+            map.getMap().get(e.getPos()).remove(e);
+        }
+    }
+
+    
+    /**
+     * Get the direction the old player needs to travel in.
+     * @param map
+     * @return Direction in which the player needs to travel to.
+     */
+    public static Direction findOlderPlayerMoveDirection(GameMap map) {
+        Integer index = map.getGameIndex() + 1;
+        Position newPos = null;
+        if (getSavedMap(index.toString(), map.getMapId()) != null) {
+            for (JsonElement e : getSavedMap(index.toString(), map.getMapId()).get("entities").getAsJsonArray()) {
+                JsonObject entityObj = e.getAsJsonObject();
+                if (entityObj.get("type").getAsString().equals("player")) {
+                    newPos = new Position(entityObj.get("x").getAsInt(), entityObj.get("y").getAsInt());
+                }
+            }
+        } else {
+            // Remove the old player from the map:
+            for (Entity e : map.getMap().get(map.getOlderPlayerPosition())) {
+                if (e.isType("older_player")) { map.getMap().get(map.getOlderPlayerPosition()).remove(e); }
+                return null;
+            }
+            
+        }
+        // Current map
+        List<Position> posList = map.getOlderPlayerPosition().getCardinallyAdjacentPositions();
+        if (posList.get(0).equals(newPos)) {
+            return Direction.UP;
+        } else if (posList.get(1).equals(newPos)) {
+            return Direction.RIGHT;
+        } else if (posList.get(2).equals(newPos)) {
+            return Direction.DOWN;
+        } else {
+            return Direction.LEFT;
+        }
+    }
+
+    /**
      * Given the name of the map converts the current game map 
      * into a json file and saves it in the designated folder.
      * @param name (String)
@@ -112,7 +185,7 @@ public class MapUtility {
             try {
                 return JsonParser.parseReader(new FileReader("time_travel_record\\" + mapId + "\\" + name + ".json")).getAsJsonObject();
             } catch (Exception c) {
-                throw new IllegalArgumentException("File not found.");
+                return null;
             }
         }
     }

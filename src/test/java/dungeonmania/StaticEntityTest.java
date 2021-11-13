@@ -450,19 +450,23 @@ public class StaticEntityTest {
         // Move the mobs:
         controller.tick(null, Direction.DOWN);
         controller.tick(null, Direction.DOWN);
-        controller.tick(null, Direction.LEFT);
-
         controller.saveGame("swamp_tile_test");
-        response = controller.loadGame("swamp_tile_test");
 
-        // New id
+        // Load the game:
+        response = controller.loadGame("swamp_tile_test");
+        controller.tick(null, Direction.LEFT);
+        
+        // Find new id:
         merc = getEntityId(new Position(3, 3, 3) ,response);
         spider = getEntityId(new Position(3, 4, 3) ,response);
+        // Should remain int he same spot
+        assertTrue(isEntityOnTile(response, new Position(3, 3), merc));
+        assertTrue(isEntityOnTile(response, new Position(3, 4), spider));
 
         // Move again, the entity should not move:
         response = controller.tick(null, Direction.LEFT);
-        assertTrue(isEntityOnTile(response, new Position(3, 3), merc));
-        assertTrue(isEntityOnTile(response, new Position(3, 4), spider));
+        assertTrue(isEntityOnTile(response, new Position(2, 3), merc));
+        assertTrue(isEntityOnTile(response, new Position(4, 4), spider));
     }
 
     // Test boulder pushing on swampTile

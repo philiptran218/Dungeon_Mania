@@ -103,7 +103,7 @@ public class DungeonManiaController {
         // Set game index to zero
         // Set map:
         this.gameMap = new GameMap(gameMode, dungeonName, getJsonFile(dungeonName));
-        animations.add(new AnimationQueue("PostTick", gameMap.getPlayer().getId(), Arrays.asList("healthbar set 1", "healthbar tint 0x00ff00"), false, -1));
+        AnimationUtility.initialiseHealthBarForAllEntities(animations, gameMap.getPlayer(), gameMap.getMovingEntityList(), false);
         // New directory
         File theDir = new File("time_travel_record/" + gameMap.getMapId());
         if (!theDir.exists()){ theDir.mkdirs(); }
@@ -136,6 +136,9 @@ public class DungeonManiaController {
      * @throws IllegalArgumentException
      */
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
+        if (MapUtility.getSavedMap(name, null) == null) {
+            throw new IllegalArgumentException("File not found.");
+        }
         JsonObject obj = MapUtility.getSavedMap(name, null);
         this.gameMap = new GameMap(name, obj.get("map-id").getAsString());
         // Create enermy spawner
@@ -169,8 +172,7 @@ public class DungeonManiaController {
      */
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
         animations.clear();
-        double health = gameMap.getPlayer().getHealth() / gameMap.getPlayer().getMaxHealth();
-        animations.add(new AnimationQueue("PostTick", gameMap.getPlayer().getId(), Arrays.asList("healthbar set " + health, "healthbar tint 0x00ff00"), false, -1));
+        AnimationUtility.setPlayerHealthBar(animations, gameMap.getPlayer());
         // If itemUsed is NULL move the player:
         if (itemUsed == null && !MapUtility.entityOnASwampTile(gameMap, null)) {
             gameMap.getPlayer().move(gameMap.getMap(), movementDirection, animations);
@@ -184,7 +186,16 @@ public class DungeonManiaController {
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
             if (!(e.getPos().equals(e.getPlayerPos()) && !e.isType("mercenary")) && !MapUtility.entityOnASwampTile(gameMap, e.getId())) {
-                e.move(gameMap.getMap());
+                AnimationUtility.setMovingEntityHealthBar(animations, e);
+                e.move(gameMap.getMap(), animations);
+            }
+            
+            Integer nextIndex = gameMap.getGameIndex() + 1;
+            if (e.isType("older_player") && MapUtility.getSavedMap(nextIndex.toString(), gameMap.getMapId()) == null) {
+                // Remove older player
+                gameMap.getMap().get(e.getPos()).remove(e);
+            } else if (e.isType("older_player")) {
+                ((Player) e).move(gameMap.getMap(), MapUtility.findOlderPlayerMoveDirection(gameMap), animations);
             }
         }
         
@@ -203,10 +214,9 @@ public class DungeonManiaController {
                 }
             }
         }
-        health = gameMap.getPlayer().getHealth() / gameMap.getPlayer().getMaxHealth();
-        animations.add(new AnimationQueue("PostTick", gameMap.getPlayer().getId(), Arrays.asList("healthbar set " + health, "healthbar tint 0x00ff00"), false, -1));
         if (!removeEntity.isEmpty()) {
-            animations.add(new AnimationQueue("PostTick", gameMap.getPlayer().getId(), Arrays.asList("healthbar shake, over 0.5s, ease Sin"), false, 0.5));
+            AnimationUtility.setPlayerHealthBar(animations, gameMap.getPlayer());
+            AnimationUtility.shakeHealthBar(animations, gameMap.getPlayer());
         }
         if (!removeEntity.contains(null)) {
             // Remove dead entities from list after battle is finished
@@ -229,7 +239,7 @@ public class DungeonManiaController {
         }
 
         // Spawn mobs on the map
-        enermySpawner.spawnMob();
+        enermySpawner.spawnMob(animations);
 
         // Check for swamp tile after all movements has occured,
         // and removes accordinly as well as tick each one.
@@ -314,6 +324,7 @@ public class DungeonManiaController {
      * @throws IllegalArgumentException
      */
     public DungeonResponse rewind(int ticks) throws IllegalArgumentException {
+        animations.clear();
         // Save game after each instance and load what you need.
         if (ticks <= 0) { throw new IllegalArgumentException("Invalid rewind tick."); }
         // If not enough rewind, do not do anything
@@ -327,6 +338,8 @@ public class DungeonManiaController {
         }
         // Load new game
         gameMap = new GameMap(gameIndex.toString(), gameMap.getMapId());
+        AnimationUtility.initialiseHealthBarForAllEntities(animations, gameMap.getPlayer(), gameMap.getMovingEntityList(), true);
+        MapUtility.addOldPlayer(gameMap);
         // Return response
         return new ResponseUtility(gameMap).returnDungeonResponse(animations);
     }
