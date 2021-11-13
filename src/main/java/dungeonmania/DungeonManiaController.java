@@ -349,9 +349,8 @@ public class DungeonManiaController {
         DungeonGenerator.generate(xStart, yStart, xEnd, yEnd);
 
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1500);
         } catch (Exception e) {
-            
         }
 
         return newGame("random", gameMode);

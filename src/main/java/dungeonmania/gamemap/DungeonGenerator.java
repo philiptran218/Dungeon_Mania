@@ -31,6 +31,13 @@ public class DungeonGenerator {
         }
     }
 
+
+    /**
+     * Given a start and end position, create the maze map using prim's algorithm
+     * @param start Spawning position of the player
+     * @param end Position of the exit
+     * @return A map of the maze, where wall == false, empty == true
+     */
     public static Map<Position, Boolean> RandomizedPrims(Position start, Position end) {
         Map<Position, Boolean> maze = new HashMap<Position, Boolean>();
         // Create a 50 x 50 map with false entries 
@@ -43,7 +50,6 @@ public class DungeonGenerator {
         }
 
         maze.put(start, true);
-
         List<Position> options = new ArrayList<Position>();
 
         for (Position pos: getNeigbours(start, 2)) {
@@ -85,9 +91,10 @@ public class DungeonGenerator {
                 }
             }
         }
-        List<Position> neighbours = getNeigbours(end, 1);
 
+        List<Position> neighbours = getNeigbours(end, 1);
         Boolean isConnected = false;
+
         for (Position pos: neighbours) {
             if (maze.get(pos) == true) { 
                 // true i.e. empty
@@ -101,11 +108,16 @@ public class DungeonGenerator {
             Position neighbour = neighbours.remove(num);
             maze.put(neighbour, true);
         }
-
         return maze;
     }
 
-
+    /**
+     * Obtain neigbouring points of a position that are distance away from the position
+     * and within the boundary of the maze
+     * @param pos Position whose neigbours are to be found
+     * @param distance Distance away the position
+     * @return A list of the neighbours of the point
+     */
     public static List<Position> getNeigbours(Position pos, int distance) {
         List<Position> neighbours = new ArrayList<Position>();
         neighbours.add(new Position(pos.getX(), pos.getY() + distance));
@@ -130,6 +142,14 @@ public class DungeonGenerator {
         return tempList;
     }
 
+    /**
+     * Given a maze map, generates the JSON file for the dungeon. Places a player
+     * at the start Position, and a exit at the end Position
+     * @param maze map of the dungeon
+     * @param start Position of the player
+     * @param end Position of the exit
+     * @return JSON file for the dungeon
+     */
     public static JSONObject toJson(Map<Position, Boolean> maze, Position start, Position end) {
         // Main object for file
         JSONObject json = new JSONObject();
