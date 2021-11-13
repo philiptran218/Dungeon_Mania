@@ -30,6 +30,7 @@
 - Player will only teleport through a portal if they can exit the opposite portal in the same direction that they entered from
 - The spawn position for mercenary changes when a game is saved and loaded; and the new spwan position will be the start position for player in the newly loaded game.
 - The hydra's health is allowed to go beyond it's original maximum health.
+- Bribed allies can move on the same tile together.
 
 # Assumptions for Buildable Entities:
 
