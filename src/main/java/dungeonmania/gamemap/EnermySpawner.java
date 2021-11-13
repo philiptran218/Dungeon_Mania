@@ -1,9 +1,12 @@
 package dungeonmania.gamemap;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import dungeonmania.AnimationUtility;
+import dungeonmania.Entity;
 import dungeonmania.MovingEntities.*;
 import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.util.Position;
@@ -30,6 +33,9 @@ public class EnermySpawner {
     public void spawnMob(List<AnimationQueue> animations) {
         spawnSpider(animations);
         spawnMercenary(animations);
+        if (map.getBattle().getDifficulty().equals("hard")) {
+            spawnHydra(animations);
+        }
         period++;
     }
 
@@ -68,16 +74,77 @@ public class EnermySpawner {
      * Periodically spawns a mecenary at the entry location.
      */
     public void spawnMercenary(List<AnimationQueue> animations) {
-        Mercenary newMerc = new Mercenary("merc" + System.currentTimeMillis(), "mercenary", map.getEntryPos());
-        // Check conditions to spawn mercenary
+        // Check conditions to spawn mercenary/assassin
         if (period != 0 && period % 15 == 0) {
-            if (newMerc.canPass(map.getMap(), map.getEntryPos())) {
-                map.getMap().get(map.getEntryPos()).add(newMerc);
-                AnimationUtility.setMovingEntityHealthBar(animations, newMerc);
-                map.getPlayer().registerObserver(newMerc);
+            Random random = new Random();
+            // 20% chance of spawning an assassin instead
+            if (random.nextInt(10) >= 8) {
+                addAssassin(animations);
             } else {
-                period--;
+                addMercenary(animations);
             }
+        }
+    }
+
+    /**
+     * Adds the assassin to the map.
+     * @param animations
+     */
+    public void addAssassin(List<AnimationQueue> animations) {
+        Assassin newAssin = new Assassin("assin" + System.currentTimeMillis(), "assassin", map.getEntryPos());
+        if (newAssin.canPass(map.getMap(), map.getEntryPos())) {
+            map.getMap().get(map.getEntryPos()).add(newAssin);
+            AnimationUtility.setMovingEntityHealthBar(animations, newAssin);
+            map.getPlayer().registerObserver(newAssin);
+        } else {
+            period--;
+        }
+    }
+
+    /**
+     * Adds the mercenary to the map.
+     * @param animations
+     */
+    public void addMercenary(List<AnimationQueue> animations) {
+        Mercenary newMerc = new Mercenary("merc" + System.currentTimeMillis(), "mercenary", map.getEntryPos());
+        if (newMerc.canPass(map.getMap(), map.getEntryPos())) {
+            map.getMap().get(map.getEntryPos()).add(newMerc);
+            AnimationUtility.setMovingEntityHealthBar(animations, newMerc);
+            map.getPlayer().registerObserver(newMerc);
+        } else {
+            period--;
+        }
+    }
+
+    public void spawnHydra(List<AnimationQueue> animations) {
+        // Check conditions to spawn hydra
+        if (period != 0 && period % 50 == 0) {
+            Position spawnPos = randomEmptyPos();
+            // If there are no empty positions, do not spawn hydra
+            if (spawnPos == null) {
+                return;
+            }
+            Hydra newHydra = new Hydra("hydra" + System.currentTimeMillis(), "hydra", spawnPos);
+            map.getMap().get(spawnPos).add(newHydra);
+            AnimationUtility.setMovingEntityHealthBar(animations, newHydra);
+            map.getPlayer().registerObserver(newHydra);
+        }
+    }
+
+    public Position randomEmptyPos() {
+        Map<Position, List<Entity>> posMap = map.getMap();
+        List<Position> emptyPos = new ArrayList<>();
+        for (Position pos : posMap.keySet()) {
+            if (posMap.get(pos.asLayer(1)).isEmpty() && !map.getPlayer().getPos().asLayer(0).equals(pos.asLayer(1))) {
+                emptyPos.add(pos);
+            }
+        }
+        if (emptyPos.isEmpty()) {
+            return null;
+        } else {
+            // Return a random empty position on the map
+            Random random = new Random();
+            return emptyPos.get(random.nextInt(emptyPos.size()));
         }
     }
 }
