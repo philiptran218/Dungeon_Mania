@@ -29,9 +29,10 @@ public class Armour extends CombatItems {
     }
 
     /**
-     * Won't need to be called, since armour is only used in battles.
+     * Only called when armour is used to build midnight armour.
      */
     public void use() {
+        getPlayer().getInventoryList().remove((CollectableEntity)this);
     }
 
     /**
