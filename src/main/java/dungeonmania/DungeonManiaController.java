@@ -100,6 +100,7 @@ public class DungeonManiaController {
      * @throws IllegalArgumentException
      */
     public DungeonResponse newGame(String dungeonName, String gameMode) throws IllegalArgumentException {
+        animations.clear();
         if (!getGameModes().contains(gameMode.toLowerCase())) {
             throw new IllegalArgumentException("Game mode does not exist.");
         }
@@ -215,7 +216,15 @@ public class DungeonManiaController {
             }
             else {
                 if (e.getPos().equals(gameMap.getPlayer().getPos())) {
-                    removeEntity.add(gameMap.getBattle().fight(gameMap.getPlayer(), e));
+                    if (e.isType("older_player")) {
+                        boolean hasMidNight = (((Player) e).getInventory().getItem("midnight_armour") != null);
+                        boolean hasSunStone = (((Player) e).getInventory().getItem("sun_stone") != null);
+                        if (!(hasMidNight || hasSunStone)) {
+                            removeEntity.add(gameMap.getBattle().fight(gameMap.getPlayer(), e)); 
+                        }
+                    } else {
+                        removeEntity.add(gameMap.getBattle().fight(gameMap.getPlayer(), e)); 
+                    }
                 }
             }
         }

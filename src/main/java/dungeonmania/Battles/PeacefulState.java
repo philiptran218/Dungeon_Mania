@@ -94,13 +94,6 @@ public class PeacefulState implements BattleState {
             double multiplier = assassinDamageMultiplier((Assassin) p2);
             newHealth = p2.getHealth() - ((health * (dmg * multiplier)) / 5);
         }
-        else if (p2.isType("older_player")) {
-            newHealth = 0;
-            // Checks if the older player has midnight armour
-            if (((Player) p2).getInventory().getItem("midnight_armour") != null) {
-                return;
-            }
-        }
         else {
             newHealth = p2.getHealth() - ((health * dmg) / 5);
         }
