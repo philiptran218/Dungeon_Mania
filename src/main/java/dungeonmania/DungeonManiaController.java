@@ -139,13 +139,18 @@ public class DungeonManiaController {
      * @throws IllegalArgumentException
      */
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
+<<<<<<< HEAD
+        animations.clear();
+=======
         if (MapUtility.getSavedMap(name, null) == null) {
             throw new IllegalArgumentException("File not found.");
         }
+>>>>>>> 5b5364eef6171af244aa29eb529dac2f748d859e
         JsonObject obj = MapUtility.getSavedMap(name, null);
         this.gameMap = new GameMap(name, obj.get("map-id").getAsString());
         // Create enermy spawner
         this.enermySpawner = new EnermySpawner(gameMap);
+        AnimationUtility.initialiseHealthBarForAllEntities(animations, gameMap.getPlayer(), gameMap.getMovingEntityList(), true);
         // Return DungeonResponse
         return new ResponseUtility(gameMap).returnDungeonResponse(animations);
     }
@@ -218,7 +223,7 @@ public class DungeonManiaController {
             }
         }
         if (!removeEntity.isEmpty()) {
-            AnimationUtility.setPlayerHealthBar(animations, gameMap.getPlayer());
+            AnimationUtility.setPlayerHealthBarAfterBattle(animations, gameMap.getPlayer());
             AnimationUtility.shakeHealthBar(animations, gameMap.getPlayer());
         }
         if (!removeEntity.contains(null)) {
@@ -236,7 +241,7 @@ public class DungeonManiaController {
         for (Map.Entry<Position, List<Entity>> entry : gameMap.getMap().entrySet()) {
             for(Entity e : entry.getValue()) {
                 if (e.getType().equals("zombie_toast_spawner")) {
-                    ((ZombieToastSpawner) e).tick(e.getPos(), gameMap.getMap(), gameMap.getGameState());
+                    ((ZombieToastSpawner) e).tick(e.getPos(), gameMap.getMap(), gameMap.getGameState(), animations);
                 }
             }
         }
