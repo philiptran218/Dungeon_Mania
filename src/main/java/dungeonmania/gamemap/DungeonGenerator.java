@@ -15,6 +15,9 @@ import dungeonmania.util.Position;
 
 public class DungeonGenerator {
 
+    private static final int WIDTH = 50;
+    private static final int HEIGHT = 50;
+
     public static void generate (int xStart, int yStart, int xEnd, int yEnd) throws IllegalArgumentException {
         Position start = new Position(xStart, yStart);
         Position end = new Position(xEnd, yEnd);
@@ -43,8 +46,8 @@ public class DungeonGenerator {
         // Create a 50 x 50 map with false entries 
         // Walls == false
         // Empty == true
-        for (int i = 0; i < 50; i++) {
-            for (int j = 0; j < 50; j++) {
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
                 maze.put(new Position(i, j), false);               
             }
         }
@@ -52,6 +55,7 @@ public class DungeonGenerator {
         maze.put(start, true);
         List<Position> options = new ArrayList<Position>();
 
+        // Adding neigbours of 'start' that are distance 2 away and are walls
         for (Position pos: getNeigbours(start, 2)) {
             if (maze.get(pos) == false) {
                 // Is a wall i.e. false
@@ -65,6 +69,8 @@ public class DungeonGenerator {
             Position next = options.remove(num1);
 
             List<Position> neighbours = new ArrayList<Position>();
+
+            // Adding neighbours of 'next' that are distance 2 away and are empty
             for (Position pos: getNeigbours(next, 2)) {
                 if (maze.get(pos) == true) {
                     // Is empty i.e. true
@@ -80,13 +86,14 @@ public class DungeonGenerator {
                 maze.put(next, true);
                 // midPos is the position inbetween next and neigbhour
                 Position midPos = new Position((next.getX() + neighbour.getX())/2, (next.getY() + neighbour.getY())/2);
-                
                 maze.put(midPos, true);
                 maze.put(neighbour, true);
             }
 
+            // Add all neighbours of 'next' that are distance 2 away and are walls
             for (Position pos: getNeigbours(next, 2)) {
                 if ( maze.get(pos) == false) {
+                    // Is a wall i.e. false
                     options.add(pos);
                 }
             }
@@ -131,10 +138,11 @@ public class DungeonGenerator {
         }
 
         for (Position neighbour: neighbours) {
-            if (!(0 < neighbour.getX() && neighbour.getX() < 49)) {
+            // Remove -1 and -1 to prevent double walling, but doesnt follow pseudo code
+            if (!(0 < neighbour.getX() && neighbour.getX() < WIDTH - 1)) {
                 // neighbour is  not within boundary of maze
                 tempList.remove(neighbour);
-            } else if (!(0 < neighbour.getY() && neighbour.getY() < 49)) {
+            } else if (!(0 < neighbour.getY() && neighbour.getY() < HEIGHT - 1)) {
                 // neighbour is  not within boundary of maze
                 tempList.remove(neighbour);
             }
@@ -155,8 +163,8 @@ public class DungeonGenerator {
         JSONObject json = new JSONObject();
         // Add all fields:
 
-        json.put("width", 50);
-        json.put("height", 50);
+        json.put("width", WIDTH);
+        json.put("height", HEIGHT);
 
         JSONObject goals = new JSONObject();
         goals.put("goal", "exit");
@@ -168,7 +176,10 @@ public class DungeonGenerator {
             JSONObject entity = new JSONObject();
             entity.put("x", pos.getX());
             entity.put("y", pos.getY());
-
+            // NOTE: to prevent double walling, doesnt follow pseudo code
+            // if (pos.getX() == WIDTH - 1 || pos.getY() == HEIGHT - 1) {
+            //     entity.put("type","wall");
+            // } else 
             if (pos.equals(start)) {
                 entity.put("type", "player");
             } else if (pos.equals(end)) {
