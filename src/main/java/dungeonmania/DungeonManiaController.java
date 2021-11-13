@@ -3,6 +3,7 @@ package dungeonmania;
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.gamemap.DungeonGenerator;
 import dungeonmania.gamemap.EnermySpawner;
 import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.AnimationQueue;
@@ -336,5 +337,20 @@ public class DungeonManiaController {
         MapUtility.addOldPlayer(gameMap);
         // Return response
         return new ResponseUtility(gameMap).returnDungeonResponse(animations);
+    }
+
+    public DungeonResponse generateDungeon(int xStart, int yStart, int xEnd, int yEnd, String gameMode) throws IllegalArgumentException {
+        if (!getGameModes().contains(gameMode.toLowerCase())) {
+            throw new IllegalArgumentException("Game mode does not exist.");
+        }
+        DungeonGenerator.generate(xStart, yStart, xEnd, yEnd);
+
+        try {
+            Thread.sleep(2000);
+        } catch (Exception e) {
+            
+        }
+
+        return newGame("random", gameMode);
     }
 }
