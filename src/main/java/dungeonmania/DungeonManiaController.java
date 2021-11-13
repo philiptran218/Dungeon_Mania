@@ -137,13 +137,10 @@ public class DungeonManiaController {
      * @throws IllegalArgumentException
      */
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
-<<<<<<< HEAD
         animations.clear();
-=======
         if (MapUtility.getSavedMap(name, null) == null) {
             throw new IllegalArgumentException("File not found.");
         }
->>>>>>> 5b5364eef6171af244aa29eb529dac2f748d859e
         JsonObject obj = MapUtility.getSavedMap(name, null);
         this.gameMap = new GameMap(name, obj.get("map-id").getAsString());
         // Create enermy spawner
