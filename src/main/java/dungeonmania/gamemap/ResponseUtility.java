@@ -75,7 +75,7 @@ public class ResponseUtility {
         int numArrow = map.getPlayer().getInventory().getNoItemType("arrow");
         boolean hasKey = map.getPlayer().hasItem("key");
         boolean hasTreasure = map.getPlayer().hasItem("treasure");
-        boolean hasSunStone = map.getPlayer().hasItem("sun_stone");
+        int numSunStone = map.getPlayer().getInventory().getNoItemType("sun_stone");
         boolean hasArmour = map.getPlayer().hasItem("armour");
         boolean hasZombie = map.getMovingEntityList().stream().anyMatch(e -> e.getType().equals("zombie_toast"));
 
@@ -83,13 +83,13 @@ public class ResponseUtility {
         if (numWood > 0 && numArrow > 2) {
             buildable.add("bow");
         }
-        if (numWood > 1 && (hasKey || hasTreasure)) {
+        if (numWood > 1 && (hasKey || hasTreasure || numSunStone > 0)) {
             buildable.add("shield");
         }
-        if ((numWood > 0 || numArrow > 1) && (hasKey || hasTreasure) && hasSunStone) {
+        if ((numWood > 0 || numArrow > 1) && (hasKey || hasTreasure || numSunStone > 1) && numSunStone > 0) {
             buildable.add("sceptre");
         }
-        if (hasArmour && hasSunStone && !hasZombie) {
+        if (hasArmour && numSunStone > 0 && !hasZombie) {
             buildable.add("midnight_armour");
         }
         return buildable;

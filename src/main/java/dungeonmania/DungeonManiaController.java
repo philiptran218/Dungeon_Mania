@@ -3,6 +3,7 @@ package dungeonmania;
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.gamemap.DungeonGenerator;
 import dungeonmania.gamemap.EnermySpawner;
 import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.AnimationQueue;
@@ -136,7 +137,13 @@ public class DungeonManiaController {
      * @throws IllegalArgumentException
      */
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
+<<<<<<< HEAD
         animations.clear();
+=======
+        if (MapUtility.getSavedMap(name, null) == null) {
+            throw new IllegalArgumentException("File not found.");
+        }
+>>>>>>> 5b5364eef6171af244aa29eb529dac2f748d859e
         JsonObject obj = MapUtility.getSavedMap(name, null);
         this.gameMap = new GameMap(name, obj.get("map-id").getAsString());
         // Create enermy spawner
@@ -201,7 +208,7 @@ public class DungeonManiaController {
         // Player battles enemies on the same tile
         List<MovingEntity> removeEntity = new ArrayList<>();
         for (MovingEntity e : gameMap.getMovingEntityList()) { 
-            if (e instanceof Mercenary) {
+            if (e.isType("mercenary") || e.isType("assassin")) {
                 Mercenary merc = (Mercenary) e;
                 if (e.getPos().equals(e.getPlayerPos()) && !merc.isAlly()) {
                     removeEntity.add(gameMap.getBattle().fight(gameMap.getPlayer(), e));
@@ -225,6 +232,8 @@ public class DungeonManiaController {
             }
 
         }
+        // Ticks the sceptre effect on allies after battling has ended
+        gameMap.getPlayer().tickAllies();
         
         // Ticks the zombie toast spawner
         for (Map.Entry<Position, List<Entity>> entry : gameMap.getMap().entrySet()) {
@@ -268,6 +277,8 @@ public class DungeonManiaController {
 
         if (e.getType().equals("mercenary")) {
             gameMap.getPlayer().bribeMercenary(gameMap.getMap(), (Mercenary) e);
+        } else if (e.getType().equals("assassin")) {
+            gameMap.getPlayer().bribeAssassin(gameMap.getMap(), (Assassin) e);
         } else if (e.getType().equals("zombie_toast_spawner")) {
             gameMap.getPlayer().attackZombieSpawner(gameMap.getMap(), (ZombieToastSpawner) e);
         } else {
@@ -288,7 +299,7 @@ public class DungeonManiaController {
      */
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
         // Checks if item being built is a bow, shield, sceptre or midnight_armour
-        if (isNotValidBuildable(buildable)) {
+        if (!validBuildables().contains(buildable)) {
             throw new IllegalArgumentException();
         }
         Inventory playerInv = gameMap.getPlayer().getInventory();
@@ -307,9 +318,8 @@ public class DungeonManiaController {
         return new ResponseUtility(gameMap).returnDungeonResponse(animations);
     }
 
-    private boolean isNotValidBuildable(String buildable) {
-        return !(buildable.equals("bow") || buildable.equals("shield") || buildable.equals("sceptre")
-                 || buildable.equals("midnight_armour"));
+    public List<String> validBuildables() {
+        return Arrays.asList("bow", "shield", "sceptre", "midnight_armour");
     }
 
     /**
@@ -338,5 +348,31 @@ public class DungeonManiaController {
         MapUtility.addOldPlayer(gameMap);
         // Return response
         return new ResponseUtility(gameMap).returnDungeonResponse(animations);
+    }
+
+    /**
+     * Generate a Dungeon maze with a start and exit Position, and create the game
+     * @param xStart x coordinate of player spawning position
+     * @param yStart y coordinate of player spawning position
+     * @param xEnd x coordinate of the exit
+     * @param yEnd y coordinate of the exit
+     * @param gameMode difficulty of the game
+     * @return DungeonResponse
+     * @throws IllegalArgumentException
+     */
+    public DungeonResponse generateDungeon(int xStart, int yStart, int xEnd, int yEnd, String gameMode) throws IllegalArgumentException {
+        if (!getGameModes().contains(gameMode.toLowerCase())) {
+            throw new IllegalArgumentException("Game mode does not exist.");
+        }
+        // Create the dungeon
+        DungeonGenerator.generate(xStart, yStart, xEnd, yEnd);
+
+        try {
+            Thread.sleep(1500);
+        } catch (Exception e) {
+        }
+
+        // Create the game
+        return newGame("random", gameMode);
     }
 }
