@@ -29,6 +29,15 @@ public class AnimationUtility {
             animations.add(new AnimationQueue("PostTick", player.getId(), Arrays.asList("healthbar set " + health, "healthbar tint 0x00ff00"), false, -1));
         }
     }
+    public static void setPlayerHealthBarAfterBattle(List<AnimationQueue> animations, Player player) {
+        double health = player.getHealth() / player.getMaxHealth();
+        if (health < 0.5) {
+            animations.add(new AnimationQueue("PostTick", player.getId(), Arrays.asList("healthbar set " + health + ", over 0.4s", "healthbar tint 0xff0000"), false, -1));
+        }
+        else {
+            animations.add(new AnimationQueue("PostTick", player.getId(), Arrays.asList("healthbar set " + health + ", over 0.4s", "healthbar tint 0x00ff00"), false, -1));
+        }
+    }
     public static void setMovingEntityHealthBar(List<AnimationQueue> animations, MovingEntity e) {
         animations.add(new AnimationQueue("PostTick", e.getId(), Arrays.asList("healthbar set 1", "healthbar tint 0x00ff00"), false, -1));
     }

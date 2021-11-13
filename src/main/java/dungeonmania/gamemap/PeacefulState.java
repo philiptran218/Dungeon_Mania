@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.List;
 
 import dungeonmania.Entity;
+import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.util.Position;
 
 public class PeacefulState implements GameState{
@@ -11,7 +12,7 @@ public class PeacefulState implements GameState{
     private static final double PLAYER_MAX_HEALTH = 20;
 
     // Spawns the zombie from the zombie toast spawner
-    public int spawnZombie(int tickProgress, Map<Position, List<Entity>> gameMap, Position zombieSpawner) {
+    public int spawnZombie(int tickProgress, Map<Position, List<Entity>> gameMap, Position zombieSpawner, List<AnimationQueue> animations) {
         // Does not spawn a zombie in peaceful mode
         return 0;
     }
