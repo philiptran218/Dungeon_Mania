@@ -129,6 +129,13 @@ public class NormalState implements BattleState {
         else if (p2.getType().equals("hydra")) {
             newHealth = hydraDamage((Hydra) p2, health, dmg);
         }
+        else if (p2.isType("older_player")) {
+            newHealth = 0;
+            // Checks if the older player has midnight armour
+            if (((Player) p2).getInventory().getItem("midnight_armour") != null) {
+                return;
+            }
+        }
         else {
             newHealth = p2.getHealth() - ((health * dmg) / 5);
         }
