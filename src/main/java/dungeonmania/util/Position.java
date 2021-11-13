@@ -134,4 +134,24 @@ public final class Position {
         adjacentPositions.add(new Position(x-1, y));
         return adjacentPositions;
     }
+    public static Direction getTranslationDirection(Position oldPos, Position newPos) {
+        Position translationDirection = new Position(newPos.getX() - oldPos.getX(), newPos.getY() - oldPos.getY());
+        if (translationDirection.getX() == 0) {
+            if (translationDirection.getY() == 1) {
+                return Direction.DOWN;
+            }
+            if (translationDirection.getY() == -1) {
+                return Direction.UP;
+            }
+        }
+        if (translationDirection.getY() == 0) {
+            if (translationDirection.getX() == 1) {
+                return Direction.RIGHT;
+            }
+            if (translationDirection.getX() == -1) {
+                return Direction.LEFT;
+            }
+        }
+        return Direction.NONE;
+    }
 }

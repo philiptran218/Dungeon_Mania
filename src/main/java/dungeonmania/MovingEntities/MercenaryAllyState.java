@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import dungeonmania.AnimationUtility;
 import dungeonmania.Entity;
+import dungeonmania.response.models.AnimationQueue;
 
 public class MercenaryAllyState implements MercenaryState{
     private Mercenary mercenary;
@@ -26,7 +29,7 @@ public class MercenaryAllyState implements MercenaryState{
      * player is an ally, mercenary follows the player
      */
     @Override
-    public void move(Map<Position, List<Entity>> map) {
+    public void move(Map<Position, List<Entity>> map, List<AnimationQueue> animations) {
         Position playerPos = mercenary.getPlayerPos();
         Position pos = mercenary.getPos();
         
@@ -49,8 +52,14 @@ public class MercenaryAllyState implements MercenaryState{
 
         if (Position.distance(pos, previousPlayerPos) > 1) {
             mercenary.moveToPos(map, new Position(newPos.getX(), newPos.getY(), 3));
+
+            Direction direction = Position.getTranslationDirection(pos, newPos);
+            AnimationUtility.translateMovingEntity(animations, false, mercenary, direction);
         } else if (Position.distance(previousPlayerPos, playerPos) != 0) {
             mercenary.moveToPos(map, previousPlayerPos);
+            
+            Direction direction = Position.getTranslationDirection(pos, previousPlayerPos);
+            AnimationUtility.translateMovingEntity(animations, false, mercenary, direction);
         }
 
         mercenary.setPreviousPlayerPos(playerPos);
@@ -59,8 +68,8 @@ public class MercenaryAllyState implements MercenaryState{
     /**
      * Player is invincible, allymercenary moves normally
      */
-    public void moveAway(Map<Position, List<Entity>> map) {
-        move(map);
+    public void moveAway(Map<Position, List<Entity>> map, List<AnimationQueue> animations) {
+        move(map, animations);
     }
 
 }

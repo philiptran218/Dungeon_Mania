@@ -48,7 +48,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     // ********************************************************************************************\\
 
     // Polymorphism
-    public void move(Map<Position, List<Entity>> map) {}
+    public void move(Map<Position, List<Entity>> map, List<AnimationQueue> animations) {}
 
     /**
      * Given a direction to move in, the player moves in that direction. Checks 
@@ -90,7 +90,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
             isMovingIntoStatic = false;
         }
         
-        AnimationUtility.translatePlayer(animations, isMovingIntoStatic, this, direction);
+        AnimationUtility.translateMovingEntity(animations, isMovingIntoStatic, this, direction);
 
         pickUp(map);
         notifyObservers();
