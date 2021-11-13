@@ -7,6 +7,7 @@ import dungeonmania.MovingEntities.Mercenary;
 import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.MovingEntities.Player;
 import dungeonmania.MovingEntities.ZombieToast;
+import dungeonmania.MovingEntities.Assassin;
 
 public class InvincibleState implements BattleState {
 
@@ -31,12 +32,16 @@ public class InvincibleState implements BattleState {
     public void usedWeapons(Player p1) {
         Sword sword = (Sword) p1.getInventory().getItem("sword");
         Bow bow = (Bow) p1.getInventory().getItem("bow");
+        Anduril anduril = (Anduril) p1.getInventory().getItem("anduril");
 
         if (sword != null) {
             sword.usedInCombat();
         }
         if (bow != null) {
             bow.usedInCombat();
+        }
+        if (anduril != null) {
+            anduril.usedInCombat();
         }
     }
 
@@ -45,28 +50,46 @@ public class InvincibleState implements BattleState {
      * @param p2
      */
     public void usedArmour(MovingEntity p2) {
-        if (p2 instanceof Mercenary) {
-            Mercenary merc = (Mercenary) p2;
-            Armour armour = merc.getArmour();
+        if (p2.getType().equals("mercenary")) {
+            adjustMercenaryArmour((Mercenary) p2);
+        }
+        else if (p2.getType().equals("zombie_toast")) {
+            adjustZombieArmour((ZombieToast) p2);
+        }
+        else if (p2.getType().equals("assassin")) {
+            adjustAssassinArmour((Assassin) p2);
+        }
+    }
 
-            if (armour != null) {
-                armour.reduceDurability();
-                // Remove armour if it is broken.
-                if (armour.getDurability() == 0) {
-                    merc.setArmour(null);
-                }
+    public void adjustZombieArmour(ZombieToast zombieToast) {
+        Armour armour = zombieToast.getArmour();
+        if (armour != null) {
+            armour.reduceDurability();
+            // Remove armour if it is broken.
+            if (armour.getDurability() == 0) {
+                zombieToast.setArmour(null);
             }
         }
-        else if (p2 instanceof ZombieToast) {
-            ZombieToast zombie = (ZombieToast) p2;
-            Armour armour = zombie.getArmour();
+    }
 
-            if (armour != null) {
-                armour.reduceDurability();
-                // Remove armour if it is broken.
-                if (armour.getDurability() == 0) {
-                    zombie.setArmour(null);
-                }
+    public void adjustMercenaryArmour(Mercenary mercenary) {
+        Armour armour = mercenary.getArmour();
+        if (armour != null) {
+            armour.reduceDurability();
+            // Remove armour if it is broken.
+            if (armour.getDurability() == 0) {
+                mercenary.setArmour(null);
+            }
+        }
+    }
+
+    public void adjustAssassinArmour(Assassin assassin) {
+        Armour armour = assassin.getArmour();
+        if (armour != null) {
+            armour.reduceDurability();
+            // Remove armour if it is broken.
+            if (armour.getDurability() == 0) {
+                assassin.setArmour(null);
             }
         }
     }
