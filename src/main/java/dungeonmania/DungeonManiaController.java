@@ -1,10 +1,11 @@
 package dungeonmania;
 
+import dungeonmania.CollectableEntities.Bomb;
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.gamemap.DungeonGenerator;
-import dungeonmania.gamemap.EnermySpawner;
+import dungeonmania.gamemap.EnemySpawner;
 import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.gamemap.MapUtility;
@@ -29,7 +30,11 @@ import com.google.gson.JsonObject;
 public class DungeonManiaController {
     // Game Map
     private GameMap gameMap;
+<<<<<<< HEAD
     private EnermySpawner enemySpawner;
+=======
+    private EnemySpawner enemySpawner;
+>>>>>>> a9574c68973ffdf79db7d573838408cd6a41be56
     private List<AnimationQueue> animations = new ArrayList<>();
 
 
@@ -114,9 +119,13 @@ public class DungeonManiaController {
         // Tick save
         MapUtility.saveTickInstance(gameMap, gameMap.getGameIndex().toString());
         // Create enermy spawner
+<<<<<<< HEAD
         this.enemySpawner = new EnermySpawner(gameMap);
+=======
+        this.enemySpawner = new EnemySpawner(gameMap);
+>>>>>>> a9574c68973ffdf79db7d573838408cd6a41be56
         // Return DungeonResponse
-        return new ResponseUtility(gameMap).returnDungeonResponse(animations);
+        return new ResponseUtility(gameMap).returnDungeonResponseNewGame(animations);
     }
     
     /**
@@ -147,7 +156,11 @@ public class DungeonManiaController {
         JsonObject obj = MapUtility.getSavedMap(name, null);
         this.gameMap = new GameMap(name, obj.get("map-id").getAsString());
         // Create enermy spawner
+<<<<<<< HEAD
         this.enemySpawner = new EnermySpawner(gameMap);
+=======
+        this.enemySpawner = new EnemySpawner(gameMap);
+>>>>>>> a9574c68973ffdf79db7d573838408cd6a41be56
         AnimationUtility.initialiseHealthBarForAllEntities(animations, gameMap.getPlayer(), gameMap.getMovingEntityList(), true);
         // Return DungeonResponse
         return new ResponseUtility(gameMap).returnDungeonResponse(animations);
@@ -195,6 +208,16 @@ public class DungeonManiaController {
         } else if (itemUsed != null) {
             // Get the entity on map:
             gameMap.getPlayer().useItem(gameMap.getMap(), itemUsed);
+        }
+        // 
+        for (Bomb bomb : gameMap.getBombList()) {
+            if (bomb.isOn(gameMap.getMap(), new ArrayList<String>())) {
+                bomb.detonate(gameMap.getMap());
+            }
+        }
+
+        for (LogicEntity logicEntity : gameMap.getLogicEnitityList()) {
+            logicEntity.isOn(gameMap.getMap(), new ArrayList<String>());
         }
 
         // Ticks the duration of any active potions

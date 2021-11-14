@@ -36,8 +36,12 @@ public class EntityFactory {
                 return new Exit(id, type, absolPos);
             case "boulder": 
                 return new Boulder(id, type, staticPos);     
-            case "switch": 
-                return new FloorSwitch(id, type, absolPos);
+            case "switch":
+                if (jsonObj.get("logic") != null) {
+                    return new FloorSwitch(id, type, absolPos, jsonObj.get("logic").getAsString());
+                } else {
+                    return new FloorSwitch(id, type, absolPos);
+                }
             case "door": 
                 return new Door(id, type, staticPos, jsonObj.get("key").getAsInt());
             case "door_unlocked":
@@ -77,8 +81,12 @@ public class EntityFactory {
                 return new Wood(id, type, collectPos);
             case "arrow": 
                 return new Arrow(id, type, collectPos);
-            case "bomb": 
-                return new Bomb(id, type, collectPos);
+            case "bomb":
+                if (jsonObj.get("logic") != null) {
+                    return new Bomb(id, type, collectPos, jsonObj.get("logic").getAsString());
+                } else {
+                    return new Bomb(id, type, collectPos);
+                }
             case "sword":
                 Sword sword = new Sword(id, type, collectPos);
                 if (jsonObj.get("durability") != null) {
@@ -173,6 +181,32 @@ public class EntityFactory {
                     }
                 }
                 return swamp;
+            case "light_bulb_on":
+                if (jsonObj.get("logic") != null) {
+                    return new LightBulb(id, type, absolPos, jsonObj.get("logic").getAsString());
+                } else {
+                    return new LightBulb(id, type, absolPos);
+                }
+            case "light_bulb_off":
+                if (jsonObj.get("logic") != null) {
+                    return new LightBulb(id, type, absolPos, jsonObj.get("logic").getAsString());
+                } else {
+                    return new LightBulb(id, type, absolPos);
+                }
+            case "switch_door":
+                if (jsonObj.get("logic") != null) {
+                    return new SwitchDoor(id, type, staticPos, jsonObj.get("logic").getAsString());
+                } else {
+                    return new SwitchDoor(id, type, staticPos);
+                }
+            case "switch_door_unlocked":
+                if (jsonObj.get("logic") != null) {
+                    return new SwitchDoor(id, type, absolPos, jsonObj.get("logic").getAsString());
+                } else {
+                    return new SwitchDoor(id, type, absolPos);
+                }
+            case "wire":
+                return new Wire(id, type, pos);
             default: 
                 return null;
         }

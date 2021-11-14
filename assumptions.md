@@ -56,8 +56,19 @@
 - All goals must be valid goals
 - Goals must be structured correctly within the dungeon .json file
 
+<<<<<<< HEAD
 # Assumptions for TimeTravel:
 - If player attempts to rewind more ticks then there currently is in the game, nothing will happen.
 - When player time travels all items collected during the ticks rewinded will be discarded back to the map.
 - Only the player can enter the time travelling portal.
 - When passing through the time travelling portal if there are not enough ticks to rewind back to the very beginning.
+=======
+# Assumptions for Logic Switches
+- Floor switches which are connected together with wires CANNOT have NOT logic, this will cause an infinite loop.
+
+- Floor switches with logic behave like wires if the logic is satisfied i.e. If a switch is activated, all of the other interactable entities adjacent to the switch are activated. The input of whether a boulder is on top the switch or not is also included to compute the switch's logic state.
+
+- Of the Logic Switch entities, bombs will detonate first and if the detonation destroys wires that connect other logic switches, input/power will not provided to those logic switches
+
+- The order in which the bombs detonate will be random.
+>>>>>>> a9574c68973ffdf79db7d573838408cd6a41be56

@@ -24,7 +24,6 @@ import dungeonmania.util.Position;
 public class GameMapTest {
     public void deleteSavedGames(String fileName) {
         File file = new File("src/main/resources/saved_games/" + fileName + ".json");
-        System.out.println("Deleting " + fileName + " " + file.delete());
         file.delete();
     }
 
