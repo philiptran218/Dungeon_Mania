@@ -30,11 +30,7 @@ import com.google.gson.JsonObject;
 public class DungeonManiaController {
     // Game Map
     private GameMap gameMap;
-<<<<<<< HEAD
-    private EnermySpawner enemySpawner;
-=======
     private EnemySpawner enemySpawner;
->>>>>>> a9574c68973ffdf79db7d573838408cd6a41be56
     private List<AnimationQueue> animations = new ArrayList<>();
 
 
@@ -119,11 +115,7 @@ public class DungeonManiaController {
         // Tick save
         MapUtility.saveTickInstance(gameMap, gameMap.getGameIndex().toString());
         // Create enermy spawner
-<<<<<<< HEAD
-        this.enemySpawner = new EnermySpawner(gameMap);
-=======
         this.enemySpawner = new EnemySpawner(gameMap);
->>>>>>> a9574c68973ffdf79db7d573838408cd6a41be56
         // Return DungeonResponse
         return new ResponseUtility(gameMap).returnDungeonResponseNewGame(animations);
     }
@@ -156,11 +148,7 @@ public class DungeonManiaController {
         JsonObject obj = MapUtility.getSavedMap(name, null);
         this.gameMap = new GameMap(name, obj.get("map-id").getAsString());
         // Create enermy spawner
-<<<<<<< HEAD
-        this.enemySpawner = new EnermySpawner(gameMap);
-=======
         this.enemySpawner = new EnemySpawner(gameMap);
->>>>>>> a9574c68973ffdf79db7d573838408cd6a41be56
         AnimationUtility.initialiseHealthBarForAllEntities(animations, gameMap.getPlayer(), gameMap.getMovingEntityList(), true);
         // Return DungeonResponse
         return new ResponseUtility(gameMap).returnDungeonResponse(animations);
