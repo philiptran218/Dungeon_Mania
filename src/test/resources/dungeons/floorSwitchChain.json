@@ -3,132 +3,132 @@
     "height": 11,
     "entities": [
       {
-        "x": 0,
+        "x": 2,
         "y": 0,
         "type": "player"
       },
       {
-        "x": 1,
+        "x": 3,
         "y": 0,
         "type": "boulder"
       },
       {
-        "x": 2,
+        "x": 4,
         "y": 0,
         "type": "switch"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 0,
         "type": "wire"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 1,
         "type": "wire"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 2,
         "type": "wire"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 3,
         "type": "wire"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 4,
         "type": "wire"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 5,
         "type": "wire"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 6,
         "type": "wire"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 7,
         "type": "wire"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 8,
         "type": "wire"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 9,
         "type": "wire"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 10,
         "type": "wire"
       },
       {
-        "x": 4,
+        "x": 6,
         "y": 0,
         "type": "switch",
         "logic": "or"
       },
       {
-        "x": 4,
+        "x": 6,
         "y": 2,
         "type": "switch"
       },
       {
-        "x": 4,
+        "x": 6,
         "y": 4,
         "type": "switch",
         "logic": "and"
       },
       {
-        "x": 4,
+        "x": 6,
         "y": 6,
         "type": "switch",
         "logic": "xor"
       },
       {
-        "x": 4,
+        "x": 6,
         "y": 10,
         "type": "switch",
         "logic": "not"
       },
       {
-        "x": 5,
+        "x": 7,
         "y": 0,
         "type": "light_bulb_off"
       },
       {
-        "x": 5,
+        "x": 7,
         "y": 2,
         "type": "light_bulb_off"
       },
       {
-        "x": 5,
+        "x": 7,
         "y": 4,
         "type": "light_bulb_off"
       },
       {
-        "x": 5,
+        "x": 7,
         "y": 6,
         "type": "light_bulb_off"
       },
       {
-        "x": 4,
+        "x": 6,
         "y": 10,
         "type": "switch",
         "logic": "not"
       },
       {
-        "x": 5,
+        "x": 7,
         "y": 10,
         "type": "light_bulb_off"
       }
