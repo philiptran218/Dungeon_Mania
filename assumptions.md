@@ -55,3 +55,9 @@
 - Every map must have at least one goal
 - All goals must be valid goals
 - Goals must be structured correctly within the dungeon .json file
+
+# Assumptions for TimeTravel:
+- If player attempts to rewind more ticks then there currently is in the game, nothing will happen.
+- When player time travels all items collected during the ticks rewinded will be discarded back to the map.
+- Only the player can enter the time travelling portal.
+- When passing through the time travelling portal if there are not enough ticks to rewind back to the very beginning.
