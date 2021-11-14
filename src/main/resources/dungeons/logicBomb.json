@@ -8,7 +8,7 @@
         "type": "player"
       },
       {
-        "x": 5,
+        "x": 6,
         "y": 0,
         "type": "treasure"
       },
@@ -80,18 +80,18 @@
       {
         "x": 4,
         "y": 0,
-        "type": "switch_door",
+        "type": "bomb",
         "logic": "or"
       },
       {
         "x": 4,
         "y": 2,
-        "type": "switch_door"
+        "type": "bomb"
       },
       {
         "x": 4,
         "y": 4,
-        "type": "switch_door",
+        "type": "bomb",
         "logic": "and"
       },
       {
@@ -102,20 +102,8 @@
       {
         "x": 4,
         "y": 6,
-        "type": "switch_door",
+        "type": "bomb",
         "logic": "xor"
-      },
-      {
-        "x": 4,
-        "y": 10,
-        "type": "switch_door",
-        "logic": "not"
-      },
-      {
-        "x": 4,
-        "y": 10,
-        "type": "switch_door",
-        "logic": "not"
       }
     ],
     "goal-condition": {

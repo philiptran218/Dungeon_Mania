@@ -40,6 +40,7 @@ public class SwitchDoor extends StaticEntity implements LogicEntity{
             visitedIDs.add(super.getId());
         }
         Position doorLayer = super.getPos().asLayer(1);
+        
         if (LogicEntityUtility.applyLogic(logic, inputValues)) {
             if (this.getType().equals("switch_door")) {
                 this.setType("switch_door_unlocked");
