@@ -51,17 +51,18 @@ public class ZombieToast extends MovingEntity {
     public Direction Randomdirection() {
         int num = ThreadLocalRandom.current().nextInt(0,4);
         // num = 0,1,2,3
+        Direction direction = null;
         switch (num) {
             case 0:
-                return Direction.RIGHT;
+                direction =  Direction.RIGHT;
             case 1:
-                return Direction.UP;
+                direction =  Direction.UP;
             case 2:
-                return Direction.LEFT;
+                direction =  Direction.LEFT;
             case 3:
-                return Direction.DOWN;
+                direction =  Direction.DOWN;
         }
-        return null;
+        return direction;
     }
 
     /**

@@ -34,19 +34,4 @@ public class Node implements Comparator<Node> {
     public Position getPos() {
         return pos;
     }
-
-    public void setPos(Position pos) {
-        this.pos = pos;
-    }
-
-    public double getDist() {
-        return dist;
-    }
-
-    public void setDist(double dist) {
-        this.dist = dist;
-    }
-
-    
-
 }
