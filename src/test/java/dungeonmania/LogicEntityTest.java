@@ -109,7 +109,7 @@ public class LogicEntityTest {
         // Create new game
         controller.newGame("floorSwitchChain", "peaceful");
         DungeonResponse response = controller.tick(null, Direction.RIGHT);
-        assertTrue(getEntity(new Position(5, 2, 0), response, "light_bulb_off") != null);
+        assertTrue(getEntity(new Position(7, 2, 0), response, "light_bulb_off") != null);
     }
 
     @Test
@@ -119,7 +119,7 @@ public class LogicEntityTest {
         // Create new game
         controller.newGame("floorSwitchChain", "peaceful");
         DungeonResponse response = controller.tick(null, Direction.RIGHT);
-        assertTrue(getEntity(new Position(5, 0, 0), response, "light_bulb_on") != null);
+        assertTrue(getEntity(new Position(7, 0, 0), response, "light_bulb_on") != null);
     }
 
     @Test
@@ -129,7 +129,7 @@ public class LogicEntityTest {
         // Create new game
         controller.newGame("floorSwitchChain", "peaceful");
         DungeonResponse response = controller.tick(null, Direction.RIGHT);
-        assertTrue(getEntity(new Position(5, 4, 0), response, "light_bulb_off") != null);
+        assertTrue(getEntity(new Position(7, 4, 0), response, "light_bulb_off") != null);
     }
 
     @Test
@@ -139,7 +139,7 @@ public class LogicEntityTest {
         // Create new game
         controller.newGame("floorSwitchChain", "peaceful");
         DungeonResponse response = controller.tick(null, Direction.RIGHT);
-        assertTrue(getEntity(new Position(5, 6, 0), response, "light_bulb_on") != null);
+        assertTrue(getEntity(new Position(7, 6, 0), response, "light_bulb_on") != null);
     }
 
     @Test
@@ -149,9 +149,10 @@ public class LogicEntityTest {
         // Create new game
         controller.newGame("floorSwitchChain", "peaceful");
         DungeonResponse response = controller.tick(null, Direction.LEFT);
-        assertTrue(getEntity(new Position(5, 10, 0), response, "light_bulb_on") != null);
+        assertTrue(getEntity(new Position(7, 10, 0), response, "light_bulb_on") != null);
         response = controller.tick(null, Direction.RIGHT);
-        assertTrue(getEntity(new Position(5, 10, 0), response, "light_bulb_off") != null);
+        response = controller.tick(null, Direction.RIGHT);
+        assertTrue(getEntity(new Position(7, 10, 0), response, "light_bulb_off") != null);
     }
 
     @Test
@@ -171,7 +172,7 @@ public class LogicEntityTest {
         // Create new game
         controller.newGame("switchDoors", "peaceful");
         DungeonResponse response = controller.tick(null, Direction.RIGHT);
-        assertTrue(getEntity(new Position(4, 2, 0), response, "switch_door_unlocked") != null);
+        assertTrue(getEntity(new Position(6, 2, 0), response, "switch_door_unlocked") != null);
     }
 
     @Test
@@ -181,7 +182,7 @@ public class LogicEntityTest {
         // Create new game
         controller.newGame("switchDoors", "peaceful");
         DungeonResponse response = controller.tick(null, Direction.RIGHT);
-        assertTrue(getEntity(new Position(4, 0, 0), response, "switch_door_unlocked") != null);
+        assertTrue(getEntity(new Position(6, 0, 0), response, "switch_door_unlocked") != null);
     }
 
     @Test
@@ -191,7 +192,7 @@ public class LogicEntityTest {
         // Create new game
         controller.newGame("switchDoors", "peaceful");
         DungeonResponse response = controller.tick(null, Direction.RIGHT);
-        assertTrue(getEntity(new Position(4, 4, 1), response, "switch_door") != null);
+        assertTrue(getEntity(new Position(6, 4, 1), response, "switch_door") != null);
         assertTrue(getEntity(new Position(4, 4, 0), response, "switch_door_unlocked") == null);
     }
 
@@ -202,7 +203,7 @@ public class LogicEntityTest {
         // Create new game
         controller.newGame("switchDoors", "peaceful");
         DungeonResponse response = controller.tick(null, Direction.RIGHT);
-        assertTrue(getEntity(new Position(4, 6, 0), response, "switch_door_unlocked") != null);
+        assertTrue(getEntity(new Position(6, 6, 0), response, "switch_door_unlocked") != null);
     }
 
     @Test
@@ -212,9 +213,10 @@ public class LogicEntityTest {
         // Create new game
         controller.newGame("switchDoors", "peaceful");
         DungeonResponse response = controller.tick(null, Direction.LEFT);
-        assertTrue(getEntity(new Position(4, 10, 0), response, "switch_door_unlocked") != null);
+        assertTrue(getEntity(new Position(6, 10, 0), response, "switch_door_unlocked") != null);
         response = controller.tick(null, Direction.RIGHT);
-        assertTrue(getEntity(new Position(4, 10, 1), response, "switch_door") != null);
+        response = controller.tick(null, Direction.RIGHT);
+        assertTrue(getEntity(new Position(6, 10, 1), response, "switch_door") != null);
     }
 
     @Test

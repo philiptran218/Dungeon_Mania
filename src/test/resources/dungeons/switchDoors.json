@@ -3,116 +3,116 @@
     "height": 11,
     "entities": [
       {
-        "x": 0,
+        "x": 2,
         "y": 0,
         "type": "player"
       },
       {
-        "x": 5,
+        "x": 7,
         "y": 0,
         "type": "treasure"
       },
       {
-        "x": 1,
+        "x": 3,
         "y": 0,
         "type": "boulder"
       },
       {
-        "x": 2,
+        "x": 4,
         "y": 0,
         "type": "switch"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 0,
         "type": "wire"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 1,
         "type": "wire"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 2,
         "type": "wire"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 3,
         "type": "wire"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 4,
         "type": "wire"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 5,
         "type": "wire"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 6,
         "type": "wire"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 7,
         "type": "wire"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 8,
         "type": "wire"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 9,
         "type": "wire"
       },
       {
-        "x": 3,
+        "x": 5,
         "y": 10,
         "type": "wire"
       },
       {
-        "x": 4,
+        "x": 6,
         "y": 0,
         "type": "switch_door",
         "logic": "or"
       },
       {
-        "x": 4,
+        "x": 6,
         "y": 2,
         "type": "switch_door"
       },
       {
-        "x": 4,
+        "x": 6,
         "y": 4,
         "type": "switch_door",
         "logic": "and"
       },
       {
-        "x": 5,
+        "x": 7,
         "y": 4,
         "type": "wire"
       },
       {
-        "x": 4,
+        "x": 6,
         "y": 6,
         "type": "switch_door",
         "logic": "xor"
       },
       {
-        "x": 4,
+        "x": 6,
         "y": 10,
         "type": "switch_door",
         "logic": "not"
       },
       {
-        "x": 4,
+        "x": 6,
         "y": 10,
         "type": "switch_door",
         "logic": "not"

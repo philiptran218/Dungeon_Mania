@@ -1,18 +1,17 @@
 {
     "main_menu": {
         "background_music": "audio/slayer.mp3",
-        "background_image": "images/backgrounds/main_menu.png",
-        "text_color": "white",
-        "background_music": "audio/slayer.mp3"
+        "background_image": "images/backgrounds/slayer.png",
+        "text_color": "white"
     },
     "game": {
-        "background_music": "audio/slayer.mp3",
         "background_image": {
-            "images/tileset/walls/wooden/wood_floor_0.png": 5,
-            "images/tileset/walls/wooden/wood_floor_1.png": 7,
-            "images/tileset/walls/wooden/wood_floor_2.png": 10,
-            "images/tileset/walls/wooden/wood_floor_3.png": 2
+            "images/tileset/walls/stone/sprite_175.png": 5,
+            "images/tileset/walls/stone/sprite_176.png": 7,
+            "images/tileset/walls/stone/sprite_177.png": 10,
+            "images/tileset/walls/stone/sprite_178.png": 2
         },
+        "background_music": "audio/emptychapel.mp3",
         "resolution_px": 16,
         "item_box": "images/ui/box.png",
         "text_color": "white"
@@ -26,14 +25,14 @@
         "arrow": "images/tileset/items/arrow_0.png",
         "exit": "images/tileset/entities/stairs_down.png",
         "treasure": "images/tileset/items/treasure_0.png",
-        "wall": "images/tileset/walls/wooden/wood_bottom.png",
-        "spider": "images/tileset/entities/spider_00.png",
+        "wall": "images/tileset/walls/stone/sprite_188.png",
+        "spider": "images/tileset/entities/Black_Recluse.png",
         "mercenary": "images/tileset/entities/ranger.png",
         "switch": "images/tileset/floor_switch.png",
         "health_potion": "images/tileset/items/potion_4.png",
         "invincibility_potion": "images/tileset/items/potion_10.png",
         "invisibility_potion": "images/tileset/items/potion_2.png",
-        "sword": "images/tileset/items/sword_silver.png",
+        "sword": "images/tileset/items/sword_gold.png",
         "zombie_toast": "images/tileset/entities/zombie_00.png",
         "enemies": "images/tileset/entities/zombie_03.png",
         "boulders": "images/tileset/entities/boulder_00.png",

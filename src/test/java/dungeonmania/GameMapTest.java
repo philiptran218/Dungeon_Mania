@@ -1,24 +1,14 @@
 package dungeonmania;
 
 import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.google.gson.*;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 import org.junit.jupiter.api.Test;
 
-import dungeonmania.gamemap.GameMap;
-import dungeonmania.response.models.EntityResponse;
-import dungeonmania.util.Direction;
-import dungeonmania.util.Position;
 
 
 public class GameMapTest {
