@@ -28,7 +28,6 @@ public class DungeonGeneratorTest {
     public void testInvalidDungeonGeneration() {
         // Create dungeon controller
         DungeonManiaController controller = new DungeonManiaController();
-        
         // Try invalid dungeon game modes
         assertThrows(IllegalArgumentException.class, () -> controller.generateDungeon(3, 3, 4, 3, "asdfa"));
     }
@@ -36,6 +35,11 @@ public class DungeonGeneratorTest {
     @Test
     public void testValidDungeonGeneration() {
         DungeonManiaController controller = new DungeonManiaController();
+        try {
+            Thread.sleep(2000);
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
         assertDoesNotThrow(() -> controller.generateDungeon(3, 3, 4, 3, "peaceful"));
     }
 
@@ -44,6 +48,7 @@ public class DungeonGeneratorTest {
     public void testDungeonGenerationPlayerSpawn() {
         DungeonManiaController controller = new DungeonManiaController();
         DungeonResponse response = controller.newGame("random", "peaceful");
+
         String playerId = getEntityId(new Position(3, 3, 3), response);
         assertNotEquals(playerId, null);
     }
