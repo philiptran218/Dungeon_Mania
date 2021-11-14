@@ -1,8 +1,7 @@
 {
     "main_menu": {
-        "background_image": "images/backgrounds/main_menu.png",
-        "text_color": "white",
-        "background_music": "audio/slayer.mp3"
+        "background_image": "images/backgrounds/slayer.png",
+        "text_color": "white"
     },
     "game": {
         "background_image": {
@@ -31,7 +30,7 @@
         "health_potion": "images/tileset/items/potion_4.png",
         "invincibility_potion": "images/tileset/items/potion_10.png",
         "invisibility_potion": "images/tileset/items/potion_2.png",
-        "sword": "images/tileset/items/Excalibur.png",
+        "sword": "images/tileset/items/sword_gold.png",
         "zombie_toast": "images/tileset/entities/zombie_00.png",
         "enemies": "images/tileset/entities/zombie_03.png",
         "boulders": "images/tileset/entities/boulder_00.png",
