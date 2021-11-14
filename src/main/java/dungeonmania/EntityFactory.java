@@ -45,7 +45,7 @@ public class EntityFactory {
             case "portal": 
                 return new Portal(id, type, otherPos, jsonObj.get("colour").getAsString());
             case "time_travelling_portal": 
-                return new TimeTravellingPortal(id, type, staticPos);
+                return new TimeTravellingPortal(id, type, staticPos, gameMap);
             case "zombie_toast_spawner":
                 return new ZombieToastSpawner(id, type, staticPos);
             case "spider":

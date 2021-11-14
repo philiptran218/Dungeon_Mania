@@ -53,6 +53,7 @@
         "sun_stone": "images/tileset/entities/sun_stone.png",
         "anduril": "images/tileset/entities/anduril.png",
         "sceptre": "images/tileset/entities/sceptre.png",
-        "midnight_armour": "images/tileset/entities/midnight_armour.png"
+        "midnight_armour": "images/tileset/entities/midnight_armour.png",
+        "time_travelling_portal": "images/tileset/entities/portal_04.png"
     }
 }

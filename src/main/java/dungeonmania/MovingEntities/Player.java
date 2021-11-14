@@ -91,7 +91,7 @@ public class Player extends MovingEntity implements MovingEntitySubject {
                 map.get(doorLayer).remove(e);
                 moveInDir(map, direction);
                 isMovingIntoStatic = false;
-            }
+            } 
         } else if (canTeleport(map, newPos, direction)) {
             Portal portal = (Portal) map.get(newPos.asLayer(4)).get(0);
             portal.teleport(map, this, direction);

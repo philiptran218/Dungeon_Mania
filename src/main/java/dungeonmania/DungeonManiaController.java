@@ -181,7 +181,17 @@ public class DungeonManiaController {
         AnimationUtility.setPlayerHealthBar(animations, gameMap.getPlayer());
         // If itemUsed is NULL move the player:
         if (itemUsed == null && !MapUtility.entityOnASwampTile(gameMap, null)) {
-            gameMap.getPlayer().move(gameMap.getMap(), movementDirection, animations);
+            // Check if player is moving into a time travelling portal:
+            Position newPos = gameMap.getPlayer().getPos().translateBy(movementDirection).asLayer(1);
+            if (TimeTravellingPortal.movingIntoTimePortal(gameMap.getMap().get(newPos))) {
+                // Load the previous tick state
+                int storeTick = gameMap.getGameIndex();
+                rewind(TimeTravellingPortal.calcualteTickBack(gameMap.getGameIndex()));
+                gameMap.setDestinationTick(storeTick);
+                return new ResponseUtility(gameMap).returnDungeonResponse(animations);
+            } else {
+                gameMap.getPlayer().move(gameMap.getMap(), movementDirection, animations);
+            }
         } else if (itemUsed != null) {
             // Get the entity on map:
             gameMap.getPlayer().useItem(gameMap.getMap(), itemUsed);
@@ -189,13 +199,14 @@ public class DungeonManiaController {
 
         // Ticks the duration of any active potions
         gameMap.getPlayer().tickPotions();
+
         // Move all the moving entities by one tick:
         for (MovingEntity e : gameMap.getMovingEntityList()) {
             if (!(e.getPos().equals(e.getPlayerPos()) && !e.isType("mercenary")) && !MapUtility.entityOnASwampTile(gameMap, e.getId())) {
                 AnimationUtility.setMovingEntityHealthBar(animations, e);
                 e.move(gameMap.getMap(), animations);
             }
-            
+
             Integer nextIndex = gameMap.getGameIndex() + 1;
             if (e.isType("older_player") && MapUtility.getSavedMap(nextIndex.toString(), gameMap.getMapId()) == null) {
                 // Remove older player
@@ -224,6 +235,7 @@ public class DungeonManiaController {
                 }
             }
         }
+
         if (!removeEntity.isEmpty()) {
             AnimationUtility.setPlayerHealthBarAfterBattle(animations, gameMap.getPlayer());
             AnimationUtility.shakeHealthBar(animations, gameMap.getPlayer());
@@ -231,10 +243,7 @@ public class DungeonManiaController {
         if (!removeEntity.contains(null)) {
             // Remove dead entities from list after battle is finished
             // Remove the entity from the map:
-            for (Entity e : removeEntity) {
-                gameMap.getMap().get(e.getPos()).remove(e);
-            }
-
+            for (Entity e : removeEntity) { gameMap.getMap().get(e.getPos()).remove(e); }
         }
         // Ticks the sceptre effect on allies after battling has ended
         gameMap.getPlayer().tickAllies();

@@ -15,6 +15,11 @@
         "type": "swamp_tile"
       },
       {
+        "x": 13,
+        "y": 5,
+        "type": "time_travelling_portal"
+      },
+      {
         "x": 0,
         "y": 0,
         "type": "wall"

@@ -235,7 +235,10 @@ public class GameMap {
     }
 
     public Position getOlderPlayerPosition() {
-        return getEntityTypeList("older_player").get(0).getPos();
+        for (Entity e : getEntityTypeList("older_player")) {
+            if (e.isType("older_player")) { return e.getPos(); }
+        }
+        return null;
     }
 
     public void setDestinationTick(int tick) {
