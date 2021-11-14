@@ -197,13 +197,15 @@ public class DungeonManiaController {
             // Get the entity on map:
             gameMap.getPlayer().useItem(gameMap.getMap(), itemUsed);
         }
-        // 
+        // Detonates all bombs on the map which are on/have been activated
         for (Bomb bomb : gameMap.getBombList()) {
             if (bomb.isOn(gameMap.getMap(), new ArrayList<String>())) {
                 bomb.detonate(gameMap.getMap());
             }
         }
 
+        // Checks for if lightbulbs/switch doors have been activated/deactivated
+        // and turns them on if they're active/turns them off if theyre not
         for (LogicEntity logicEntity : gameMap.getLogicEnitityList()) {
             logicEntity.isOn(gameMap.getMap(), new ArrayList<String>());
         }

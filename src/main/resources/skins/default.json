@@ -1,10 +1,12 @@
 {
     "main_menu": {
+        "background_music": "audio/slayer.mp3",
         "background_image": "images/backgrounds/main_menu.png",
         "text_color": "white",
         "background_music": "audio/slayer.mp3"
     },
     "game": {
+        "background_music": "audio/slayer.mp3",
         "background_image": {
             "images/tileset/walls/wooden/wood_floor_0.png": 5,
             "images/tileset/walls/wooden/wood_floor_1.png": 7,

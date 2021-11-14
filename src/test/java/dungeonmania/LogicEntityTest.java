@@ -2,13 +2,6 @@ package dungeonmania;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.File;
-import java.util.concurrent.TimeUnit;
-
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.Test;
 
 import dungeonmania.response.models.DungeonResponse;
@@ -159,5 +152,108 @@ public class LogicEntityTest {
         assertTrue(getEntity(new Position(5, 10, 0), response, "light_bulb_on") != null);
         response = controller.tick(null, Direction.RIGHT);
         assertTrue(getEntity(new Position(5, 10, 0), response, "light_bulb_off") != null);
+    }
+
+    @Test
+    public void testWireLoop() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        controller.newGame("wireloop", "peaceful");
+        DungeonResponse response = controller.tick(null, Direction.RIGHT);
+        assertTrue(getEntity(new Position(5, 1, 0), response, "bomb") == null);
+    }
+
+    @Test
+    public void testNoLogicSwitchDoor() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        controller.newGame("switchDoors", "peaceful");
+        DungeonResponse response = controller.tick(null, Direction.RIGHT);
+        assertTrue(getEntity(new Position(4, 2, 0), response, "switch_door_unlocked") != null);
+    }
+
+    @Test
+    public void testOrLogicSwitchDoor() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        controller.newGame("switchDoors", "peaceful");
+        DungeonResponse response = controller.tick(null, Direction.RIGHT);
+        assertTrue(getEntity(new Position(4, 0, 0), response, "switch_door_unlocked") != null);
+    }
+
+    @Test
+    public void testAndLogicSwitchDoor() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        controller.newGame("switchDoors", "peaceful");
+        DungeonResponse response = controller.tick(null, Direction.RIGHT);
+        assertTrue(getEntity(new Position(4, 4, 1), response, "switch_door") != null);
+        assertTrue(getEntity(new Position(4, 4, 0), response, "switch_door_unlocked") == null);
+    }
+
+    @Test
+    public void testXorLogicSwitchDoor() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        controller.newGame("switchDoors", "peaceful");
+        DungeonResponse response = controller.tick(null, Direction.RIGHT);
+        assertTrue(getEntity(new Position(4, 6, 0), response, "switch_door_unlocked") != null);
+    }
+
+    @Test
+    public void testNotLogicSwitchDoor() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        controller.newGame("switchDoors", "peaceful");
+        DungeonResponse response = controller.tick(null, Direction.LEFT);
+        assertTrue(getEntity(new Position(4, 10, 0), response, "switch_door_unlocked") != null);
+        response = controller.tick(null, Direction.RIGHT);
+        assertTrue(getEntity(new Position(4, 10, 1), response, "switch_door") != null);
+    }
+
+    @Test
+    public void testNoLogicBomb() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        controller.newGame("logicBomb", "peaceful");
+        DungeonResponse response = controller.tick(null, Direction.RIGHT);
+        assertTrue(getEntity(new Position(4, 2, 2), response, "bomb") != null);
+    }
+
+    @Test
+    public void testOrLogicBomb() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        controller.newGame("logicBomb", "peaceful");
+        DungeonResponse response = controller.tick(null, Direction.RIGHT);
+        assertTrue(getEntity(new Position(4, 0, 2), response, "bomb") == null);
+    }
+
+    @Test
+    public void testAndLogicBomb() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        controller.newGame("logicBomb", "peaceful");
+        DungeonResponse response = controller.tick(null, Direction.RIGHT);
+        assertTrue(getEntity(new Position(4, 4, 2), response, "bomb") != null);
+    }
+
+    @Test
+    public void testXorLogicBomb() {
+        // Create controller
+        DungeonManiaController controller = new DungeonManiaController();
+        // Create new game
+        controller.newGame("logicBomb", "peaceful");
+        DungeonResponse response = controller.tick(null, Direction.RIGHT);
+        assertTrue(getEntity(new Position(4, 6, 2), response, "bomb") == null);
     }
 }
