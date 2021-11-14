@@ -456,10 +456,6 @@ public class Player extends MovingEntity implements MovingEntitySubject {
     }
 
     @Override
-    public void removeObserver(MovingEntityObserver o) {
-        listObservers.remove(o);        
-    }
-    @Override
     public void notifyObservers() {
         for (MovingEntityObserver obs: listObservers) {
             obs.update(this);
