@@ -159,9 +159,9 @@
         "type": "switch"
       },
       {
-        "x": 4,
+        "x": 5,
         "y": 1,
-        "type": "switch"
+        "type": "treasure"
       },
       {
         "x": 3,
@@ -206,28 +206,28 @@
       {
         "x": 3,
         "y": 5,
-        "type": "light_bulb_off"
+        "type": "switch_door",
+        "logic": "or"
       },
       {
         "x": 1,
         "y": 5,
-        "type": "light_bulb_off"
+        "type": "switch_door",
+        "logic": "or"
       },
       {
         "x": 5,
         "y": 5,
-        "type": "light_bulb_off"
+        "type": "light_bulb_off",
+        "logic": "and"
+      },
+      {
+        "x": 6,
+        "y": 5,
+        "type": "wire"
       }
     ],
     "goal-condition": {
-      "goal": "AND",
-      "subgoals": [
-        {
-          "goal": "enemies"
-        },
-        {
-          "goal": "boulders"
-        }
-      ]
+      "goal": "treasure"
     }
 }

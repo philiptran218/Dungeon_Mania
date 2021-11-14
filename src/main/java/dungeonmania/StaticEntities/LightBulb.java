@@ -1,6 +1,5 @@
 package dungeonmania.StaticEntities;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +36,8 @@ public class LightBulb extends StaticEntity implements LogicGate {
                     inputValues.add(((LogicGate) entities.get(0)).isOn(map, visitedIDs));
                 }
             }
+            visitedIDs.clear();
+            visitedIDs.add(super.getId());
         }
         Position position = super.getPos();
         if (LogicGateUtility.applyLogic(logic, inputValues)) {

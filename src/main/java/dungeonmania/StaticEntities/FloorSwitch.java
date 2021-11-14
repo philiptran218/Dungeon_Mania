@@ -40,8 +40,9 @@ public class FloorSwitch extends StaticEntity implements LogicGate{
         } else {
             List<Entity> inputs = new ArrayList<Entity>();
             List<Position> adjacentPositions = super.getPos().getCardinallyAdjacentPositions();
-            System.out.println(super.getPos() + " " + visitedIDs);
-
+            if (!(visitedIDs.contains(super.getId()))) {
+                visitedIDs.add(super.getId());
+            }
             for (Position position : adjacentPositions) {
                 List<Entity> entities = map.get(position.asLayer(0));
                 if (entities != null && entities.size() > 0 && ((entities.get(0) instanceof Wire) || (entities.get(0) instanceof FloorSwitch))) {
@@ -51,11 +52,14 @@ public class FloorSwitch extends StaticEntity implements LogicGate{
                         inputs.add(entities.get(0));
                     }
                 }
+                visitedIDs.clear();
+                visitedIDs.add(super.getId());
             }
             List<Boolean> inputValues = new ArrayList<Boolean>();
             for (Entity entity : inputs) {
                 inputValues.add(((LogicGate) entity).isOn(map, visitedIDs));
             }
+            inputValues.add(isUnderBoulder(map));
             return LogicGateUtility.applyLogic(logic, inputValues);
         }
     }

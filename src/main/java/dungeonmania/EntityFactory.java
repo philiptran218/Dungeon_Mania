@@ -193,6 +193,12 @@ public class EntityFactory {
                 } else {
                     return new SwitchDoor(id, type, staticPos);
                 }
+            case "switch_door_unlocked":
+                if (jsonObj.get("logic") != null) {
+                    return new SwitchDoor(id, type, absolPos, jsonObj.get("logic").getAsString());
+                } else {
+                    return new SwitchDoor(id, type, absolPos);
+                }
             case "wire":
                 return new Wire(id, type, pos);
             default: 

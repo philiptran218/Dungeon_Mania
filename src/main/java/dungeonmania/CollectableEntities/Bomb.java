@@ -60,6 +60,9 @@ public class Bomb extends CombatItems implements LogicGate {
     public boolean isOn(Map<Position, List<Entity>> map, List<String> visitedIDs) {
         List<Entity> inputs = new ArrayList<Entity>();
         List<Position> adjacentPositions = super.getPos().getCardinallyAdjacentPositions();
+        if (!(visitedIDs.contains(super.getId()))) {
+            visitedIDs.add(super.getId());
+        }
         for (Position position : adjacentPositions) {
             List<Entity> entities = map.get(position.asLayer(0));
             if (entities != null && entities.size() > 0 && (entities.get(0) instanceof LogicGate)) {
@@ -69,6 +72,8 @@ public class Bomb extends CombatItems implements LogicGate {
                     inputs.add(entities.get(0));
                 }
             }
+            visitedIDs.clear();
+            visitedIDs.add(super.getId());
         }
         List<Boolean> inputValues = new ArrayList<Boolean>();
         for (Entity entity : inputs) {

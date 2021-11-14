@@ -22,26 +22,38 @@ public class SwitchDoor extends StaticEntity implements LogicGate{
 
     @Override
     public boolean isOn(Map<Position, List<Entity>> map, List<String> visitedIDs) {
-        List<Entity> inputs = new ArrayList<Entity>();
+        List<Boolean> inputValues = new ArrayList<Boolean>();
         List<Position> adjacentPositions = super.getPos().getCardinallyAdjacentPositions();
+        if (!(visitedIDs.contains(super.getId()))) {
+            visitedIDs.add(super.getId());
+        }
         for (Position position : adjacentPositions) {
             List<Entity> entities = map.get(position.asLayer(0));
             if (entities != null && entities.size() > 0 && (entities.get(0) instanceof LogicGate)) {
                 String entityID = entities.get(0).getId();
-                if (!visitedIDs.contains(entityID)) {
+                if (!(visitedIDs.contains(entityID))) {
                     visitedIDs.add(entityID);
-                    inputs.add(entities.get(0));
+                    inputValues.add(((LogicGate) entities.get(0)).isOn(map, visitedIDs));
                 }
             }
+            visitedIDs.clear();
+            visitedIDs.add(super.getId());
         }
-        List<Boolean> inputValues = new ArrayList<Boolean>();
-        for (Entity entity : inputs) {
-            inputValues.add(((LogicGate) entity).isOn(map, visitedIDs));
-        }
+        Position doorLayer = super.getPos().asLayer(1);
         if (LogicGateUtility.applyLogic(logic, inputValues)) {
-            // Open door
+            if (this.getType().equals("switch_door")) {
+                this.setType("switch_door_unlocked");
+                this.setPos(doorLayer.asLayer(0));
+                map.get(super.getPos().asLayer(0)).add(this);
+                map.get(doorLayer).remove(this);
+            }
         } else {
-            // Close door
+            if (this.getType().equals("switch_door_unlocked")) {
+                this.setType("switch_door");
+                this.setPos(doorLayer.asLayer(1));
+                map.get(super.getPos().asLayer(1)).add(this);
+                map.get(super.getPos().asLayer(0)).remove(this);
+            }
         }
         return false;
     }
