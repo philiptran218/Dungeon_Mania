@@ -301,9 +301,9 @@ public class MovingEntityTest {
         DungeonManiaController controller = new DungeonManiaController();
         // Create new game
         DungeonResponse response = controller.newGame("bribeMercSceptre", "standard");
-        String mercId = getEntityId(new Position(10, 1, 3), response);
+        String mercId = getEntityId(new Position(8, 1, 3), response);
         // Move to collect the items
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
             controller.tick(null, Direction.RIGHT);
         }
         // Build the sceptre

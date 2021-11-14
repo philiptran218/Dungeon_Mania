@@ -15,6 +15,7 @@ public class EnemySpawner {
     // Seed counter used for spider
     int seed;
     int period = 1;
+    int mercAssSeed = 9999;
 
     // ******************************
     GameMap map;
@@ -76,13 +77,14 @@ public class EnemySpawner {
     public void spawnMercenary(List<AnimationQueue> animations) {
         // Check conditions to spawn mercenary/assassin
         if (period != 0 && period % 15 == 0) {
-            Random random = new Random();
+            Random random = new Random(mercAssSeed);
             // 20% chance of spawning an assassin instead
             if (random.nextInt(10) >= 8) {
                 addAssassin(animations);
             } else {
                 addMercenary(animations);
             }
+            mercAssSeed += 50;
         }
     }
 

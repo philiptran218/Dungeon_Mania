@@ -187,12 +187,7 @@
         "type": "sun_stone"
       },
       {
-        "x": 5,
-        "y": 1,
-        "type": "armour"
-      },
-      {
-        "x": 10,
+        "x": 8,
         "y": 1,
         "type": "mercenary"
       }
