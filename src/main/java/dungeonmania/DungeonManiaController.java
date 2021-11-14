@@ -29,7 +29,7 @@ import com.google.gson.JsonObject;
 public class DungeonManiaController {
     // Game Map
     private GameMap gameMap;
-    private EnermySpawner enermySpawner;
+    private EnermySpawner enemySpawner;
     private List<AnimationQueue> animations = new ArrayList<>();
 
 
@@ -114,7 +114,7 @@ public class DungeonManiaController {
         // Tick save
         MapUtility.saveTickInstance(gameMap, gameMap.getGameIndex().toString());
         // Create enermy spawner
-        this.enermySpawner = new EnermySpawner(gameMap);
+        this.enemySpawner = new EnermySpawner(gameMap);
         // Return DungeonResponse
         return new ResponseUtility(gameMap).returnDungeonResponse(animations);
     }
@@ -147,7 +147,7 @@ public class DungeonManiaController {
         JsonObject obj = MapUtility.getSavedMap(name, null);
         this.gameMap = new GameMap(name, obj.get("map-id").getAsString());
         // Create enermy spawner
-        this.enermySpawner = new EnermySpawner(gameMap);
+        this.enemySpawner = new EnermySpawner(gameMap);
         AnimationUtility.initialiseHealthBarForAllEntities(animations, gameMap.getPlayer(), gameMap.getMovingEntityList(), true);
         // Return DungeonResponse
         return new ResponseUtility(gameMap).returnDungeonResponse(animations);
@@ -249,7 +249,7 @@ public class DungeonManiaController {
         }
 
         // Spawn mobs on the map
-        enermySpawner.spawnMob(animations);
+        enemySpawner.spawnMob(animations);
 
         // Check for swamp tile after all movements has occured,
         // and removes accordinly as well as tick each one.
