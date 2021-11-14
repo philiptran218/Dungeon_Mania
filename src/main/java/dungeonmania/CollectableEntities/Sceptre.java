@@ -1,6 +1,5 @@
 package dungeonmania.CollectableEntities;
 
-import dungeonmania.MovingEntities.MovingEntity;
 import dungeonmania.util.Position;
 
 public class Sceptre extends CombatItems {

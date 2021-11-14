@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.event.SwingPropertyChangeSupport;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
