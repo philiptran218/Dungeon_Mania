@@ -21,6 +21,9 @@ public class TimeTravellingPortal extends StaticEntity {
      * @return True is the player is moving into the portal, false otherwise.
      */
     public static boolean movingIntoTimePortal(List<Entity> timeTelePortal) {
+        if (timeTelePortal == null) {
+            return false;
+        }
         for (Entity e : timeTelePortal) {
             if (e.isType("time_travelling_portal")) { return true; }
         }
