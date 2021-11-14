@@ -19,6 +19,8 @@ public class Spider extends MovingEntity {
     private Position startPos;
     private boolean clockwise = true; // 1 for clockwise
     private int pathPos = 0;
+    private static final double Health = 5;
+    private static final double Damage = 1;
 
     /**
      * Constructor for spider.
@@ -27,8 +29,8 @@ public class Spider extends MovingEntity {
      * @param pos
      */
     public Spider(String id, String type, Position pos){
-        super(id, type, pos, 5, 1);
-        if (startPos == null) { this.startPos = pos; }
+        super(id, type, pos, Health, Damage);
+        if (startPos == null) { this.startPos = pos;}
         this.setPath();
     }
 
@@ -41,7 +43,6 @@ public class Spider extends MovingEntity {
                                                              .filter(e -> e.getType().equals("player"))
                                                              .collect(Collectors.toList());
         Player player = (Player) entities.get(0);
-
         if (player.getInvincDuration() > 0 && !player.getBattle().getDifficulty().equals("hard")) {
             moveAway(map, animations);
         }
@@ -57,11 +58,14 @@ public class Spider extends MovingEntity {
     public void moveNormal(Map<Position, List<Entity>> map, List<AnimationQueue> animations) {
         Position pos = super.getPos();
         if (super.getPos().equals(startPos)) {
-            // Spider has just spawned, move up
+            // Spider has just spawned
             Position newPos = this.path.get(0);
-            super.moveToPos(map, newPos);
-            Direction direction = Position.getTranslationDirection(pos, newPos);
-            AnimationUtility.translateMovingEntity(animations, false, this, direction);
+            if (canPass(map, newPos)) {
+                // Move up if it can
+                super.moveToPos(map, newPos);
+                Direction direction = Position.getTranslationDirection(pos, newPos);
+                AnimationUtility.translateMovingEntity(animations, false, this, direction);
+            }
             return;
         }
 
@@ -100,7 +104,6 @@ public class Spider extends MovingEntity {
         Position newPosition = super.getPos();
         Direction direction = Position.getTranslationDirection(pos, newPosition);
         AnimationUtility.translateMovingEntity(animations, false, this, direction);
-        
     }
 
     /**
@@ -134,6 +137,9 @@ public class Spider extends MovingEntity {
      * @return True is the spider can move onto the pos, false otherwise.
      */
     public boolean canPass(Map<Position, List<Entity>> map, Position pos) {
+        if (!map.containsKey(pos)) {
+            return false;
+        }
         return !isPassingBoulder(map, pos);
     }
 
