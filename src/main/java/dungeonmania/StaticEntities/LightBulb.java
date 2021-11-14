@@ -7,7 +7,7 @@ import java.util.Map;
 import dungeonmania.Entity;
 import dungeonmania.util.Position;
 
-public class LightBulb extends StaticEntity implements LogicGate {
+public class LightBulb extends StaticEntity implements LogicEntity {
 
     private String logic = "or";
 
@@ -29,18 +29,18 @@ public class LightBulb extends StaticEntity implements LogicGate {
         }
         for (Position position : adjacentPositions) {
             List<Entity> entities = map.get(position.asLayer(0));
-            if (entities != null && entities.size() > 0 && (entities.get(0) instanceof LogicGate)) {
+            if (LogicEntityUtility.isLogicCarrier(entities)) {
                 String entityID = entities.get(0).getId();
                 if (!(visitedIDs.contains(entityID))) {
                     visitedIDs.add(entityID);
-                    inputValues.add(((LogicGate) entities.get(0)).isOn(map, visitedIDs));
+                    inputValues.add(((LogicEntity) entities.get(0)).isOn(map, visitedIDs));
                 }
             }
             visitedIDs.clear();
             visitedIDs.add(super.getId());
         }
         Position position = super.getPos();
-        if (LogicGateUtility.applyLogic(logic, inputValues)) {
+        if (LogicEntityUtility.applyLogic(logic, inputValues)) {
             map.get(position.asLayer(0)).remove(this);
             this.setType("light_bulb_on");
             map.get(position.asLayer(0)).add(this);

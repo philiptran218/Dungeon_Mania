@@ -184,18 +184,16 @@ public class DungeonManiaController {
             // Get the entity on map:
             gameMap.getPlayer().useItem(gameMap.getMap(), itemUsed);
         }
-        // Blow Up Bombs
+        // 
         for (Bomb bomb : gameMap.getBombList()) {
             if (bomb.isOn(gameMap.getMap(), new ArrayList<String>())) {
                 bomb.detonate(gameMap.getMap());
             }
         }
 
-        for (LogicGate logicEntity : gameMap.getLogicEnitityList()) {
+        for (LogicEntity logicEntity : gameMap.getLogicEnitityList()) {
             logicEntity.isOn(gameMap.getMap(), new ArrayList<String>());
         }
-
-        // Activate lights, doors, etc
 
         // Ticks the duration of any active potions
         gameMap.getPlayer().tickPotions();

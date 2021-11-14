@@ -7,7 +7,7 @@ import java.util.Map;
 import dungeonmania.Entity;
 import dungeonmania.util.Position;
 
-public class Wire extends StaticEntity implements LogicGate{
+public class Wire extends StaticEntity implements LogicEntity{
 
     private static final String LOGIC = "or";
 
@@ -19,9 +19,12 @@ public class Wire extends StaticEntity implements LogicGate{
     public boolean isOn(Map<Position, List<Entity>> map, List<String> visitedIDs) {
         List<Entity> inputs = new ArrayList<Entity>();
         List<Position> adjacentPositions = super.getPos().getCardinallyAdjacentPositions();
+        if (!(visitedIDs.contains(super.getId()))) {
+            visitedIDs.add(super.getId());
+        }
         for (Position position : adjacentPositions) {
             List<Entity> entities = map.get(position.asLayer(0));
-            if (entities != null && entities.size() > 0 && ((entities.get(0) instanceof Wire) || (entities.get(0) instanceof FloorSwitch))) {
+            if (LogicEntityUtility.isLogicCarrier(entities)) {
                 String entityID = entities.get(0).getId();
                 if (!(visitedIDs.contains(entityID))) {
                     visitedIDs.add(entityID);
@@ -31,8 +34,8 @@ public class Wire extends StaticEntity implements LogicGate{
         }
         List<Boolean> inputValues = new ArrayList<Boolean>();
         for (Entity entity : inputs) {
-            inputValues.add(((LogicGate) entity).isOn(map, visitedIDs));
+            inputValues.add(((LogicEntity) entity).isOn(map, visitedIDs));
         }
-        return LogicGateUtility.applyLogic(LOGIC, inputValues);
+        return LogicEntityUtility.applyLogic(LOGIC, inputValues);
     }
 }

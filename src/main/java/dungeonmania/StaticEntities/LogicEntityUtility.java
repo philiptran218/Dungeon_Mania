@@ -2,7 +2,9 @@ package dungeonmania.StaticEntities;
 
 import java.util.List;
 
-public class LogicGateUtility {
+import dungeonmania.Entity;
+
+public class LogicEntityUtility {
 
     public static boolean applyLogic(String logic, List<Boolean> inputValues) {
         switch (logic) {
@@ -21,9 +23,14 @@ public class LogicGateUtility {
                 if (inputValues.size() >= 1) {
                     return !(inputValues.stream().anyMatch(x -> x.equals(true)));
                 }
-                return false;
+                return true;
             default:
                 return false;
         }
+    }
+
+    public static boolean isLogicCarrier(List<Entity> entities) {
+        return entities != null && entities.size() > 0 
+                && ((entities.get(0) instanceof Wire) || (entities.get(0) instanceof FloorSwitch));
     }
 }

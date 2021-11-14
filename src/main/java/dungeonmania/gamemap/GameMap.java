@@ -13,7 +13,7 @@ import dungeonmania.Battles.Battle;
 import dungeonmania.CollectableEntities.Bomb;
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.LightBulb;
-import dungeonmania.StaticEntities.LogicGate;
+import dungeonmania.StaticEntities.LogicEntity;
 import dungeonmania.StaticEntities.SwitchDoor;
 import dungeonmania.util.Position;
 
@@ -109,11 +109,11 @@ public class GameMap {
         return bombList;
     }
 
-    public List<LogicGate> getLogicEnitityList() {
-        List<LogicGate> logicList = new ArrayList<>();
+    public List<LogicEntity> getLogicEnitityList() {
+        List<LogicEntity> logicList = new ArrayList<>();
         for (Entity e : getAllEntity()) {
             if (e instanceof LightBulb || e instanceof SwitchDoor) {
-                logicList.add((LogicGate) e);
+                logicList.add((LogicEntity) e);
             }
         }
         return logicList;

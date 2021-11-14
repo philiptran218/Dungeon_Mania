@@ -7,7 +7,7 @@ import java.util.Map;
 import dungeonmania.Entity;
 import dungeonmania.util.Position;
 
-public class FloorSwitch extends StaticEntity implements LogicGate{
+public class FloorSwitch extends StaticEntity implements LogicEntity{
 
     private String logic = "none";
     /**
@@ -18,8 +18,13 @@ public class FloorSwitch extends StaticEntity implements LogicGate{
      */
     public FloorSwitch(String id, String type, Position pos) {
         super(id, type, pos);
-        super.setType("switch");
     }
+
+    public FloorSwitch(String id, String type, Position pos, String logic) {
+        this(id, type, pos);
+        this.logic = logic;
+    }
+
     /**
      * Checks if there is a boulder on a floor switch
      * @param map
@@ -45,22 +50,20 @@ public class FloorSwitch extends StaticEntity implements LogicGate{
             }
             for (Position position : adjacentPositions) {
                 List<Entity> entities = map.get(position.asLayer(0));
-                if (entities != null && entities.size() > 0 && ((entities.get(0) instanceof Wire) || (entities.get(0) instanceof FloorSwitch))) {
+                if (LogicEntityUtility.isLogicCarrier(entities)) {
                     String entityID = entities.get(0).getId();
-                    if (!visitedIDs.contains(entityID)) {
+                    if (!(visitedIDs.contains(entityID))) {
                         visitedIDs.add(entityID);
                         inputs.add(entities.get(0));
                     }
                 }
-                visitedIDs.clear();
-                visitedIDs.add(super.getId());
             }
             List<Boolean> inputValues = new ArrayList<Boolean>();
             for (Entity entity : inputs) {
-                inputValues.add(((LogicGate) entity).isOn(map, visitedIDs));
+                inputValues.add(((LogicEntity) entity).isOn(map, visitedIDs));
             }
             inputValues.add(isUnderBoulder(map));
-            return LogicGateUtility.applyLogic(logic, inputValues);
+            return LogicEntityUtility.applyLogic(logic, inputValues);
         }
     }
 }

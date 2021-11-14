@@ -36,8 +36,12 @@ public class EntityFactory {
                 return new Exit(id, type, absolPos);
             case "boulder": 
                 return new Boulder(id, type, staticPos);     
-            case "switch": 
-                return new FloorSwitch(id, type, absolPos);
+            case "switch":
+                if (jsonObj.get("logic") != null) {
+                    return new FloorSwitch(id, type, absolPos, jsonObj.get("logic").getAsString());
+                } else {
+                    return new FloorSwitch(id, type, absolPos);
+                }
             case "door": 
                 return new Door(id, type, staticPos, jsonObj.get("key").getAsInt());
             case "door_unlocked":

@@ -6,6 +6,6 @@ import java.util.Map;
 import dungeonmania.Entity;
 import dungeonmania.util.Position;
 
-public interface LogicGate {
+public interface LogicEntity {
     public boolean isOn(Map<Position, List<Entity>> map, List<String> visitedIDs);
 }

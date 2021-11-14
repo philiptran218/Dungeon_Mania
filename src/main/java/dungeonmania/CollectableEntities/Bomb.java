@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import dungeonmania.Entity;
-import dungeonmania.StaticEntities.LogicGate;
-import dungeonmania.StaticEntities.LogicGateUtility;
+import dungeonmania.StaticEntities.LogicEntity;
+import dungeonmania.StaticEntities.LogicEntityUtility;
 import dungeonmania.util.Position;
 
-public class Bomb extends CombatItems implements LogicGate {
+public class Bomb extends CombatItems implements LogicEntity {
     private static final int EXPLOSION_RADIUS = 2;
     private String logic = "or";
 
@@ -65,7 +65,7 @@ public class Bomb extends CombatItems implements LogicGate {
         }
         for (Position position : adjacentPositions) {
             List<Entity> entities = map.get(position.asLayer(0));
-            if (entities != null && entities.size() > 0 && (entities.get(0) instanceof LogicGate)) {
+            if (LogicEntityUtility.isLogicCarrier(entities)) {
                 String entityID = entities.get(0).getId();
                 if (!visitedIDs.contains(entityID)) {
                     visitedIDs.add(entityID);
@@ -77,8 +77,8 @@ public class Bomb extends CombatItems implements LogicGate {
         }
         List<Boolean> inputValues = new ArrayList<Boolean>();
         for (Entity entity : inputs) {
-            inputValues.add(((LogicGate) entity).isOn(map, visitedIDs));
+            inputValues.add(((LogicEntity) entity).isOn(map, visitedIDs));
         }
-        return LogicGateUtility.applyLogic(logic, inputValues);
+        return LogicEntityUtility.applyLogic(logic, inputValues);
     }
 }
