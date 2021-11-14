@@ -1,5 +1,7 @@
 package dungeonmania.StaticEntities;
 
+import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +10,7 @@ import dungeonmania.util.Position;
 
 public class LightBulb extends StaticEntity implements LogicGate {
 
-    private String logic = "none";
+    private String logic = "or";
 
     public LightBulb(String id, String type, Position pos, String logic) {
         this(id, type, pos);
@@ -21,7 +23,34 @@ public class LightBulb extends StaticEntity implements LogicGate {
 
     @Override
     public boolean isOn(Map<Position, List<Entity>> map, List<String> visitedIDs) {
+        List<Boolean> inputValues = new ArrayList<Boolean>();
+        List<Position> adjacentPositions = super.getPos().getCardinallyAdjacentPositions();
+        if (!(visitedIDs.contains(super.getId()))) {
+            visitedIDs.add(super.getId());
+        }
+        for (Position position : adjacentPositions) {
+            List<Entity> entities = map.get(position.asLayer(0));
+            if (entities != null && entities.size() > 0 && (entities.get(0) instanceof LogicGate)) {
+                String entityID = entities.get(0).getId();
+                if (!(visitedIDs.contains(entityID))) {
+                    visitedIDs.add(entityID);
+                    inputValues.add(((LogicGate) entities.get(0)).isOn(map, visitedIDs));
+                }
+            }
+        }
+        Position position = super.getPos();
+        if (LogicGateUtility.applyLogic(logic, inputValues)) {
+            map.get(position.asLayer(0)).remove(this);
+            this.setType("light_bulb_on");
+            map.get(position.asLayer(0)).add(this);
+        } else {
+            map.get(position.asLayer(0)).remove(this);
+            this.setType("light_bulb_off");
+            map.get(position.asLayer(0)).add(this);
+        }
         return false;
     }
+
+
 
 }

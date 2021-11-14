@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jetty.util.log.Log;
-
 import dungeonmania.Entity;
 import dungeonmania.util.Position;
 
@@ -42,11 +40,14 @@ public class FloorSwitch extends StaticEntity implements LogicGate{
         } else {
             List<Entity> inputs = new ArrayList<Entity>();
             List<Position> adjacentPositions = super.getPos().getCardinallyAdjacentPositions();
+            System.out.println(super.getPos() + " " + visitedIDs);
+
             for (Position position : adjacentPositions) {
                 List<Entity> entities = map.get(position.asLayer(0));
-                if (entities.size() > 0 && (entities.get(0) instanceof LogicGate)) {
+                if (entities != null && entities.size() > 0 && ((entities.get(0) instanceof Wire) || (entities.get(0) instanceof FloorSwitch))) {
                     String entityID = entities.get(0).getId();
                     if (!visitedIDs.contains(entityID)) {
+                        visitedIDs.add(entityID);
                         inputs.add(entities.get(0));
                     }
                 }

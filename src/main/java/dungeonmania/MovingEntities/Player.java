@@ -60,7 +60,9 @@ public class Player extends MovingEntity implements MovingEntitySubject {
         Position newPos = super.getPos().translateBy(direction);    
         Position doorLayer = newPos.asLayer(1);
         boolean isMovingIntoStatic = true;
-        if (canPass(map, newPos)) {
+        if (!map.containsKey(newPos)) {
+
+        } else if (canPass(map, newPos)) {
             moveInDir(map, direction);
             isMovingIntoStatic = false;
         } else if (canPush(map, newPos, direction)) {   

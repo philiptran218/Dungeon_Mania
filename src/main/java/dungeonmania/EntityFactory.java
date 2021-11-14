@@ -189,9 +189,9 @@ public class EntityFactory {
                 }
             case "switch_door":
                 if (jsonObj.get("logic") != null) {
-                    return new SwitchDoor(id, type, absolPos, jsonObj.get("logic").getAsString());
+                    return new SwitchDoor(id, type, staticPos, jsonObj.get("logic").getAsString());
                 } else {
-                    return new SwitchDoor(id, type, absolPos);
+                    return new SwitchDoor(id, type, staticPos);
                 }
             case "wire":
                 return new Wire(id, type, pos);

@@ -19,7 +19,7 @@ public class LogicGateUtility {
                 return inputValues.stream().reduce(Boolean::logicalXor).orElse(false);
             case "not":
                 if (inputValues.size() >= 1) {
-                    return !(inputValues.stream().anyMatch(x -> true));
+                    return !(inputValues.stream().anyMatch(x -> x.equals(true)));
                 }
                 return false;
             default:

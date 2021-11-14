@@ -114,7 +114,7 @@ public class DungeonManiaController {
         // Create enermy spawner
         this.enermySpawner = new EnermySpawner(gameMap);
         // Return DungeonResponse
-        return new ResponseUtility(gameMap).returnDungeonResponse(animations);
+        return new ResponseUtility(gameMap).returnDungeonResponseNewGame(animations);
     }
     
     /**
@@ -189,6 +189,10 @@ public class DungeonManiaController {
             if (bomb.isOn(gameMap.getMap(), new ArrayList<String>())) {
                 bomb.detonate(gameMap.getMap());
             }
+        }
+
+        for (LogicGate logicEntity : gameMap.getLogicEnitityList()) {
+            logicEntity.isOn(gameMap.getMap(), new ArrayList<String>());
         }
 
         // Activate lights, doors, etc

@@ -25,12 +25,12 @@ public class ResponseUtility {
     
 
      /**
-     * Returns a dungeon response based on the current state of the game.
+     * Returns a dungeon response for the first instance of a new game.
      * @return DungeonResponse on the current state of map.
      */
-    public DungeonResponse returnDungeonResponseNewGame() {
+    public DungeonResponse returnDungeonResponseNewGame(List<AnimationQueue> animations) {
         return new DungeonResponse(map.getMapId(), map.getDungeonName(), getEntityResponse(), 
-            getInventoryResponse(), getBuildablesResponse(), getNewGameGoalResponse());
+            getInventoryResponse(), getBuildablesResponse(), getNewGameGoalResponse(), animations);
     }
 
     /**

@@ -12,6 +12,9 @@ import dungeonmania.EntityFactory;
 import dungeonmania.Battles.Battle;
 import dungeonmania.CollectableEntities.Bomb;
 import dungeonmania.MovingEntities.*;
+import dungeonmania.StaticEntities.LightBulb;
+import dungeonmania.StaticEntities.LogicGate;
+import dungeonmania.StaticEntities.SwitchDoor;
 import dungeonmania.util.Position;
 
 public class GameMap {
@@ -94,8 +97,7 @@ public class GameMap {
     // ********************************************************************************************\\
 
     /**
-     * Returns a list of all self moving entities from the game map.
-     * @return List<MovingEntity> List of moving entities on map.
+     * NEED NEW COMMENT
      */
     public List<Bomb> getBombList() {
         List<Bomb> bombList = new ArrayList<>();
@@ -105,6 +107,16 @@ public class GameMap {
             }
         }
         return bombList;
+    }
+
+    public List<LogicGate> getLogicEnitityList() {
+        List<LogicGate> logicList = new ArrayList<>();
+        for (Entity e : getAllEntity()) {
+            if (e instanceof LightBulb || e instanceof SwitchDoor) {
+                logicList.add((LogicGate) e);
+            }
+        }
+        return logicList;
     }
 
     /**

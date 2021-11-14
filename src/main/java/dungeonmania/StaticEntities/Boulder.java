@@ -30,6 +30,9 @@ public class Boulder extends StaticEntity {
     public boolean canBePushed(Map<Position, List<Entity>> map, Direction direction) {
         Position pos = super.getPos();
         Position newPos = pos.translateBy(direction);
+        if (map.get(newPos) == null) {
+            return false;
+        }
         for (int i = 1; i < 5; i++) {
             if (!map.get(newPos.asLayer(i)).isEmpty()) {
                 // New tile is not empty, cannot be pushed onto

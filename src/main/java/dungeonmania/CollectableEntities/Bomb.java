@@ -11,7 +11,7 @@ import dungeonmania.util.Position;
 
 public class Bomb extends CombatItems implements LogicGate {
     private static final int EXPLOSION_RADIUS = 2;
-    private String logic = "none";
+    private String logic = "or";
 
     public Bomb(String id, String type, Position pos, String logic) {
         this(id, type, pos);
@@ -62,9 +62,10 @@ public class Bomb extends CombatItems implements LogicGate {
         List<Position> adjacentPositions = super.getPos().getCardinallyAdjacentPositions();
         for (Position position : adjacentPositions) {
             List<Entity> entities = map.get(position.asLayer(0));
-            if (entities.size() > 0 && (entities.get(0) instanceof LogicGate)) {
+            if (entities != null && entities.size() > 0 && (entities.get(0) instanceof LogicGate)) {
                 String entityID = entities.get(0).getId();
                 if (!visitedIDs.contains(entityID)) {
+                    visitedIDs.add(entityID);
                     inputs.add(entities.get(0));
                 }
             }
@@ -74,22 +75,5 @@ public class Bomb extends CombatItems implements LogicGate {
             inputValues.add(((LogicGate) entity).isOn(map, visitedIDs));
         }
         return LogicGateUtility.applyLogic(logic, inputValues);
-        // Position pos = super.getPos();
-        // List<Entity> entities = map.get(getPos().asLayer(0));
-        // if ( entities.size() > 0 && entities.get(0).isType("switch")) {
-        //     // Boulder is on a switch
-        //     List<Position> adjacentPos = pos.getCardinallyAdjacentPositions();
-        //     for (Position tempPos: adjacentPos) {
-        //         // Checks if a bomb needs to be exploded
-        //         List<Entity> collectablEntities = map.get(tempPos.asLayer(2));
-        //         if (collectablEntities.size() > 0 && collectablEntities.get(0).isType("bomb")) {
-        //             // contains bomb
-        //             Bomb bomb = (Bomb) collectablEntities.get(0);
-        //             bomb.detonate(map);
-        //         }
-        //     }
-        // }
-        // return false;
     }
-
 }
