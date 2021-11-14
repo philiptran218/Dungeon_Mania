@@ -1,7 +1,8 @@
 {
     "main_menu": {
         "background_image": "images/backgrounds/main_menu.png",
-        "text_color": "white"
+        "text_color": "white",
+        "background_music": "audio/slayer.mp3"
     },
     "game": {
         "background_image": {
@@ -58,6 +59,7 @@
         "light_bulb_off": "images/tileset/entities/lightbulb_off.png",
         "light_bulb_on": "images/tileset/entities/lightbulb.png",
         "switch_door": "images/tileset/walls/wooden/switch_door_locked.png",
-        "switch_door_unlocked": "images/tileset/walls/wooden/switch_door_unlocked.png"
+        "switch_door_unlocked": "images/tileset/walls/wooden/switch_door_unlocked.png",
+        "time_travelling_portal": "images/tileset/entities/portal_04.png"
     }
 }
