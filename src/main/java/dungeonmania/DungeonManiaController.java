@@ -4,7 +4,7 @@ import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.gamemap.DungeonGenerator;
-import dungeonmania.gamemap.EnermySpawner;
+import dungeonmania.gamemap.EnemySpawner;
 import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.gamemap.MapUtility;
@@ -29,7 +29,7 @@ import com.google.gson.JsonObject;
 public class DungeonManiaController {
     // Game Map
     private GameMap gameMap;
-    private EnermySpawner enermySpawner;
+    private EnemySpawner enemySpawner;
     private List<AnimationQueue> animations = new ArrayList<>();
 
 
@@ -114,7 +114,7 @@ public class DungeonManiaController {
         // Tick save
         MapUtility.saveTickInstance(gameMap, gameMap.getGameIndex().toString());
         // Create enermy spawner
-        this.enermySpawner = new EnermySpawner(gameMap);
+        this.enemySpawner = new EnemySpawner(gameMap);
         // Return DungeonResponse
         return new ResponseUtility(gameMap).returnDungeonResponse(animations);
     }
@@ -147,7 +147,7 @@ public class DungeonManiaController {
         JsonObject obj = MapUtility.getSavedMap(name, null);
         this.gameMap = new GameMap(name, obj.get("map-id").getAsString());
         // Create enermy spawner
-        this.enermySpawner = new EnermySpawner(gameMap);
+        this.enemySpawner = new EnemySpawner(gameMap);
         AnimationUtility.initialiseHealthBarForAllEntities(animations, gameMap.getPlayer(), gameMap.getMovingEntityList(), true);
         // Return DungeonResponse
         return new ResponseUtility(gameMap).returnDungeonResponse(animations);
@@ -249,7 +249,7 @@ public class DungeonManiaController {
         }
 
         // Spawn mobs on the map
-        enermySpawner.spawnMob(animations);
+        enemySpawner.spawnMob(animations);
 
         // Check for swamp tile after all movements has occured,
         // and removes accordinly as well as tick each one.

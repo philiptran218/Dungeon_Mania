@@ -62,16 +62,16 @@ public class AnimationUtility {
     }
     public static void translateBoulder(List<AnimationQueue> animations, Direction direction, String boulderId) {
         if (direction.getOffset().getX() == 1) {
-            animations.add(new AnimationQueue("PostTick", boulderId, Arrays.asList("translate-x -1", "translate-x 1, over 0.3s", "rotate 180, over 0.3s"), false, -1));
+            animations.add(new AnimationQueue("PostTick", boulderId, Arrays.asList("rotate 180, over 0.3s", "translate-x -1", "translate-x 1, over 0.3s"), false, -1));
         }
         else if (direction.getOffset().getX() == -1) {
-            animations.add(new AnimationQueue("PostTick", boulderId, Arrays.asList("translate-x 1", "translate-x -1, over 0.3s", "rotate 180, over 0.3s"), false, -1));
+            animations.add(new AnimationQueue("PostTick", boulderId, Arrays.asList("rotate 180, over 0.3s", "translate-x 1", "translate-x -1, over 0.3s"), false, -1));
         }
         else if (direction.getOffset().getY() == 1) {
-            animations.add(new AnimationQueue("PostTick", boulderId, Arrays.asList("translate-y -1", "translate-y 1, over 0.3s", "rotate 180, over 0.3s"), false, -1));
+            animations.add(new AnimationQueue("PostTick", boulderId, Arrays.asList("rotate 180, over 0.3s", "translate-y -1", "translate-y 1, over 0.3s"), false, -1));
         }
         else if (direction.getOffset().getY() == -1) {
-            animations.add(new AnimationQueue("PostTick", boulderId, Arrays.asList("translate-y 1", "translate-y -1, over 0.3s", "rotate 180, over 0.3s"), false, -1));
+            animations.add(new AnimationQueue("PostTick", boulderId, Arrays.asList("rotate 180, over 0.3s", "translate-y 1", "translate-y -1, over 0.3s"), false, -1));
         }
     }
 }
