@@ -1,5 +1,6 @@
 package dungeonmania;
 
+import dungeonmania.CollectableEntities.Bomb;
 import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.exceptions.InvalidActionException;
@@ -116,7 +117,7 @@ public class DungeonManiaController {
         // Create enermy spawner
         this.enemySpawner = new EnemySpawner(gameMap);
         // Return DungeonResponse
-        return new ResponseUtility(gameMap).returnDungeonResponse(animations);
+        return new ResponseUtility(gameMap).returnDungeonResponseNewGame(animations);
     }
     
     /**
@@ -185,6 +186,16 @@ public class DungeonManiaController {
         } else if (itemUsed != null) {
             // Get the entity on map:
             gameMap.getPlayer().useItem(gameMap.getMap(), itemUsed);
+        }
+        // 
+        for (Bomb bomb : gameMap.getBombList()) {
+            if (bomb.isOn(gameMap.getMap(), new ArrayList<String>())) {
+                bomb.detonate(gameMap.getMap());
+            }
+        }
+
+        for (LogicEntity logicEntity : gameMap.getLogicEnitityList()) {
+            logicEntity.isOn(gameMap.getMap(), new ArrayList<String>());
         }
 
         // Ticks the duration of any active potions

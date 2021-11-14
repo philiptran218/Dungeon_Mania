@@ -1,0 +1,131 @@
+
+{
+    "width": 10,
+    "height": 10,
+    "entities": [
+      {
+        "x": 1,
+        "y": 1,
+        "type": "player"
+      },
+      {
+        "x": 2,
+        "y": 1,
+        "type": "boulder"
+      },
+      {
+        "x": 3,
+        "y": 1,
+        "type": "switch"
+      },
+      {
+        "x": 5,
+        "y": 1,
+        "type": "treasure"
+      },
+      {
+        "x": 3,
+        "y": 2,
+        "type": "wire"
+      },
+      {
+        "x": 3,
+        "y": 3,
+        "type": "wire"
+      },
+      {
+        "x": 3,
+        "y": 4,
+        "type": "wire"
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "type": "wire"
+      },
+      {
+        "x": 1,
+        "y": 4,
+        "type": "wire"
+      },
+      {
+        "x": 4,
+        "y": 4,
+        "type": "wire"
+      },
+      {
+        "x": 5,
+        "y": 4,
+        "type": "wire"
+      },
+      {
+        "x": 6,
+        "y": 4,
+        "type": "wire"
+      },
+      {
+        "x": 3,
+        "y": 5,
+        "type": "light_bulb_off"
+      },
+      {
+        "x": 2,
+        "y": 5,
+        "type": "light_bulb_off",
+        "logic": "and"
+      },
+      {
+        "x": 1,
+        "y": 5,
+        "type": "light_bulb_off",
+        "logic": "or"
+      },
+      {
+        "x": 5,
+        "y": 5,
+        "type": "light_bulb_off",
+        "logic": "and"
+      },
+      {
+        "x": 6,
+        "y": 5,
+        "type": "wire"
+      },
+      {
+        "x": 7,
+        "y": 4,
+        "type": "wire"
+      },
+      {
+        "x": 8,
+        "y": 4,
+        "type": "wire"
+      },
+      {
+        "x": 9,
+        "y": 4,
+        "type": "wire"
+      },
+      {
+        "x": 7,
+        "y": 5,
+        "type": "light_bulb_off",
+        "logic": "xor"
+      },
+      {
+        "x": 9,
+        "y": 5,
+        "type": "light_bulb_off",
+        "logic": "not"
+      },
+      {
+        "x": 9,
+        "y": 7,
+        "type": "light_bulb_off",
+        "logic": "not"
+      }
+    ],
+    "goal-condition": {
+      "goal": "treasure"
+    }
+}

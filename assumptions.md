@@ -55,3 +55,12 @@
 - Every map must have at least one goal
 - All goals must be valid goals
 - Goals must be structured correctly within the dungeon .json file
+
+# Assumptions for Logic Switches
+- Floor switches which are connected together with wires CANNOT have NOT logic, this will cause an infinite loop.
+
+- Floor switches with logic behave like wires if the logic is satisfied i.e. If a switch is activated, all of the other interactable entities adjacent to the switch are activated. The input of whether a boulder is on top the switch or not is also included to compute the switch's logic state.
+
+- Of the Logic Switch entities, bombs will detonate first and if the detonation destroys wires that connect other logic switches, input/power will not provided to those logic switches
+
+- The order in which the bombs detonate will be random.
