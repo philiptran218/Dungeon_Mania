@@ -223,7 +223,7 @@ public class BattleTest {
     @Test 
     public void testArmourCombatInvincible() {
         DungeonManiaController newDungeon = new DungeonManiaController();
-        DungeonResponse response = newDungeon.newGame("onslaught_armour_invincible", "hard");
+        DungeonResponse response = newDungeon.newGame("onslaught_armour_invincible", "standard");
         String potionId = getEntityId(new Position(2,1,2), response);
         newDungeon.tick(null, Direction.RIGHT);
         newDungeon.tick(potionId, null);
