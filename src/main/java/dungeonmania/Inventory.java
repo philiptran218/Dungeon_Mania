@@ -36,10 +36,6 @@ public class Inventory {
         this.player = player;
     }
 
-    public Player getPlayer() {
-        return player;
-    }
-
     public List<CollectableEntity> getInventory() {
         return entities;
     }

@@ -20,6 +20,9 @@ public class Mercenary extends MovingEntity {
     private int price = 1;
     private int battleRadius = 3;
     private int bribedTicks = -1;
+    private static final double Health = 15;
+    private static final double Damage = 2;
+
 
     /**
      * Constructor for mercenary.
@@ -28,7 +31,7 @@ public class Mercenary extends MovingEntity {
      * @param pos
      */
     public Mercenary(String id, String type, Position pos) {
-        super(id, type, pos, 15, 2);
+        super(id, type, pos, Health, Damage);
         this.enemyState = new MercenaryEnemyState(this);
         this.allyState = new MercenaryAllyState(this);
         this.state = enemyState;

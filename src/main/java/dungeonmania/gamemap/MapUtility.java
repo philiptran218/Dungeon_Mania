@@ -126,6 +126,13 @@ public class MapUtility {
      */
     public static Direction findOlderPlayerMoveDirection(GameMap map) {
         Integer index = map.getGameIndex() + 1;
+        if (map.getGameIndex() == map.getDestinationTick()) {
+            // Remove the old player from the map:
+            for (Entity e : map.getMap().get(map.getOlderPlayerPosition())) {
+                if (e.isType("older_player")) { map.getMap().get(map.getOlderPlayerPosition()).remove(e); }
+                return null;
+            }
+        }
         Position newPos = null;
         if (getSavedMap(index.toString(), map.getMapId()) != null) {
             for (JsonElement e : getSavedMap(index.toString(), map.getMapId()).get("entities").getAsJsonArray()) {
@@ -134,14 +141,7 @@ public class MapUtility {
                     newPos = new Position(entityObj.get("x").getAsInt(), entityObj.get("y").getAsInt());
                 }
             }
-        } else {
-            // Remove the old player from the map:
-            for (Entity e : map.getMap().get(map.getOlderPlayerPosition())) {
-                if (e.isType("older_player")) { map.getMap().get(map.getOlderPlayerPosition()).remove(e); }
-                return null;
-            }
-            
-        }
+        } 
         // Current map
         List<Position> posList = map.getOlderPlayerPosition().getCardinallyAdjacentPositions();
         if (posList.get(0).equals(newPos)) {
@@ -150,8 +150,10 @@ public class MapUtility {
             return Direction.RIGHT;
         } else if (posList.get(2).equals(newPos)) {
             return Direction.DOWN;
-        } else {
+        } else if (posList.get(3).equals(newPos)){
             return Direction.LEFT;
+        } else {
+            return null;
         }
     }
 

@@ -5,7 +5,7 @@ import dungeonmania.MovingEntities.*;
 import dungeonmania.StaticEntities.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.gamemap.DungeonGenerator;
-import dungeonmania.gamemap.EnermySpawner;
+import dungeonmania.gamemap.EnemySpawner;
 import dungeonmania.gamemap.GameMap;
 import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.gamemap.MapUtility;
@@ -22,13 +22,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.event.SwingPropertyChangeSupport;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 public class DungeonManiaController {
     // Game Map
     private GameMap gameMap;
-    private EnermySpawner enermySpawner;
+    private EnemySpawner enemySpawner;
     private List<AnimationQueue> animations = new ArrayList<>();
 
 
@@ -99,6 +101,7 @@ public class DungeonManiaController {
      * @throws IllegalArgumentException
      */
     public DungeonResponse newGame(String dungeonName, String gameMode) throws IllegalArgumentException {
+        animations.clear();
         if (!getGameModes().contains(gameMode.toLowerCase())) {
             throw new IllegalArgumentException("Game mode does not exist.");
         }
@@ -112,7 +115,7 @@ public class DungeonManiaController {
         // Tick save
         MapUtility.saveTickInstance(gameMap, gameMap.getGameIndex().toString());
         // Create enermy spawner
-        this.enermySpawner = new EnermySpawner(gameMap);
+        this.enemySpawner = new EnemySpawner(gameMap);
         // Return DungeonResponse
         return new ResponseUtility(gameMap).returnDungeonResponseNewGame(animations);
     }
@@ -145,7 +148,7 @@ public class DungeonManiaController {
         JsonObject obj = MapUtility.getSavedMap(name, null);
         this.gameMap = new GameMap(name, obj.get("map-id").getAsString());
         // Create enermy spawner
-        this.enermySpawner = new EnermySpawner(gameMap);
+        this.enemySpawner = new EnemySpawner(gameMap);
         AnimationUtility.initialiseHealthBarForAllEntities(animations, gameMap.getPlayer(), gameMap.getMovingEntityList(), true);
         // Return DungeonResponse
         return new ResponseUtility(gameMap).returnDungeonResponse(animations);
@@ -208,7 +211,7 @@ public class DungeonManiaController {
             if (e.isType("older_player") && MapUtility.getSavedMap(nextIndex.toString(), gameMap.getMapId()) == null) {
                 // Remove older player
                 gameMap.getMap().get(e.getPos()).remove(e);
-            } else if (e.isType("older_player")) {
+            } else if (e.isType("older_player") && MapUtility.findOlderPlayerMoveDirection(gameMap) != null) {
                 ((Player) e).move(gameMap.getMap(), MapUtility.findOlderPlayerMoveDirection(gameMap), animations);
             }
         }
@@ -224,7 +227,11 @@ public class DungeonManiaController {
             }
             else {
                 if (e.getPos().equals(gameMap.getPlayer().getPos())) {
-                    removeEntity.add(gameMap.getBattle().fight(gameMap.getPlayer(), e));
+                    if (e.isType("older_player")) {
+                        boolean hasMidNight = (((Player) e).getInventory().getItem("midnight_armour") != null);
+                        boolean hasSunStone = (((Player) e).getInventory().getItem("sun_stone") != null);
+                        if (!(hasMidNight || hasSunStone)) { removeEntity.add(gameMap.getBattle().fight(gameMap.getPlayer(), e)); }
+                    } else { removeEntity.add(gameMap.getBattle().fight(gameMap.getPlayer(), e)); }
                 }
             }
         }
@@ -253,7 +260,7 @@ public class DungeonManiaController {
         }
 
         // Spawn mobs on the map
-        enermySpawner.spawnMob(animations);
+        enemySpawner.spawnMob(animations);
 
         // Check for swamp tile after all movements has occured,
         // and removes accordinly as well as tick each one.
@@ -339,6 +346,8 @@ public class DungeonManiaController {
      */
     public DungeonResponse rewind(int ticks) throws IllegalArgumentException {
         animations.clear();
+        // Track which tick we need to get to
+        gameMap.setDestinationTick(gameMap.getGameIndex());
         // Save game after each instance and load what you need.
         if (ticks <= 0) { throw new IllegalArgumentException("Invalid rewind tick."); }
         // If not enough rewind, do not do anything

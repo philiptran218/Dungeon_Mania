@@ -29,7 +29,7 @@ public class GameMap {
     private int width;
     private int height;
     private int gameIndex = 0;
-
+    private int destTick;
 
     // Game State: **************
     private GameState gameState;
@@ -263,5 +263,13 @@ public class GameMap {
 
     public Position getOlderPlayerPosition() {
         return getEntityTypeList("older_player").get(0).getPos();
+    }
+
+    public void setDestinationTick(int tick) {
+        this.destTick = tick;
+    }
+
+    public Integer getDestinationTick() {
+        return this.destTick;
     }
 }

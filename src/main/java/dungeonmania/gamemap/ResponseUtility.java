@@ -53,8 +53,10 @@ public class ResponseUtility {
         // Loops through entities on the map entities on the map
         for (Entity e : map.getAllEntity()) {
             // Checks if the the entity is a mecenary or toast_spawner to 
-            boolean isInteractable = (e.isType("mercenary") || e.isType("zombie_toast_spawner"));
+            boolean isInteractable = (e.isType("mercenary") || e.isType("zombie_toast_spawner") || e.isType("assassin"));
             if (e.getType().equals("mercenary") && ((Mercenary) e).isAlly()){
+                isInteractable = false;
+            } else if (e.getType().equals("assassin") && ((Assassin) e).isAlly()) {
                 isInteractable = false;
             }
             // Add the entity to the map
