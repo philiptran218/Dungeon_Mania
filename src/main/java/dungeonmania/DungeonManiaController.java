@@ -370,7 +370,9 @@ public class DungeonManiaController {
             gameIndex -= 1;
         }
         // Load new game
+        int destinationTick = gameMap.getGameIndex();
         gameMap = new GameMap(gameIndex.toString(), gameMap.getMapId());
+        gameMap.setDestinationTick(destinationTick);
         AnimationUtility.initialiseHealthBarForAllEntities(animations, gameMap.getPlayer(), gameMap.getMovingEntityList(), true);
         MapUtility.addOldPlayer(gameMap);
         // Return response
