@@ -182,7 +182,17 @@ public class DungeonManiaController {
         AnimationUtility.setPlayerHealthBar(animations, gameMap.getPlayer());
         // If itemUsed is NULL move the player:
         if (itemUsed == null && !MapUtility.entityOnASwampTile(gameMap, null)) {
-            gameMap.getPlayer().move(gameMap.getMap(), movementDirection, animations);
+            // Check if player is moving into a time travelling portal:
+            Position newPos = gameMap.getPlayer().getPos().translateBy(movementDirection).asLayer(1);
+            if (TimeTravellingPortal.movingIntoTimePortal(gameMap.getMap().get(newPos))) {
+                // Load the previous tick state
+                int storeTick = gameMap.getGameIndex();
+                rewind(TimeTravellingPortal.calcualteTickBack(gameMap.getGameIndex()));
+                gameMap.setDestinationTick(storeTick);
+                return new ResponseUtility(gameMap).returnDungeonResponse(animations);
+            } else {
+                gameMap.getPlayer().move(gameMap.getMap(), movementDirection, animations);
+            }
         } else if (itemUsed != null) {
             // Get the entity on map:
             gameMap.getPlayer().useItem(gameMap.getMap(), itemUsed);

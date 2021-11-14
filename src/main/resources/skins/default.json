@@ -58,6 +58,7 @@
         "light_bulb_off": "images/tileset/entities/lightbulb_off.png",
         "light_bulb_on": "images/tileset/entities/lightbulb.png",
         "switch_door": "images/tileset/walls/wooden/switch_door_locked.png",
-        "switch_door_unlocked": "images/tileset/walls/wooden/switch_door_unlocked.png"
+        "switch_door_unlocked": "images/tileset/walls/wooden/switch_door_unlocked.png",
+        "time_travelling_portal": "images/tileset/entities/portal_04.png"
     }
 }
